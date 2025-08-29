@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --import tsx watch src/index.ts",
-    "dev:debug": "node --inspect --import tsx watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "dev:debug": "tsx watch --inspect src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "vitest",
