@@ -343,7 +343,7 @@ export class SavedSearchService {
         description: 'Common status filters',
         category: 'status',
         entityType,
-        quickFilters: entityType === 'form' ? ['draft', 'completed'] : ['active_' + entityType],
+        quickFilters: entityType === 'form' ? ['draft', 'completed'] : [`active_${entityType}`],
         autoApply: false,
         isDefault: false,
         isSystem: true,

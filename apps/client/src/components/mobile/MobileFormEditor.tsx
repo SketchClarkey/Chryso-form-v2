@@ -291,7 +291,7 @@ export function MobileFormEditor() {
         toast.showSuccess('Location captured');
       },
       error => {
-        toast.showError('Failed to get location: ' + error.message);
+        toast.showError(`Failed to get location: ${error.message}`);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );

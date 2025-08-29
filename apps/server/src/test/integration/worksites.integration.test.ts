@@ -410,7 +410,7 @@ describe('Worksites API Integration Tests', () => {
       const response = await request(app)
         .patch(`/api/worksites/${worksiteId}/template`)
         .set('Authorization', `Bearer ${managerToken}`)
-        .send({ templateId: templateId })
+        .send({ templateId })
         .expect(403);
 
       expect(response.body.success).toBe(false);
@@ -422,7 +422,7 @@ describe('Worksites API Integration Tests', () => {
       const response = await request(app)
         .patch(`/api/worksites/${fakeId}/template`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ templateId: templateId })
+        .send({ templateId })
         .expect(404);
 
       expect(response.body.success).toBe(false);

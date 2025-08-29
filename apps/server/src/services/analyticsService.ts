@@ -474,7 +474,7 @@ export class AnalyticsService {
   private formatPeriodLabel(date: Date, granularity: string): string {
     switch (granularity) {
       case 'hour':
-        return date.toISOString().slice(0, 13) + ':00';
+        return `${date.toISOString().slice(0, 13)}:00`;
       case 'day':
         return date.toISOString().slice(0, 10);
       case 'week':

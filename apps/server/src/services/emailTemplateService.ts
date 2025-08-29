@@ -50,7 +50,7 @@ export class EmailTemplateService {
 
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: currency,
+        currency,
       }).format(amount);
     });
 

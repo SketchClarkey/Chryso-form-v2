@@ -28,7 +28,7 @@ router.get(
 
       // Calculate time range
       const now = new Date();
-      let startTime = new Date();
+      const startTime = new Date();
 
       switch (timeRange) {
         case '1h':
@@ -192,7 +192,7 @@ router.get(
 
       // Calculate time range
       const now = new Date();
-      let startTime = new Date();
+      const startTime = new Date();
 
       switch (timeRange) {
         case '1h':
@@ -337,7 +337,7 @@ router.get(
 
       // Calculate time range
       const now = new Date();
-      let startTime = new Date();
+      const startTime = new Date();
       let groupBy = '$hour';
       let dateFormat = '%Y-%m-%d %H:00';
 
@@ -369,7 +369,7 @@ router.get(
       const events = await AuditLog.aggregate([
         {
           $match: {
-            organizationId: organizationId,
+            organizationId,
             timestamp: { $gte: startTime },
             category: { $in: ['security', 'authentication', 'authorization'] },
           },

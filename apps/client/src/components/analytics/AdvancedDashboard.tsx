@@ -302,7 +302,7 @@ const AdvancedDashboard: React.FC = () => {
         label,
         data: trends.map(t => t.value),
         borderColor: chartColors.primary,
-        backgroundColor: chartColors.primary + '20',
+        backgroundColor: `${chartColors.primary}20`,
         tension: 0.4,
         fill: true,
       },

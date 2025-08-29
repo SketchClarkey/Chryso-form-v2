@@ -520,7 +520,7 @@ async function generateReportData(
   const data: any = {};
 
   for (const dataSource of report.dataSources) {
-    let query: any = {};
+    const query: any = {};
 
     // Apply date range filter if provided
     if (dateRange) {

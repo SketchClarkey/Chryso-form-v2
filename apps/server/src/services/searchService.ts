@@ -398,12 +398,12 @@ export class SearchService {
       if (queryWords.some(word => lowerSentence.includes(word))) {
         const trimmed = sentence.trim();
         if (trimmed.length <= maxLength) return trimmed;
-        return trimmed.substring(0, maxLength - 3) + '...';
+        return `${trimmed.substring(0, maxLength - 3)}...`;
       }
     }
 
     // Fallback to beginning of text
-    return text.length <= maxLength ? text : text.substring(0, maxLength - 3) + '...';
+    return text.length <= maxLength ? text : `${text.substring(0, maxLength - 3)}...`;
   }
 
   private calculateRelevance(query: string, fields: string[]): number {

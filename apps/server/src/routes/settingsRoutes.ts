@@ -53,7 +53,7 @@ router.put('/organization', authorize('admin'), async (req, res) => {
     const { organizationId } = req.user!;
     const updateData = { ...req.body, updatedBy: req.user!.userId };
 
-    let settings = await OrganizationSettings.findOneAndUpdate({ organizationId }, updateData, {
+    const settings = await OrganizationSettings.findOneAndUpdate({ organizationId }, updateData, {
       new: true,
       upsert: true,
       runValidators: true,

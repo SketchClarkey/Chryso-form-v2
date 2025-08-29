@@ -103,7 +103,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
     res.json({
       success: true,
       data: {
-        query: query,
+        query,
         results: results.results,
         total: results.total,
         facets: results.facets,
@@ -146,7 +146,7 @@ router.get('/suggestions', authenticate, suggestionValidation, async (req, res) 
     res.json({
       success: true,
       data: {
-        query: query,
+        query,
         suggestions,
       },
     });

@@ -316,7 +316,7 @@ export class ExportService {
 
         // Headers
         const headers = Object.keys(sourceData[0]);
-        csvContent += headers.map(header => `"${header}"`).join(',') + '\n';
+        csvContent += `${headers.map(header => `"${header}"`).join(',')}\n`;
 
         // Data rows
         sourceData.forEach((row: any) => {
@@ -327,7 +327,7 @@ export class ExportService {
             }
             return `"${String(value || '').replace(/"/g, '""')}"`;
           });
-          csvContent += values.join(',') + '\n';
+          csvContent += `${values.join(',')}\n`;
         });
 
         csvContent += '\n';

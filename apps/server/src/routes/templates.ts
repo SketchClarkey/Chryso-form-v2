@@ -417,7 +417,7 @@ router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response): Prom
 
     // Create cloned template
     const clonedTemplate = new Template({
-      name: name,
+      name,
       category: template.category,
       description: `${template.description || ''} (Cloned)`,
       elements: JSON.parse(JSON.stringify(template.elements)), // Deep copy

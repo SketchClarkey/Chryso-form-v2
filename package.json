@@ -43,18 +43,18 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/bcryptjs": "^2.4.6",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
+    "@types/bcryptjs": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
     "bcryptjs": "^3.0.2",
-    "concurrently": "^8.2.2",
-    "eslint": "^9.0.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^15.0.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.34.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "mongoose": "^8.18.0",
-    "npm-check-updates": "^16.0.0",
-    "prettier": "^3.0.0",
-    "wait-on": "^7.0.0"
+    "npm-check-updates": "^18.0.3",
+    "prettier": "^3.6.2",
+    "wait-on": "^8.0.4"
   },
   "engines": {
     "node": ">=18.0.0",

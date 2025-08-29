@@ -240,7 +240,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           label: metric?.label || 'Value',
           data: analysis.trend.map(t => t.value),
           borderColor: color,
-          backgroundColor: color + '20',
+          backgroundColor: `${color}20`,
           tension: 0.4,
           fill: true,
           pointBackgroundColor: analysis.trend.map(t =>
