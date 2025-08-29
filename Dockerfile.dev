@@ -1,0 +1,25 @@
+# Development Dockerfile with hot reload support
+
+# Base image with Node.js
+FROM node:20-alpine AS base
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --include=dev
+
+# Copy source code
+COPY . .
+
+# Server development target
+FROM base AS server
+WORKDIR /app
+EXPOSE 5000
+CMD ["npm", "run", "dev:server"]
+
+# Client development target  
+FROM base AS client
+WORKDIR /app
+EXPOSE 3000
+CMD ["npm", "run", "dev:client"]

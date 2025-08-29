@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # MongoDB Database for Development
+  mongodb-dev:
+    image: mongo:7-jammy
+    container_name: chryso-forms-mongo-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-chryso-forms-v2-dev}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_dev_data:/data/db
+      - mongodb_dev_config:/data/configdb
+    networks:
+      - chryso-dev-network
+
+  # Redis for Session Storage and Caching (optional)
+  redis-dev:
+    image: redis:7-alpine
+    container_name: chryso-forms-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - chryso-dev-network
+    command: redis-server --appendonly yes
+    profiles:
+      - redis
+
+  # Development Server (Node.js with hot reload)
+  server-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: server
+    container_name: chryso-forms-server-dev
+    restart: unless-stopped
+    depends_on:
+      - mongodb-dev
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password}@mongodb-dev:27017/${MONGO_DB:-chryso-forms-v2-dev}?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-key}
+      CLIENT_URL: http://localhost:3000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./apps/server:/app/apps/server
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+      - /app/apps/server/node_modules
+      - uploads_dev_data:/app/apps/server/uploads
+    networks:
+      - chryso-dev-network
+    command: npm run dev:server
+
+  # Development Client (React with Vite hot reload)
+  client-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: client
+    container_name: chryso-forms-client-dev
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/client:/app/apps/client
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+      - /app/apps/client/node_modules
+    networks:
+      - chryso-dev-network
+    command: npm run dev:client
+
+volumes:
+  mongodb_dev_data:
+    driver: local
+  mongodb_dev_config:
+    driver: local
+  redis_dev_data:
+    driver: local
+  uploads_dev_data:
+    driver: local
+
+networks:
+  chryso-dev-network:
+    driver: bridge

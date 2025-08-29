@@ -1,0 +1,55 @@
+{
+  "name": "chryso-form-v2",
+  "version": "2.0.0",
+  "description": "Modern form digitization application with Vite React frontend and Express backend",
+  "private": true,
+  "workspaces": [
+    "apps/client",
+    "apps/server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev -w apps/server",
+    "dev:client": "npm run dev -w apps/client",
+    "build": "npm run build:server && npm run build -w apps/client",
+    "build:server": "npm run build -w apps/server",
+    "build:client": "npm run build -w apps/client",
+    "start": "npm run start -w apps/server",
+    "start:client": "npm run preview -w apps/client",
+    "test": "npm run test -w apps/server && npm run test -w apps/client",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:all": "npm run test && npm run test:e2e",
+    "lint": "npm run lint -w apps/server && npm run lint -w apps/client",
+    "clean": "npm run clean -w apps/server && npm run clean -w apps/client",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.2",
+    "concurrently": "^8.2.2",
+    "mongoose": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SketchClarkey/Chryso-form.git"
+  },
+  "keywords": [
+    "form",
+    "digitization",
+    "vite",
+    "react",
+    "typescript",
+    "express",
+    "mongodb"
+  ],
+  "author": "SketchClarkey",
+  "license": "MIT"
+}

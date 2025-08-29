@@ -1,0 +1,1 @@
+export { default as DataRetentionManager } from './DataRetentionManager';
