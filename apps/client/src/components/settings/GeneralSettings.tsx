@@ -98,33 +98,33 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<CompanyIcon />}
-          title="Company Information"
-          subheader="Basic information about your organization"
+          title='Company Information'
+          subheader='Basic information about your organization'
         />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
               <TextField
-                label="Company Name"
+                label='Company Name'
                 value={settings?.companyName || ''}
-                onChange={(e) => handleFieldChange('companyName', e.target.value)}
+                onChange={e => handleFieldChange('companyName', e.target.value)}
                 fullWidth
                 required
               />
             </Grid>
             <Grid item xs={12} md={4}>
-              <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+              <Box display='flex' flexDirection='column' alignItems='center' gap={2}>
                 <Avatar
                   src={settings?.companyLogo}
                   sx={{ width: 80, height: 80 }}
-                  variant="rounded"
+                  variant='rounded'
                 >
-                  <CompanyIcon fontSize="large" />
+                  <CompanyIcon fontSize='large' />
                 </Avatar>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   startIcon={<UploadIcon />}
-                  size="small"
+                  size='small'
                   onClick={() => {
                     // File upload handler would go here
                     console.log('Upload company logo');
@@ -137,41 +137,41 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Street Address"
+                label='Street Address'
                 value={settings?.address?.street || ''}
-                onChange={(e) => handleNestedFieldChange('address', 'street', e.target.value)}
+                onChange={e => handleNestedFieldChange('address', 'street', e.target.value)}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
-                label="City"
+                label='City'
                 value={settings?.address?.city || ''}
-                onChange={(e) => handleNestedFieldChange('address', 'city', e.target.value)}
+                onChange={e => handleNestedFieldChange('address', 'city', e.target.value)}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
-                label="State/Province"
+                label='State/Province'
                 value={settings?.address?.state || ''}
-                onChange={(e) => handleNestedFieldChange('address', 'state', e.target.value)}
+                onChange={e => handleNestedFieldChange('address', 'state', e.target.value)}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
-                label="ZIP/Postal Code"
+                label='ZIP/Postal Code'
                 value={settings?.address?.zipCode || ''}
-                onChange={(e) => handleNestedFieldChange('address', 'zipCode', e.target.value)}
+                onChange={e => handleNestedFieldChange('address', 'zipCode', e.target.value)}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
-                label="Country"
+                label='Country'
                 value={settings?.address?.country || ''}
-                onChange={(e) => handleNestedFieldChange('address', 'country', e.target.value)}
+                onChange={e => handleNestedFieldChange('address', 'country', e.target.value)}
                 fullWidth
                 required
               />
@@ -179,27 +179,27 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
 
             <Grid item xs={12} md={4}>
               <TextField
-                label="Phone Number"
+                label='Phone Number'
                 value={settings?.contact?.phone || ''}
-                onChange={(e) => handleNestedFieldChange('contact', 'phone', e.target.value)}
+                onChange={e => handleNestedFieldChange('contact', 'phone', e.target.value)}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
-                label="Email Address"
-                type="email"
+                label='Email Address'
+                type='email'
                 value={settings?.contact?.email || ''}
-                onChange={(e) => handleNestedFieldChange('contact', 'email', e.target.value)}
+                onChange={e => handleNestedFieldChange('contact', 'email', e.target.value)}
                 fullWidth
                 required
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
-                label="Website"
+                label='Website'
                 value={settings?.contact?.website || ''}
-                onChange={(e) => handleNestedFieldChange('contact', 'website', e.target.value)}
+                onChange={e => handleNestedFieldChange('contact', 'website', e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -211,8 +211,8 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<LanguageIcon />}
-          title="Regional Settings"
-          subheader="Timezone, language, and format preferences"
+          title='Regional Settings'
+          subheader='Timezone, language, and format preferences'
         />
         <CardContent>
           <Grid container spacing={3}>
@@ -221,10 +221,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Timezone</InputLabel>
                 <Select
                   value={settings?.timezone || 'UTC'}
-                  onChange={(e) => handleFieldChange('timezone', e.target.value)}
-                  label="Timezone"
+                  onChange={e => handleFieldChange('timezone', e.target.value)}
+                  label='Timezone'
                 >
-                  {timezones.map((tz) => (
+                  {timezones.map(tz => (
                     <MenuItem key={tz.value} value={tz.value}>
                       {tz.label}
                     </MenuItem>
@@ -237,10 +237,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Default Language</InputLabel>
                 <Select
                   value={settings?.defaultLanguage || 'en'}
-                  onChange={(e) => handleFieldChange('defaultLanguage', e.target.value)}
-                  label="Default Language"
+                  onChange={e => handleFieldChange('defaultLanguage', e.target.value)}
+                  label='Default Language'
                 >
-                  {languages.map((lang) => (
+                  {languages.map(lang => (
                     <MenuItem key={lang.value} value={lang.value}>
                       {lang.label}
                     </MenuItem>
@@ -254,10 +254,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Date Format</InputLabel>
                 <Select
                   value={settings?.dateFormat || 'MM/dd/yyyy'}
-                  onChange={(e) => handleFieldChange('dateFormat', e.target.value)}
-                  label="Date Format"
+                  onChange={e => handleFieldChange('dateFormat', e.target.value)}
+                  label='Date Format'
                 >
-                  {dateFormats.map((format) => (
+                  {dateFormats.map(format => (
                     <MenuItem key={format.value} value={format.value}>
                       {format.label}
                     </MenuItem>
@@ -270,11 +270,11 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Time Format</InputLabel>
                 <Select
                   value={settings?.timeFormat || '12h'}
-                  onChange={(e) => handleFieldChange('timeFormat', e.target.value)}
-                  label="Time Format"
+                  onChange={e => handleFieldChange('timeFormat', e.target.value)}
+                  label='Time Format'
                 >
-                  <MenuItem value="12h">12-hour (AM/PM)</MenuItem>
-                  <MenuItem value="24h">24-hour</MenuItem>
+                  <MenuItem value='12h'>12-hour (AM/PM)</MenuItem>
+                  <MenuItem value='24h'>24-hour</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -283,10 +283,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Currency</InputLabel>
                 <Select
                   value={settings?.currency || 'USD'}
-                  onChange={(e) => handleFieldChange('currency', e.target.value)}
-                  label="Currency"
+                  onChange={e => handleFieldChange('currency', e.target.value)}
+                  label='Currency'
                 >
-                  {currencies.map((currency) => (
+                  {currencies.map(currency => (
                     <MenuItem key={currency.value} value={currency.value}>
                       {currency.label}
                     </MenuItem>
@@ -302,7 +302,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
       <Card>
         <CardHeader
           avatar={<TimeIcon />}
-          title="Work Week Settings"
+          title='Work Week Settings'
           subheader="Configure your organization's work schedule"
         />
         <CardContent>
@@ -312,10 +312,10 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Week Start Day</InputLabel>
                 <Select
                   value={settings?.workWeek?.startDay || 1}
-                  onChange={(e) => handleNestedFieldChange('workWeek', 'startDay', e.target.value)}
-                  label="Week Start Day"
+                  onChange={e => handleNestedFieldChange('workWeek', 'startDay', e.target.value)}
+                  label='Week Start Day'
                 >
-                  {workDayOptions.map((day) => (
+                  {workDayOptions.map(day => (
                     <MenuItem key={day.value} value={day.value}>
                       {day.label}
                     </MenuItem>
@@ -325,13 +325,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
             </Grid>
             <Grid item xs={12} md={3}>
               <TextField
-                label="Work Start Time"
-                type="time"
+                label='Work Start Time'
+                type='time'
                 value={settings?.workWeek?.workHours?.start || '09:00'}
-                onChange={(e) => 
+                onChange={e =>
                   handleNestedFieldChange('workWeek', 'workHours', {
                     ...settings?.workWeek?.workHours,
-                    start: e.target.value
+                    start: e.target.value,
                   })
                 }
                 fullWidth
@@ -340,13 +340,13 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
             </Grid>
             <Grid item xs={12} md={3}>
               <TextField
-                label="Work End Time"
-                type="time"
+                label='Work End Time'
+                type='time'
                 value={settings?.workWeek?.workHours?.end || '17:00'}
-                onChange={(e) => 
+                onChange={e =>
                   handleNestedFieldChange('workWeek', 'workHours', {
                     ...settings?.workWeek?.workHours,
-                    end: e.target.value
+                    end: e.target.value,
                   })
                 }
                 fullWidth
@@ -355,17 +355,17 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Work Days
               </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                {workDayOptions.map((day) => (
+              <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
+                {workDayOptions.map(day => (
                   <FormControlLabel
                     key={day.value}
                     control={
                       <Switch
                         checked={settings?.workWeek?.workDays?.includes(day.value) || false}
-                        onChange={(e) => {
+                        onChange={e => {
                           const currentWorkDays = settings?.workWeek?.workDays || [];
                           let newWorkDays;
                           if (e.target.checked) {
@@ -388,8 +388,8 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 <InputLabel>Fiscal Year Start Month</InputLabel>
                 <Select
                   value={settings?.fiscalYearStart || 1}
-                  onChange={(e) => handleFieldChange('fiscalYearStart', e.target.value)}
-                  label="Fiscal Year Start Month"
+                  onChange={e => handleFieldChange('fiscalYearStart', e.target.value)}
+                  label='Fiscal Year Start Month'
                 >
                   {Array.from({ length: 12 }, (_, i) => (
                     <MenuItem key={i + 1} value={i + 1}>

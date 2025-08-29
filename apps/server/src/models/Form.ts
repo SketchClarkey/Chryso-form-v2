@@ -47,7 +47,7 @@ export interface IForm extends Document {
   worksite: Types.ObjectId;
   technician: Types.ObjectId;
   status: 'draft' | 'in-progress' | 'completed' | 'approved' | 'rejected' | 'archived';
-  
+
   // Customer Information
   customerInfo: {
     customerName: string;
@@ -129,7 +129,7 @@ export interface IForm extends Document {
   rejectedAt?: Date;
   rejectedBy?: Types.ObjectId;
   rejectionReason?: string;
-  
+
   createdAt: Date;
   updatedAt: Date;
 
@@ -142,279 +142,298 @@ export interface IForm extends Document {
   getStatusHistory(): Array<{ status: string; timestamp: Date; userId?: Types.ObjectId }>;
 }
 
-const dispenserSystemSchema = new Schema<IDispenserSystem>({
-  tankNumber: {
-    type: String,
-    required: [true, 'Tank number is required'],
-    trim: true,
-  },
-  chemicalProduct: {
-    type: String,
-    required: [true, 'Chemical product is required'],
-    trim: true,
-  },
-  tankSize: {
-    type: Number,
-    required: [true, 'Tank size is required'],
-    min: [0, 'Tank size must be positive'],
-  },
-  equipmentCondition: {
-    type: String,
-    enum: ['excellent', 'good', 'fair', 'poor'],
-    required: true,
-  },
-  pumpModel: {
-    type: String,
-    trim: true,
-  },
-  pumpCondition: {
-    type: String,
-    enum: ['excellent', 'good', 'fair', 'poor'],
-    required: true,
-  },
-  pulseMeterType: {
-    type: String,
-    trim: true,
-  },
-  pulseMeterCondition: {
-    type: String,
-    enum: ['excellent', 'good', 'fair', 'poor'],
-    required: true,
-  },
-  dispenserType: {
-    type: String,
-    trim: true,
-  },
-  dispenserCondition: {
-    type: String,
-    enum: ['excellent', 'good', 'fair', 'poor'],
-    required: true,
-  },
-}, { _id: false });
-
-const calibrationDataSchema = new Schema<ICalibrationData>({
-  productName: {
-    type: String,
-    required: [true, 'Product name is required'],
-    trim: true,
-  },
-  doseRate: {
-    type: Number,
-    required: [true, 'Dose rate is required'],
-    min: [0, 'Dose rate must be positive'],
-  },
-  cementContent: {
-    type: Number,
-    required: [true, 'Cement content is required'],
-    min: [0, 'Cement content must be positive'],
-  },
-  batchTotal: {
-    type: Number,
-    required: [true, 'Batch total is required'],
-    min: [0, 'Batch total must be positive'],
-  },
-  actualMeasurement: {
-    type: Number,
-    required: [true, 'Actual measurement is required'],
-    min: [0, 'Actual measurement must be positive'],
-  },
-  resultPercentage: {
-    type: Number,
-    required: [true, 'Result percentage is required'],
-  },
-  graduatedMeasureId: {
-    type: String,
-    required: [true, 'Graduated measure ID is required'],
-    trim: true,
-  },
-}, { _id: false });
-
-const serviceChecklistSchema = new Schema<IServiceChecklist>({
-  workAreaCleaned: { type: Boolean, default: false },
-  siteTablesReplaced: { type: Boolean, default: false },
-  systemCheckedForLeaks: { type: Boolean, default: false },
-  pulseMetersLabeled: { type: Boolean, default: false },
-  pumpsLabeled: { type: Boolean, default: false },
-  tanksLabeled: { type: Boolean, default: false },
-  dispensersLabeled: { type: Boolean, default: false },
-  calibrationPointsReturned: { type: Boolean, default: false },
-}, { _id: false });
-
-const signatureSchema = new Schema<ISignature>({
-  dataUrl: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  signedBy: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  ipAddress: {
-    type: String,
-  },
-}, { _id: false });
-
-const formSchema = new Schema<IForm>({
-  formId: {
-    type: String,
-    unique: true,
-    sparse: true,
-  },
-  worksite: {
-    type: Schema.Types.ObjectId,
-    ref: 'Worksite',
-    required: [true, 'Worksite is required'],
-  },
-  technician: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'Technician is required'],
-  },
-  status: {
-    type: String,
-    enum: ['draft', 'in-progress', 'completed', 'approved', 'rejected', 'archived'],
-    default: 'draft',
-  },
-
-  // Customer Information
-  customerInfo: {
-    customerName: {
+const dispenserSystemSchema = new Schema<IDispenserSystem>(
+  {
+    tankNumber: {
       type: String,
-      required: [true, 'Customer name is required'],
+      required: [true, 'Tank number is required'],
       trim: true,
     },
-    plantLocation: {
+    chemicalProduct: {
       type: String,
-      required: [true, 'Plant location is required'],
+      required: [true, 'Chemical product is required'],
       trim: true,
     },
-    contactPhone: String,
-    contactFax: String,
-    contactPerson: String,
-    workOrderNumber: String,
-    shippingInfo: String,
-  },
-
-  // Current Dispenser Systems
-  dispenserSystems: [dispenserSystemSchema],
-
-  // Service Type
-  serviceType: {
-    service: { type: Boolean, default: false },
-    breakdown: { type: Boolean, default: false },
-    calibration: { type: Boolean, default: false },
-    installation: { type: Boolean, default: false },
-    jobComplete: { type: Boolean, default: false },
-  },
-
-  // Maintenance and Breakdown Details
-  maintenanceDetails: {
-    gcpTechnicianHours: Number,
-    contractHours: Number,
-    partsUsed: [{
-      partNumber: { type: String, required: true },
-      description: { type: String, required: true },
-      quantity: { type: Number, required: true, min: 0 },
-      replaced: { type: Boolean, default: false },
-    }],
-    maintenanceProcedures: {
-      type: String,
-      maxlength: [2000, 'Maintenance procedures cannot exceed 2000 characters'],
+    tankSize: {
+      type: Number,
+      required: [true, 'Tank size is required'],
+      min: [0, 'Tank size must be positive'],
     },
-    breakdownDetails: {
+    equipmentCondition: {
       type: String,
-      maxlength: [2000, 'Breakdown details cannot exceed 2000 characters'],
-    },
-  },
-
-  // Calibration Data
-  calibrationData: [calibrationDataSchema],
-
-  // Service Checklist
-  serviceChecklist: {
-    type: serviceChecklistSchema,
-    default: () => ({}),
-  },
-
-  // Additional Information
-  additionalInfo: {
-    notes: {
-      type: String,
-      maxlength: [1000, 'Notes cannot exceed 1000 characters'],
-    },
-    attachments: [{
-      filename: { type: String, required: true },
-      originalName: { type: String, required: true },
-      mimeType: { type: String, required: true },
-      size: { type: Number, required: true },
-      uploadedAt: { type: Date, default: Date.now },
-    }],
-  },
-
-  // Digital Signatures
-  signatures: {
-    customer: signatureSchema,
-    servicePerson: signatureSchema,
-  },
-
-  // Form Metadata
-  metadata: {
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      enum: ['excellent', 'good', 'fair', 'poor'],
       required: true,
     },
-    lastModifiedBy: {
+    pumpModel: {
+      type: String,
+      trim: true,
+    },
+    pumpCondition: {
+      type: String,
+      enum: ['excellent', 'good', 'fair', 'poor'],
+      required: true,
+    },
+    pulseMeterType: {
+      type: String,
+      trim: true,
+    },
+    pulseMeterCondition: {
+      type: String,
+      enum: ['excellent', 'good', 'fair', 'poor'],
+      required: true,
+    },
+    dispenserType: {
+      type: String,
+      trim: true,
+    },
+    dispenserCondition: {
+      type: String,
+      enum: ['excellent', 'good', 'fair', 'poor'],
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
+const calibrationDataSchema = new Schema<ICalibrationData>(
+  {
+    productName: {
+      type: String,
+      required: [true, 'Product name is required'],
+      trim: true,
+    },
+    doseRate: {
+      type: Number,
+      required: [true, 'Dose rate is required'],
+      min: [0, 'Dose rate must be positive'],
+    },
+    cementContent: {
+      type: Number,
+      required: [true, 'Cement content is required'],
+      min: [0, 'Cement content must be positive'],
+    },
+    batchTotal: {
+      type: Number,
+      required: [true, 'Batch total is required'],
+      min: [0, 'Batch total must be positive'],
+    },
+    actualMeasurement: {
+      type: Number,
+      required: [true, 'Actual measurement is required'],
+      min: [0, 'Actual measurement must be positive'],
+    },
+    resultPercentage: {
+      type: Number,
+      required: [true, 'Result percentage is required'],
+    },
+    graduatedMeasureId: {
+      type: String,
+      required: [true, 'Graduated measure ID is required'],
+      trim: true,
+    },
+  },
+  { _id: false }
+);
+
+const serviceChecklistSchema = new Schema<IServiceChecklist>(
+  {
+    workAreaCleaned: { type: Boolean, default: false },
+    siteTablesReplaced: { type: Boolean, default: false },
+    systemCheckedForLeaks: { type: Boolean, default: false },
+    pulseMetersLabeled: { type: Boolean, default: false },
+    pumpsLabeled: { type: Boolean, default: false },
+    tanksLabeled: { type: Boolean, default: false },
+    dispensersLabeled: { type: Boolean, default: false },
+    calibrationPointsReturned: { type: Boolean, default: false },
+  },
+  { _id: false }
+);
+
+const signatureSchema = new Schema<ISignature>(
+  {
+    dataUrl: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    signedBy: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    ipAddress: {
+      type: String,
+    },
+  },
+  { _id: false }
+);
+
+const formSchema = new Schema<IForm>(
+  {
+    formId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    worksite: {
+      type: Schema.Types.ObjectId,
+      ref: 'Worksite',
+      required: [true, 'Worksite is required'],
+    },
+    technician: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Technician is required'],
+    },
+    status: {
+      type: String,
+      enum: ['draft', 'in-progress', 'completed', 'approved', 'rejected', 'archived'],
+      default: 'draft',
+    },
+
+    // Customer Information
+    customerInfo: {
+      customerName: {
+        type: String,
+        required: [true, 'Customer name is required'],
+        trim: true,
+      },
+      plantLocation: {
+        type: String,
+        required: [true, 'Plant location is required'],
+        trim: true,
+      },
+      contactPhone: String,
+      contactFax: String,
+      contactPerson: String,
+      workOrderNumber: String,
+      shippingInfo: String,
+    },
+
+    // Current Dispenser Systems
+    dispenserSystems: [dispenserSystemSchema],
+
+    // Service Type
+    serviceType: {
+      service: { type: Boolean, default: false },
+      breakdown: { type: Boolean, default: false },
+      calibration: { type: Boolean, default: false },
+      installation: { type: Boolean, default: false },
+      jobComplete: { type: Boolean, default: false },
+    },
+
+    // Maintenance and Breakdown Details
+    maintenanceDetails: {
+      gcpTechnicianHours: Number,
+      contractHours: Number,
+      partsUsed: [
+        {
+          partNumber: { type: String, required: true },
+          description: { type: String, required: true },
+          quantity: { type: Number, required: true, min: 0 },
+          replaced: { type: Boolean, default: false },
+        },
+      ],
+      maintenanceProcedures: {
+        type: String,
+        maxlength: [2000, 'Maintenance procedures cannot exceed 2000 characters'],
+      },
+      breakdownDetails: {
+        type: String,
+        maxlength: [2000, 'Breakdown details cannot exceed 2000 characters'],
+      },
+    },
+
+    // Calibration Data
+    calibrationData: [calibrationDataSchema],
+
+    // Service Checklist
+    serviceChecklist: {
+      type: serviceChecklistSchema,
+      default: () => ({}),
+    },
+
+    // Additional Information
+    additionalInfo: {
+      notes: {
+        type: String,
+        maxlength: [1000, 'Notes cannot exceed 1000 characters'],
+      },
+      attachments: [
+        {
+          filename: { type: String, required: true },
+          originalName: { type: String, required: true },
+          mimeType: { type: String, required: true },
+          size: { type: Number, required: true },
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ],
+    },
+
+    // Digital Signatures
+    signatures: {
+      customer: signatureSchema,
+      servicePerson: signatureSchema,
+    },
+
+    // Form Metadata
+    metadata: {
+      createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      lastModifiedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      templateUsed: {
+        type: Schema.Types.ObjectId,
+        ref: 'Template',
+      },
+      version: {
+        type: Number,
+        default: 1,
+      },
+      syncStatus: {
+        type: String,
+        enum: ['synced', 'pending', 'conflict', 'error'],
+        default: 'synced',
+      },
+      offlineCreated: {
+        type: Boolean,
+        default: false,
+      },
+      autoSaveEnabled: {
+        type: Boolean,
+        default: true,
+      },
+      lastAutoSave: Date,
+    },
+
+    // Status timestamps
+    submittedAt: Date,
+    completedAt: Date,
+    approvedAt: Date,
+    approvedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    templateUsed: {
+    rejectedAt: Date,
+    rejectedBy: {
       type: Schema.Types.ObjectId,
-      ref: 'Template',
+      ref: 'User',
     },
-    version: {
-      type: Number,
-      default: 1,
-    },
-    syncStatus: {
-      type: String,
-      enum: ['synced', 'pending', 'conflict', 'error'],
-      default: 'synced',
-    },
-    offlineCreated: {
-      type: Boolean,
-      default: false,
-    },
-    autoSaveEnabled: {
-      type: Boolean,
-      default: true,
-    },
-    lastAutoSave: Date,
+    rejectionReason: String,
   },
-
-  // Status timestamps
-  submittedAt: Date,
-  completedAt: Date,
-  approvedAt: Date,
-  approvedBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  rejectedAt: Date,
-  rejectedBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  rejectionReason: String,
-}, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-});
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+  }
+);
 
 // Indexes for performance
 // formId index is created by unique: true
@@ -425,7 +444,7 @@ formSchema.index({ 'customerInfo.customerName': 'text' });
 formSchema.index({ 'metadata.syncStatus': 1 });
 
 // Virtual for form completion percentage
-formSchema.virtual('completionPercentage').get(function() {
+formSchema.virtual('completionPercentage').get(function () {
   let completed = 0;
   let total = 0;
 
@@ -451,7 +470,7 @@ formSchema.virtual('completionPercentage').get(function() {
 });
 
 // Pre-save middleware to generate formId
-formSchema.pre('save', function(next) {
+formSchema.pre('save', function (next) {
   if (!this.formId) {
     this.formId = this.generateFormId();
   }
@@ -459,17 +478,17 @@ formSchema.pre('save', function(next) {
 });
 
 // Methods
-formSchema.methods.generateFormId = function(): string {
+formSchema.methods.generateFormId = function (): string {
   const date = new Date();
   const year = date.getFullYear().toString().slice(-2);
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   const random = Math.random().toString(36).substr(2, 4).toUpperCase();
-  
+
   return `GCP-${year}${month}${day}-${random}`;
 };
 
-formSchema.methods.canBeEditedBy = function(userId: string, userRole: string): boolean {
+formSchema.methods.canBeEditedBy = function (userId: string, userRole: string): boolean {
   if (userRole === 'admin') return true;
   if (this.status === 'approved' || this.status === 'archived') return false;
   if (userRole === 'manager') return true;
@@ -477,9 +496,9 @@ formSchema.methods.canBeEditedBy = function(userId: string, userRole: string): b
   return false;
 };
 
-formSchema.methods.getStatusHistory = function() {
+formSchema.methods.getStatusHistory = function () {
   const history: Array<{ status: string; timestamp: Date; userId?: Types.ObjectId }> = [
-    { status: 'draft', timestamp: this.createdAt, userId: this.metadata.createdBy }
+    { status: 'draft', timestamp: this.createdAt, userId: this.metadata.createdBy },
   ];
 
   if (this.submittedAt) {

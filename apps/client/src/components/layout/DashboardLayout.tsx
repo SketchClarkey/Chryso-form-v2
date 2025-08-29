@@ -156,13 +156,13 @@ export function DashboardLayout() {
   const drawer = (
     <Box>
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h6" component="div" color="primary" fontWeight={600}>
+        <Typography variant='h6' component='div' color='primary' fontWeight={600}>
           Chryso Forms
         </Typography>
       </Box>
       <Divider />
       <List>
-        {filteredNavigationItems.map((item) => (
+        {filteredNavigationItems.map(item => (
           <ListItem key={item.path} disablePadding>
             <ListItemButton
               selected={location.pathname === item.path}
@@ -199,7 +199,7 @@ export function DashboardLayout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar
-        position="fixed"
+        position='fixed'
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
@@ -207,31 +207,33 @@ export function DashboardLayout() {
       >
         <Toolbar>
           <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
+            color='inherit'
+            aria-label='open drawer'
+            edge='start'
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { md: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {filteredNavigationItems.find(item => item.path === location.pathname)?.label || 'Dashboard'}
+          <Typography variant='h6' noWrap component='div' sx={{ flexGrow: 1 }}>
+            {filteredNavigationItems.find(item => item.path === location.pathname)?.label ||
+              'Dashboard'}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ mr: 1, display: { xs: 'none', sm: 'block' } }}>
+            <Typography variant='body2' sx={{ mr: 1, display: { xs: 'none', sm: 'block' } }}>
               {user?.fullName}
             </Typography>
             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+              size='large'
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
               onClick={handleMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
+                {user?.firstName?.[0]}
+                {user?.lastName?.[0]}
               </Avatar>
             </IconButton>
           </Box>
@@ -239,7 +241,7 @@ export function DashboardLayout() {
       </AppBar>
 
       <Menu
-        id="menu-appbar"
+        id='menu-appbar'
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'top',
@@ -253,40 +255,42 @@ export function DashboardLayout() {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={() => { handleMenuClose(); navigate('/profile'); }}>
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
+            navigate('/profile');
+          }}
+        >
           <ListItemIcon>
-            <AccountCircle fontSize="small" />
+            <AccountCircle fontSize='small' />
           </ListItemIcon>
           Profile
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <Settings fontSize='small' />
           </ListItemIcon>
           Settings
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout fontSize='small' />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
 
-      <Box
-        component="nav"
-        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-      >
+      <Box component='nav' sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
         <Drawer
-          variant="temporary"
+          variant='temporary'
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
               width: drawerWidth,
             },
           }}
@@ -294,11 +298,11 @@ export function DashboardLayout() {
           {drawer}
         </Drawer>
         <Drawer
-          variant="permanent"
+          variant='permanent'
           sx={{
             display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
               width: drawerWidth,
             },
           }}
@@ -309,7 +313,7 @@ export function DashboardLayout() {
       </Box>
 
       <Box
-        component="main"
+        component='main'
         sx={{
           flexGrow: 1,
           p: 3,
@@ -318,18 +322,18 @@ export function DashboardLayout() {
       >
         <Toolbar />
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/forms" element={<Forms />} />
-          <Route path="/forms/:id" element={<Forms />} />
-          <Route path="/templates/*" element={<Templates />} />
-          <Route path="/worksites" element={<Worksites />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/reports/*" element={<Reports />} />
-          <Route path="/analytics/*" element={<Analytics />} />
-          <Route path="/search/*" element={<SearchDashboard />} />
-          <Route path="/filters/*" element={<AdvancedFiltering />} />
-          <Route path="/settings/*" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/forms' element={<Forms />} />
+          <Route path='/forms/:id' element={<Forms />} />
+          <Route path='/templates/*' element={<Templates />} />
+          <Route path='/worksites' element={<Worksites />} />
+          <Route path='/users' element={<Users />} />
+          <Route path='/reports/*' element={<Reports />} />
+          <Route path='/analytics/*' element={<Analytics />} />
+          <Route path='/search/*' element={<SearchDashboard />} />
+          <Route path='/filters/*' element={<AdvancedFiltering />} />
+          <Route path='/settings/*' element={<Settings />} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </Box>
     </Box>

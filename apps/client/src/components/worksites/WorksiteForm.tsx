@@ -134,7 +134,10 @@ export function WorksiteForm({
         name: worksite.name,
         customerName: worksite.customerName,
         address: worksite.address,
-        contacts: worksite.contacts.length > 0 ? worksite.contacts : [{ ...initialContact, isPrimary: true }],
+        contacts:
+          worksite.contacts.length > 0
+            ? worksite.contacts
+            : [{ ...initialContact, isPrimary: true }],
         equipment: worksite.equipment,
         defaultTemplate: worksite.defaultTemplate?._id || '',
         isActive: worksite.isActive,
@@ -196,11 +199,9 @@ export function WorksiteForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleInputChange = (field: string) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    
+
     if (field.startsWith('address.')) {
       const addressField = field.split('.')[1];
       setFormData(prev => ({
@@ -210,29 +211,28 @@ export function WorksiteForm({
     } else {
       setFormData(prev => ({ ...prev, [field]: value }));
     }
-    
+
     if (formErrors[field]) {
       setFormErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
 
-  const handleContactChange = (index: number, field: keyof Contact) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    
-    setFormData(prev => ({
-      ...prev,
-      contacts: prev.contacts.map((contact, i) => 
-        i === index ? { ...contact, [field]: value } : contact
-      ),
-    }));
+  const handleContactChange =
+    (index: number, field: keyof Contact) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
 
-    const errorKey = `contact.${index}.${field}`;
-    if (formErrors[errorKey]) {
-      setFormErrors(prev => ({ ...prev, [errorKey]: '' }));
-    }
-  };
+      setFormData(prev => ({
+        ...prev,
+        contacts: prev.contacts.map((contact, i) =>
+          i === index ? { ...contact, [field]: value } : contact
+        ),
+      }));
+
+      const errorKey = `contact.${index}.${field}`;
+      if (formErrors[errorKey]) {
+        setFormErrors(prev => ({ ...prev, [errorKey]: '' }));
+      }
+    };
 
   const handleSetPrimaryContact = (index: number) => {
     setFormData(prev => ({
@@ -258,23 +258,22 @@ export function WorksiteForm({
     }));
   };
 
-  const handleEquipmentChange = (index: number, field: keyof Equipment) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    
-    setFormData(prev => ({
-      ...prev,
-      equipment: prev.equipment.map((equipment, i) => 
-        i === index ? { ...equipment, [field]: value } : equipment
-      ),
-    }));
+  const handleEquipmentChange =
+    (index: number, field: keyof Equipment) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
 
-    const errorKey = `equipment.${index}.${field}`;
-    if (formErrors[errorKey]) {
-      setFormErrors(prev => ({ ...prev, [errorKey]: '' }));
-    }
-  };
+      setFormData(prev => ({
+        ...prev,
+        equipment: prev.equipment.map((equipment, i) =>
+          i === index ? { ...equipment, [field]: value } : equipment
+        ),
+      }));
+
+      const errorKey = `equipment.${index}.${field}`;
+      if (formErrors[errorKey]) {
+        setFormErrors(prev => ({ ...prev, [errorKey]: '' }));
+      }
+    };
 
   const addEquipment = () => {
     const newEquipment = {
@@ -296,7 +295,7 @@ export function WorksiteForm({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -322,20 +321,18 @@ export function WorksiteForm({
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="lg"
+      maxWidth='lg'
       fullWidth
       PaperProps={{
         component: 'form',
         onSubmit: handleSubmit,
       }}
     >
-      <DialogTitle>
-        {isEditing ? 'Edit Worksite' : 'Create New Worksite'}
-      </DialogTitle>
+      <DialogTitle>{isEditing ? 'Edit Worksite' : 'Create New Worksite'}</DialogTitle>
 
       <DialogContent dividers>
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity='error' sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
@@ -343,13 +340,13 @@ export function WorksiteForm({
         <Box sx={{ display: 'grid', gap: 3 }}>
           {/* Basic Information */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Basic Information
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Worksite Name"
+                  label='Worksite Name'
                   value={formData.name}
                   onChange={handleInputChange('name')}
                   error={Boolean(formErrors.name)}
@@ -361,7 +358,7 @@ export function WorksiteForm({
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Customer Name"
+                  label='Customer Name'
                   value={formData.customerName}
                   onChange={handleInputChange('customerName')}
                   error={Boolean(formErrors.customerName)}
@@ -378,17 +375,17 @@ export function WorksiteForm({
 
           {/* Default Template */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Default Form Template
             </Typography>
             <FormControl fullWidth disabled={submitting}>
               <InputLabel>Default Template (Optional)</InputLabel>
               <Select
                 value={formData.defaultTemplate || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, defaultTemplate: e.target.value }))}
-                label="Default Template (Optional)"
+                onChange={e => setFormData(prev => ({ ...prev, defaultTemplate: e.target.value }))}
+                label='Default Template (Optional)'
               >
-                <MenuItem value="">
+                <MenuItem value=''>
                   <em>No default template</em>
                 </MenuItem>
                 {templatesData?.map((template: any) => (
@@ -398,8 +395,9 @@ export function WorksiteForm({
                 ))}
               </Select>
             </FormControl>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Select a default template that will be automatically used when creating forms for this worksite.
+            <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
+              Select a default template that will be automatically used when creating forms for this
+              worksite.
             </Typography>
           </Box>
 
@@ -407,13 +405,13 @@ export function WorksiteForm({
 
           {/* Address */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Address
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  label="Street Address"
+                  label='Street Address'
                   value={formData.address.street}
                   onChange={handleInputChange('address.street')}
                   error={Boolean(formErrors['address.street'])}
@@ -425,7 +423,7 @@ export function WorksiteForm({
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
-                  label="City"
+                  label='City'
                   value={formData.address.city}
                   onChange={handleInputChange('address.city')}
                   error={Boolean(formErrors['address.city'])}
@@ -437,7 +435,7 @@ export function WorksiteForm({
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
-                  label="State"
+                  label='State'
                   value={formData.address.state}
                   onChange={handleInputChange('address.state')}
                   error={Boolean(formErrors['address.state'])}
@@ -449,7 +447,7 @@ export function WorksiteForm({
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
-                  label="ZIP Code"
+                  label='ZIP Code'
                   value={formData.address.zipCode}
                   onChange={handleInputChange('address.zipCode')}
                   error={Boolean(formErrors['address.zipCode'])}
@@ -466,15 +464,15 @@ export function WorksiteForm({
 
           {/* Contacts */}
           <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6">
-                Contacts
-              </Typography>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+            >
+              <Typography variant='h6'>Contacts</Typography>
               <Button
                 startIcon={<AddIcon />}
                 onClick={addContact}
                 disabled={submitting}
-                size="small"
+                size='small'
               >
                 Add Contact
               </Button>
@@ -483,13 +481,18 @@ export function WorksiteForm({
             {formData.contacts.map((contact, index) => (
               <Card key={index} sx={{ mb: 2 }}>
                 <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="subtitle2">
-                      Contact {index + 1}
-                    </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      mb: 2,
+                    }}
+                  >
+                    <Typography variant='subtitle2'>Contact {index + 1}</Typography>
                     <Box>
                       <IconButton
-                        size="small"
+                        size='small'
                         onClick={() => handleSetPrimaryContact(index)}
                         color={contact.isPrimary ? 'primary' : 'default'}
                         title={contact.isPrimary ? 'Primary Contact' : 'Set as Primary'}
@@ -498,10 +501,10 @@ export function WorksiteForm({
                       </IconButton>
                       {formData.contacts.length > 1 && (
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => removeContact(index)}
                           disabled={submitting}
-                          color="error"
+                          color='error'
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -512,7 +515,7 @@ export function WorksiteForm({
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Name"
+                        label='Name'
                         value={contact.name}
                         onChange={handleContactChange(index, 'name')}
                         error={Boolean(formErrors[`contact.${index}.name`])}
@@ -524,7 +527,7 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Position"
+                        label='Position'
                         value={contact.position}
                         onChange={handleContactChange(index, 'position')}
                         fullWidth
@@ -533,7 +536,7 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Phone"
+                        label='Phone'
                         value={contact.phone}
                         onChange={handleContactChange(index, 'phone')}
                         fullWidth
@@ -542,8 +545,8 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Email"
-                        type="email"
+                        label='Email'
+                        type='email'
                         value={contact.email}
                         onChange={handleContactChange(index, 'email')}
                         error={Boolean(formErrors[`contact.${index}.email`])}
@@ -562,15 +565,15 @@ export function WorksiteForm({
 
           {/* Equipment */}
           <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6">
-                Equipment
-              </Typography>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+            >
+              <Typography variant='h6'>Equipment</Typography>
               <Button
                 startIcon={<AddIcon />}
                 onClick={addEquipment}
                 disabled={submitting}
-                size="small"
+                size='small'
               >
                 Add Equipment
               </Button>
@@ -579,15 +582,20 @@ export function WorksiteForm({
             {formData.equipment.map((equipment, index) => (
               <Card key={index} sx={{ mb: 2 }}>
                 <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="subtitle2">
-                      Equipment {index + 1}
-                    </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      mb: 2,
+                    }}
+                  >
+                    <Typography variant='subtitle2'>Equipment {index + 1}</Typography>
                     <IconButton
-                      size="small"
+                      size='small'
                       onClick={() => removeEquipment(index)}
                       disabled={submitting}
-                      color="error"
+                      color='error'
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -596,7 +604,7 @@ export function WorksiteForm({
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={3}>
                       <TextField
-                        label="Equipment ID"
+                        label='Equipment ID'
                         value={equipment.id}
                         onChange={handleEquipmentChange(index, 'id')}
                         error={Boolean(formErrors[`equipment.${index}.id`])}
@@ -611,10 +619,10 @@ export function WorksiteForm({
                         <InputLabel>Type</InputLabel>
                         <Select
                           value={equipment.type}
-                          onChange={(e) => handleEquipmentChange(index, 'type')(e as any)}
-                          label="Type"
+                          onChange={e => handleEquipmentChange(index, 'type')(e as any)}
+                          label='Type'
                         >
-                          {equipmentTypes.map((type) => (
+                          {equipmentTypes.map(type => (
                             <MenuItem key={type.value} value={type.value}>
                               {type.label}
                             </MenuItem>
@@ -624,7 +632,7 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={3}>
                       <TextField
-                        label="Model"
+                        label='Model'
                         value={equipment.model}
                         onChange={handleEquipmentChange(index, 'model')}
                         fullWidth
@@ -636,10 +644,10 @@ export function WorksiteForm({
                         <InputLabel>Condition</InputLabel>
                         <Select
                           value={equipment.condition}
-                          onChange={(e) => handleEquipmentChange(index, 'condition')(e as any)}
-                          label="Condition"
+                          onChange={e => handleEquipmentChange(index, 'condition')(e as any)}
+                          label='Condition'
                         >
-                          {conditionOptions.map((condition) => (
+                          {conditionOptions.map(condition => (
                             <MenuItem key={condition.value} value={condition.value}>
                               {condition.label}
                             </MenuItem>
@@ -649,7 +657,7 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Serial Number"
+                        label='Serial Number'
                         value={equipment.serialNumber}
                         onChange={handleEquipmentChange(index, 'serialNumber')}
                         fullWidth
@@ -658,7 +666,7 @@ export function WorksiteForm({
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
-                        label="Notes"
+                        label='Notes'
                         value={equipment.notes}
                         onChange={handleEquipmentChange(index, 'notes')}
                         fullWidth
@@ -685,7 +693,7 @@ export function WorksiteForm({
                   disabled={submitting}
                 />
               }
-              label="Active Worksite"
+              label='Active Worksite'
             />
           </Box>
         </Box>
@@ -696,8 +704,8 @@ export function WorksiteForm({
           Cancel
         </Button>
         <Button
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           disabled={submitting || loading}
           startIcon={submitting && <CircularProgress size={16} />}
         >

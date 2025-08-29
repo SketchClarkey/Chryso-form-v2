@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
-import { authenticate, authorize, requireWorksite, AuthenticatedRequest } from '../../middleware/auth.js';
+import {
+  authenticate,
+  authorize,
+  requireWorksite,
+  AuthenticatedRequest,
+} from '../../middleware/auth.js';
 import * as jwt from '../../utils/jwt.js';
 import { User } from '../../models/User.js';
 
@@ -8,18 +13,20 @@ import { User } from '../../models/User.js';
 vi.mock('../../utils/jwt.js');
 vi.mock('../../models/User.js');
 
-const mockRequest = (overrides: Partial<AuthenticatedRequest> = {}): AuthenticatedRequest => ({
-  header: vi.fn(),
-  params: {},
-  body: {},
-  query: {},
-  ...overrides,
-} as any);
+const mockRequest = (overrides: Partial<AuthenticatedRequest> = {}): AuthenticatedRequest =>
+  ({
+    header: vi.fn(),
+    params: {},
+    body: {},
+    query: {},
+    ...overrides,
+  }) as any;
 
-const mockResponse = (): Response => ({
-  status: vi.fn().mockReturnThis(),
-  json: vi.fn(),
-} as any);
+const mockResponse = (): Response =>
+  ({
+    status: vi.fn().mockReturnThis(),
+    json: vi.fn(),
+  }) as any;
 
 const mockNext = vi.fn() as NextFunction;
 
@@ -45,10 +52,10 @@ describe('Auth Middleware', () => {
       };
 
       const mockDecodedToken = { id: 'user123' };
-      
+
       vi.mocked(jwt.extractTokenFromHeader).mockReturnValue('valid-token');
       vi.mocked(jwt.verifyAccessToken).mockReturnValue(mockDecodedToken as any);
-      
+
       const mockUserQuery = {
         select: vi.fn().mockReturnThis(),
         populate: vi.fn().mockReturnThis(),
@@ -117,10 +124,10 @@ describe('Auth Middleware', () => {
 
     it('should return 401 when user not found', async () => {
       const mockDecodedToken = { id: 'nonexistent' };
-      
+
       vi.mocked(jwt.extractTokenFromHeader).mockReturnValue('valid-token');
       vi.mocked(jwt.verifyAccessToken).mockReturnValue(mockDecodedToken as any);
-      
+
       const mockUserQuery = {
         select: vi.fn().mockReturnThis(),
         populate: vi.fn().mockReturnThis(),
@@ -155,10 +162,10 @@ describe('Auth Middleware', () => {
       };
 
       const mockDecodedToken = { id: 'user123' };
-      
+
       vi.mocked(jwt.extractTokenFromHeader).mockReturnValue('valid-token');
       vi.mocked(jwt.verifyAccessToken).mockReturnValue(mockDecodedToken as any);
-      
+
       const mockUserQuery = {
         select: vi.fn().mockReturnThis(),
         populate: vi.fn().mockReturnThis(),

@@ -105,7 +105,11 @@ interface DashboardViewerProps {
   onEdit?: () => void;
 }
 
-const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable = false, onEdit }) => {
+const DashboardViewer: React.FC<DashboardViewerProps> = ({
+  dashboardId,
+  editable = false,
+  onEdit,
+}) => {
   const { request } = useApi();
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [widgetData, setWidgetData] = useState<WidgetData[]>([]);
@@ -141,7 +145,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
       setDashboard(dashboardData);
       setAutoRefresh(dashboardData.settings.autoRefresh);
       setFullscreen(dashboardData.settings.fullscreen);
-      
+
       // Load dashboard data
       await loadDashboardData();
     } catch (err: any) {
@@ -153,7 +157,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   const loadDashboardData = async (forceRefresh = false) => {
     if (!dashboard && !forceRefresh) return;
-    
+
     setRefreshing(true);
     try {
       const response = await request(`/api/dashboards/${dashboardId}/data?refresh=${forceRefresh}`);
@@ -183,7 +187,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   const renderWidget = (widget: Widget) => {
     const data = widgetData.find(d => d.widgetId === widget.id);
-    
+
     const widgetProps = {
       widget,
       data: data?.data,
@@ -208,8 +212,8 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
           return (
             <Card sx={{ height: '100%', ...widget.styling }}>
               <CardContent>
-                <Typography variant="h6">{widget.title}</Typography>
-                <Typography color="error">Unknown widget type: {widget.type}</Typography>
+                <Typography variant='h6'>{widget.title}</Typography>
+                <Typography color='error'>Unknown widget type: {widget.type}</Typography>
               </CardContent>
             </Card>
           );
@@ -221,7 +225,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   const getGridLayouts = () => {
     if (!dashboard) return { lg: [] };
-    
+
     const layouts = dashboard.widgets.map(widget => ({
       i: widget.id,
       x: widget.layout.x,
@@ -236,7 +240,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
@@ -244,7 +248,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ mb: 2 }}>
+      <Alert severity='error' sx={{ mb: 2 }}>
         {error}
       </Alert>
     );
@@ -252,7 +256,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
 
   if (!dashboard) {
     return (
-      <Alert severity="warning" sx={{ mb: 2 }}>
+      <Alert severity='warning' sx={{ mb: 2 }}>
         Dashboard not found
       </Alert>
     );
@@ -277,48 +281,48 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
       {dashboard.settings.showHeader && !fullscreen && (
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant='h4' gutterBottom>
               {dashboard.name}
             </Typography>
             {dashboard.description && (
-              <Typography variant="body1" color="text.secondary" gutterBottom>
+              <Typography variant='body1' color='text.secondary' gutterBottom>
                 {dashboard.description}
               </Typography>
             )}
-            <Box display="flex" gap={1} mb={1}>
-              <Chip label={dashboard.category} size="small" color="primary" variant="outlined" />
+            <Box display='flex' gap={1} mb={1}>
+              <Chip label={dashboard.category} size='small' color='primary' variant='outlined' />
               {dashboard.tags.map((tag, index) => (
-                <Chip key={index} label={tag} size="small" variant="outlined" />
+                <Chip key={index} label={tag} size='small' variant='outlined' />
               ))}
             </Box>
-            <Typography variant="caption" color="text.secondary">
-              Created by {dashboard.createdBy.firstName} {dashboard.createdBy.lastName} • 
-              Last updated {new Date(dashboard.updatedAt).toLocaleDateString()}
+            <Typography variant='caption' color='text.secondary'>
+              Created by {dashboard.createdBy.firstName} {dashboard.createdBy.lastName} • Last
+              updated {new Date(dashboard.updatedAt).toLocaleDateString()}
             </Typography>
           </Box>
-          <Box display="flex" gap={1}>
+          <Box display='flex' gap={1}>
             <FormControlLabel
               control={
                 <Switch
                   checked={autoRefresh}
-                  onChange={(e) => setAutoRefresh(e.target.checked)}
-                  size="small"
+                  onChange={e => setAutoRefresh(e.target.checked)}
+                  size='small'
                 />
               }
-              label="Auto Refresh"
+              label='Auto Refresh'
             />
-            <Tooltip title="Refresh Data">
+            <Tooltip title='Refresh Data'>
               <IconButton onClick={handleRefresh} disabled={refreshing}>
                 <RefreshIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Fullscreen">
+            <Tooltip title='Fullscreen'>
               <IconButton onClick={toggleFullscreen}>
                 <FullscreenIcon />
               </IconButton>
             </Tooltip>
             {editable && (
-              <Tooltip title="Edit Dashboard">
+              <Tooltip title='Edit Dashboard'>
                 <IconButton onClick={onEdit}>
                   <EditIcon />
                 </IconButton>
@@ -350,17 +354,17 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
             zIndex: 1301,
           }}
         >
-          <Typography variant="h6">{dashboard.name}</Typography>
-          <Box display="flex" gap={1} alignItems="center">
+          <Typography variant='h6'>{dashboard.name}</Typography>
+          <Box display='flex' gap={1} alignItems='center'>
             <FormControlLabel
               control={
                 <Switch
                   checked={autoRefresh}
-                  onChange={(e) => setAutoRefresh(e.target.checked)}
-                  size="small"
+                  onChange={e => setAutoRefresh(e.target.checked)}
+                  size='small'
                 />
               }
-              label="Auto Refresh"
+              label='Auto Refresh'
             />
             <IconButton onClick={handleRefresh} disabled={refreshing}>
               <RefreshIcon />
@@ -375,31 +379,37 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
       {/* Dashboard Content */}
       <Box sx={{ mt: fullscreen ? 8 : 0 }}>
         {refreshing && (
-          <Box display="flex" justifyContent="center" mb={2}>
+          <Box display='flex' justifyContent='center' mb={2}>
             <CircularProgress size={24} />
           </Box>
         )}
 
         {dashboard.widgets.length === 0 ? (
           <Paper sx={{ p: 6, textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               No widgets configured
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={2}>
+            <Typography variant='body2' color='text.secondary' mb={2}>
               This dashboard doesn't have any widgets yet.
             </Typography>
             {editable && (
-              <Button variant="contained" onClick={onEdit} startIcon={<EditIcon />}>
+              <Button variant='contained' onClick={onEdit} startIcon={<EditIcon />}>
                 Edit Dashboard
               </Button>
             )}
           </Paper>
         ) : (
           <ResponsiveGridLayout
-            className="layout"
+            className='layout'
             layouts={getGridLayouts()}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: dashboard.layout.columns, md: dashboard.layout.columns, sm: 6, xs: 4, xxs: 2 }}
+            cols={{
+              lg: dashboard.layout.columns,
+              md: dashboard.layout.columns,
+              sm: 6,
+              xs: 4,
+              xxs: 2,
+            }}
             rowHeight={60}
             margin={[dashboard.layout.gap, dashboard.layout.gap]}
             isDraggable={false}
@@ -412,11 +422,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
       </Box>
 
       {/* Action Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={handleRefresh}>
           <RefreshIcon sx={{ mr: 1 }} />
           Refresh Data
@@ -440,8 +446,8 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({ dashboardId, editable
       {/* Refresh FAB (fullscreen only) */}
       {fullscreen && (
         <Fab
-          color="primary"
-          size="small"
+          color='primary'
+          size='small'
           onClick={handleRefresh}
           disabled={refreshing}
           sx={{

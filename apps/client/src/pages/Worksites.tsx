@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Typography,
-  Button,
-  Box,
-  Alert,
-  CircularProgress,
-} from '@mui/material';
+import { Typography, Button, Box, Alert, CircularProgress } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { WorksiteTable, type Worksite } from '../components/worksites/WorksiteTable';
 import { WorksiteForm } from '../components/worksites/WorksiteForm';
@@ -25,14 +19,14 @@ export function Worksites() {
       try {
         setLoading(true);
         setError('');
-        
+
         const worksitesData = await worksiteService.getWorksites();
         setWorksites(worksitesData);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load worksites';
         setError(errorMessage);
         console.error('Error loading worksites:', err);
-        
+
         // Fallback to mock data if API fails
         const mockWorksites: Worksite[] = [
           {
@@ -150,9 +144,7 @@ export function Worksites() {
     try {
       const updatedWorksite = await worksiteService.toggleWorksiteStatus(worksiteId, isActive);
       setWorksites(prevWorksites =>
-        prevWorksites.map(worksite =>
-          worksite.id === worksiteId ? updatedWorksite : worksite
-        )
+        prevWorksites.map(worksite => (worksite.id === worksiteId ? updatedWorksite : worksite))
       );
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update worksite status';
@@ -171,9 +163,9 @@ export function Worksites() {
     try {
       setFormLoading(true);
       setFormError('');
-      
+
       let savedWorksite: Worksite;
-      
+
       if (editingWorksite) {
         // Update existing worksite
         savedWorksite = await worksiteService.updateWorksite(editingWorksite.id, worksiteData);
@@ -187,7 +179,7 @@ export function Worksites() {
         savedWorksite = await worksiteService.createWorksite(worksiteData);
         setWorksites(prevWorksites => [...prevWorksites, savedWorksite]);
       }
-      
+
       setFormOpen(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save worksite';
@@ -206,7 +198,7 @@ export function Worksites() {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -214,21 +206,17 @@ export function Worksites() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" gutterBottom>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4' gutterBottom>
           Worksites
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreateWorksite}
-        >
+        <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateWorksite}>
           Add Worksite
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}

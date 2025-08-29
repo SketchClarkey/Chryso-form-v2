@@ -89,16 +89,11 @@ interface FormData {
   };
 }
 
-const steps = [
-  'Customer Info',
-  'Service Details', 
-  'Checklist',
-  'Additional Info'
-];
+const steps = ['Customer Info', 'Service Details', 'Checklist', 'Additional Info'];
 
 const checklistItems = {
   workAreaCleaned: 'Work Area Cleaned',
-  siteTablesReplaced: 'Site Tables Replaced', 
+  siteTablesReplaced: 'Site Tables Replaced',
   systemCheckedForLeaks: 'System Checked for Leaks',
   pulseMetersLabeled: 'Pulse Meters Labeled',
   pumpsLabeled: 'Pumps Labeled',
@@ -115,7 +110,7 @@ export function MobileFormEditor() {
   const toast = useToastNotifications();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<Partial<FormData>>({});
   const [error, setError] = useState<string>('');
@@ -125,7 +120,7 @@ export function MobileFormEditor() {
     partNumber: '',
     description: '',
     quantity: 1,
-    replaced: false
+    replaced: false,
   });
 
   const pwaService = PWAService.getInstance();
@@ -135,10 +130,10 @@ export function MobileFormEditor() {
     // Listen for online/offline status
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
+
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -186,14 +181,18 @@ export function MobileFormEditor() {
         // Store in offline storage
         const formKey = `form_${id || Date.now()}`;
         await pwaService.storeOfflineData(formKey, data, 'form');
-        await pwaService.storeOfflineData(`pending_save_${formKey}`, {
-          type: isEditing ? 'update' : 'create',
-          data,
-          formId: id,
-        }, 'pending_request');
+        await pwaService.storeOfflineData(
+          `pending_save_${formKey}`,
+          {
+            type: isEditing ? 'update' : 'create',
+            data,
+            formId: id,
+          },
+          'pending_request'
+        );
         return { data: { message: 'Saved offline - will sync when online' } };
       }
-      
+
       if (isEditing) {
         const response = await api.put(`/forms/${id}`, data);
         return response.data;
@@ -202,7 +201,7 @@ export function MobileFormEditor() {
         return response.data;
       }
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (isOffline) {
         toast.showInfo('Form saved offline - will sync when connection is restored');
       } else {
@@ -220,11 +219,11 @@ export function MobileFormEditor() {
   });
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleSave = () => {
@@ -280,7 +279,7 @@ export function MobileFormEditor() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         const { latitude, longitude } = position.coords;
         setFormData(prev => ({
           ...prev,
@@ -291,7 +290,7 @@ export function MobileFormEditor() {
         }));
         toast.showSuccess('Location captured');
       },
-      (error) => {
+      error => {
         toast.showError('Failed to get location: ' + error.message);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
@@ -303,65 +302,67 @@ export function MobileFormEditor() {
       case 0: // Customer Info
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Customer Information</Typography>
+            <Typography variant='h6' gutterBottom>
+              Customer Information
+            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
-                label="Customer Name"
+                label='Customer Name'
                 value={formData.customerInfo?.customerName || ''}
-                onChange={(e) => updateFormData('customerInfo', 'customerName', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'customerName', e.target.value)}
                 required
                 fullWidth
               />
               <TextField
-                label="Plant Location"
+                label='Plant Location'
                 value={formData.customerInfo?.plantLocation || ''}
-                onChange={(e) => updateFormData('customerInfo', 'plantLocation', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'plantLocation', e.target.value)}
                 required
                 fullWidth
               />
               <TextField
-                label="Contact Person"
+                label='Contact Person'
                 value={formData.customerInfo?.contactPerson || ''}
-                onChange={(e) => updateFormData('customerInfo', 'contactPerson', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'contactPerson', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Contact Email"
-                type="email"
+                label='Contact Email'
+                type='email'
                 value={formData.customerInfo?.contactEmail || ''}
-                onChange={(e) => updateFormData('customerInfo', 'contactEmail', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'contactEmail', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Contact Phone"
+                label='Contact Phone'
                 value={formData.customerInfo?.contactPhone || ''}
-                onChange={(e) => updateFormData('customerInfo', 'contactPhone', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'contactPhone', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Service Date"
-                type="date"
+                label='Service Date'
+                type='date'
                 value={formData.customerInfo?.serviceDate || ''}
-                onChange={(e) => updateFormData('customerInfo', 'serviceDate', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'serviceDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
                 fullWidth
               />
               <TextField
-                label="Equipment Type"
+                label='Equipment Type'
                 value={formData.customerInfo?.equipmentType || ''}
-                onChange={(e) => updateFormData('customerInfo', 'equipmentType', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'equipmentType', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Equipment Model"
+                label='Equipment Model'
                 value={formData.customerInfo?.equipmentModel || ''}
-                onChange={(e) => updateFormData('customerInfo', 'equipmentModel', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'equipmentModel', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Serial Number"
+                label='Serial Number'
                 value={formData.customerInfo?.serialNumber || ''}
-                onChange={(e) => updateFormData('customerInfo', 'serialNumber', e.target.value)}
+                onChange={e => updateFormData('customerInfo', 'serialNumber', e.target.value)}
                 fullWidth
               />
             </Box>
@@ -371,52 +372,63 @@ export function MobileFormEditor() {
       case 1: // Service Details
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Service Details</Typography>
+            <Typography variant='h6' gutterBottom>
+              Service Details
+            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
-                label="Service Type"
+                label='Service Type'
                 value={formData.serviceDetails?.serviceType || ''}
-                onChange={(e) => updateFormData('serviceDetails', 'serviceType', e.target.value)}
+                onChange={e => updateFormData('serviceDetails', 'serviceType', e.target.value)}
                 fullWidth
               />
               <TextField
-                label="Work Performed"
+                label='Work Performed'
                 multiline
                 rows={3}
                 value={formData.serviceDetails?.workPerformed || ''}
-                onChange={(e) => updateFormData('serviceDetails', 'workPerformed', e.target.value)}
+                onChange={e => updateFormData('serviceDetails', 'workPerformed', e.target.value)}
                 fullWidth
               />
-              
+
               {/* Parts Used */}
               <Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                  <Typography variant="subtitle1">Parts Used</Typography>
-                  <Button
-                    startIcon={<Add />}
-                    onClick={() => setAddPartDialog(true)}
-                    size="small"
-                  >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant='subtitle1'>Parts Used</Typography>
+                  <Button startIcon={<Add />} onClick={() => setAddPartDialog(true)} size='small'>
                     Add Part
                   </Button>
                 </Box>
-                
+
                 {formData.serviceDetails?.partsUsed?.map((part, index) => (
                   <Card key={index} sx={{ mb: 1, p: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" fontWeight="bold">
+                        <Typography variant='body2' fontWeight='bold'>
                           {part.partNumber} - {part.description}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           Quantity: {part.quantity} {part.replaced && '• Replaced'}
                         </Typography>
                       </Box>
                       <Button
                         startIcon={<Remove />}
                         onClick={() => removePart(index)}
-                        color="error"
-                        size="small"
+                        color='error'
+                        size='small'
                       >
                         Remove
                       </Button>
@@ -427,34 +439,44 @@ export function MobileFormEditor() {
 
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                 <TextField
-                  label="GCP Hours"
-                  type="number"
+                  label='GCP Hours'
+                  type='number'
                   value={formData.serviceDetails?.gcpTechnicianHours || 0}
-                  onChange={(e) => updateFormData('serviceDetails', 'gcpTechnicianHours', parseFloat(e.target.value))}
+                  onChange={e =>
+                    updateFormData(
+                      'serviceDetails',
+                      'gcpTechnicianHours',
+                      parseFloat(e.target.value)
+                    )
+                  }
                 />
                 <TextField
-                  label="Contract Hours"
-                  type="number"
+                  label='Contract Hours'
+                  type='number'
                   value={formData.serviceDetails?.contractHours || 0}
-                  onChange={(e) => updateFormData('serviceDetails', 'contractHours', parseFloat(e.target.value))}
+                  onChange={e =>
+                    updateFormData('serviceDetails', 'contractHours', parseFloat(e.target.value))
+                  }
                 />
               </Box>
 
               <TextField
-                label="Maintenance Procedures"
+                label='Maintenance Procedures'
                 multiline
                 rows={2}
                 value={formData.serviceDetails?.maintenanceProcedures || ''}
-                onChange={(e) => updateFormData('serviceDetails', 'maintenanceProcedures', e.target.value)}
+                onChange={e =>
+                  updateFormData('serviceDetails', 'maintenanceProcedures', e.target.value)
+                }
                 fullWidth
               />
-              
+
               <TextField
-                label="Breakdown Details"
+                label='Breakdown Details'
                 multiline
                 rows={2}
                 value={formData.serviceDetails?.breakdownDetails || ''}
-                onChange={(e) => updateFormData('serviceDetails', 'breakdownDetails', e.target.value)}
+                onChange={e => updateFormData('serviceDetails', 'breakdownDetails', e.target.value)}
                 fullWidth
               />
             </Box>
@@ -464,7 +486,9 @@ export function MobileFormEditor() {
       case 2: // Checklist
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Service Checklist</Typography>
+            <Typography variant='h6' gutterBottom>
+              Service Checklist
+            </Typography>
             <List>
               {Object.entries(checklistItems).map(([field, label]) => (
                 <ListItem key={field} sx={{ px: 0 }}>
@@ -472,8 +496,8 @@ export function MobileFormEditor() {
                   <ListItemSecondaryAction>
                     <Switch
                       checked={formData.serviceChecklist?.[field] || false}
-                      onChange={(e) => updateChecklistItem(field, e.target.checked)}
-                      color="primary"
+                      onChange={e => updateChecklistItem(field, e.target.checked)}
+                      color='primary'
                     />
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -485,45 +509,50 @@ export function MobileFormEditor() {
       case 3: // Additional Info
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Additional Information</Typography>
+            <Typography variant='h6' gutterBottom>
+              Additional Information
+            </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
-                label="Additional Notes"
+                label='Additional Notes'
                 multiline
                 rows={4}
                 value={formData.additionalInfo?.notes || ''}
-                onChange={(e) => updateFormData('additionalInfo', 'notes', e.target.value)}
+                onChange={e => updateFormData('additionalInfo', 'notes', e.target.value)}
                 fullWidth
               />
-              
+
               {/* Location Section */}
               <Paper sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                  <Typography variant="subtitle1">Location</Typography>
-                  <Button
-                    startIcon={<LocationOn />}
-                    onClick={getCurrentLocation}
-                    size="small"
-                  >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant='subtitle1'>Location</Typography>
+                  <Button startIcon={<LocationOn />} onClick={getCurrentLocation} size='small'>
                     Get Location
                   </Button>
                 </Box>
                 {formData.additionalInfo?.location && (
-                  <Typography variant="body2" color="text.secondary">
-                    Lat: {formData.additionalInfo.location.latitude.toFixed(6)}, 
-                    Lng: {formData.additionalInfo.location.longitude.toFixed(6)}
+                  <Typography variant='body2' color='text.secondary'>
+                    Lat: {formData.additionalInfo.location.latitude.toFixed(6)}, Lng:{' '}
+                    {formData.additionalInfo.location.longitude.toFixed(6)}
                   </Typography>
                 )}
               </Paper>
-              
+
               {/* File Attachments */}
               <Box>
-                <Typography variant="subtitle1" gutterBottom>
+                <Typography variant='subtitle1' gutterBottom>
                   File Attachments
                 </Typography>
                 <EnhancedFileUploader
                   files={formData.additionalInfo?.attachments || []}
-                  onFilesChange={(files) => updateFormData('additionalInfo', 'attachments', files)}
+                  onFilesChange={files => updateFormData('additionalInfo', 'attachments', files)}
                   maxFiles={5}
                   maxSizeBytes={10 * 1024 * 1024} // 10MB for mobile
                   enableCamera={true}
@@ -544,7 +573,7 @@ export function MobileFormEditor() {
 
   if (isLoadingForm) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -555,32 +584,23 @@ export function MobileFormEditor() {
       {/* Header */}
       <Paper sx={{ p: 2, borderRadius: 0 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6">
-            {isEditing ? 'Edit Form' : 'New Form'}
-          </Typography>
+          <Typography variant='h6'>{isEditing ? 'Edit Form' : 'New Form'}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {isOffline && (
-              <Chip 
-                icon={<CloudOff />} 
-                label="Offline" 
-                color="warning" 
-                size="small" 
-              />
-            )}
+            {isOffline && <Chip icon={<CloudOff />} label='Offline' color='warning' size='small' />}
             <Button
               startIcon={<SaveIcon />}
               onClick={handleSave}
               disabled={saveFormMutation.isPending}
-              size="small"
-              variant="outlined"
+              size='small'
+              variant='outlined'
             >
               Save
             </Button>
           </Box>
         </Box>
-        
+
         {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
+          <Alert severity='error' sx={{ mt: 2 }}>
             {error}
           </Alert>
         )}
@@ -589,27 +609,25 @@ export function MobileFormEditor() {
       {/* Content */}
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         <Card sx={{ m: 1, height: 'calc(100% - 16px)' }}>
-          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-            {renderStepContent()}
-          </CardContent>
+          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>{renderStepContent()}</CardContent>
         </Card>
       </Box>
 
       {/* Bottom Navigation */}
       <Paper sx={{ borderRadius: 0 }}>
         <MobileStepper
-          variant="dots"
+          variant='dots'
           steps={steps.length}
-          position="static"
+          position='static'
           activeStep={activeStep}
           nextButton={
-            <Button size="small" onClick={handleNext} disabled={activeStep === steps.length - 1}>
+            <Button size='small' onClick={handleNext} disabled={activeStep === steps.length - 1}>
               Next
               <KeyboardArrowRight />
             </Button>
           }
           backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            <Button size='small' onClick={handleBack} disabled={activeStep === 0}>
               <KeyboardArrowLeft />
               Back
             </Button>
@@ -618,33 +636,33 @@ export function MobileFormEditor() {
       </Paper>
 
       {/* Add Part Dialog */}
-      <Dialog open={addPartDialog} onClose={() => setAddPartDialog(false)} fullWidth maxWidth="sm">
+      <Dialog open={addPartDialog} onClose={() => setAddPartDialog(false)} fullWidth maxWidth='sm'>
         <DialogTitle>Add Part</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <TextField
-              label="Part Number"
+              label='Part Number'
               value={newPart.partNumber}
-              onChange={(e) => setNewPart(prev => ({ ...prev, partNumber: e.target.value }))}
+              onChange={e => setNewPart(prev => ({ ...prev, partNumber: e.target.value }))}
               fullWidth
             />
             <TextField
-              label="Description"
+              label='Description'
               value={newPart.description}
-              onChange={(e) => setNewPart(prev => ({ ...prev, description: e.target.value }))}
+              onChange={e => setNewPart(prev => ({ ...prev, description: e.target.value }))}
               fullWidth
             />
             <TextField
-              label="Quantity"
-              type="number"
+              label='Quantity'
+              type='number'
               value={newPart.quantity}
-              onChange={(e) => setNewPart(prev => ({ ...prev, quantity: parseInt(e.target.value) }))}
+              onChange={e => setNewPart(prev => ({ ...prev, quantity: parseInt(e.target.value) }))}
               fullWidth
             />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Switch
                 checked={newPart.replaced}
-                onChange={(e) => setNewPart(prev => ({ ...prev, replaced: e.target.checked }))}
+                onChange={e => setNewPart(prev => ({ ...prev, replaced: e.target.checked }))}
               />
               <Typography>Part was replaced</Typography>
             </Box>
@@ -652,7 +670,11 @@ export function MobileFormEditor() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setAddPartDialog(false)}>Cancel</Button>
-          <Button onClick={addPart} variant="contained" disabled={!newPart.partNumber || !newPart.description}>
+          <Button
+            onClick={addPart}
+            variant='contained'
+            disabled={!newPart.partNumber || !newPart.description}
+          >
             Add Part
           </Button>
         </DialogActions>

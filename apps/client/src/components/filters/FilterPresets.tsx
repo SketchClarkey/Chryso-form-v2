@@ -224,7 +224,7 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
         data: presetData,
       });
 
-      setPresets(presets.map(p => p.id === selectedPreset.id ? response.data.preset : p));
+      setPresets(presets.map(p => (p.id === selectedPreset.id ? response.data.preset : p)));
       setEditDialogOpen(false);
     } catch (error) {
       console.error('Failed to update preset:', error);
@@ -271,12 +271,17 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
   const updateUsage = async (presetId: string) => {
     try {
       await request(`/api/filter-presets/${presetId}/usage`, { method: 'POST' });
-      
-      setPresets(presets.map(p => 
-        p.id === presetId 
-          ? { ...p, usage: { ...p.usage, totalUses: p.usage.totalUses + 1, lastUsed: new Date() }}
-          : p
-      ));
+
+      setPresets(
+        presets.map(p =>
+          p.id === presetId
+            ? {
+                ...p,
+                usage: { ...p.usage, totalUses: p.usage.totalUses + 1, lastUsed: new Date() },
+              }
+            : p
+        )
+      );
     } catch (error) {
       console.error('Failed to update usage:', error);
     }
@@ -308,25 +313,28 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
       .join(', ');
   };
 
-  const groupedPresets = presets.reduce((groups, preset) => {
-    const category = preset.category;
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(preset);
-    return groups;
-  }, {} as Record<string, FilterPreset[]>);
+  const groupedPresets = presets.reduce(
+    (groups, preset) => {
+      const category = preset.category;
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(preset);
+      return groups;
+    },
+    {} as Record<string, FilterPreset[]>
+  );
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Filter Presets</Typography>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+        <Typography variant='h6'>Filter Presets</Typography>
         {showCreateButton && (
           <Button
-            size="small"
+            size='small'
             onClick={() => setCreateDialogOpen(true)}
             startIcon={<AddIcon />}
-            variant="outlined"
+            variant='outlined'
           >
             Create Preset
           </Button>
@@ -338,18 +346,18 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
         return (
           <Box key={category} mb={3}>
             <Typography
-              variant="subtitle2"
-              color="text.secondary"
+              variant='subtitle2'
+              color='text.secondary'
               gutterBottom
               sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
             >
               <Chip
                 label={categoryInfo?.label || category}
-                size="small"
+                size='small'
                 color={getCategoryColor(category) as any}
-                variant="outlined"
+                variant='outlined'
               />
-              <Typography variant="caption">
+              <Typography variant='caption'>
                 {categoryPresets.length} preset{categoryPresets.length !== 1 ? 's' : ''}
               </Typography>
             </Typography>
@@ -357,10 +365,10 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
             <Grid container spacing={2}>
               {categoryPresets
                 .sort((a, b) => a.order - b.order)
-                .map((preset) => (
+                .map(preset => (
                   <Grid item xs={12} sm={6} md={4} key={preset.id}>
                     <Card
-                      variant="outlined"
+                      variant='outlined'
                       sx={{
                         height: '100%',
                         display: 'flex',
@@ -371,9 +379,9 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
                     >
                       {preset.isDefault && (
                         <Chip
-                          label="Default"
-                          size="small"
-                          color="primary"
+                          label='Default'
+                          size='small'
+                          color='primary'
                           sx={{
                             position: 'absolute',
                             top: 8,
@@ -384,22 +392,19 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
                       )}
 
                       <CardContent sx={{ flex: 1 }}>
-                        <Box display="flex" alignItems="center" mb={1}>
-                          <Typography variant="h6" component="h3" noWrap flex={1}>
+                        <Box display='flex' alignItems='center' mb={1}>
+                          <Typography variant='h6' component='h3' noWrap flex={1}>
                             {preset.name}
                           </Typography>
-                          <IconButton
-                            size="small"
-                            onClick={(e) => handleMenuOpen(e, preset)}
-                          >
+                          <IconButton size='small' onClick={e => handleMenuOpen(e, preset)}>
                             <MoreIcon />
                           </IconButton>
                         </Box>
 
                         {preset.description && (
                           <Typography
-                            variant="body2"
-                            color="text.secondary"
+                            variant='body2'
+                            color='text.secondary'
                             gutterBottom
                             sx={{
                               display: '-webkit-box',
@@ -413,24 +418,40 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
                         )}
 
                         <Box mb={2}>
-                          <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+                          <Typography
+                            variant='caption'
+                            color='text.secondary'
+                            gutterBottom
+                            display='block'
+                          >
                             Quick Filters:
                           </Typography>
-                          <Typography variant="body2">
+                          <Typography variant='body2'>
                             {preset.quickFilters.length > 0
                               ? getQuickFilterNames(preset.quickFilters) || 'No matching filters'
                               : 'No filters selected'}
                           </Typography>
                         </Box>
 
-                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+                        <Stack
+                          direction='row'
+                          spacing={1}
+                          alignItems='center'
+                          flexWrap='wrap'
+                          useFlexGap
+                        >
                           {preset.autoApply && (
-                            <Chip label="Auto Apply" size="small" color="info" variant="outlined" />
+                            <Chip label='Auto Apply' size='small' color='info' variant='outlined' />
                           )}
                           {preset.isSystem && (
-                            <Chip label="System" size="small" color="secondary" variant="outlined" />
+                            <Chip
+                              label='System'
+                              size='small'
+                              color='secondary'
+                              variant='outlined'
+                            />
                           )}
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant='caption' color='text.secondary'>
                             {preset.usage.totalUses} uses
                           </Typography>
                         </Stack>
@@ -438,10 +459,10 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
 
                       <CardActions>
                         <Button
-                          size="small"
+                          size='small'
                           onClick={() => handleApplyPreset(preset)}
                           startIcon={<ApplyIcon />}
-                          variant="contained"
+                          variant='contained'
                           fullWidth
                         >
                           Apply Preset
@@ -456,17 +477,17 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
       })}
 
       {presets.length === 0 && (
-        <Card variant="outlined">
+        <Card variant='outlined'>
           <CardContent sx={{ textAlign: 'center', py: 6 }}>
             <FilterIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               No Filter Presets
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
+            <Typography variant='body2' color='text.secondary' mb={3}>
               Create preset combinations of quick filters for easy access
             </Typography>
             <Button
-              variant="contained"
+              variant='contained'
               onClick={() => setCreateDialogOpen(true)}
               startIcon={<AddIcon />}
             >
@@ -477,11 +498,7 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
       )}
 
       {/* Context Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={() => selectedPreset && handleApplyPreset(selectedPreset)}>
           <ApplyIcon sx={{ mr: 1 }} />
           Apply Preset
@@ -506,22 +523,27 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
       </Menu>
 
       {/* Create Preset Dialog */}
-      <Dialog open={createDialogOpen} onClose={() => setCreateDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Create Filter Preset</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Preset Name"
+              label='Preset Name'
               value={presetData.name}
-              onChange={(e) => setPresetData({ ...presetData, name: e.target.value })}
+              onChange={e => setPresetData({ ...presetData, name: e.target.value })}
               fullWidth
               required
             />
-            
+
             <TextField
-              label="Description"
+              label='Description'
               value={presetData.description}
-              onChange={(e) => setPresetData({ ...presetData, description: e.target.value })}
+              onChange={e => setPresetData({ ...presetData, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
@@ -531,10 +553,10 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
               <InputLabel>Category</InputLabel>
               <Select
                 value={presetData.category}
-                onChange={(e) => setPresetData({ ...presetData, category: e.target.value as any })}
-                label="Category"
+                onChange={e => setPresetData({ ...presetData, category: e.target.value as any })}
+                label='Category'
               >
-                {categories.map((category) => (
+                {categories.map(category => (
                   <MenuItem key={category.value} value={category.value}>
                     {category.label}
                   </MenuItem>
@@ -545,19 +567,21 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
             <Autocomplete
               multiple
               options={availableQuickFilters}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={option => option.name}
               value={availableQuickFilters.filter(f => presetData.quickFilters?.includes(f.id))}
-              onChange={(_, value) => setPresetData({
-                ...presetData,
-                quickFilters: value.map(f => f.id)
-              })}
-              renderInput={(params) => (
-                <TextField {...params} label="Quick Filters" placeholder="Select filters..." />
+              onChange={(_, value) =>
+                setPresetData({
+                  ...presetData,
+                  quickFilters: value.map(f => f.id),
+                })
+              }
+              renderInput={params => (
+                <TextField {...params} label='Quick Filters' placeholder='Select filters...' />
               )}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
                   <Chip
-                    variant="outlined"
+                    variant='outlined'
                     label={option.name}
                     {...getTagProps({ index })}
                     key={option.id}
@@ -566,53 +590,58 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
               }
             />
 
-            <Stack direction="row" spacing={2}>
+            <Stack direction='row' spacing={2}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={presetData.autoApply || false}
-                    onChange={(e) => setPresetData({ ...presetData, autoApply: e.target.checked })}
+                    onChange={e => setPresetData({ ...presetData, autoApply: e.target.checked })}
                   />
                 }
-                label="Auto Apply"
+                label='Auto Apply'
               />
               <FormControlLabel
                 control={
                   <Switch
                     checked={presetData.isDefault || false}
-                    onChange={(e) => setPresetData({ ...presetData, isDefault: e.target.checked })}
+                    onChange={e => setPresetData({ ...presetData, isDefault: e.target.checked })}
                   />
                 }
-                label="Set as Default"
+                label='Set as Default'
               />
             </Stack>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCreateDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleCreatePreset} variant="contained">
+          <Button onClick={handleCreatePreset} variant='contained'>
             Create Preset
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Edit Preset Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Edit Filter Preset</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Preset Name"
+              label='Preset Name'
               value={presetData.name}
-              onChange={(e) => setPresetData({ ...presetData, name: e.target.value })}
+              onChange={e => setPresetData({ ...presetData, name: e.target.value })}
               fullWidth
               required
             />
-            
+
             <TextField
-              label="Description"
+              label='Description'
               value={presetData.description}
-              onChange={(e) => setPresetData({ ...presetData, description: e.target.value })}
+              onChange={e => setPresetData({ ...presetData, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
@@ -621,42 +650,44 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
             <Autocomplete
               multiple
               options={availableQuickFilters}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={option => option.name}
               value={availableQuickFilters.filter(f => presetData.quickFilters?.includes(f.id))}
-              onChange={(_, value) => setPresetData({
-                ...presetData,
-                quickFilters: value.map(f => f.id)
-              })}
-              renderInput={(params) => (
-                <TextField {...params} label="Quick Filters" placeholder="Select filters..." />
+              onChange={(_, value) =>
+                setPresetData({
+                  ...presetData,
+                  quickFilters: value.map(f => f.id),
+                })
+              }
+              renderInput={params => (
+                <TextField {...params} label='Quick Filters' placeholder='Select filters...' />
               )}
             />
 
-            <Stack direction="row" spacing={2}>
+            <Stack direction='row' spacing={2}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={presetData.autoApply || false}
-                    onChange={(e) => setPresetData({ ...presetData, autoApply: e.target.checked })}
+                    onChange={e => setPresetData({ ...presetData, autoApply: e.target.checked })}
                   />
                 }
-                label="Auto Apply"
+                label='Auto Apply'
               />
               <FormControlLabel
                 control={
                   <Switch
                     checked={presetData.isDefault || false}
-                    onChange={(e) => setPresetData({ ...presetData, isDefault: e.target.checked })}
+                    onChange={e => setPresetData({ ...presetData, isDefault: e.target.checked })}
                   />
                 }
-                label="Set as Default"
+                label='Set as Default'
               />
             </Stack>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleUpdatePreset} variant="contained">
+          <Button onClick={handleUpdatePreset} variant='contained'>
             Update Preset
           </Button>
         </DialogActions>
@@ -672,7 +703,7 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeletePreset} color="error" variant="contained">
+          <Button onClick={handleDeletePreset} color='error' variant='contained'>
             Delete
           </Button>
         </DialogActions>

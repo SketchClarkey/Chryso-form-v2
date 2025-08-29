@@ -73,7 +73,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
       id: `custom_${Date.now()}`,
       ...field,
     };
-    
+
     onChange({
       customFields: [...currentFields, newField],
     });
@@ -86,7 +86,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
     const updatedFields = currentFields.map((field: any) =>
       field.id === fieldId ? { ...field, ...updatedField } : field
     );
-    
+
     onChange({
       customFields: updatedFields,
     });
@@ -125,16 +125,16 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<PaletteIcon />}
-          title="Theme & Colors"
-          subheader="Customize the visual appearance of your application"
+          title='Theme & Colors'
+          subheader='Customize the visual appearance of your application'
         />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Primary Color
               </Typography>
-              <Box display="flex" alignItems="center" gap={2}>
+              <Box display='flex' alignItems='center' gap={2}>
                 <Box
                   sx={{
                     width: 40,
@@ -149,13 +149,13 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 />
                 <TextField
                   value={settings?.theme?.primaryColor || '#1976d2'}
-                  onChange={(e) => handleThemeChange('primaryColor', e.target.value)}
-                  size="small"
+                  onChange={e => handleThemeChange('primaryColor', e.target.value)}
+                  size='small'
                   sx={{ flex: 1 }}
                 />
               </Box>
-              <Stack direction="row" spacing={1} sx={{ mt: 1 }} flexWrap="wrap" useFlexGap>
-                {predefinedColors.map((color) => (
+              <Stack direction='row' spacing={1} sx={{ mt: 1 }} flexWrap='wrap' useFlexGap>
+                {predefinedColors.map(color => (
                   <Chip
                     key={color.value}
                     label={color.name}
@@ -166,17 +166,17 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                       color: 'white',
                       '&:hover': { backgroundColor: color.value },
                     }}
-                    size="small"
+                    size='small'
                   />
                 ))}
               </Stack>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Secondary Color
               </Typography>
-              <Box display="flex" alignItems="center" gap={2}>
+              <Box display='flex' alignItems='center' gap={2}>
                 <Box
                   sx={{
                     width: 40,
@@ -191,30 +191,30 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 />
                 <TextField
                   value={settings?.theme?.secondaryColor || '#dc004e'}
-                  onChange={(e) => handleThemeChange('secondaryColor', e.target.value)}
-                  size="small"
+                  onChange={e => handleThemeChange('secondaryColor', e.target.value)}
+                  size='small'
                   sx={{ flex: 1 }}
                 />
               </Box>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Logo
               </Typography>
-              <Box display="flex" alignItems="center" gap={2}>
+              <Box display='flex' alignItems='center' gap={2}>
                 <Avatar
                   src={settings?.theme?.logoUrl}
                   sx={{ width: 60, height: 60 }}
-                  variant="rounded"
+                  variant='rounded'
                 >
                   <ColorIcon />
                 </Avatar>
                 <Box>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     startIcon={<UploadIcon />}
-                    size="small"
+                    size='small'
                     onClick={() => {
                       // File upload handler would go here
                       console.log('Upload logo');
@@ -222,7 +222,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   >
                     Upload Logo
                   </Button>
-                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                  <Typography variant='caption' display='block' sx={{ mt: 0.5 }}>
                     Recommended: 200x60px, PNG or SVG
                   </Typography>
                 </Box>
@@ -230,21 +230,18 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Favicon
               </Typography>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar
-                  src={settings?.theme?.faviconUrl}
-                  sx={{ width: 32, height: 32 }}
-                >
-                  <ColorIcon fontSize="small" />
+              <Box display='flex' alignItems='center' gap={2}>
+                <Avatar src={settings?.theme?.faviconUrl} sx={{ width: 32, height: 32 }}>
+                  <ColorIcon fontSize='small' />
                 </Avatar>
                 <Box>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     startIcon={<UploadIcon />}
-                    size="small"
+                    size='small'
                     onClick={() => {
                       // File upload handler would go here
                       console.log('Upload favicon');
@@ -252,7 +249,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   >
                     Upload Favicon
                   </Button>
-                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                  <Typography variant='caption' display='block' sx={{ mt: 0.5 }}>
                     32x32px ICO or PNG format
                   </Typography>
                 </Box>
@@ -266,8 +263,8 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<BrandingIcon />}
-          title="Branding Options"
-          subheader="Configure branding and footer customization"
+          title='Branding Options'
+          subheader='Configure branding and footer customization'
         />
         <CardContent>
           <Grid container spacing={3}>
@@ -276,7 +273,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 control={
                   <Switch
                     checked={settings?.branding?.showPoweredBy !== false}
-                    onChange={(e) => handleBrandingChange('showPoweredBy', e.target.checked)}
+                    onChange={e => handleBrandingChange('showPoweredBy', e.target.checked)}
                   />
                 }
                 label="Show 'Powered by' branding"
@@ -285,25 +282,25 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
 
             <Grid item xs={12}>
               <TextField
-                label="Custom Header HTML"
+                label='Custom Header HTML'
                 multiline
                 rows={3}
                 value={settings?.branding?.customHeader || ''}
-                onChange={(e) => handleBrandingChange('customHeader', e.target.value)}
+                onChange={e => handleBrandingChange('customHeader', e.target.value)}
                 fullWidth
-                helperText="HTML content to display in the header area"
+                helperText='HTML content to display in the header area'
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                label="Custom Footer HTML"
+                label='Custom Footer HTML'
                 multiline
                 rows={3}
                 value={settings?.branding?.customFooter || ''}
-                onChange={(e) => handleBrandingChange('customFooter', e.target.value)}
+                onChange={e => handleBrandingChange('customFooter', e.target.value)}
                 fullWidth
-                helperText="HTML content to display in the footer area"
+                helperText='HTML content to display in the footer area'
               />
             </Grid>
           </Grid>
@@ -314,11 +311,11 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
       <Card>
         <CardHeader
           avatar={<FieldIcon />}
-          title="Custom Fields"
-          subheader="Define custom fields that can be used across forms"
+          title='Custom Fields'
+          subheader='Define custom fields that can be used across forms'
           action={
             <Button
-              variant="outlined"
+              variant='outlined'
               startIcon={<AddIcon />}
               onClick={() => {
                 setEditingField(null);
@@ -338,14 +335,14 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                     primary={field.name}
                     secondary={
                       <Box>
-                        <Typography variant="body2" component="span">
+                        <Typography variant='body2' component='span'>
                           Type: {fieldTypes.find(t => t.value === field.type)?.label || field.type}
                         </Typography>
                         {field.required && (
-                          <Chip label="Required" size="small" color="primary" sx={{ ml: 1 }} />
+                          <Chip label='Required' size='small' color='primary' sx={{ ml: 1 }} />
                         )}
                         {field.options && field.options.length > 0 && (
-                          <Typography variant="caption" display="block">
+                          <Typography variant='caption' display='block'>
                             Options: {field.options.join(', ')}
                           </Typography>
                         )}
@@ -354,7 +351,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   />
                   <ListItemSecondaryAction>
                     <IconButton
-                      edge="end"
+                      edge='end'
                       onClick={() => {
                         setEditingField(field);
                         setCustomFieldDialog(true);
@@ -364,9 +361,9 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                       <EditIcon />
                     </IconButton>
                     <IconButton
-                      edge="end"
+                      edge='end'
                       onClick={() => handleCustomFieldDelete(field.id)}
-                      color="error"
+                      color='error'
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -375,7 +372,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               ))}
             </List>
           ) : (
-            <Typography variant="body2" color="text.secondary" textAlign="center" py={4}>
+            <Typography variant='body2' color='text.secondary' textAlign='center' py={4}>
               No custom fields defined. Click "Add Field" to create your first custom field.
             </Typography>
           )}
@@ -383,10 +380,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
       </Card>
 
       {/* Color Picker Dialog */}
-      <Dialog
-        open={!!colorPickerOpen}
-        onClose={() => setColorPickerOpen(null)}
-      >
+      <Dialog open={!!colorPickerOpen} onClose={() => setColorPickerOpen(null)}>
         <DialogTitle>
           Choose {colorPickerOpen === 'primary' ? 'Primary' : 'Secondary'} Color
         </DialogTitle>
@@ -397,7 +391,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 ? settings?.theme?.primaryColor || '#1976d2'
                 : settings?.theme?.secondaryColor || '#dc004e'
             }
-            onChange={(color) => {
+            onChange={color => {
               if (colorPickerOpen === 'primary') {
                 handleThemeChange('primaryColor', color.hex);
               } else {
@@ -418,9 +412,10 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
           setCustomFieldDialog(false);
           setEditingField(null);
         }}
-        onSave={editingField ? 
-          (field) => handleCustomFieldUpdate(editingField.id, field) :
-          handleCustomFieldAdd
+        onSave={
+          editingField
+            ? field => handleCustomFieldUpdate(editingField.id, field)
+            : handleCustomFieldAdd
         }
         initialData={editingField}
         fieldTypes={fieldTypes}
@@ -473,17 +468,15 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        {initialData ? 'Edit Custom Field' : 'Add Custom Field'}
-      </DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
+      <DialogTitle>{initialData ? 'Edit Custom Field' : 'Add Custom Field'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={12}>
             <TextField
-              label="Field Name"
+              label='Field Name'
               value={fieldData.name}
-              onChange={(e) => setFieldData({ ...fieldData, name: e.target.value })}
+              onChange={e => setFieldData({ ...fieldData, name: e.target.value })}
               fullWidth
               required
             />
@@ -494,10 +487,10 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
               <InputLabel>Field Type</InputLabel>
               <Select
                 value={fieldData.type}
-                onChange={(e) => setFieldData({ ...fieldData, type: e.target.value })}
-                label="Field Type"
+                onChange={e => setFieldData({ ...fieldData, type: e.target.value })}
+                label='Field Type'
               >
-                {fieldTypes.map((type) => (
+                {fieldTypes.map(type => (
                   <MenuItem key={type.value} value={type.value}>
                     {type.label}
                   </MenuItem>
@@ -509,23 +502,28 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
           {(fieldData.type === 'select' || fieldData.type === 'multiselect') && (
             <Grid item xs={12}>
               <TextField
-                label="Options (comma-separated)"
+                label='Options (comma-separated)'
                 value={Array.isArray(fieldData.options) ? fieldData.options.join(', ') : ''}
-                onChange={(e) => setFieldData({ 
-                  ...fieldData, 
-                  options: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                })}
+                onChange={e =>
+                  setFieldData({
+                    ...fieldData,
+                    options: e.target.value
+                      .split(',')
+                      .map(s => s.trim())
+                      .filter(Boolean),
+                  })
+                }
                 fullWidth
-                helperText="Enter options separated by commas"
+                helperText='Enter options separated by commas'
               />
             </Grid>
           )}
 
           <Grid item xs={12}>
             <TextField
-              label="Default Value"
+              label='Default Value'
               value={fieldData.defaultValue}
-              onChange={(e) => setFieldData({ ...fieldData, defaultValue: e.target.value })}
+              onChange={e => setFieldData({ ...fieldData, defaultValue: e.target.value })}
               fullWidth
             />
           </Grid>
@@ -535,17 +533,17 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
               control={
                 <Switch
                   checked={fieldData.required}
-                  onChange={(e) => setFieldData({ ...fieldData, required: e.target.checked })}
+                  onChange={e => setFieldData({ ...fieldData, required: e.target.checked })}
                 />
               }
-              label="Required Field"
+              label='Required Field'
             />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" disabled={!fieldData.name.trim()}>
+        <Button onClick={handleSave} variant='contained' disabled={!fieldData.name.trim()}>
           {initialData ? 'Update' : 'Add'} Field
         </Button>
       </DialogActions>

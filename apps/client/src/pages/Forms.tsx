@@ -102,7 +102,12 @@ export function Forms() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Fetch forms data
-  const { data: formsData, isLoading, error, isError } = useQuery({
+  const {
+    data: formsData,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ['forms', { page, pageSize, search: searchTerm, status: statusFilter }],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -111,7 +116,7 @@ export function Forms() {
         ...(searchTerm && { search: searchTerm }),
         ...(statusFilter !== 'all' && { status: statusFilter }),
       });
-      
+
       const response = await api.get(`/forms?${params}`);
       return response.data.data;
     },
@@ -142,13 +147,14 @@ export function Forms() {
   // Filter forms based on search and status
   const filteredForms = useMemo(() => {
     return forms.filter((form: Form) => {
-      const matchesSearch = !searchTerm || 
+      const matchesSearch =
+        !searchTerm ||
         form.customerInfo.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         form.customerInfo.plantLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
         form.formId.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchesStatus = statusFilter === 'all' || form.status === statusFilter;
-      
+
       return matchesSearch && matchesStatus;
     });
   }, [forms, searchTerm, statusFilter]);
@@ -197,13 +203,13 @@ export function Forms() {
 
   const getStatusChip = (status: string) => {
     const config = statusConfig[status as keyof typeof statusConfig];
-    if (!config) return <Chip label={status} size="small" />;
+    if (!config) return <Chip label={status} size='small' />;
 
     return (
       <Chip
         label={config.label}
         color={config.color as any}
-        size="small"
+        size='small'
         icon={<config.icon sx={{ fontSize: '16px !important' }} />}
       />
     );
@@ -224,10 +230,10 @@ export function Forms() {
   if (isError) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Forms
         </Typography>
-        <Alert severity="error">
+        <Alert severity='error'>
           {error?.message || 'Failed to load forms. Please try again.'}
         </Alert>
       </Box>
@@ -237,13 +243,17 @@ export function Forms() {
   return (
     <Box>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FormIcon color="primary" />
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography
+          variant='h4'
+          gutterBottom
+          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+        >
+          <FormIcon color='primary' />
           Forms
         </Typography>
         <Button
-          variant="contained"
+          variant='contained'
           startIcon={<AddIcon />}
           onClick={() => navigate('/forms/new')}
           sx={{ minWidth: 140 }}
@@ -257,44 +267,40 @@ export function Forms() {
         <CardContent>
           <Toolbar sx={{ px: '0 !important', minHeight: '48px !important' }}>
             <TextField
-              placeholder="Search forms..."
-              variant="outlined"
-              size="small"
+              placeholder='Search forms...'
+              variant='outlined'
+              size='small'
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="action" />
+                  <InputAdornment position='start'>
+                    <SearchIcon color='action' />
                   </InputAdornment>
                 ),
               }}
               sx={{ minWidth: 300, mr: 2 }}
             />
-            
-            <FormControl size="small" sx={{ minWidth: 150, mr: 2 }}>
+
+            <FormControl size='small' sx={{ minWidth: 150, mr: 2 }}>
               <InputLabel>Status</InputLabel>
               <Select
                 value={statusFilter}
-                label="Status"
-                onChange={(e) => setStatusFilter(e.target.value)}
+                label='Status'
+                onChange={e => setStatusFilter(e.target.value)}
               >
-                <MenuItem value="all">All Status</MenuItem>
-                <MenuItem value="draft">Draft</MenuItem>
-                <MenuItem value="completed">Completed</MenuItem>
-                <MenuItem value="submitted">Submitted</MenuItem>
-                <MenuItem value="approved">Approved</MenuItem>
-                <MenuItem value="rejected">Rejected</MenuItem>
+                <MenuItem value='all'>All Status</MenuItem>
+                <MenuItem value='draft'>Draft</MenuItem>
+                <MenuItem value='completed'>Completed</MenuItem>
+                <MenuItem value='submitted'>Submitted</MenuItem>
+                <MenuItem value='approved'>Approved</MenuItem>
+                <MenuItem value='rejected'>Rejected</MenuItem>
               </Select>
             </FormControl>
 
             <Box sx={{ flexGrow: 1 }} />
-            
-            <Button
-              startIcon={<ExportIcon />}
-              variant="outlined"
-              size="small"
-            >
+
+            <Button startIcon={<ExportIcon />} variant='outlined' size='small'>
               Export
             </Button>
           </Toolbar>
@@ -308,15 +314,33 @@ export function Forms() {
             <Table>
               <TableHead>
                 <TableRow sx={{ backgroundColor: alpha(theme.palette.primary.main, 0.05) }}>
-                  <TableCell><strong>Form ID</strong></TableCell>
-                  <TableCell><strong>Customer</strong></TableCell>
-                  <TableCell><strong>Location</strong></TableCell>
-                  <TableCell><strong>Worksite</strong></TableCell>
-                  <TableCell><strong>Technician</strong></TableCell>
-                  <TableCell><strong>Status</strong></TableCell>
-                  <TableCell><strong>Progress</strong></TableCell>
-                  <TableCell><strong>Service Date</strong></TableCell>
-                  <TableCell><strong>Last Updated</strong></TableCell>
+                  <TableCell>
+                    <strong>Form ID</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Customer</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Location</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Worksite</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Technician</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Status</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Progress</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Service Date</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Last Updated</strong>
+                  </TableCell>
                   <TableCell width={50}></TableCell>
                 </TableRow>
               </TableHead>
@@ -327,43 +351,42 @@ export function Forms() {
                     <TableRow key={index}>
                       {Array.from({ length: 10 }).map((_, cellIndex) => (
                         <TableCell key={cellIndex}>
-                          <Skeleton variant="text" />
+                          <Skeleton variant='text' />
                         </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : filteredForms.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={10} align="center" sx={{ py: 4 }}>
+                    <TableCell colSpan={10} align='center' sx={{ py: 4 }}>
                       <Box sx={{ textAlign: 'center' }}>
                         <FormIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                        <Typography variant="h6" color="text.secondary" gutterBottom>
+                        <Typography variant='h6' color='text.secondary' gutterBottom>
                           No forms found
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {searchTerm || statusFilter !== 'all' 
+                        <Typography variant='body2' color='text.secondary'>
+                          {searchTerm || statusFilter !== 'all'
                             ? 'Try adjusting your search or filters'
-                            : 'Click "New Form" to create your first form'
-                          }
+                            : 'Click "New Form" to create your first form'}
                         </Typography>
                       </Box>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredForms.map((form: Form) => (
-                    <TableRow 
-                      key={form._id} 
+                    <TableRow
+                      key={form._id}
                       hover
-                      sx={{ 
+                      sx={{
                         cursor: 'pointer',
                         '&:hover': {
-                          backgroundColor: alpha(theme.palette.primary.main, 0.02)
-                        }
+                          backgroundColor: alpha(theme.palette.primary.main, 0.02),
+                        },
                       }}
                       onClick={() => handleRowClick(form)}
                     >
                       <TableCell>
-                        <Typography variant="body2" fontWeight="medium">
+                        <Typography variant='body2' fontWeight='medium'>
                           {form.formId}
                         </Typography>
                       </TableCell>
@@ -392,27 +415,23 @@ export function Forms() {
                               }}
                             />
                           </Box>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant='caption' color='text.secondary'>
                             {form.completionPercentage}%
                           </Typography>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        {form.customerInfo.serviceDate 
+                        {form.customerInfo.serviceDate
                           ? format(parseISO(form.customerInfo.serviceDate), 'MMM dd, yyyy')
-                          : '-'
-                        }
+                          : '-'}
                       </TableCell>
                       <TableCell>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {format(parseISO(form.updatedAt), 'MMM dd, yyyy HH:mm')}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleMenuOpen(e, form)}
-                        >
+                        <IconButton size='small' onClick={e => handleMenuOpen(e, form)}>
                           <MoreVertIcon />
                         </IconButton>
                       </TableCell>
@@ -430,8 +449,8 @@ export function Forms() {
                 count={totalPages}
                 page={page}
                 onChange={(_, newPage) => setPage(newPage)}
-                color="primary"
-                size="medium"
+                color='primary'
+                size='medium'
               />
             </Box>
           )}
@@ -439,11 +458,7 @@ export function Forms() {
       </Card>
 
       {/* Action Menu */}
-      <Menu
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
         <MenuItem onClick={() => selectedForm && handleView(selectedForm)}>
           <ViewIcon sx={{ mr: 1 }} />
           View
@@ -455,7 +470,10 @@ export function Forms() {
           </MenuItem>
         )}
         {selectedForm && canDeleteForm(selectedForm) && (
-          <MenuItem onClick={() => selectedForm && handleDelete(selectedForm)} sx={{ color: 'error.main' }}>
+          <MenuItem
+            onClick={() => selectedForm && handleDelete(selectedForm)}
+            sx={{ color: 'error.main' }}
+          >
             <DeleteIcon sx={{ mr: 1 }} />
             Delete
           </MenuItem>
@@ -467,15 +485,16 @@ export function Forms() {
         <DialogTitle>Delete Form</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete form "{selectedForm?.formId}"? This action cannot be undone.
+            Are you sure you want to delete form "{selectedForm?.formId}"? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button 
-            onClick={confirmDelete} 
-            color="error" 
-            variant="contained"
+          <Button
+            onClick={confirmDelete}
+            color='error'
+            variant='contained'
             disabled={deleteFormMutation.isPending}
           >
             {deleteFormMutation.isPending ? 'Deleting...' : 'Delete'}

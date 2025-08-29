@@ -127,7 +127,7 @@ const WidgetTypeItem: React.FC<{
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.WIDGET_TYPE,
     item: { type, name, description },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
   }));
@@ -146,8 +146,8 @@ const WidgetTypeItem: React.FC<{
       }}
     >
       <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText 
-        primary={name} 
+      <ListItemText
+        primary={name}
         secondary={description}
         secondaryTypographyProps={{ variant: 'caption' }}
       />
@@ -172,11 +172,14 @@ const DashboardCanvas: React.FC<{
         if (canvasRect) {
           const x = Math.floor((offset.x - canvasRect.left) / (canvasRect.width / layout.columns));
           const y = Math.floor((offset.y - canvasRect.top) / 60); // Approximate row height
-          onWidgetAdd(item.type, { x: Math.max(0, Math.min(x, layout.columns - 2)), y: Math.max(0, y) });
+          onWidgetAdd(item.type, {
+            x: Math.max(0, Math.min(x, layout.columns - 2)),
+            y: Math.max(0, y),
+          });
         }
       }
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
@@ -214,25 +217,25 @@ const DashboardCanvas: React.FC<{
           }}
         >
           <IconButton
-            size="small"
+            size='small'
             onClick={() => onWidgetUpdate(widget.id, widget)}
             sx={{ bgcolor: 'background.paper' }}
           >
-            <EditIcon fontSize="small" />
+            <EditIcon fontSize='small' />
           </IconButton>
           <IconButton
-            size="small"
+            size='small'
             onClick={() => onWidgetDelete(widget.id)}
-            color="error"
+            color='error'
             sx={{ bgcolor: 'background.paper' }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon fontSize='small' />
           </IconButton>
         </Box>
 
-        <Box display="flex" alignItems="center" mb={1}>
+        <Box display='flex' alignItems='center' mb={1}>
           {getWidgetTypeIcon(widget.type)}
-          <Typography variant="subtitle2" sx={{ ml: 1 }}>
+          <Typography variant='subtitle2' sx={{ ml: 1 }}>
             {widget.title}
           </Typography>
         </Box>
@@ -249,9 +252,7 @@ const DashboardCanvas: React.FC<{
             color: 'text.secondary',
           }}
         >
-          <Typography variant="body2">
-            {widget.description || `${widget.type} Widget`}
-          </Typography>
+          <Typography variant='body2'>{widget.description || `${widget.type} Widget`}</Typography>
         </Box>
       </CardContent>
     </Card>
@@ -259,12 +260,18 @@ const DashboardCanvas: React.FC<{
 
   const getWidgetTypeIcon = (type: string) => {
     switch (type) {
-      case 'metric': return <MetricIcon fontSize="small" />;
-      case 'chart': return <ChartIcon fontSize="small" />;
-      case 'table': return <TableIcon fontSize="small" />;
-      case 'text': return <TextIcon fontSize="small" />;
-      case 'filter': return <FilterIcon fontSize="small" />;
-      default: return <MetricIcon fontSize="small" />;
+      case 'metric':
+        return <MetricIcon fontSize='small' />;
+      case 'chart':
+        return <ChartIcon fontSize='small' />;
+      case 'table':
+        return <TableIcon fontSize='small' />;
+      case 'text':
+        return <TextIcon fontSize='small' />;
+      case 'filter':
+        return <FilterIcon fontSize='small' />;
+      default:
+        return <MetricIcon fontSize='small' />;
     }
   };
 
@@ -275,7 +282,8 @@ const DashboardCanvas: React.FC<{
         position: 'relative',
         minHeight: 600,
         width: '100%',
-        backgroundColor: isOver && canDrop ? 'action.hover' : layout.backgroundColor || 'background.default',
+        backgroundColor:
+          isOver && canDrop ? 'action.hover' : layout.backgroundColor || 'background.default',
         border: '2px dashed',
         borderColor: isOver && canDrop ? 'primary.main' : 'grey.300',
         p: layout.padding / 8,
@@ -284,29 +292,27 @@ const DashboardCanvas: React.FC<{
       <div ref={canvasRef} style={{ width: '100%', height: '100%' }}>
         {widgets.length > 0 ? (
           <ResponsiveGridLayout
-            className="layout"
+            className='layout'
             layouts={{ lg: gridLayouts }}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: layout.columns, md: layout.columns, sm: 6, xs: 4, xxs: 2 }}
             rowHeight={60}
             margin={[layout.gap, layout.gap]}
             onLayoutChange={handleLayoutChange}
-            draggableHandle=".drag-handle"
+            draggableHandle='.drag-handle'
             resizeHandles={['se']}
           >
             {widgets.map(renderWidget)}
           </ResponsiveGridLayout>
         ) : (
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="100%"
-            color="text.secondary"
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            height='100%'
+            color='text.secondary'
           >
-            <Typography variant="h6">
-              Drag widgets here to build your dashboard
-            </Typography>
+            <Typography variant='h6'>Drag widgets here to build your dashboard</Typography>
           </Box>
         )}
       </div>
@@ -337,15 +343,15 @@ const WidgetEditor: React.FC<{
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth='md' fullWidth>
       <DialogTitle>Edit Widget: {editedWidget.title}</DialogTitle>
       <DialogContent>
         <Box sx={{ width: '100%', mt: 2 }}>
           <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
-            <Tab label="General" />
-            <Tab label="Configuration" />
-            <Tab label="Styling" />
-            <Tab label="Visibility" />
+            <Tab label='General' />
+            <Tab label='Configuration' />
+            <Tab label='Styling' />
+            <Tab label='Visibility' />
           </Tabs>
 
           {/* General Tab */}
@@ -355,17 +361,19 @@ const WidgetEditor: React.FC<{
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Widget Title"
+                    label='Widget Title'
                     value={editedWidget.title}
-                    onChange={(e) => setEditedWidget({ ...editedWidget, title: e.target.value })}
+                    onChange={e => setEditedWidget({ ...editedWidget, title: e.target.value })}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Description"
+                    label='Description'
                     value={editedWidget.description || ''}
-                    onChange={(e) => setEditedWidget({ ...editedWidget, description: e.target.value })}
+                    onChange={e =>
+                      setEditedWidget({ ...editedWidget, description: e.target.value })
+                    }
                     multiline
                     rows={3}
                   />
@@ -373,26 +381,30 @@ const WidgetEditor: React.FC<{
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Width"
-                    type="number"
+                    label='Width'
+                    type='number'
                     value={editedWidget.layout.width}
-                    onChange={(e) => setEditedWidget({
-                      ...editedWidget,
-                      layout: { ...editedWidget.layout, width: parseInt(e.target.value) }
-                    })}
+                    onChange={e =>
+                      setEditedWidget({
+                        ...editedWidget,
+                        layout: { ...editedWidget.layout, width: parseInt(e.target.value) },
+                      })
+                    }
                     inputProps={{ min: 1, max: 12 }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Height"
-                    type="number"
+                    label='Height'
+                    type='number'
                     value={editedWidget.layout.height}
-                    onChange={(e) => setEditedWidget({
-                      ...editedWidget,
-                      layout: { ...editedWidget.layout, height: parseInt(e.target.value) }
-                    })}
+                    onChange={e =>
+                      setEditedWidget({
+                        ...editedWidget,
+                        layout: { ...editedWidget.layout, height: parseInt(e.target.value) },
+                      })
+                    }
                     inputProps={{ min: 1, max: 20 }}
                   />
                 </Grid>
@@ -403,7 +415,9 @@ const WidgetEditor: React.FC<{
           {/* Configuration Tab */}
           {activeTab === 1 && (
             <Box sx={{ mt: 2 }}>
-              <Typography variant="h6" gutterBottom>Widget Configuration</Typography>
+              <Typography variant='h6' gutterBottom>
+                Widget Configuration
+              </Typography>
               {editedWidget.type === 'metric' && (
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
@@ -411,15 +425,17 @@ const WidgetEditor: React.FC<{
                       <InputLabel>Metric</InputLabel>
                       <Select
                         value={editedWidget.config?.metric || ''}
-                        onChange={(e) => setEditedWidget({
-                          ...editedWidget,
-                          config: { ...editedWidget.config, metric: e.target.value }
-                        })}
+                        onChange={e =>
+                          setEditedWidget({
+                            ...editedWidget,
+                            config: { ...editedWidget.config, metric: e.target.value },
+                          })
+                        }
                       >
-                        <MenuItem value="totalForms">Total Forms</MenuItem>
-                        <MenuItem value="completedForms">Completed Forms</MenuItem>
-                        <MenuItem value="activeUsers">Active Users</MenuItem>
-                        <MenuItem value="avgCompletionTime">Avg Completion Time</MenuItem>
+                        <MenuItem value='totalForms'>Total Forms</MenuItem>
+                        <MenuItem value='completedForms'>Completed Forms</MenuItem>
+                        <MenuItem value='activeUsers'>Active Users</MenuItem>
+                        <MenuItem value='avgCompletionTime'>Avg Completion Time</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -428,15 +444,17 @@ const WidgetEditor: React.FC<{
                       <InputLabel>Format</InputLabel>
                       <Select
                         value={editedWidget.config?.format || 'number'}
-                        onChange={(e) => setEditedWidget({
-                          ...editedWidget,
-                          config: { ...editedWidget.config, format: e.target.value }
-                        })}
+                        onChange={e =>
+                          setEditedWidget({
+                            ...editedWidget,
+                            config: { ...editedWidget.config, format: e.target.value },
+                          })
+                        }
                       >
-                        <MenuItem value="number">Number</MenuItem>
-                        <MenuItem value="percentage">Percentage</MenuItem>
-                        <MenuItem value="currency">Currency</MenuItem>
-                        <MenuItem value="time">Time</MenuItem>
+                        <MenuItem value='number'>Number</MenuItem>
+                        <MenuItem value='percentage'>Percentage</MenuItem>
+                        <MenuItem value='currency'>Currency</MenuItem>
+                        <MenuItem value='time'>Time</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -450,16 +468,18 @@ const WidgetEditor: React.FC<{
                       <InputLabel>Chart Type</InputLabel>
                       <Select
                         value={editedWidget.config?.chartType || 'bar'}
-                        onChange={(e) => setEditedWidget({
-                          ...editedWidget,
-                          config: { ...editedWidget.config, chartType: e.target.value }
-                        })}
+                        onChange={e =>
+                          setEditedWidget({
+                            ...editedWidget,
+                            config: { ...editedWidget.config, chartType: e.target.value },
+                          })
+                        }
                       >
-                        <MenuItem value="bar">Bar Chart</MenuItem>
-                        <MenuItem value="line">Line Chart</MenuItem>
-                        <MenuItem value="pie">Pie Chart</MenuItem>
-                        <MenuItem value="doughnut">Doughnut Chart</MenuItem>
-                        <MenuItem value="area">Area Chart</MenuItem>
+                        <MenuItem value='bar'>Bar Chart</MenuItem>
+                        <MenuItem value='line'>Line Chart</MenuItem>
+                        <MenuItem value='pie'>Pie Chart</MenuItem>
+                        <MenuItem value='doughnut'>Doughnut Chart</MenuItem>
+                        <MenuItem value='area'>Area Chart</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -468,15 +488,17 @@ const WidgetEditor: React.FC<{
                       <InputLabel>Data Source</InputLabel>
                       <Select
                         value={editedWidget.config?.dataSource || ''}
-                        onChange={(e) => setEditedWidget({
-                          ...editedWidget,
-                          config: { ...editedWidget.config, dataSource: e.target.value }
-                        })}
+                        onChange={e =>
+                          setEditedWidget({
+                            ...editedWidget,
+                            config: { ...editedWidget.config, dataSource: e.target.value },
+                          })
+                        }
                       >
-                        <MenuItem value="forms">Forms</MenuItem>
-                        <MenuItem value="templates">Templates</MenuItem>
-                        <MenuItem value="worksites">Worksites</MenuItem>
-                        <MenuItem value="users">Users</MenuItem>
+                        <MenuItem value='forms'>Forms</MenuItem>
+                        <MenuItem value='templates'>Templates</MenuItem>
+                        <MenuItem value='worksites'>Worksites</MenuItem>
+                        <MenuItem value='users'>Users</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -488,15 +510,17 @@ const WidgetEditor: React.FC<{
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      label="Content"
+                      label='Content'
                       value={editedWidget.config?.content || ''}
-                      onChange={(e) => setEditedWidget({
-                        ...editedWidget,
-                        config: { ...editedWidget.config, content: e.target.value }
-                      })}
+                      onChange={e =>
+                        setEditedWidget({
+                          ...editedWidget,
+                          config: { ...editedWidget.config, content: e.target.value },
+                        })
+                      }
                       multiline
                       rows={6}
-                      placeholder="Enter your text content here..."
+                      placeholder='Enter your text content here...'
                     />
                   </Grid>
                 </Grid>
@@ -511,37 +535,46 @@ const WidgetEditor: React.FC<{
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Background Color"
-                    type="color"
+                    label='Background Color'
+                    type='color'
                     value={editedWidget.styling?.backgroundColor || '#ffffff'}
-                    onChange={(e) => setEditedWidget({
-                      ...editedWidget,
-                      styling: { ...editedWidget.styling, backgroundColor: e.target.value }
-                    })}
+                    onChange={e =>
+                      setEditedWidget({
+                        ...editedWidget,
+                        styling: { ...editedWidget.styling, backgroundColor: e.target.value },
+                      })
+                    }
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Border Color"
-                    type="color"
+                    label='Border Color'
+                    type='color'
                     value={editedWidget.styling?.borderColor || '#dddddd'}
-                    onChange={(e) => setEditedWidget({
-                      ...editedWidget,
-                      styling: { ...editedWidget.styling, borderColor: e.target.value }
-                    })}
+                    onChange={e =>
+                      setEditedWidget({
+                        ...editedWidget,
+                        styling: { ...editedWidget.styling, borderColor: e.target.value },
+                      })
+                    }
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Border Radius"
-                    type="number"
+                    label='Border Radius'
+                    type='number'
                     value={editedWidget.styling?.borderRadius || 4}
-                    onChange={(e) => setEditedWidget({
-                      ...editedWidget,
-                      styling: { ...editedWidget.styling, borderRadius: parseInt(e.target.value) }
-                    })}
+                    onChange={e =>
+                      setEditedWidget({
+                        ...editedWidget,
+                        styling: {
+                          ...editedWidget.styling,
+                          borderRadius: parseInt(e.target.value),
+                        },
+                      })
+                    }
                     inputProps={{ min: 0, max: 50 }}
                   />
                 </Grid>
@@ -550,13 +583,15 @@ const WidgetEditor: React.FC<{
                     control={
                       <Switch
                         checked={editedWidget.styling?.shadow || false}
-                        onChange={(e) => setEditedWidget({
-                          ...editedWidget,
-                          styling: { ...editedWidget.styling, shadow: e.target.checked }
-                        })}
+                        onChange={e =>
+                          setEditedWidget({
+                            ...editedWidget,
+                            styling: { ...editedWidget.styling, shadow: e.target.checked },
+                          })
+                        }
                       />
                     }
-                    label="Drop Shadow"
+                    label='Drop Shadow'
                   />
                 </Grid>
               </Grid>
@@ -566,11 +601,11 @@ const WidgetEditor: React.FC<{
           {/* Visibility Tab */}
           {activeTab === 3 && (
             <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Visible to Roles
               </Typography>
-              <Box display="flex" gap={1} flexWrap="wrap">
-                {['admin', 'manager', 'technician'].map((role) => (
+              <Box display='flex' gap={1} flexWrap='wrap'>
+                {['admin', 'manager', 'technician'].map(role => (
                   <Chip
                     key={role}
                     label={role}
@@ -581,10 +616,10 @@ const WidgetEditor: React.FC<{
                       const newRoles = currentRoles.includes(role)
                         ? currentRoles.filter(r => r !== role)
                         : [...currentRoles, role];
-                      
+
                       setEditedWidget({
                         ...editedWidget,
-                        visibility: { ...editedWidget.visibility, roles: newRoles }
+                        visibility: { ...editedWidget.visibility, roles: newRoles },
                       });
                     }}
                   />
@@ -596,7 +631,7 @@ const WidgetEditor: React.FC<{
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained">
+        <Button onClick={handleSave} variant='contained'>
           Save Widget
         </Button>
       </DialogActions>
@@ -644,7 +679,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
 
   const loadDashboard = async () => {
     if (!dashboardId) return;
-    
+
     setLoading(true);
     try {
       const response = await request(`/api/dashboards/${dashboardId}`);
@@ -751,7 +786,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
@@ -762,8 +797,8 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
       <Box sx={{ display: 'flex', height: '100vh' }}>
         {/* Sidebar */}
         <Drawer
-          variant="persistent"
-          anchor="left"
+          variant='persistent'
+          anchor='left'
           open={sidebarOpen}
           sx={{
             width: 300,
@@ -776,7 +811,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
           }}
         >
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Dashboard Builder
             </Typography>
 
@@ -787,34 +822,34 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
               <AccordionDetails>
                 <List>
                   <WidgetTypeItem
-                    type="metric"
+                    type='metric'
                     icon={<MetricIcon />}
-                    name="Metric"
-                    description="Display key performance indicators"
+                    name='Metric'
+                    description='Display key performance indicators'
                   />
                   <WidgetTypeItem
-                    type="chart"
+                    type='chart'
                     icon={<ChartIcon />}
-                    name="Chart"
-                    description="Visualize data with various chart types"
+                    name='Chart'
+                    description='Visualize data with various chart types'
                   />
                   <WidgetTypeItem
-                    type="table"
+                    type='table'
                     icon={<TableIcon />}
-                    name="Table"
-                    description="Display data in tabular format"
+                    name='Table'
+                    description='Display data in tabular format'
                   />
                   <WidgetTypeItem
-                    type="text"
+                    type='text'
                     icon={<TextIcon />}
-                    name="Text"
-                    description="Add custom text and descriptions"
+                    name='Text'
+                    description='Add custom text and descriptions'
                   />
                   <WidgetTypeItem
-                    type="filter"
+                    type='filter'
                     icon={<FilterIcon />}
-                    name="Filter"
-                    description="Interactive data filters"
+                    name='Filter'
+                    description='Interactive data filters'
                   />
                 </List>
               </AccordionDetails>
@@ -829,9 +864,9 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      label="Dashboard Name"
+                      label='Dashboard Name'
                       value={dashboard.name}
-                      onChange={(e) => setDashboard({ ...dashboard, name: e.target.value })}
+                      onChange={e => setDashboard({ ...dashboard, name: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -839,15 +874,17 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       <InputLabel>Category</InputLabel>
                       <Select
                         value={dashboard.category}
-                        onChange={(e) => setDashboard({
-                          ...dashboard,
-                          category: e.target.value as Dashboard['category']
-                        })}
+                        onChange={e =>
+                          setDashboard({
+                            ...dashboard,
+                            category: e.target.value as Dashboard['category'],
+                          })
+                        }
                       >
-                        <MenuItem value="personal">Personal</MenuItem>
-                        <MenuItem value="team">Team</MenuItem>
-                        <MenuItem value="organization">Organization</MenuItem>
-                        <MenuItem value="public">Public</MenuItem>
+                        <MenuItem value='personal'>Personal</MenuItem>
+                        <MenuItem value='team'>Team</MenuItem>
+                        <MenuItem value='organization'>Organization</MenuItem>
+                        <MenuItem value='public'>Public</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -856,13 +893,15 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       control={
                         <Switch
                           checked={dashboard.settings.autoRefresh}
-                          onChange={(e) => setDashboard({
-                            ...dashboard,
-                            settings: { ...dashboard.settings, autoRefresh: e.target.checked }
-                          })}
+                          onChange={e =>
+                            setDashboard({
+                              ...dashboard,
+                              settings: { ...dashboard.settings, autoRefresh: e.target.checked },
+                            })
+                          }
                         />
                       }
-                      label="Auto Refresh"
+                      label='Auto Refresh'
                     />
                   </Grid>
                 </Grid>
@@ -875,18 +914,18 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
         <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
           <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="h5">{dashboard.name}</Typography>
-              <Box display="flex" gap={1}>
+            <Box display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography variant='h5'>{dashboard.name}</Typography>
+              <Box display='flex' gap={1}>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   startIcon={<GridIcon />}
                   onClick={() => setSidebarOpen(!sidebarOpen)}
                 >
                   {sidebarOpen ? 'Hide' : 'Show'} Sidebar
                 </Button>
                 <Button
-                  variant="contained"
+                  variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={handleSave}
                   disabled={saving}
@@ -922,7 +961,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
           widget={editingWidget}
           open={!!editingWidget}
           onClose={() => setEditingWidget(null)}
-          onSave={(widget) => handleWidgetUpdate(widget.id, widget)}
+          onSave={widget => handleWidgetUpdate(widget.id, widget)}
         />
       </Box>
     </DndProvider>

@@ -86,7 +86,7 @@ export function Profile() {
       timezone: 'UTC',
     },
   });
-  
+
   const [passwordData, setPasswordData] = useState<PasswordChangeData>({
     currentPassword: '',
     newPassword: '',
@@ -101,7 +101,7 @@ export function Profile() {
       const response = await api.put(`/users/${user?.id}`, data);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       updateUser(data.data.user);
       queryClient.invalidateQueries({ queryKey: ['user', user?.id] });
       setIsEditing(false);
@@ -135,7 +135,7 @@ export function Profile() {
 
   const handleSaveProfile = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!profileData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
     }
@@ -160,7 +160,7 @@ export function Profile() {
 
   const handlePasswordChange = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!passwordData.currentPassword) {
       newErrors.currentPassword = 'Current password is required';
     }
@@ -206,15 +206,15 @@ export function Profile() {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Profile
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
         Manage your account settings and preferences
       </Typography>
 
       {errors.general && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {errors.general}
         </Alert>
       )}
@@ -226,13 +226,13 @@ export function Profile() {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <PersonIcon sx={{ mr: 2, color: 'primary.main' }} />
-                <Typography variant="h6">Profile Information</Typography>
+                <Typography variant='h6'>Profile Information</Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 {!isEditing ? (
                   <Button
                     startIcon={<EditIcon />}
                     onClick={() => setIsEditing(true)}
-                    variant="outlined"
+                    variant='outlined'
                   >
                     Edit
                   </Button>
@@ -241,7 +241,7 @@ export function Profile() {
                     <Button
                       startIcon={<SaveIcon />}
                       onClick={handleSaveProfile}
-                      variant="contained"
+                      variant='contained'
                       disabled={updateProfileMutation.isPending}
                     >
                       {updateProfileMutation.isPending ? <CircularProgress size={20} /> : 'Save'}
@@ -249,7 +249,7 @@ export function Profile() {
                     <Button
                       startIcon={<CancelIcon />}
                       onClick={handleCancel}
-                      variant="outlined"
+                      variant='outlined'
                       disabled={updateProfileMutation.isPending}
                     >
                       Cancel
@@ -262,9 +262,9 @@ export function Profile() {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="First Name"
+                    label='First Name'
                     value={profileData.firstName}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
+                    onChange={e => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
                     disabled={!isEditing}
                     error={!!errors.firstName}
                     helperText={errors.firstName}
@@ -273,9 +273,9 @@ export function Profile() {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Last Name"
+                    label='Last Name'
                     value={profileData.lastName}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
+                    onChange={e => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
                     disabled={!isEditing}
                     error={!!errors.lastName}
                     helperText={errors.lastName}
@@ -284,19 +284,19 @@ export function Profile() {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Email"
+                    label='Email'
                     value={profileData.email}
                     disabled
-                    helperText="Email cannot be changed"
+                    helperText='Email cannot be changed'
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Role"
+                    label='Role'
                     value={profileData.role}
                     disabled
-                    helperText="Role is assigned by administrators"
+                    helperText='Role is assigned by administrators'
                   />
                 </Grid>
               </Grid>
@@ -304,24 +304,29 @@ export function Profile() {
               <Divider sx={{ my: 3 }} />
 
               {/* Preferences */}
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Preferences
               </Typography>
-              
+
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Theme</InputLabel>
                     <Select
                       value={profileData.preferences.theme}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: { ...prev.preferences, theme: e.target.value as 'light' | 'dark' }
-                      }))}
-                      label="Theme"
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: {
+                            ...prev.preferences,
+                            theme: e.target.value as 'light' | 'dark',
+                          },
+                        }))
+                      }
+                      label='Theme'
                     >
-                      <MenuItem value="light">Light</MenuItem>
-                      <MenuItem value="dark">Dark</MenuItem>
+                      <MenuItem value='light'>Light</MenuItem>
+                      <MenuItem value='dark'>Dark</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -330,15 +335,17 @@ export function Profile() {
                     <InputLabel>Language</InputLabel>
                     <Select
                       value={profileData.preferences.language}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: { ...prev.preferences, language: e.target.value }
-                      }))}
-                      label="Language"
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, language: e.target.value },
+                        }))
+                      }
+                      label='Language'
                     >
-                      <MenuItem value="en">English</MenuItem>
-                      <MenuItem value="es">Spanish</MenuItem>
-                      <MenuItem value="fr">French</MenuItem>
+                      <MenuItem value='en'>English</MenuItem>
+                      <MenuItem value='es'>Spanish</MenuItem>
+                      <MenuItem value='fr'>French</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -347,91 +354,113 @@ export function Profile() {
                     <InputLabel>Timezone</InputLabel>
                     <Select
                       value={profileData.preferences.timezone}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: { ...prev.preferences, timezone: e.target.value }
-                      }))}
-                      label="Timezone"
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, timezone: e.target.value },
+                        }))
+                      }
+                      label='Timezone'
                     >
-                      <MenuItem value="UTC">UTC</MenuItem>
-                      <MenuItem value="America/New_York">Eastern Time</MenuItem>
-                      <MenuItem value="America/Chicago">Central Time</MenuItem>
-                      <MenuItem value="America/Denver">Mountain Time</MenuItem>
-                      <MenuItem value="America/Los_Angeles">Pacific Time</MenuItem>
+                      <MenuItem value='UTC'>UTC</MenuItem>
+                      <MenuItem value='America/New_York'>Eastern Time</MenuItem>
+                      <MenuItem value='America/Chicago'>Central Time</MenuItem>
+                      <MenuItem value='America/Denver'>Mountain Time</MenuItem>
+                      <MenuItem value='America/Los_Angeles'>Pacific Time</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
 
               {/* Notification Settings */}
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+              <Typography variant='h6' gutterBottom sx={{ mt: 3 }}>
                 Notification Settings
               </Typography>
-              
+
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControlLabel
                   control={
                     <Switch
                       checked={profileData.preferences.notifications.email}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: {
-                          ...prev.preferences,
-                          notifications: { ...prev.preferences.notifications, email: e.target.checked }
-                        }
-                      }))}
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: {
+                            ...prev.preferences,
+                            notifications: {
+                              ...prev.preferences.notifications,
+                              email: e.target.checked,
+                            },
+                          },
+                        }))
+                      }
                       disabled={!isEditing}
                     />
                   }
-                  label="Email notifications"
+                  label='Email notifications'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={profileData.preferences.notifications.formSubmissions}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: {
-                          ...prev.preferences,
-                          notifications: { ...prev.preferences.notifications, formSubmissions: e.target.checked }
-                        }
-                      }))}
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: {
+                            ...prev.preferences,
+                            notifications: {
+                              ...prev.preferences.notifications,
+                              formSubmissions: e.target.checked,
+                            },
+                          },
+                        }))
+                      }
                       disabled={!isEditing}
                     />
                   }
-                  label="Form submission notifications"
+                  label='Form submission notifications'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={profileData.preferences.notifications.approvals}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: {
-                          ...prev.preferences,
-                          notifications: { ...prev.preferences.notifications, approvals: e.target.checked }
-                        }
-                      }))}
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: {
+                            ...prev.preferences,
+                            notifications: {
+                              ...prev.preferences.notifications,
+                              approvals: e.target.checked,
+                            },
+                          },
+                        }))
+                      }
                       disabled={!isEditing}
                     />
                   }
-                  label="Approval notifications"
+                  label='Approval notifications'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={profileData.preferences.notifications.reminders}
-                      onChange={(e) => setProfileData(prev => ({
-                        ...prev,
-                        preferences: {
-                          ...prev.preferences,
-                          notifications: { ...prev.preferences.notifications, reminders: e.target.checked }
-                        }
-                      }))}
+                      onChange={e =>
+                        setProfileData(prev => ({
+                          ...prev,
+                          preferences: {
+                            ...prev.preferences,
+                            notifications: {
+                              ...prev.preferences.notifications,
+                              reminders: e.target.checked,
+                            },
+                          },
+                        }))
+                      }
                       disabled={!isEditing}
                     />
                   }
-                  label="Reminder notifications"
+                  label='Reminder notifications'
                 />
               </Box>
             </CardContent>
@@ -444,12 +473,19 @@ export function Profile() {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Avatar sx={{ width: 80, height: 80, bgcolor: 'primary.main', fontSize: '2rem' }}>
-                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                  {user?.firstName?.[0]}
+                  {user?.lastName?.[0]}
                 </Avatar>
                 <Box sx={{ ml: 2 }}>
-                  <Typography variant="h6">{user?.firstName} {user?.lastName}</Typography>
-                  <Typography variant="body2" color="text.secondary">{user?.role}</Typography>
-                  <Typography variant="body2" color="text.secondary">{user?.email}</Typography>
+                  <Typography variant='h6'>
+                    {user?.firstName} {user?.lastName}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>
+                    {user?.role}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>
+                    {user?.email}
+                  </Typography>
                 </Box>
               </Box>
 
@@ -458,9 +494,9 @@ export function Profile() {
               <List>
                 <ListItem button onClick={() => setShowPasswordDialog(true)}>
                   <SecurityIcon sx={{ mr: 2 }} />
-                  <ListItemText 
-                    primary="Change Password" 
-                    secondary="Update your account password"
+                  <ListItemText
+                    primary='Change Password'
+                    secondary='Update your account password'
                   />
                 </ListItem>
               </List>
@@ -468,19 +504,19 @@ export function Profile() {
           </Card>
 
           <Paper sx={{ mt: 2, p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Account Statistics
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2">Member since:</Typography>
-                <Typography variant="body2">
+                <Typography variant='body2'>Member since:</Typography>
+                <Typography variant='body2'>
                   {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2">Last login:</Typography>
-                <Typography variant="body2">
+                <Typography variant='body2'>Last login:</Typography>
+                <Typography variant='body2'>
                   {user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}
                 </Typography>
               </Box>
@@ -490,51 +526,63 @@ export function Profile() {
       </Grid>
 
       {/* Password Change Dialog */}
-      <Dialog open={showPasswordDialog} onClose={() => setShowPasswordDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={showPasswordDialog}
+        onClose={() => setShowPasswordDialog(false)}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           {errors.password && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity='error' sx={{ mb: 2 }}>
               {errors.password}
             </Alert>
           )}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <TextField
               fullWidth
-              label="Current Password"
-              type="password"
+              label='Current Password'
+              type='password'
               value={passwordData.currentPassword}
-              onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+              onChange={e =>
+                setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))
+              }
               error={!!errors.currentPassword}
               helperText={errors.currentPassword}
             />
             <TextField
               fullWidth
-              label="New Password"
-              type="password"
+              label='New Password'
+              type='password'
               value={passwordData.newPassword}
-              onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+              onChange={e => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
               error={!!errors.newPassword}
               helperText={errors.newPassword || 'Must be at least 8 characters'}
             />
             <TextField
               fullWidth
-              label="Confirm New Password"
-              type="password"
+              label='Confirm New Password'
+              type='password'
               value={passwordData.confirmPassword}
-              onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+              onChange={e =>
+                setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))
+              }
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowPasswordDialog(false)} disabled={changePasswordMutation.isPending}>
+          <Button
+            onClick={() => setShowPasswordDialog(false)}
+            disabled={changePasswordMutation.isPending}
+          >
             Cancel
           </Button>
-          <Button 
-            onClick={handlePasswordChange} 
-            variant="contained" 
+          <Button
+            onClick={handlePasswordChange}
+            variant='contained'
             disabled={changePasswordMutation.isPending}
           >
             {changePasswordMutation.isPending ? <CircularProgress size={20} /> : 'Change Password'}

@@ -52,36 +52,44 @@ async function startServer() {
     app.use(preventFraming);
 
     // CORS configuration
-    app.use(cors({
-      origin: env.CORS_ORIGIN,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-      credentials: true,
-      optionsSuccessStatus: 200,
-    }));
+    app.use(
+      cors({
+        origin: env.CORS_ORIGIN,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+        credentials: true,
+        optionsSuccessStatus: 200,
+      })
+    );
 
     // Compression middleware
-    app.use(compression({
-      filter: (req, res) => {
-        if (req.headers['x-no-compression']) {
-          return false;
-        }
-        return compression.filter(req, res);
-      },
-      level: 6,
-    }));
+    app.use(
+      compression({
+        filter: (req, res) => {
+          if (req.headers['x-no-compression']) {
+            return false;
+          }
+          return compression.filter(req, res);
+        },
+        level: 6,
+      })
+    );
 
     // Body parsing middleware
-    app.use(express.json({ 
-      limit: '10mb',
-      strict: true,
-      type: ['application/json'],
-    }));
-    app.use(express.urlencoded({ 
-      extended: true, 
-      limit: '10mb',
-      type: ['application/x-www-form-urlencoded'],
-    }));
+    app.use(
+      express.json({
+        limit: '10mb',
+        strict: true,
+        type: ['application/json'],
+      })
+    );
+    app.use(
+      express.urlencoded({
+        extended: true,
+        limit: '10mb',
+        type: ['application/x-www-form-urlencoded'],
+      })
+    );
 
     // Content type validation and input sanitization
     app.use(validateContentType);
@@ -97,7 +105,7 @@ async function startServer() {
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         version: process.env.npm_package_version || '1.0.0',
-        environment: env.NODE_ENV
+        environment: env.NODE_ENV,
       });
     });
 
@@ -112,7 +120,7 @@ async function startServer() {
           uptime: process.uptime(),
           environment: env.NODE_ENV,
           version: '2.0.0',
-        }
+        },
       });
     });
 
@@ -125,7 +133,7 @@ async function startServer() {
           version: '2.0.0',
           environment: env.NODE_ENV,
           timestamp: new Date().toISOString(),
-        }
+        },
       });
     });
 
@@ -169,23 +177,25 @@ async function startServer() {
     });
 
     // Global error handler
-    app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.error('Global error handler:', error);
+    app.use(
+      (error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        console.error('Global error handler:', error);
 
-      // Don't leak error details in production
-      const isDevelopment = env.NODE_ENV === 'development';
+        // Don't leak error details in production
+        const isDevelopment = env.NODE_ENV === 'development';
 
-      res.status(error.status || 500).json({
-        success: false,
-        message: error.message || 'Internal server error',
-        code: error.code || 'INTERNAL_ERROR',
-        ...(isDevelopment && { stack: error.stack, details: error.details }),
-      });
-    });
+        res.status(error.status || 500).json({
+          success: false,
+          message: error.message || 'Internal server error',
+          code: error.code || 'INTERNAL_ERROR',
+          ...(isDevelopment && { stack: error.stack, details: error.details }),
+        });
+      }
+    );
 
     // Initialize scheduler service
     const schedulerService = SchedulerService.getInstance();
-    
+
     // Start server
     const server = app.listen(PORT, () => {
       console.log(`🚀 Chryso Forms v2 Server started`);
@@ -201,10 +211,10 @@ async function startServer() {
     // Graceful shutdown handling
     const gracefulShutdown = (signal: string) => {
       console.log(`\n${signal} received. Shutting down gracefully...`);
-      
+
       // Stop scheduler service first
       schedulerService.shutdownSystemJobs();
-      
+
       server.close(() => {
         console.log('🔴 HTTP server closed');
         process.exit(0);
@@ -221,7 +231,7 @@ async function startServer() {
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
     // Handle uncaught exceptions
-    process.on('uncaughtException', (error) => {
+    process.on('uncaughtException', error => {
       console.error('Uncaught Exception:', error);
       process.exit(1);
     });
@@ -230,7 +240,6 @@ async function startServer() {
       console.error('Unhandled Rejection at:', promise, 'reason:', reason);
       process.exit(1);
     });
-
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);

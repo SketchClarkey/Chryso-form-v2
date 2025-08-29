@@ -32,13 +32,15 @@ describe('Form Model', () => {
         zipCode: '12345',
         country: 'Test Country',
       },
-      contacts: [{
-        name: 'John Doe',
-        position: 'Manager',
-        phone: '+1234567890',
-        email: 'john@test.com',
-        isPrimary: true,
-      }],
+      contacts: [
+        {
+          name: 'John Doe',
+          position: 'Manager',
+          phone: '+1234567890',
+          email: 'john@test.com',
+          isPrimary: true,
+        },
+      ],
       equipment: [],
       isActive: true,
       metadata: {
@@ -49,7 +51,6 @@ describe('Form Model', () => {
       },
     });
   });
-
 
   describe('Form Creation', () => {
     it('should create a form with required fields', async () => {
@@ -192,7 +193,7 @@ describe('Form Model', () => {
 
       const formId1 = form.generateFormId();
       const formId2 = form.generateFormId();
-      
+
       expect(formId1).toMatch(/^GCP-\d{6}-[A-Z0-9]{4}$/);
       expect(formId2).toMatch(/^GCP-\d{6}-[A-Z0-9]{4}$/);
       expect(formId1).not.toBe(formId2);
@@ -208,13 +209,15 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        dispenserSystems: [{
-          // Missing required fields
-          equipmentCondition: 'good',
-          pumpCondition: 'good',
-          pulseMeterCondition: 'good',
-          dispenserCondition: 'good',
-        }],
+        dispenserSystems: [
+          {
+            // Missing required fields
+            equipmentCondition: 'good',
+            pumpCondition: 'good',
+            pulseMeterCondition: 'good',
+            dispenserCondition: 'good',
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -231,15 +234,17 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        dispenserSystems: [{
-          tankNumber: 'TANK-001',
-          chemicalProduct: 'Test Chemical',
-          tankSize: 100,
-          equipmentCondition: 'invalid-condition' as any,
-          pumpCondition: 'good',
-          pulseMeterCondition: 'good',
-          dispenserCondition: 'good',
-        }],
+        dispenserSystems: [
+          {
+            tankNumber: 'TANK-001',
+            chemicalProduct: 'Test Chemical',
+            tankSize: 100,
+            equipmentCondition: 'invalid-condition' as any,
+            pumpCondition: 'good',
+            pulseMeterCondition: 'good',
+            dispenserCondition: 'good',
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -256,18 +261,20 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        dispenserSystems: [{
-          tankNumber: 'TANK-001',
-          chemicalProduct: 'Test Chemical',
-          tankSize: 100,
-          equipmentCondition: 'excellent',
-          pumpCondition: 'good',
-          pulseMeterCondition: 'fair',
-          dispenserCondition: 'poor',
-          pumpModel: 'Pump Model X',
-          pulseMeterType: 'Digital',
-          dispenserType: 'Automatic',
-        }],
+        dispenserSystems: [
+          {
+            tankNumber: 'TANK-001',
+            chemicalProduct: 'Test Chemical',
+            tankSize: 100,
+            equipmentCondition: 'excellent',
+            pumpCondition: 'good',
+            pulseMeterCondition: 'fair',
+            dispenserCondition: 'poor',
+            pumpModel: 'Pump Model X',
+            pulseMeterType: 'Digital',
+            dispenserType: 'Automatic',
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -290,10 +297,12 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        calibrationData: [{
-          productName: 'Test Product',
-          // Missing other required fields
-        }],
+        calibrationData: [
+          {
+            productName: 'Test Product',
+            // Missing other required fields
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -310,15 +319,17 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        calibrationData: [{
-          productName: 'Test Product',
-          doseRate: -5, // Invalid negative value
-          cementContent: 100,
-          batchTotal: 1000,
-          actualMeasurement: 95,
-          resultPercentage: 95,
-          graduatedMeasureId: 'GM-001',
-        }],
+        calibrationData: [
+          {
+            productName: 'Test Product',
+            doseRate: -5, // Invalid negative value
+            cementContent: 100,
+            batchTotal: 1000,
+            actualMeasurement: 95,
+            resultPercentage: 95,
+            graduatedMeasureId: 'GM-001',
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -335,15 +346,17 @@ describe('Form Model', () => {
           customerName: 'Test Customer',
           plantLocation: 'Plant Location',
         },
-        calibrationData: [{
-          productName: 'Test Product',
-          doseRate: 5.5,
-          cementContent: 100,
-          batchTotal: 1000,
-          actualMeasurement: 95.2,
-          resultPercentage: 95.2,
-          graduatedMeasureId: 'GM-001',
-        }],
+        calibrationData: [
+          {
+            productName: 'Test Product',
+            doseRate: 5.5,
+            cementContent: 100,
+            batchTotal: 1000,
+            actualMeasurement: 95.2,
+            resultPercentage: 95.2,
+            graduatedMeasureId: 'GM-001',
+          },
+        ],
         metadata: {
           createdBy: testUser._id,
         },
@@ -446,15 +459,17 @@ describe('Form Model', () => {
           serviceType: {
             service: true,
           },
-          dispenserSystems: [{
-            tankNumber: 'TANK-001',
-            chemicalProduct: 'Test Chemical',
-            tankSize: 100,
-            equipmentCondition: 'good',
-            pumpCondition: 'good',
-            pulseMeterCondition: 'good',
-            dispenserCondition: 'good',
-          }],
+          dispenserSystems: [
+            {
+              tankNumber: 'TANK-001',
+              chemicalProduct: 'Test Chemical',
+              tankSize: 100,
+              equipmentCondition: 'good',
+              pumpCondition: 'good',
+              pulseMeterCondition: 'good',
+              dispenserCondition: 'good',
+            },
+          ],
           serviceChecklist: {
             workAreaCleaned: true,
             siteTablesReplaced: true,
@@ -499,10 +514,10 @@ describe('Form Model', () => {
 
       it('should allow manager to edit forms unless approved/archived', () => {
         expect(testForm.canBeEditedBy('manager123', 'manager')).toBe(true);
-        
+
         testForm.status = 'approved';
         expect(testForm.canBeEditedBy('manager123', 'manager')).toBe(false);
-        
+
         testForm.status = 'archived';
         expect(testForm.canBeEditedBy('manager123', 'manager')).toBe(false);
       });

@@ -27,28 +27,24 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/login"
-        element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginForm />
-        }
+        path='/login'
+        element={isAuthenticated ? <Navigate to='/dashboard' replace /> : <LoginForm />}
       />
       <Route
-        path="/register"
-        element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterForm />
-        }
+        path='/register'
+        element={isAuthenticated ? <Navigate to='/dashboard' replace /> : <RegisterForm />}
       />
       <Route
-        path="/*"
+        path='/*'
         element={
           <ProtectedRoute>
             <DashboardLayout />
           </ProtectedRoute>
         }
       />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path='/' element={<Navigate to='/dashboard' replace />} />
     </Routes>
   );
 }
 
-export default App
+export default App;

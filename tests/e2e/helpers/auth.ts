@@ -8,10 +8,10 @@ export class AuthHelper {
     await this.page.getByLabel('Email').fill(email);
     await this.page.getByLabel('Password').fill(password);
     await this.page.getByRole('button', { name: 'Sign In' }).click();
-    
+
     // Wait for potential redirect
     await this.page.waitForTimeout(2000);
-    
+
     // Return whether login was successful
     return !this.page.url().includes('/login');
   }
@@ -44,7 +44,7 @@ export class AuthHelper {
         await this.page.goto('/logout');
       }
     }
-    
+
     await this.page.waitForTimeout(1000);
   }
 
@@ -52,13 +52,13 @@ export class AuthHelper {
     // Check if already logged in
     const isLoginPage = this.page.url().includes('/login');
     const isDashboard = this.page.url().includes('/dashboard');
-    
+
     if (!isLoginPage && !isDashboard) {
       // Try to access a protected route to check auth status
       await this.page.goto('/dashboard');
       await this.page.waitForTimeout(1000);
     }
-    
+
     // If redirected to login, perform login
     if (this.page.url().includes('/login')) {
       await this.login(email, password);
@@ -71,39 +71,39 @@ export class TestData {
     ADMIN: {
       email: 'admin@example.com',
       password: 'admin123',
-      role: 'admin'
+      role: 'admin',
     },
     MANAGER: {
-      email: 'manager@example.com', 
+      email: 'manager@example.com',
       password: 'manager123',
-      role: 'manager'
+      role: 'manager',
     },
     TECHNICIAN: {
       email: 'tech@example.com',
-      password: 'tech123', 
-      role: 'technician'
-    }
+      password: 'tech123',
+      role: 'technician',
+    },
   };
 
   static readonly FORMS = {
     SAMPLE_FORM: {
       title: 'Sample Test Form',
-      description: 'A form for testing purposes'
+      description: 'A form for testing purposes',
     },
     CHEMICAL_FORM: {
       title: 'Chemical Treatment Form',
-      description: 'Form for recording chemical treatments'
-    }
+      description: 'Form for recording chemical treatments',
+    },
   };
 
   static readonly WORKSITES = {
     MAIN_SITE: {
       name: 'Main Test Site',
-      address: '123 Test Street, Test City'
+      address: '123 Test Street, Test City',
     },
     SECONDARY_SITE: {
-      name: 'Secondary Test Site', 
-      address: '456 Test Avenue, Test Town'
-    }
+      name: 'Secondary Test Site',
+      address: '456 Test Avenue, Test Town',
+    },
   };
 }

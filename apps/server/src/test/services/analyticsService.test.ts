@@ -37,13 +37,15 @@ describe('AnalyticsService', () => {
         zipCode: '12345',
         country: 'Test Country',
       },
-      contacts: [{
-        name: 'John Doe',
-        position: 'Manager',
-        phone: '+1234567890',
-        email: 'john@test.com',
-        isPrimary: true,
-      }],
+      contacts: [
+        {
+          name: 'John Doe',
+          position: 'Manager',
+          phone: '+1234567890',
+          email: 'john@test.com',
+          isPrimary: true,
+        },
+      ],
       equipment: [],
       isActive: true,
       metadata: {
@@ -54,7 +56,6 @@ describe('AnalyticsService', () => {
       },
     });
   });
-
 
   describe('getInstance', () => {
     it('should return singleton instance', () => {
@@ -131,7 +132,7 @@ describe('AnalyticsService', () => {
       expect(result).toHaveProperty('trends');
       expect(result).toHaveProperty('distributions');
       expect(result).toHaveProperty('comparisons');
-      
+
       expect(result.metrics.totalForms).toBeDefined();
       expect(result.metrics.completedForms).toBeDefined();
       expect(result.metrics.completionRate).toBeDefined();
@@ -168,10 +169,12 @@ describe('AnalyticsService', () => {
           zipCode: '67890',
           country: 'Another Country',
         },
-        contacts: [{
-          name: 'Jane Doe',
-          isPrimary: true,
-        }],
+        contacts: [
+          {
+            name: 'Jane Doe',
+            isPrimary: true,
+          },
+        ],
         equipment: [],
         isActive: true,
         metadata: {
@@ -350,7 +353,7 @@ describe('AnalyticsService', () => {
     beforeEach(async () => {
       // Create forms with different statuses
       const statuses = ['draft', 'completed', 'approved', 'rejected'];
-      
+
       for (let i = 0; i < statuses.length; i++) {
         await Form.create({
           worksite: testWorksite._id,
@@ -380,9 +383,11 @@ describe('AnalyticsService', () => {
 
       expect(result.distributions.statusDistribution).toBeDefined();
       expect(result.distributions.statusDistribution.length).toBe(4);
-      
+
       // Each status should have 25% (1 out of 4)
-      expect(result.distributions.statusDistribution.every(dist => dist.percentage === 25)).toBe(true);
+      expect(result.distributions.statusDistribution.every(dist => dist.percentage === 25)).toBe(
+        true
+      );
     });
 
     it('should calculate worksite distribution', async () => {
@@ -397,10 +402,12 @@ describe('AnalyticsService', () => {
           zipCode: '12345',
           country: 'Test Country',
         },
-        contacts: [{
-          name: 'Jane Doe',
-          isPrimary: true,
-        }],
+        contacts: [
+          {
+            name: 'Jane Doe',
+            isPrimary: true,
+          },
+        ],
         equipment: [],
         isActive: true,
         metadata: {
@@ -436,7 +443,7 @@ describe('AnalyticsService', () => {
 
       expect(result.distributions.worksiteDistribution).toBeDefined();
       expect(result.distributions.worksiteDistribution.length).toBe(2);
-      
+
       // Test worksite should have 80% (4 out of 5), another should have 20%
       const testWorksiteDist = result.distributions.worksiteDistribution.find(
         d => d.label === 'Test Worksite'
@@ -449,7 +456,7 @@ describe('AnalyticsService', () => {
     beforeEach(async () => {
       const now = new Date();
       const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      
+
       // Create forms for current period
       await Form.create([
         {
@@ -469,7 +476,7 @@ describe('AnalyticsService', () => {
           createdAt: now,
         },
       ]);
-      
+
       // Create forms for previous period
       await Form.create([
         {
@@ -496,7 +503,7 @@ describe('AnalyticsService', () => {
 
       expect(result.comparisons.periodComparison).toBeDefined();
       expect(Array.isArray(result.comparisons.periodComparison)).toBe(true);
-      
+
       const totalFormsComparison = result.comparisons.periodComparison.find(
         c => c.category === 'Total Forms'
       );

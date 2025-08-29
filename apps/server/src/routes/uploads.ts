@@ -2,11 +2,11 @@ import { Router, Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs/promises';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
-import { 
-  uploadMultiple, 
-  uploadSingle, 
-  handleUploadError, 
-  getFileInfo 
+import {
+  uploadMultiple,
+  uploadSingle,
+  handleUploadError,
+  getFileInfo,
 } from '../middleware/upload.js';
 
 const router = Router();
@@ -15,70 +15,78 @@ const router = Router();
 router.use(authenticate);
 
 // Upload single file
-router.post('/single', uploadSingle, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    if (!req.file) {
-      res.status(400).json({
-        success: false,
-        message: 'No file uploaded',
-        code: 'NO_FILE',
+router.post(
+  '/single',
+  uploadSingle,
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      if (!req.file) {
+        res.status(400).json({
+          success: false,
+          message: 'No file uploaded',
+          code: 'NO_FILE',
+        });
+        return;
+      }
+
+      const fileInfo = getFileInfo(req.file);
+
+      res.json({
+        success: true,
+        message: 'File uploaded successfully',
+        data: { file: fileInfo },
       });
-      return;
+    } catch (error) {
+      console.error('Single file upload error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'File upload failed',
+        code: 'UPLOAD_ERROR',
+      });
     }
-
-    const fileInfo = getFileInfo(req.file);
-
-    res.json({
-      success: true,
-      message: 'File uploaded successfully',
-      data: { file: fileInfo },
-    });
-  } catch (error) {
-    console.error('Single file upload error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'File upload failed',
-      code: 'UPLOAD_ERROR',
-    });
   }
-});
+);
 
 // Upload multiple files
-router.post('/multiple', uploadMultiple, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const files = req.files as Express.Multer.File[];
-    
-    if (!files || files.length === 0) {
-      res.status(400).json({
-        success: false,
-        message: 'No files uploaded',
-        code: 'NO_FILES',
+router.post(
+  '/multiple',
+  uploadMultiple,
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const files = req.files as Express.Multer.File[];
+
+      if (!files || files.length === 0) {
+        res.status(400).json({
+          success: false,
+          message: 'No files uploaded',
+          code: 'NO_FILES',
+        });
+        return;
+      }
+
+      const filesInfo = files.map(getFileInfo);
+
+      res.json({
+        success: true,
+        message: `${files.length} files uploaded successfully`,
+        data: { files: filesInfo },
       });
-      return;
+    } catch (error) {
+      console.error('Multiple files upload error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'File upload failed',
+        code: 'UPLOAD_ERROR',
+      });
     }
-
-    const filesInfo = files.map(getFileInfo);
-
-    res.json({
-      success: true,
-      message: `${files.length} files uploaded successfully`,
-      data: { files: filesInfo },
-    });
-  } catch (error) {
-    console.error('Multiple files upload error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'File upload failed',
-      code: 'UPLOAD_ERROR',
-    });
   }
-});
+);
 
 // Serve uploaded files
 router.get('/:filename', async (req: Request, res: Response): Promise<void> => {
   try {
     const { filename } = req.params;
-    
+
     // Validate filename to prevent path traversal attacks
     if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
       res.status(400).json({
@@ -90,19 +98,19 @@ router.get('/:filename', async (req: Request, res: Response): Promise<void> => {
     }
 
     const filePath = path.join(process.cwd(), 'uploads', filename);
-    
+
     try {
       // Check if file exists
       await fs.access(filePath);
-      
+
       // Get file stats for content length
       const stats = await fs.stat(filePath);
-      
+
       // Set appropriate headers
       res.setHeader('Content-Length', stats.size);
       res.setHeader('Content-Type', 'application/octet-stream');
       res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-      
+
       // Stream the file
       res.sendFile(filePath);
     } catch (fileError) {
@@ -126,7 +134,7 @@ router.get('/:filename', async (req: Request, res: Response): Promise<void> => {
 router.delete('/:filename', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { filename } = req.params;
-    
+
     // Validate filename
     if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
       res.status(400).json({
@@ -138,11 +146,11 @@ router.delete('/:filename', async (req: AuthenticatedRequest, res: Response): Pr
     }
 
     const filePath = path.join(process.cwd(), 'uploads', filename);
-    
+
     try {
       // Delete the file
       await fs.unlink(filePath);
-      
+
       res.json({
         success: true,
         message: 'File deleted successfully',
@@ -173,7 +181,7 @@ router.delete('/:filename', async (req: AuthenticatedRequest, res: Response): Pr
 router.get('/info/:filename', async (req: Request, res: Response): Promise<void> => {
   try {
     const { filename } = req.params;
-    
+
     if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
       res.status(400).json({
         success: false,
@@ -184,10 +192,10 @@ router.get('/info/:filename', async (req: Request, res: Response): Promise<void>
     }
 
     const filePath = path.join(process.cwd(), 'uploads', filename);
-    
+
     try {
       const stats = await fs.stat(filePath);
-      
+
       res.json({
         success: true,
         data: {

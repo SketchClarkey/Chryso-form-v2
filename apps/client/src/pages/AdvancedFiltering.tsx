@@ -97,7 +97,7 @@ const AdvancedFiltering: React.FC = () => {
   const handleSaveFilter = async (filter: AdvancedFilter) => {
     try {
       setLoading(true);
-      
+
       if (editingFilter?.id) {
         await request(`/api/filters/${editingFilter.id}`, {
           method: 'PUT',
@@ -132,16 +132,16 @@ const AdvancedFiltering: React.FC = () => {
   return (
     <Box>
       <Box mb={3}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Advanced Filtering System
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant='body1' color='text.secondary'>
           Create, manage, and apply complex filters across all data types
         </Typography>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert severity='error' sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
@@ -151,19 +151,19 @@ const AdvancedFiltering: React.FC = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Filter Configuration
               </Typography>
-              <Box display="flex" gap={2} alignItems="center" flexWrap="wrap">
-                <Typography variant="body2" color="text.secondary">
+              <Box display='flex' gap={2} alignItems='center' flexWrap='wrap'>
+                <Typography variant='body2' color='text.secondary'>
                   Entity Type:
                 </Typography>
-                {entityTypes.map((type) => (
+                {entityTypes.map(type => (
                   <Button
                     key={type.value}
                     variant={selectedEntityType === type.value ? 'contained' : 'outlined'}
                     onClick={() => setSelectedEntityType(type.value)}
-                    size="small"
+                    size='small'
                   >
                     {type.label}
                   </Button>
@@ -188,7 +188,7 @@ const AdvancedFiltering: React.FC = () => {
               </Tabs>
 
               {loading && (
-                <Box display="flex" justifyContent="center" p={4}>
+                <Box display='flex' justifyContent='center' p={4}>
                   <CircularProgress />
                 </Box>
               )}
@@ -216,17 +216,17 @@ const AdvancedFiltering: React.FC = () => {
                       autoApply={true}
                     />
                   ) : (
-                    <Card variant="outlined">
+                    <Card variant='outlined'>
                       <CardContent sx={{ textAlign: 'center', py: 6 }}>
                         <FilterIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant='h6' gutterBottom>
                           No Active Filters
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" mb={3}>
+                        <Typography variant='body2' color='text.secondary' mb={3}>
                           Select a filter from the Filter Manager to apply it and see results
                         </Typography>
                         <Button
-                          variant="contained"
+                          variant='contained'
                           onClick={() => setCurrentTab(0)}
                           startIcon={<FilterIcon />}
                         >
@@ -250,17 +250,17 @@ const AdvancedFiltering: React.FC = () => {
                       availableFields={availableFields}
                     />
                   ) : (
-                    <Card variant="outlined">
+                    <Card variant='outlined'>
                       <CardContent sx={{ textAlign: 'center', py: 6 }}>
                         <SettingsIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant='h6' gutterBottom>
                           Filter Builder
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" mb={3}>
+                        <Typography variant='body2' color='text.secondary' mb={3}>
                           Create complex filters with multiple criteria and logical operators
                         </Typography>
                         <Button
-                          variant="contained"
+                          variant='contained'
                           onClick={handleCreateNewFilter}
                           startIcon={<AddIcon />}
                         >
@@ -279,25 +279,29 @@ const AdvancedFiltering: React.FC = () => {
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Filter Statistics
               </Typography>
-              <Box display="flex" flexDirection="column" gap={2}>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2">Available Fields:</Typography>
-                  <Typography variant="body2" fontWeight="bold">
+              <Box display='flex' flexDirection='column' gap={2}>
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography variant='body2'>Available Fields:</Typography>
+                  <Typography variant='body2' fontWeight='bold'>
                     {Object.keys(availableFields).length}
                   </Typography>
                 </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2">Active Filters:</Typography>
-                  <Typography variant="body2" fontWeight="bold">
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography variant='body2'>Active Filters:</Typography>
+                  <Typography variant='body2' fontWeight='bold'>
                     {appliedFilter ? 1 : 0}
                   </Typography>
                 </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2">Entity Type:</Typography>
-                  <Typography variant="body2" fontWeight="bold" sx={{ textTransform: 'capitalize' }}>
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography variant='body2'>Entity Type:</Typography>
+                  <Typography
+                    variant='body2'
+                    fontWeight='bold'
+                    sx={{ textTransform: 'capitalize' }}
+                  >
                     {selectedEntityType}
                   </Typography>
                 </Box>
@@ -310,30 +314,22 @@ const AdvancedFiltering: React.FC = () => {
         <Grid item xs={12} md={8}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Quick Actions
               </Typography>
-              <Box display="flex" gap={2} flexWrap="wrap">
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  onClick={handleCreateNewFilter}
-                >
+              <Box display='flex' gap={2} flexWrap='wrap'>
+                <Button variant='outlined' startIcon={<AddIcon />} onClick={handleCreateNewFilter}>
                   New Filter
                 </Button>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   startIcon={<FilterIcon />}
                   onClick={() => setCurrentTab(0)}
                 >
                   Browse Filters
                 </Button>
                 {appliedFilter && (
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleClearAppliedFilter}
-                  >
+                  <Button variant='outlined' color='secondary' onClick={handleClearAppliedFilter}>
                     Clear Active Filter
                   </Button>
                 )}
@@ -345,8 +341,8 @@ const AdvancedFiltering: React.FC = () => {
 
       {/* Floating Action Button */}
       <Fab
-        color="primary"
-        aria-label="create filter"
+        color='primary'
+        aria-label='create filter'
         onClick={handleCreateNewFilter}
         sx={{
           position: 'fixed',
@@ -361,10 +357,10 @@ const AdvancedFiltering: React.FC = () => {
       <Dialog
         open={builderOpen}
         onClose={handleCancelBuilder}
-        maxWidth="lg"
+        maxWidth='lg'
         fullWidth
         PaperProps={{
-          sx: { minHeight: '80vh' }
+          sx: { minHeight: '80vh' },
         }}
       >
         <DialogContent sx={{ p: 0 }}>

@@ -18,15 +18,14 @@ describe('Templates API Integration Tests', () => {
   let technicianUserId: string;
   let templateId: string;
 
-
   beforeEach(async () => {
     app = createTestApp();
-    
+
     // Clean up database
     await User.deleteMany({});
     await Template.deleteMany({});
     await Form.deleteMany({});
-    
+
     const timestamp = Date.now();
 
     // Create test users first
@@ -36,7 +35,7 @@ describe('Templates API Integration Tests', () => {
       email: `admin-${timestamp}@test.com`,
       password: 'AdminPass123!',
       role: 'admin',
-      emailVerified: true
+      emailVerified: true,
     });
     await adminUser.save();
     adminUserId = adminUser._id.toString();
@@ -47,7 +46,7 @@ describe('Templates API Integration Tests', () => {
       email: `manager-${timestamp}@test.com`,
       password: 'ManagerPass123!',
       role: 'manager',
-      emailVerified: true
+      emailVerified: true,
     });
     await managerUser.save();
     managerUserId = managerUser._id.toString();
@@ -58,7 +57,7 @@ describe('Templates API Integration Tests', () => {
       email: `tech-${timestamp}@test.com`,
       password: 'TechPass123!',
       role: 'technician',
-      emailVerified: true
+      emailVerified: true,
     });
     await technicianUser.save();
     technicianUserId = technicianUser._id.toString();
@@ -76,30 +75,30 @@ describe('Templates API Integration Tests', () => {
           required: true,
           validation: {
             required: true,
-            minLength: 1
-          }
+            minLength: 1,
+          },
         },
         {
           id: 'field2',
           type: 'number',
           label: 'Test Field 2',
-          required: false
-        }
+          required: false,
+        },
       ],
       status: 'active',
       createdBy: new mongoose.Types.ObjectId(adminUserId),
       metadata: {
-        version: 1
+        version: 1,
       },
       permissions: {
         canView: ['admin', 'manager', 'technician'],
         canUse: ['admin', 'manager', 'technician'],
-        canEdit: ['admin', 'manager']
+        canEdit: ['admin', 'manager'],
       },
       usage: {
         totalForms: 0,
-        lastUsed: null
-      }
+        lastUsed: null,
+      },
     });
     await template.save();
     templateId = template._id.toString();
@@ -109,21 +108,21 @@ describe('Templates API Integration Tests', () => {
       id: adminUserId,
       email: `admin-${timestamp}@test.com`,
       role: 'admin',
-      worksiteIds: []
+      worksiteIds: [],
     });
 
     managerToken = generateAccessToken({
       id: managerUserId,
       email: `manager-${timestamp}@test.com`,
       role: 'manager',
-      worksiteIds: []
+      worksiteIds: [],
     });
 
     technicianToken = generateAccessToken({
       id: technicianUserId,
       email: `tech-${timestamp}@test.com`,
       role: 'technician',
-      worksiteIds: []
+      worksiteIds: [],
     });
   });
 
@@ -236,9 +235,9 @@ describe('Templates API Integration Tests', () => {
           id: 'new-field',
           type: 'text',
           label: 'New Field',
-          required: true
-        }
-      ]
+          required: true,
+        },
+      ],
     };
 
     it('should allow admin to create template', async () => {
@@ -276,7 +275,7 @@ describe('Templates API Integration Tests', () => {
 
     it('should validate required fields', async () => {
       const incompleteData = {
-        name: 'Incomplete Template'
+        name: 'Incomplete Template',
         // Missing category and elements
       };
 
@@ -292,7 +291,7 @@ describe('Templates API Integration Tests', () => {
     it('should validate category', async () => {
       const invalidCategoryData = {
         ...validTemplateData,
-        category: 'invalid-category'
+        category: 'invalid-category',
       };
 
       const response = await request(app)
@@ -315,9 +314,9 @@ describe('Templates API Integration Tests', () => {
           id: 'updated-field',
           type: 'text',
           label: 'Updated Field',
-          required: false
-        }
-      ]
+          required: false,
+        },
+      ],
     };
 
     it('should allow admin to update template', async () => {
@@ -394,14 +393,14 @@ describe('Templates API Integration Tests', () => {
         status: 'draft',
         customerInfo: {
           customerName: 'Test Customer',
-          plantLocation: 'Test Location'
+          plantLocation: 'Test Location',
         },
         formData: {},
         metadata: {
           createdBy: new mongoose.Types.ObjectId(technicianUserId),
           syncStatus: 'synced',
-          version: 1
-        }
+          version: 1,
+        },
       });
       await form.save();
 
@@ -515,14 +514,14 @@ describe('Templates API Integration Tests', () => {
         status: 'draft',
         customerInfo: {
           customerName: 'Test Customer',
-          plantLocation: 'Test Location'
+          plantLocation: 'Test Location',
         },
         formData: {},
         metadata: {
           createdBy: new mongoose.Types.ObjectId(technicianUserId),
           syncStatus: 'synced',
-          version: 1
-        }
+          version: 1,
+        },
       });
       await form.save();
 

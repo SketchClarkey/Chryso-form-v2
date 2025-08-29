@@ -10,12 +10,13 @@ vi.mock('../../utils/logger.js', () => ({
   },
 }));
 
-const mockRequest = (): Request => ({} as Request);
+const mockRequest = (): Request => ({}) as Request;
 
-const mockResponse = (): Response => ({
-  status: vi.fn().mockReturnThis(),
-  json: vi.fn(),
-} as any);
+const mockResponse = (): Response =>
+  ({
+    status: vi.fn().mockReturnThis(),
+    json: vi.fn(),
+  }) as any;
 
 const mockNext = vi.fn() as NextFunction;
 

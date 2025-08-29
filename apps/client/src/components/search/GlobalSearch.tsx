@@ -126,7 +126,9 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   const getSuggestions = async () => {
     try {
-      const response = await request(`/api/search/suggestions?q=${encodeURIComponent(debouncedQuery)}`);
+      const response = await request(
+        `/api/search/suggestions?q=${encodeURIComponent(debouncedQuery)}`
+      );
       setSuggestions(response.data.suggestions);
     } catch (error) {
       console.error('Failed to get suggestions:', error);
@@ -139,7 +141,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
         request('/api/search/recent'),
         request('/api/search/popular'),
       ]);
-      
+
       setRecentSearches(recentRes.data.recentSearches);
       setPopularTerms(popularRes.data.popularTerms);
     } catch (error) {
@@ -193,15 +195,15 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
   const getResultIcon = (type: string) => {
     switch (type) {
       case 'form':
-        return <FormIcon color="primary" />;
+        return <FormIcon color='primary' />;
       case 'template':
-        return <TemplateIcon color="secondary" />;
+        return <TemplateIcon color='secondary' />;
       case 'user':
-        return <UserIcon color="info" />;
+        return <UserIcon color='info' />;
       case 'worksite':
-        return <WorksiteIcon color="success" />;
+        return <WorksiteIcon color='success' />;
       case 'dashboard':
-        return <DashboardIcon color="warning" />;
+        return <DashboardIcon color='warning' />;
       default:
         return <SearchIcon />;
     }
@@ -257,15 +259,15 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
         size={variant === 'header' ? 'small' : 'medium'}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon color="action" />
+            <InputAdornment position='start'>
+              <SearchIcon color='action' />
             </InputAdornment>
           ),
           endAdornment: (
-            <InputAdornment position="end">
+            <InputAdornment position='end'>
               {loading && <CircularProgress size={20} />}
               {query && (
-                <IconButton size="small" onClick={handleClear}>
+                <IconButton size='small' onClick={handleClear}>
                   <ClearIcon />
                 </IconButton>
               )}
@@ -280,14 +282,14 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
       {/* Type Filters for page variant */}
       {showFilters && variant === 'page' && (
         <Box sx={{ mt: 2 }}>
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
             {[
               { value: 'form', label: 'Forms', icon: <FormIcon /> },
               { value: 'template', label: 'Templates', icon: <TemplateIcon /> },
               { value: 'user', label: 'Users', icon: <UserIcon /> },
               { value: 'worksite', label: 'Worksites', icon: <WorksiteIcon /> },
               { value: 'dashboard', label: 'Dashboards', icon: <DashboardIcon /> },
-            ].map((type) => (
+            ].map(type => (
               <Chip
                 key={type.value}
                 label={type.label}
@@ -311,7 +313,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
       <Popper
         open={open}
         anchorEl={anchorRef.current}
-        placement="bottom-start"
+        placement='bottom-start'
         style={{ width: anchorRef.current?.clientWidth, zIndex: theme.zIndex.modal }}
         disablePortal={false}
       >
@@ -332,33 +334,31 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                 <ListItem>
                   <ListItemText
                     primary={
-                      <Typography variant="subtitle2" color="text.secondary">
+                      <Typography variant='subtitle2' color='text.secondary'>
                         Search Results
                       </Typography>
                     }
                   />
                 </ListItem>
-                {results.map((result) => (
+                {results.map(result => (
                   <ListItemButton
                     key={`${result.type}-${result.id}`}
                     onClick={() => handleResultClick(result)}
                     sx={{ pl: 2 }}
                   >
-                    <ListItemIcon sx={{ minWidth: 36 }}>
-                      {getResultIcon(result.type)}
-                    </ListItemIcon>
+                    <ListItemIcon sx={{ minWidth: 36 }}>{getResultIcon(result.type)}</ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="body2" noWrap>
+                        <Box display='flex' alignItems='center' gap={1}>
+                          <Typography variant='body2' noWrap>
                             {result.title}
                           </Typography>
                           {result.metadata.status && (
                             <Chip
                               label={result.metadata.status}
-                              size="small"
+                              size='small'
                               color={getStatusColor(result.metadata.status) as any}
-                              variant="outlined"
+                              variant='outlined'
                             />
                           )}
                         </Box>
@@ -366,12 +366,12 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                       secondary={
                         <Box>
                           {result.description && (
-                            <Typography variant="caption" color="text.secondary" display="block">
+                            <Typography variant='caption' color='text.secondary' display='block'>
                               {result.description}
                             </Typography>
                           )}
                           {result.excerpt && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant='caption' color='text.secondary'>
                               {result.excerpt}
                             </Typography>
                           )}
@@ -381,10 +381,12 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                   </ListItemButton>
                 ))}
                 {variant === 'header' && (
-                  <ListItemButton onClick={() => navigate(`/search?q=${encodeURIComponent(query)}`)}>
+                  <ListItemButton
+                    onClick={() => navigate(`/search?q=${encodeURIComponent(query)}`)}
+                  >
                     <ListItemText
                       primary={
-                        <Typography variant="body2" color="primary">
+                        <Typography variant='body2' color='primary'>
                           View all results for "{query}"
                         </Typography>
                       }
@@ -401,7 +403,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                 <ListItem>
                   <ListItemText
                     primary={
-                      <Typography variant="subtitle2" color="text.secondary">
+                      <Typography variant='subtitle2' color='text.secondary'>
                         Suggestions
                       </Typography>
                     }
@@ -414,7 +416,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                     sx={{ pl: 2 }}
                   >
                     <ListItemIcon sx={{ minWidth: 36 }}>
-                      <SearchIcon fontSize="small" />
+                      <SearchIcon fontSize='small' />
                     </ListItemIcon>
                     <ListItemText primary={suggestion} />
                   </ListItemButton>
@@ -430,7 +432,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                     <ListItem>
                       <ListItemText
                         primary={
-                          <Typography variant="subtitle2" color="text.secondary">
+                          <Typography variant='subtitle2' color='text.secondary'>
                             Recent Searches
                           </Typography>
                         }
@@ -443,7 +445,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                         sx={{ pl: 2 }}
                       >
                         <ListItemIcon sx={{ minWidth: 36 }}>
-                          <HistoryIcon fontSize="small" />
+                          <HistoryIcon fontSize='small' />
                         </ListItemIcon>
                         <ListItemText primary={recent} />
                       </ListItemButton>
@@ -457,7 +459,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                     <ListItem>
                       <ListItemText
                         primary={
-                          <Typography variant="subtitle2" color="text.secondary">
+                          <Typography variant='subtitle2' color='text.secondary'>
                             Popular Searches
                           </Typography>
                         }
@@ -470,7 +472,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                         sx={{ pl: 2 }}
                       >
                         <ListItemIcon sx={{ minWidth: 36 }}>
-                          <TrendingIcon fontSize="small" />
+                          <TrendingIcon fontSize='small' />
                         </ListItemIcon>
                         <ListItemText
                           primary={popular.term}
@@ -488,7 +490,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
               <ListItem>
                 <ListItemText
                   primary={
-                    <Typography variant="body2" color="text.secondary" textAlign="center">
+                    <Typography variant='body2' color='text.secondary' textAlign='center'>
                       No results found for "{query}"
                     </Typography>
                   }

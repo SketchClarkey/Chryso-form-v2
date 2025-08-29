@@ -315,7 +315,9 @@ export class SavedSearchService {
       ],
     };
 
-    const commonFilters = baseFilters.filter(f => f.entityType === 'all' || f.entityType === entityType);
+    const commonFilters = baseFilters.filter(
+      f => f.entityType === 'all' || f.entityType === entityType
+    );
     const specificFilters = entitySpecificFilters[entityType] || [];
 
     return [...commonFilters, ...specificFilters];
@@ -369,7 +371,7 @@ export class SavedSearchService {
 
   buildQuickFilterQuery(quickFilter: QuickFilter): FilterQuery<any> {
     const { field, operator, value, dataType } = quickFilter.filterCriteria;
-    
+
     switch (operator) {
       case 'equals':
         return { [field]: value };

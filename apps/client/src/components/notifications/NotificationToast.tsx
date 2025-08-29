@@ -1,15 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import {
-  Snackbar,
-  Alert,
-  AlertTitle,
-  IconButton,
-  Slide,
-  Stack,
-} from '@mui/material';
-import {
-  Close as CloseIcon,
-} from '@mui/icons-material';
+import { Snackbar, Alert, AlertTitle, IconButton, Slide, Stack } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { NotificationType } from '../../services/notificationService';
 
 export interface ToastNotification {
@@ -50,9 +41,9 @@ interface NotificationToastProviderProps {
   maxToasts?: number;
 }
 
-export function NotificationToastProvider({ 
-  children, 
-  maxToasts = 5 
+export function NotificationToastProvider({
+  children,
+  maxToasts = 5,
 }: NotificationToastProviderProps) {
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
 
@@ -137,12 +128,8 @@ function NotificationToastContainer({ toasts, onHide }: NotificationToastContain
         maxWidth: 400,
       }}
     >
-      {toasts.map((toast) => (
-        <NotificationToastItem
-          key={toast.id}
-          toast={toast}
-          onHide={onHide}
-        />
+      {toasts.map(toast => (
+        <NotificationToastItem key={toast.id} toast={toast} onHide={onHide} />
       ))}
     </Stack>
   );
@@ -169,10 +156,10 @@ function NotificationToastItem({ toast, onHide }: NotificationToastItemProps) {
   };
 
   return (
-    <Slide direction="left" in={open} timeout={200}>
+    <Slide direction='left' in={open} timeout={200}>
       <Alert
         severity={toast.type}
-        variant="filled"
+        variant='filled'
         sx={{
           minWidth: 300,
           boxShadow: 3,
@@ -183,21 +170,12 @@ function NotificationToastItem({ toast, onHide }: NotificationToastItemProps) {
         action={
           <>
             {toast.action && (
-              <IconButton
-                size="small"
-                color="inherit"
-                onClick={handleAction}
-                sx={{ mr: 1 }}
-              >
+              <IconButton size='small' color='inherit' onClick={handleAction} sx={{ mr: 1 }}>
                 {toast.action.label}
               </IconButton>
             )}
-            <IconButton
-              size="small"
-              color="inherit"
-              onClick={handleClose}
-            >
-              <CloseIcon fontSize="small" />
+            <IconButton size='small' color='inherit' onClick={handleClose}>
+              <CloseIcon fontSize='small' />
             </IconButton>
           </>
         }
@@ -250,7 +228,10 @@ export function useToastNotifications() {
   };
 
   const showNetworkError = () => {
-    showError('Network connection error. Please check your internet connection.', 'Connection Error');
+    showError(
+      'Network connection error. Please check your internet connection.',
+      'Connection Error'
+    );
   };
 
   const showValidationError = (message: string) => {

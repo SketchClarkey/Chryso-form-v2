@@ -13,24 +13,12 @@ const ReportsPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
+    <Container maxWidth='xl' sx={{ py: 3 }}>
       <Routes>
-        <Route 
-          path="/" 
-          element={<ReportList onCreateNew={handleCreateNew} />} 
-        />
-        <Route 
-          path="/new" 
-          element={<ReportBuilderPage />} 
-        />
-        <Route 
-          path="/:id/edit" 
-          element={<ReportBuilderPage />} 
-        />
-        <Route 
-          path="/:id/view" 
-          element={<ReportViewerPage />} 
-        />
+        <Route path='/' element={<ReportList onCreateNew={handleCreateNew} />} />
+        <Route path='/new' element={<ReportBuilderPage />} />
+        <Route path='/:id/edit' element={<ReportBuilderPage />} />
+        <Route path='/:id/view' element={<ReportViewerPage />} />
       </Routes>
     </Container>
   );
@@ -45,18 +33,16 @@ const ReportBuilderPage: React.FC = () => {
       <Box mb={2}>
         <Breadcrumbs>
           <Link
-            color="inherit"
-            href="#"
-            onClick={(e) => {
+            color='inherit'
+            href='#'
+            onClick={e => {
               e.preventDefault();
               navigate('/reports');
             }}
           >
             Reports
           </Link>
-          <Typography color="text.primary">
-            {id ? 'Edit Report' : 'New Report'}
-          </Typography>
+          <Typography color='text.primary'>{id ? 'Edit Report' : 'New Report'}</Typography>
         </Breadcrumbs>
       </Box>
       <ReportBuilder reportId={id} />
@@ -82,16 +68,16 @@ const ReportViewerPage: React.FC = () => {
       <Box mb={2}>
         <Breadcrumbs>
           <Link
-            color="inherit"
-            href="#"
-            onClick={(e) => {
+            color='inherit'
+            href='#'
+            onClick={e => {
               e.preventDefault();
               navigate('/reports');
             }}
           >
             Reports
           </Link>
-          <Typography color="text.primary">View Report</Typography>
+          <Typography color='text.primary'>View Report</Typography>
         </Breadcrumbs>
       </Box>
       <ReportViewer reportId={id} onEdit={handleEdit} />

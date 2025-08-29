@@ -118,12 +118,10 @@ const FilterManager: React.FC<FilterManagerProps> = ({
             {
               id: 'g1',
               name: 'Priority Group',
-              criteria: [
-                { field: 'priority', operator: 'in', value: ['high', 'urgent'] }
-              ],
+              criteria: [{ field: 'priority', operator: 'in', value: ['high', 'urgent'] }],
               logicalOperator: 'AND',
               isActive: true,
-            }
+            },
           ],
           globalLogicalOperator: 'AND',
           isShared: false,
@@ -144,11 +142,11 @@ const FilterManager: React.FC<FilterManagerProps> = ({
               name: 'Status and Date',
               criteria: [
                 { field: 'status', operator: 'equals', value: 'completed' },
-                { field: 'completedAt', operator: 'dateThisWeek', value: null }
+                { field: 'completedAt', operator: 'dateThisWeek', value: null },
               ],
               logicalOperator: 'AND',
               isActive: true,
-            }
+            },
           ],
           globalLogicalOperator: 'AND',
           isShared: true,
@@ -167,12 +165,10 @@ const FilterManager: React.FC<FilterManagerProps> = ({
             {
               id: 'g3',
               name: 'Category Filter',
-              criteria: [
-                { field: 'category', operator: 'equals', value: 'safety' }
-              ],
+              criteria: [{ field: 'category', operator: 'equals', value: 'safety' }],
               logicalOperator: 'AND',
               isActive: true,
-            }
+            },
           ],
           globalLogicalOperator: 'AND',
           isShared: true,
@@ -269,11 +265,16 @@ const FilterManager: React.FC<FilterManagerProps> = ({
     try {
       await request(`/api/filters/${filterId}/usage`, { method: 'POST' });
       // Update local state
-      setFilters(filters.map(f => 
-        f.id === filterId 
-          ? { ...f, usage: { ...f.usage, totalUses: f.usage.totalUses + 1, lastUsed: new Date() }}
-          : f
-      ));
+      setFilters(
+        filters.map(f =>
+          f.id === filterId
+            ? {
+                ...f,
+                usage: { ...f.usage, totalUses: f.usage.totalUses + 1, lastUsed: new Date() },
+              }
+            : f
+        )
+      );
     } catch (error) {
       console.error('Failed to update filter usage:', error);
     }
@@ -286,33 +287,31 @@ const FilterManager: React.FC<FilterManagerProps> = ({
 
   const getEntityTypeColor = (entityType: string) => {
     switch (entityType) {
-      case 'form': return 'primary';
-      case 'template': return 'secondary';
-      case 'user': return 'info';
-      case 'worksite': return 'success';
-      case 'dashboard': return 'warning';
-      default: return 'default';
+      case 'form':
+        return 'primary';
+      case 'template':
+        return 'secondary';
+      case 'user':
+        return 'info';
+      case 'worksite':
+        return 'success';
+      case 'dashboard':
+        return 'warning';
+      default:
+        return 'default';
     }
   };
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h6">Filter Manager</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onCreateNew}
-        >
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h6'>Filter Manager</Typography>
+        <Button variant='contained' startIcon={<AddIcon />} onClick={onCreateNew}>
           Create New Filter
         </Button>
       </Box>
 
-      <Tabs
-        value={selectedTab}
-        onChange={(_, newValue) => setSelectedTab(newValue)}
-        sx={{ mb: 3 }}
-      >
+      <Tabs value={selectedTab} onChange={(_, newValue) => setSelectedTab(newValue)} sx={{ mb: 3 }}>
         {tabs.map((tab, index) => (
           <Tab key={index} label={tab.label} />
         ))}
@@ -322,47 +321,40 @@ const FilterManager: React.FC<FilterManagerProps> = ({
         <Card>
           <CardContent sx={{ textAlign: 'center', py: 6 }}>
             <FilterIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               No filters found
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
-              {selectedTab === 0 
+            <Typography variant='body2' color='text.secondary' mb={3}>
+              {selectedTab === 0
                 ? "You haven't created any filters yet"
-                : "No shared filters available"}
+                : 'No shared filters available'}
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={onCreateNew}
-            >
+            <Button variant='contained' startIcon={<AddIcon />} onClick={onCreateNew}>
               Create Your First Filter
             </Button>
           </CardContent>
         </Card>
       ) : (
         <Grid container spacing={3}>
-          {filters.map((filter) => (
+          {filters.map(filter => (
             <Grid item xs={12} sm={6} md={4} key={filter.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                    <Typography variant="h6" component="h3" gutterBottom noWrap>
+                  <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
+                    <Typography variant='h6' component='h3' gutterBottom noWrap>
                       {filter.name}
                     </Typography>
-                    <Box display="flex" alignItems="center">
+                    <Box display='flex' alignItems='center'>
                       {filter.isShared ? (
-                        <Tooltip title="Shared filter">
-                          <PublicIcon fontSize="small" color="primary" />
+                        <Tooltip title='Shared filter'>
+                          <PublicIcon fontSize='small' color='primary' />
                         </Tooltip>
                       ) : (
-                        <Tooltip title="Private filter">
-                          <PrivateIcon fontSize="small" color="action" />
+                        <Tooltip title='Private filter'>
+                          <PrivateIcon fontSize='small' color='action' />
                         </Tooltip>
                       )}
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuOpen(e, filter)}
-                      >
+                      <IconButton size='small' onClick={e => handleMenuOpen(e, filter)}>
                         <MoreIcon />
                       </IconButton>
                     </Box>
@@ -370,56 +362,67 @@ const FilterManager: React.FC<FilterManagerProps> = ({
 
                   {filter.description && (
                     <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                      variant='body2'
+                      color='text.secondary'
+                      sx={{
+                        mb: 2,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
                     >
                       {filter.description}
                     </Typography>
                   )}
 
-                  <Stack direction="row" spacing={1} mb={2} flexWrap="wrap" useFlexGap>
+                  <Stack direction='row' spacing={1} mb={2} flexWrap='wrap' useFlexGap>
                     <Chip
                       icon={getEntityTypeIcon(filter.entityType)}
                       label={filter.entityType}
-                      size="small"
+                      size='small'
                       color={getEntityTypeColor(filter.entityType) as any}
-                      variant="outlined"
+                      variant='outlined'
                     />
                     <Chip
                       label={`${filter.groups.length} groups`}
-                      size="small"
-                      variant="outlined"
+                      size='small'
+                      variant='outlined'
                     />
                   </Stack>
 
                   {filter.tags.length > 0 && (
                     <Box mb={2}>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                      <Stack direction='row' spacing={0.5} flexWrap='wrap' useFlexGap>
                         {filter.tags.slice(0, 3).map((tag, index) => (
-                          <Chip key={index} label={tag} size="small" variant="outlined" />
+                          <Chip key={index} label={tag} size='small' variant='outlined' />
                         ))}
                         {filter.tags.length > 3 && (
-                          <Chip label={`+${filter.tags.length - 3}`} size="small" variant="outlined" />
+                          <Chip
+                            label={`+${filter.tags.length - 3}`}
+                            size='small'
+                            variant='outlined'
+                          />
                         )}
                       </Stack>
                     </Box>
                   )}
 
-                  <Box display="flex" alignItems="center" mb={1}>
+                  <Box display='flex' alignItems='center' mb={1}>
                     <Avatar sx={{ width: 24, height: 24, mr: 1, fontSize: 12 }}>
-                      {filter.createdBy.firstName[0]}{filter.createdBy.lastName[0]}
+                      {filter.createdBy.firstName[0]}
+                      {filter.createdBy.lastName[0]}
                     </Avatar>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       by {filter.createdBy.firstName} {filter.createdBy.lastName}
                     </Typography>
                   </Box>
 
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" color="text.secondary">
+                  <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    <Typography variant='caption' color='text.secondary'>
                       {filter.usage.totalUses} uses
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       {formatDistanceToNow(new Date(filter.updatedAt), { addSuffix: true })}
                     </Typography>
                   </Box>
@@ -427,15 +430,15 @@ const FilterManager: React.FC<FilterManagerProps> = ({
 
                 <CardActions>
                   <Button
-                    size="small"
+                    size='small'
                     startIcon={<ApplyIcon />}
                     onClick={() => handleApplyFilter(filter)}
-                    variant="contained"
+                    variant='contained'
                   >
                     Apply
                   </Button>
                   <Button
-                    size="small"
+                    size='small'
                     startIcon={<EditIcon />}
                     onClick={() => onEditFilter(filter)}
                   >
@@ -449,11 +452,7 @@ const FilterManager: React.FC<FilterManagerProps> = ({
       )}
 
       {/* Context Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={() => selectedFilter && handleApplyFilter(selectedFilter)}>
           <ApplyIcon sx={{ mr: 1 }} />
           Apply Filter
@@ -462,28 +461,29 @@ const FilterManager: React.FC<FilterManagerProps> = ({
           <EditIcon sx={{ mr: 1 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={() => {
-          setDuplicateName(`${selectedFilter?.name} (Copy)`);
-          setDuplicateDialogOpen(true);
-          handleMenuClose();
-        }}>
+        <MenuItem
+          onClick={() => {
+            setDuplicateName(`${selectedFilter?.name} (Copy)`);
+            setDuplicateDialogOpen(true);
+            handleMenuClose();
+          }}
+        >
           <CopyIcon sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
-        <MenuItem onClick={() => {
-          setDeleteDialogOpen(true);
-          handleMenuClose();
-        }}>
+        <MenuItem
+          onClick={() => {
+            setDeleteDialogOpen(true);
+            handleMenuClose();
+          }}
+        >
           <DeleteIcon sx={{ mr: 1 }} />
           Delete
         </MenuItem>
       </Menu>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Filter</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -492,7 +492,7 @@ const FilterManager: React.FC<FilterManagerProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteFilter} color="error" variant="contained">
+          <Button onClick={handleDeleteFilter} color='error' variant='contained'>
             Delete
           </Button>
         </DialogActions>
@@ -502,7 +502,7 @@ const FilterManager: React.FC<FilterManagerProps> = ({
       <Dialog
         open={duplicateDialogOpen}
         onClose={() => setDuplicateDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogTitle>Duplicate Filter</DialogTitle>
@@ -512,18 +512,18 @@ const FilterManager: React.FC<FilterManagerProps> = ({
           </DialogContentText>
           <TextField
             autoFocus
-            label="Filter Name"
+            label='Filter Name'
             fullWidth
             value={duplicateName}
-            onChange={(e) => setDuplicateName(e.target.value)}
-            margin="dense"
+            onChange={e => setDuplicateName(e.target.value)}
+            margin='dense'
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDuplicateDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={handleDuplicateFilter}
-            variant="contained"
+            variant='contained'
             disabled={!duplicateName.trim()}
           >
             Duplicate

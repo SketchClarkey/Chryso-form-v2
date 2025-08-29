@@ -45,36 +45,44 @@ export function createApp(): express.Application {
   app.use(preventFraming);
 
   // CORS configuration
-  app.use(cors({
-    origin: env.CORS_ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  }));
+  app.use(
+    cors({
+      origin: env.CORS_ORIGIN || 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      credentials: true,
+      optionsSuccessStatus: 200,
+    })
+  );
 
   // Compression middleware
-  app.use(compression({
-    filter: (req, res) => {
-      if (req.headers['x-no-compression']) {
-        return false;
-      }
-      return compression.filter(req, res);
-    },
-    level: 6,
-  }));
+  app.use(
+    compression({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          return false;
+        }
+        return compression.filter(req, res);
+      },
+      level: 6,
+    })
+  );
 
   // Body parsing middleware
-  app.use(express.json({ 
-    limit: '10mb',
-    strict: true,
-    type: ['application/json'],
-  }));
-  app.use(express.urlencoded({ 
-    extended: true, 
-    limit: '10mb',
-    type: ['application/x-www-form-urlencoded'],
-  }));
+  app.use(
+    express.json({
+      limit: '10mb',
+      strict: true,
+      type: ['application/json'],
+    })
+  );
+  app.use(
+    express.urlencoded({
+      extended: true,
+      limit: '10mb',
+      type: ['application/x-www-form-urlencoded'],
+    })
+  );
 
   // Content type validation and input sanitization
   app.use(validateContentType);
@@ -96,7 +104,7 @@ export function createApp(): express.Application {
         uptime: process.uptime(),
         environment: env.NODE_ENV,
         version: '2.0.0',
-      }
+      },
     });
   });
 
@@ -109,7 +117,7 @@ export function createApp(): express.Application {
         version: '2.0.0',
         environment: env.NODE_ENV,
         timestamp: new Date().toISOString(),
-      }
+      },
     });
   });
 
@@ -131,7 +139,7 @@ export function createApp(): express.Application {
   app.use('/api/email-templates', emailTemplateRoutes);
   app.use('/api/settings', settingsRoutes);
   app.use('/api/scheduler', schedulerRoutes);
-  
+
   // Swagger API Documentation
   app.use('/api', swaggerRoutes);
 

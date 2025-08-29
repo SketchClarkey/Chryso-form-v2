@@ -96,9 +96,7 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
   }, [filter]);
 
   const hasActiveFilters = (): boolean => {
-    return filter.groups.some(group => 
-      group.isActive && group.criteria.length > 0
-    );
+    return filter.groups.some(group => group.isActive && group.criteria.length > 0);
   };
 
   const getActiveFiltersCount = (): number => {
@@ -113,7 +111,7 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
   const generateFilterSummary = () => {
     const activeGroups = filter.groups.filter(group => group.isActive);
-    
+
     if (activeGroups.length === 0) {
       setFilterSummary('No active filters');
       return;
@@ -121,9 +119,12 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
     const groupSummaries = activeGroups.map(group => {
       const criteriaSummary = group.criteria
-        .map(criteria => `${getFieldLabel(criteria.field)} ${getOperatorLabel(criteria.operator)} ${formatValue(criteria.value, criteria.dataType)}`)
+        .map(
+          criteria =>
+            `${getFieldLabel(criteria.field)} ${getOperatorLabel(criteria.operator)} ${formatValue(criteria.value, criteria.dataType)}`
+        )
         .join(` ${group.logicalOperator} `);
-      
+
       return group.criteria.length > 1 ? `(${criteriaSummary})` : criteriaSummary;
     });
 
@@ -159,19 +160,19 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
   const formatValue = (value: any, dataType: string): string => {
     if (value === null || value === undefined) return '';
-    
+
     if (Array.isArray(value)) {
       return `[${value.join(', ')}]`;
     }
-    
+
     if (dataType === 'date' && value instanceof Date) {
       return value.toLocaleDateString();
     }
-    
+
     if (typeof value === 'string' && value.length > 20) {
       return `"${value.substring(0, 20)}..."`;
     }
-    
+
     return `"${value}"`;
   };
 
@@ -206,9 +207,7 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
     const updatedFilter = {
       ...filter,
       groups: filter.groups.map(group =>
-        group.id === groupId
-          ? { ...group, isActive: !group.isActive }
-          : group
+        group.id === groupId ? { ...group, isActive: !group.isActive } : group
       ),
     };
     onFilterChange?.(updatedFilter);
@@ -231,45 +230,39 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
   return (
     <Box>
-      <Card variant="outlined">
+      <Card variant='outlined'>
         <CardContent sx={{ pb: 1 }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Box display="flex" alignItems="center" gap={1}>
-              <Badge badgeContent={getActiveFiltersCount()} color="primary">
+          <Box display='flex' justifyContent='space-between' alignItems='center'>
+            <Box display='flex' alignItems='center' gap={1}>
+              <Badge badgeContent={getActiveFiltersCount()} color='primary'>
                 <FilterIcon color={hasActiveFilters() ? 'primary' : 'action'} />
               </Badge>
-              <Typography variant="h6">
-                {filter.name || 'Advanced Filter'}
-              </Typography>
+              <Typography variant='h6'>{filter.name || 'Advanced Filter'}</Typography>
               {hasActiveFilters() && (
                 <Chip
                   label={`${getActiveCriteriaCount()} criteria`}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
+                  size='small'
+                  color='primary'
+                  variant='outlined'
                 />
               )}
             </Box>
-            
-            <Stack direction="row" spacing={1}>
+
+            <Stack direction='row' spacing={1}>
               {onSaveFilter && (
-                <Tooltip title="Save Filter">
+                <Tooltip title='Save Filter'>
                   <IconButton onClick={handleSaveFilter}>
                     <SaveIcon />
                   </IconButton>
                 </Tooltip>
               )}
-              
-              <Tooltip title="Clear All Filters">
-                <IconButton 
-                  onClick={clearAllFilters}
-                  disabled={!hasActiveFilters()}
-                  color="error"
-                >
+
+              <Tooltip title='Clear All Filters'>
+                <IconButton onClick={clearAllFilters} disabled={!hasActiveFilters()} color='error'>
                   <ClearIcon />
                 </IconButton>
               </Tooltip>
-              
+
               <IconButton onClick={() => setExpanded(!expanded)}>
                 {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </IconButton>
@@ -279,17 +272,26 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
           <Collapse in={expanded}>
             <Box mt={2}>
               {filter.description && (
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant='body2' color='text.secondary' gutterBottom>
                   {filter.description}
                 </Typography>
               )}
 
               {/* Filter Summary */}
               <Box mt={1} mb={2}>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Active Filters:
                 </Typography>
-                <Typography variant="body2" sx={{ fontFamily: 'monospace', bgcolor: 'grey.100', p: 1, borderRadius: 1, mt: 0.5 }}>
+                <Typography
+                  variant='body2'
+                  sx={{
+                    fontFamily: 'monospace',
+                    bgcolor: 'grey.100',
+                    p: 1,
+                    borderRadius: 1,
+                    mt: 0.5,
+                  }}
+                >
                   {filterSummary}
                 </Typography>
               </Box>
@@ -299,19 +301,19 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
                 {filter.groups.map((group, index) => (
                   <Box key={group.id}>
                     {index > 0 && (
-                      <Box display="flex" justifyContent="center" py={0.5}>
+                      <Box display='flex' justifyContent='center' py={0.5}>
                         <Chip
                           label={filter.globalLogicalOperator}
-                          size="small"
-                          color="secondary"
-                          variant="outlined"
+                          size='small'
+                          color='secondary'
+                          variant='outlined'
                         />
                       </Box>
                     )}
-                    
+
                     <Box
-                      display="flex"
-                      alignItems="center"
+                      display='flex'
+                      alignItems='center'
                       gap={1}
                       p={1}
                       border={1}
@@ -320,27 +322,30 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
                       bgcolor={group.isActive ? 'primary.50' : 'grey.50'}
                     >
                       <IconButton
-                        size="small"
+                        size='small'
                         onClick={() => toggleGroupActive(group.id)}
                         color={group.isActive ? 'primary' : 'default'}
                       >
                         <TuneIcon />
                       </IconButton>
-                      
+
                       <Box flex={1}>
-                        <Typography variant="subtitle2" color={group.isActive ? 'primary.main' : 'text.secondary'}>
+                        <Typography
+                          variant='subtitle2'
+                          color={group.isActive ? 'primary.main' : 'text.secondary'}
+                        >
                           {group.name}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {group.criteria.length} criteria • {group.logicalOperator} logic
                         </Typography>
                       </Box>
-                      
+
                       <Chip
                         label={group.isActive ? 'Active' : 'Inactive'}
-                        size="small"
+                        size='small'
                         color={group.isActive ? 'success' : 'default'}
-                        variant="outlined"
+                        variant='outlined'
                         onClick={() => toggleGroupActive(group.id)}
                         clickable
                       />
@@ -351,9 +356,9 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
               {/* Apply Filter Button */}
               {!autoApply && (
-                <Box mt={2} display="flex" justifyContent="center">
+                <Box mt={2} display='flex' justifyContent='center'>
                   <Button
-                    variant="contained"
+                    variant='contained'
                     onClick={applyFilter}
                     disabled={!hasActiveFilters() || loading}
                     startIcon={loading ? <CircularProgress size={16} /> : <FilterIcon />}
@@ -372,7 +377,7 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
         <Card sx={{ mt: 2 }}>
           <CardContent sx={{ textAlign: 'center', py: 4 }}>
             <CircularProgress />
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
               Applying filters...
             </Typography>
           </CardContent>
@@ -380,7 +385,7 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
       )}
 
       {error && (
-        <Alert severity="error" sx={{ mt: 2 }}>
+        <Alert severity='error' sx={{ mt: 2 }}>
           {error}
         </Alert>
       )}
@@ -388,33 +393,33 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
       {result && (
         <Card sx={{ mt: 2 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Filter Results
             </Typography>
-            
-            <Stack direction="row" spacing={2} alignItems="center" mb={2}>
+
+            <Stack direction='row' spacing={2} alignItems='center' mb={2}>
               <Chip
                 label={`${result.filteredCount} of ${result.total} records`}
-                color="primary"
+                color='primary'
                 icon={<FilterIcon />}
               />
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant='caption' color='text.secondary'>
                 Execution time: {result.executionTime}ms
               </Typography>
             </Stack>
 
             {/* Applied Filters Summary */}
-            <Typography variant="subtitle2" gutterBottom>
+            <Typography variant='subtitle2' gutterBottom>
               Applied Filters:
             </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
               {result.appliedFilters.map((appliedFilter, index) => (
                 <Chip
                   key={index}
                   label={`${appliedFilter.groupName} (${appliedFilter.criteriaCount})`}
-                  size="small"
+                  size='small'
                   color={appliedFilter.isActive ? 'success' : 'default'}
-                  variant="outlined"
+                  variant='outlined'
                 />
               ))}
             </Stack>
@@ -423,15 +428,14 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
 
             {/* Results Summary */}
             <Box>
-              <Typography variant="body2" color="text.secondary">
-                {result.filteredCount === 0 
+              <Typography variant='body2' color='text.secondary'>
+                {result.filteredCount === 0
                   ? 'No records match the current filter criteria.'
-                  : `Showing ${result.filteredCount} records that match your filter criteria.`
-                }
+                  : `Showing ${result.filteredCount} records that match your filter criteria.`}
               </Typography>
-              
+
               {result.filteredCount < result.total && (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   {result.total - result.filteredCount} records were filtered out.
                 </Typography>
               )}
@@ -445,10 +449,10 @@ const FilterApplicator: React.FC<FilterApplicatorProps> = ({
         <Card sx={{ mt: 2 }}>
           <CardContent sx={{ textAlign: 'center', py: 4 }}>
             <FilterIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant='h6' color='text.secondary' gutterBottom>
               No Active Filters
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               Activate one or more filter groups to see results
             </Typography>
           </CardContent>

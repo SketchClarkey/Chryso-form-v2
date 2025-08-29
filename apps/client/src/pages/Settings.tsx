@@ -92,10 +92,10 @@ export function Settings() {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Settings
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
         Configure application settings and preferences
       </Typography>
 
@@ -104,7 +104,7 @@ export function Settings() {
         <Grid item xs={12} md={4} lg={3}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Settings
               </Typography>
               <List>
@@ -115,13 +115,15 @@ export function Settings() {
                         selected={currentPath === section.path}
                         onClick={() => navigate(`/settings/${section.path}`)}
                       >
-                        <ListItemIcon>
-                          {section.icon}
-                        </ListItemIcon>
+                        <ListItemIcon>{section.icon}</ListItemIcon>
                         <ListItemText
                           primary={section.label}
                           secondary={
-                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                            <Typography
+                              variant='caption'
+                              color='text.secondary'
+                              sx={{ display: 'block' }}
+                            >
                               {section.description}
                             </Typography>
                           }
@@ -140,11 +142,11 @@ export function Settings() {
         <Grid item xs={12} md={8} lg={9}>
           <Paper sx={{ p: 3, minHeight: 600 }}>
             <Routes>
-              <Route path="general" element={<GeneralSettings />} />
-              <Route path="security" element={<SecuritySettings />} />
-              <Route path="system" element={<SystemSettings />} />
-              <Route path="preferences" element={<UserPreferences />} />
-              <Route path="*" element={<Navigate to="/settings/general" replace />} />
+              <Route path='general' element={<GeneralSettings />} />
+              <Route path='security' element={<SecuritySettings />} />
+              <Route path='system' element={<SystemSettings />} />
+              <Route path='preferences' element={<UserPreferences />} />
+              <Route path='*' element={<Navigate to='/settings/general' replace />} />
             </Routes>
           </Paper>
         </Grid>

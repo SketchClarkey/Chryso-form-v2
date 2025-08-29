@@ -29,13 +29,13 @@ class PWAService {
   private initialize(): void {
     // Register service worker
     this.registerServiceWorker();
-    
+
     // Setup online/offline listeners
     this.setupOnlineStatusListeners();
-    
+
     // Setup background sync
     this.setupBackgroundSync();
-    
+
     // Setup beforeinstallprompt handler
     this.setupInstallPrompt();
 
@@ -47,7 +47,7 @@ class PWAService {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js', {
-          scope: '/'
+          scope: '/',
         });
 
         console.log('Service Worker registered successfully:', registration);
@@ -69,10 +69,9 @@ class PWAService {
         this.serviceWorker = registration.active;
 
         // Listen for messages from service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
+        navigator.serviceWorker.addEventListener('message', event => {
           this.handleServiceWorkerMessage(event.data);
         });
-
       } catch (error) {
         console.error('Service Worker registration failed:', error);
       }
@@ -98,11 +97,13 @@ class PWAService {
   // Setup background sync
   private setupBackgroundSync(): void {
     if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-      navigator.serviceWorker.ready.then((registration: ExtendedServiceWorkerRegistration) => {
-        return registration.sync?.register('chryso-forms-sync');
-      }).catch((error) => {
-        console.log('Background sync not supported or registration failed:', error);
-      });
+      navigator.serviceWorker.ready
+        .then((registration: ExtendedServiceWorkerRegistration) => {
+          return registration.sync?.register('chryso-forms-sync');
+        })
+        .catch(error => {
+          console.log('Background sync not supported or registration failed:', error);
+        });
     }
   }
 
@@ -110,11 +111,11 @@ class PWAService {
   private setupInstallPrompt(): void {
     let deferredPrompt: any = null;
 
-    window.addEventListener('beforeinstallprompt', (event) => {
+    window.addEventListener('beforeinstallprompt', event => {
       console.log('Install prompt available');
       event.preventDefault();
       deferredPrompt = event;
-      
+
       // Show custom install prompt
       this.showInstallPrompt(deferredPrompt);
     });
@@ -122,7 +123,7 @@ class PWAService {
     window.addEventListener('appinstalled', () => {
       console.log('PWA was installed');
       deferredPrompt = null;
-      
+
       // Track installation
       this.trackPWAInstall();
     });
@@ -135,11 +136,11 @@ class PWAService {
         console.log('Background sync completed for:', data.url);
         this.notifySyncComplete(data);
         break;
-        
+
       case 'CACHE_UPDATED':
         console.log('Cache updated:', data.cacheName);
         break;
-        
+
       default:
         console.log('Unknown service worker message:', data);
     }
@@ -208,7 +209,7 @@ class PWAService {
     // Handle dismiss button click
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
       installBanner.remove();
-      
+
       // Don't show again for this session
       sessionStorage.setItem('pwa-install-dismissed', 'true');
     });
@@ -225,7 +226,7 @@ class PWAService {
   private trackPWAInstall(): void {
     // Analytics tracking would go here
     console.log('PWA installation tracked');
-    
+
     // Store install date
     localStorage.setItem('pwa-installed', new Date().toISOString());
   }
@@ -261,20 +262,20 @@ class PWAService {
   // Check if device has good connection for heavy operations
   public hasGoodConnection(): boolean {
     const connection = this.getConnectionInfo();
-    
+
     // If data saver is enabled, consider as poor connection
     if (connection.saveData) return false;
-    
+
     // Check effective connection type
     if (connection.effectiveType) {
       return ['4g'].includes(connection.effectiveType);
     }
-    
+
     // Check downlink speed (Mbps)
     if (connection.downlink !== undefined) {
       return connection.downlink > 1.5; // > 1.5 Mbps considered good
     }
-    
+
     // Default to true if we can't determine
     return this.isOnline;
   }
@@ -298,7 +299,8 @@ class PWAService {
   public async triggerSync(): Promise<void> {
     if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
       try {
-        const registration = await navigator.serviceWorker.ready as ExtendedServiceWorkerRegistration;
+        const registration = (await navigator.serviceWorker
+          .ready) as ExtendedServiceWorkerRegistration;
         await registration.sync?.register('chryso-forms-sync');
         console.log('Background sync triggered');
       } catch (error) {
@@ -309,20 +311,17 @@ class PWAService {
 
   // Get cache information
   public async getCacheInfo(): Promise<{ size: number; count: number }> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (this.serviceWorker) {
         const messageChannel = new MessageChannel();
-        messageChannel.port1.onmessage = (event) => {
+        messageChannel.port1.onmessage = event => {
           resolve({
             size: event.data.cacheSize || 0,
-            count: event.data.cacheCount || 0
+            count: event.data.cacheCount || 0,
           });
         };
-        
-        this.serviceWorker.postMessage(
-          { type: 'GET_CACHE_SIZE' },
-          [messageChannel.port2]
-        );
+
+        this.serviceWorker.postMessage({ type: 'GET_CACHE_SIZE' }, [messageChannel.port2]);
       } else {
         resolve({ size: 0, count: 0 });
       }
@@ -333,9 +332,7 @@ class PWAService {
   public async clearCaches(): Promise<void> {
     if ('caches' in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
-      );
+      await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
       console.log('All caches cleared');
     }
   }
@@ -346,7 +343,7 @@ class PWAService {
       const registration = await navigator.serviceWorker.getRegistration();
       if (registration) {
         registration.update();
-        
+
         // Skip waiting for new service worker
         if (registration.waiting) {
           registration.waiting.postMessage({ type: 'SKIP_WAITING' });
@@ -360,14 +357,16 @@ class PWAService {
     // Check if running in standalone mode
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     const isInstalled = localStorage.getItem('pwa-installed') !== null;
-    
+
     return isStandalone || isInstalled;
   }
 
   // Mobile device detection
   public isMobileDevice(): boolean {
-    return window.matchMedia('(max-width: 768px)').matches ||
-           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return (
+      window.matchMedia('(max-width: 768px)').matches ||
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    );
   }
 
   // Get device orientation
@@ -423,19 +422,19 @@ class PWAService {
       const db = await this.openIndexedDB();
       const transaction = db.transaction(['offlineData'], 'readwrite');
       const store = transaction.objectStore('offlineData');
-      
+
       await new Promise((resolve, reject) => {
         const request = store.put({
           key,
           data,
           type,
-          lastUpdated: new Date().toISOString()
+          lastUpdated: new Date().toISOString(),
         });
-        
+
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
-      
+
       console.log('Offline data stored:', key);
     } catch (error) {
       console.error('Failed to store offline data:', error);
@@ -448,7 +447,7 @@ class PWAService {
       const db = await this.openIndexedDB();
       const transaction = db.transaction(['offlineData'], 'readonly');
       const store = transaction.objectStore('offlineData');
-      
+
       return new Promise((resolve, reject) => {
         const request = store.get(key);
         request.onsuccess = () => {
@@ -470,7 +469,7 @@ class PWAService {
       const transaction = db.transaction(['offlineData'], 'readonly');
       const store = transaction.objectStore('offlineData');
       const index = store.index('type');
-      
+
       return new Promise((resolve, reject) => {
         const request = index.getAll(type);
         request.onsuccess = () => resolve(request.result);
@@ -504,23 +503,23 @@ class PWAService {
   private openIndexedDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('ChrysoPWADB', 1);
-      
+
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
-      
-      request.onupgradeneeded = (event) => {
+
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         if (!db.objectStoreNames.contains('offlineData')) {
           const store = db.createObjectStore('offlineData', { keyPath: 'key' });
           store.createIndex('type', 'type');
           store.createIndex('lastUpdated', 'lastUpdated');
         }
-        
+
         if (!db.objectStoreNames.contains('pendingRequests')) {
-          const store = db.createObjectStore('pendingRequests', { 
-            keyPath: 'id', 
-            autoIncrement: true 
+          const store = db.createObjectStore('pendingRequests', {
+            keyPath: 'id',
+            autoIncrement: true,
           });
           store.createIndex('timestamp', 'timestamp');
         }

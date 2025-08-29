@@ -40,7 +40,7 @@ export interface AuditEventData {
 
 export class AuditService {
   private static instance: AuditService;
-  
+
   static getInstance(): AuditService {
     if (!AuditService.instance) {
       AuditService.instance = new AuditService();
@@ -53,68 +53,69 @@ export class AuditService {
       // Determine severity and risk level if not provided
       const severity = eventData.severity || this.calculateSeverity(eventData);
       const riskLevel = eventData.riskLevel || this.calculateRiskLevel(eventData);
-      
+
       // Get compliance flags based on the event
-      const complianceFlags = eventData.complianceFlags || await this.getComplianceFlags(context, eventData);
-      
+      const complianceFlags =
+        eventData.complianceFlags || (await this.getComplianceFlags(context, eventData));
+
       const auditLog = new AuditLog({
         organizationId: context.organizationId,
-        
+
         // Event Information
         eventType: eventData.eventType,
         action: eventData.action,
         category: eventData.category,
-        
+
         // Actor Information
         userId: context.userId,
         userEmail: context.userEmail,
         userName: context.userName,
         userRole: context.userRole,
         sessionId: context.sessionId,
-        
+
         // Target Information
         resourceType: eventData.resourceType,
         resourceId: eventData.resourceId,
         resourceName: eventData.resourceName,
-        
+
         // Request Context
         ipAddress: context.ipAddress,
         userAgent: context.userAgent,
         endpoint: context.endpoint,
         httpMethod: context.httpMethod,
-        
+
         // Event Details
         description: eventData.description,
         details: this.sanitizeDetails(eventData.details),
         oldValues: this.sanitizeDetails(eventData.oldValues),
         newValues: this.sanitizeDetails(eventData.newValues),
-        
+
         // Classification
         severity,
         riskLevel,
         complianceFlags,
         dataClassification: eventData.dataClassification || 'internal',
-        
+
         // Status
         status: eventData.status || 'success',
         errorMessage: eventData.errorMessage,
         duration: eventData.duration,
-        
+
         // Metadata
         tags: eventData.tags,
         correlationId: context.correlationId || uuidv4(),
-        
-        timestamp: new Date()
+
+        timestamp: new Date(),
       });
 
       const savedLog = await auditLog.save();
-      
+
       // Check for real-time compliance violations
       await this.checkComplianceViolations(context.organizationId, savedLog);
-      
+
       // Trigger alerts if needed
       await this.checkAlertThresholds(context.organizationId, savedLog);
-      
+
       return savedLog;
     } catch (error) {
       console.error('Failed to log audit event:', error);
@@ -123,7 +124,7 @@ export class AuditService {
   }
 
   async logAuthentication(
-    context: AuditContext, 
+    context: AuditContext,
     action: 'login' | 'logout' | 'password_reset' | 'mfa_challenge',
     success: boolean,
     details?: Record<string, any>
@@ -138,7 +139,7 @@ export class AuditService {
       riskLevel: success ? 'none' : 'medium',
       status: success ? 'success' : 'failure',
       complianceFlags: ['GDPR', 'ISO27001'],
-      tags: ['authentication', action]
+      tags: ['authentication', action],
     });
   }
 
@@ -163,7 +164,7 @@ export class AuditService {
       riskLevel: action === 'export' ? 'medium' : 'low',
       complianceFlags: ['GDPR', 'HIPAA'],
       dataClassification: details?.classification || 'internal',
-      tags: ['data_access', action, resourceType]
+      tags: ['data_access', action, resourceType],
     });
   }
 
@@ -191,7 +192,7 @@ export class AuditService {
       severity: action === 'delete' ? 'high' : 'medium',
       riskLevel: action === 'delete' ? 'high' : 'low',
       complianceFlags: ['GDPR', 'HIPAA', 'SOX'],
-      tags: ['data_modification', action, resourceType]
+      tags: ['data_modification', action, resourceType],
     });
   }
 
@@ -214,7 +215,7 @@ export class AuditService {
       severity: 'high',
       riskLevel: 'high',
       complianceFlags: ['SOX', 'ISO27001'],
-      tags: ['admin', action]
+      tags: ['admin', action],
     });
   }
 
@@ -234,7 +235,7 @@ export class AuditService {
       riskLevel: 'critical',
       status: 'warning',
       complianceFlags: ['GDPR', 'ISO27001'],
-      tags: ['security', eventType]
+      tags: ['security', eventType],
     });
   }
 
@@ -252,52 +253,49 @@ export class AuditService {
       details,
       severity: 'low',
       riskLevel: 'none',
-      tags: ['system', action]
+      tags: ['system', action],
     });
   }
 
   // Helper method to create audit context from Express request
   createContextFromRequest(req: Request, organizationId: string): AuditContext {
     const user = (req as any).user;
-    
+
     return {
       organizationId,
       userId: user?.userId,
       userEmail: user?.email,
-      userName: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : undefined,
+      userName:
+        user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : undefined,
       userRole: user?.role,
       sessionId: (req as any).sessionID,
       ipAddress: this.getClientIP(req),
       userAgent: req.get('User-Agent'),
       endpoint: req.path,
       httpMethod: req.method as any,
-      correlationId: req.headers['x-correlation-id'] as string || uuidv4()
+      correlationId: (req.headers['x-correlation-id'] as string) || uuidv4(),
     };
   }
 
   // Analytics and reporting methods
-  async getAuditSummary(
-    organizationId: string,
-    startDate: Date,
-    endDate: Date
-  ): Promise<any> {
+  async getAuditSummary(organizationId: string, startDate: Date, endDate: Date): Promise<any> {
     const summary = await AuditLog.aggregate([
       {
         $match: {
           organizationId,
-          timestamp: { $gte: startDate, $lte: endDate }
-        }
+          timestamp: { $gte: startDate, $lte: endDate },
+        },
       },
       {
         $group: {
           _id: {
             category: '$category',
             eventType: '$eventType',
-            status: '$status'
+            status: '$status',
           },
           count: { $sum: 1 },
-          avgDuration: { $avg: '$duration' }
-        }
+          avgDuration: { $avg: '$duration' },
+        },
       },
       {
         $group: {
@@ -307,13 +305,13 @@ export class AuditService {
               eventType: '$_id.eventType',
               status: '$_id.status',
               count: '$count',
-              avgDuration: '$avgDuration'
-            }
+              avgDuration: '$avgDuration',
+            },
           },
-          totalEvents: { $sum: '$count' }
-        }
+          totalEvents: { $sum: '$count' },
+        },
       },
-      { $sort: { totalEvents: -1 } }
+      { $sort: { totalEvents: -1 } },
     ]);
 
     return summary;
@@ -321,16 +319,18 @@ export class AuditService {
 
   async getSecurityAlerts(organizationId: string, hours: number = 24): Promise<IAuditLog[]> {
     const startTime = new Date(Date.now() - hours * 60 * 60 * 1000);
-    
+
     return AuditLog.find({
       organizationId,
       timestamp: { $gte: startTime },
       $or: [
         { severity: { $in: ['high', 'critical'] } },
         { status: 'failure' },
-        { category: 'security' }
-      ]
-    }).sort({ timestamp: -1 }).limit(100);
+        { category: 'security' },
+      ],
+    })
+      .sort({ timestamp: -1 })
+      .limit(100);
   }
 
   async getUserActivity(
@@ -342,7 +342,7 @@ export class AuditService {
     return AuditLog.find({
       organizationId,
       userId,
-      timestamp: { $gte: startDate, $lte: endDate }
+      timestamp: { $gte: startDate, $lte: endDate },
     }).sort({ timestamp: -1 });
   }
 
@@ -354,8 +354,10 @@ export class AuditService {
     return AuditLog.find({
       organizationId,
       resourceType,
-      resourceId
-    }).sort({ timestamp: -1 }).limit(100);
+      resourceId,
+    })
+      .sort({ timestamp: -1 })
+      .limit(100);
   }
 
   async getComplianceReport(
@@ -365,11 +367,11 @@ export class AuditService {
     endDate?: Date
   ): Promise<any> {
     const matchStage: any = { organizationId };
-    
+
     if (complianceType) {
       matchStage.complianceFlags = complianceType;
     }
-    
+
     if (startDate || endDate) {
       matchStage.timestamp = {};
       if (startDate) matchStage.timestamp.$gte = startDate;
@@ -383,11 +385,11 @@ export class AuditService {
           _id: {
             compliance: { $arrayElemAt: ['$complianceFlags', 0] },
             severity: '$severity',
-            status: '$status'
+            status: '$status',
           },
           count: { $sum: 1 },
-          events: { $push: '$$ROOT' }
-        }
+          events: { $push: '$$ROOT' },
+        },
       },
       {
         $group: {
@@ -396,12 +398,12 @@ export class AuditService {
             $push: {
               severity: '$_id.severity',
               status: '$_id.status',
-              count: '$count'
-            }
+              count: '$count',
+            },
           },
-          totalEvents: { $sum: '$count' }
-        }
-      }
+          totalEvents: { $sum: '$count' },
+        },
+      },
     ]);
 
     return report;
@@ -437,74 +439,83 @@ export class AuditService {
     return 'none';
   }
 
-  private async getComplianceFlags(context: AuditContext, eventData: AuditEventData): Promise<string[]> {
+  private async getComplianceFlags(
+    context: AuditContext,
+    eventData: AuditEventData
+  ): Promise<string[]> {
     const flags: string[] = [];
-    
+
     // Data-related events typically require GDPR compliance
     if (eventData.category === 'data' || eventData.resourceType === 'user') {
       flags.push('GDPR');
     }
-    
+
     // Authentication and security events
     if (eventData.category === 'authentication' || eventData.category === 'security') {
       flags.push('ISO27001');
     }
-    
+
     // Financial or administrative actions
     if (eventData.category === 'user_management' || eventData.eventType === 'admin') {
       flags.push('SOX');
     }
-    
+
     return flags;
   }
 
   private sanitizeDetails(details?: Record<string, any>): Record<string, any> | undefined {
     if (!details) return undefined;
-    
+
     const sanitized = { ...details };
     const sensitiveFields = ['password', 'token', 'apiKey', 'secret', 'ssn', 'creditCard'];
-    
+
     sensitiveFields.forEach(field => {
       if (sanitized[field]) {
         sanitized[field] = '***REDACTED***';
       }
     });
-    
+
     return sanitized;
   }
 
-  private async checkComplianceViolations(organizationId: string, auditLog: IAuditLog): Promise<void> {
+  private async checkComplianceViolations(
+    organizationId: string,
+    auditLog: IAuditLog
+  ): Promise<void> {
     try {
       const policies = await CompliancePolicy.find({ organizationId, isActive: true });
-      
+
       for (const policy of policies) {
         const applicableRules = policy.getApplicableRules({
           resourceType: auditLog.resourceType,
           action: auditLog.action,
-          userRole: auditLog.userRole
+          userRole: auditLog.userRole,
         });
-        
+
         for (const rule of applicableRules) {
           // Check if rule requirements are met
           if (rule.requirements.accessLogging && !auditLog.userId) {
             // Log compliance violation
-            await this.logEvent({
-              organizationId,
-              correlationId: auditLog.correlationId
-            }, {
-              eventType: 'system',
-              action: 'compliance_violation',
-              category: 'compliance',
-              description: `Compliance violation: ${rule.name}`,
-              details: {
-                policyType: policy.type,
-                ruleName: rule.name,
-                originalEventId: auditLog._id
+            await this.logEvent(
+              {
+                organizationId,
+                correlationId: auditLog.correlationId,
               },
-              severity: 'high',
-              riskLevel: 'high',
-              status: 'warning'
-            });
+              {
+                eventType: 'system',
+                action: 'compliance_violation',
+                category: 'compliance',
+                description: `Compliance violation: ${rule.name}`,
+                details: {
+                  policyType: policy.type,
+                  ruleName: rule.name,
+                  originalEventId: auditLog._id,
+                },
+                severity: 'high',
+                riskLevel: 'high',
+                status: 'warning',
+              }
+            );
           }
         }
       }
@@ -521,7 +532,7 @@ export class AuditService {
         console.log(`ALERT: Critical audit event for organization ${organizationId}`, {
           action: auditLog.action,
           user: auditLog.userEmail,
-          severity: auditLog.severity
+          severity: auditLog.severity,
         });
       }
     } catch (error) {
@@ -530,10 +541,12 @@ export class AuditService {
   }
 
   private getClientIP(req: Request): string {
-    return (req.headers['x-forwarded-for'] as string)?.split(',')[0] ||
-           req.connection?.remoteAddress ||
-           req.socket?.remoteAddress ||
-           'unknown';
+    return (
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0] ||
+      req.connection?.remoteAddress ||
+      req.socket?.remoteAddress ||
+      'unknown'
+    );
   }
 }
 

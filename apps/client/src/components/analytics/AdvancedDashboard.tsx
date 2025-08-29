@@ -141,42 +141,46 @@ const MetricCard: React.FC<{
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up':
-        return <TrendingUpIcon color="success" fontSize="small" />;
+        return <TrendingUpIcon color='success' fontSize='small' />;
       case 'down':
-        return <TrendingDownIcon color="error" fontSize="small" />;
+        return <TrendingDownIcon color='error' fontSize='small' />;
       default:
-        return <TrendingFlatIcon color="disabled" fontSize="small" />;
+        return <TrendingFlatIcon color='disabled' fontSize='small' />;
     }
   };
 
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-          <Box color={`${color}.main`}>
-            {icon}
-          </Box>
+        <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
+          <Box color={`${color}.main`}>{icon}</Box>
           {getTrendIcon(metric.trend)}
         </Box>
 
-        <Typography variant="h4" component="div" gutterBottom>
+        <Typography variant='h4' component='div' gutterBottom>
           {formatValue(metric.current, metric.format)}
         </Typography>
 
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           {title}
         </Typography>
 
         {metric.changePercentage !== undefined && (
-          <Box display="flex" alignItems="center" gap={0.5}>
+          <Box display='flex' alignItems='center' gap={0.5}>
             <Typography
-              variant="caption"
-              color={metric.changePercentage > 0 ? 'success.main' : 
-                     metric.changePercentage < 0 ? 'error.main' : 'text.secondary'}
+              variant='caption'
+              color={
+                metric.changePercentage > 0
+                  ? 'success.main'
+                  : metric.changePercentage < 0
+                    ? 'error.main'
+                    : 'text.secondary'
+              }
             >
-              {metric.changePercentage > 0 ? '+' : ''}{metric.changePercentage.toFixed(1)}%
+              {metric.changePercentage > 0 ? '+' : ''}
+              {metric.changePercentage.toFixed(1)}%
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               vs previous period
             </Typography>
           </Box>
@@ -193,7 +197,7 @@ const AdvancedDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Filters
   const [dateRange, setDateRange] = useState({
     start: startOfDay(subDays(new Date(), 30)),
@@ -217,14 +221,19 @@ const AdvancedDashboard: React.FC = () => {
     if (filterOptions) {
       loadAnalytics();
     }
-  }, [dateRange, granularity, selectedTemplates, selectedWorksites, selectedTechnicians, selectedStatus]);
+  }, [
+    dateRange,
+    granularity,
+    selectedTemplates,
+    selectedWorksites,
+    selectedTechnicians,
+    selectedStatus,
+  ]);
 
   const loadInitialData = async () => {
     try {
-      const [filtersResponse] = await Promise.all([
-        request('GET', '/api/analytics/filters'),
-      ]);
-      
+      const [filtersResponse] = await Promise.all([request('GET', '/api/analytics/filters')]);
+
       setFilterOptions(filtersResponse.data);
     } catch (error: unknown) {
       setError('Failed to load dashboard data');
@@ -233,10 +242,10 @@ const AdvancedDashboard: React.FC = () => {
 
   const loadAnalytics = async () => {
     if (!filterOptions) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const params = new URLSearchParams({
         startDate: dateRange.start.toISOString(),
@@ -331,7 +340,7 @@ const AdvancedDashboard: React.FC = () => {
 
   if (loading && !analytics) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
@@ -339,11 +348,14 @@ const AdvancedDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <Alert severity="error" action={
-        <Button color="inherit" size="small" onClick={loadAnalytics}>
-          Retry
-        </Button>
-      }>
+      <Alert
+        severity='error'
+        action={
+          <Button color='inherit' size='small' onClick={loadAnalytics}>
+            Retry
+          </Button>
+        }
+      >
         {error}
       </Alert>
     );
@@ -352,19 +364,26 @@ const AdvancedDashboard: React.FC = () => {
   return (
     <Box>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Advanced Analytics</Typography>
-        <Box display="flex" gap={1}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>Advanced Analytics</Typography>
+        <Box display='flex' gap={1}>
           <IconButton
             onClick={() => setFilterMenuAnchor(document.body)}
-            color={selectedTemplates.length || selectedWorksites.length || selectedTechnicians.length || selectedStatus.length ? 'primary' : 'default'}
+            color={
+              selectedTemplates.length ||
+              selectedWorksites.length ||
+              selectedTechnicians.length ||
+              selectedStatus.length
+                ? 'primary'
+                : 'default'
+            }
           >
             <FilterIcon />
           </IconButton>
           <IconButton onClick={handleRefresh} disabled={refreshing}>
             <RefreshIcon />
           </IconButton>
-          <Button startIcon={<ExportIcon />} variant="outlined">
+          <Button startIcon={<ExportIcon />} variant='outlined'>
             Export
           </Button>
         </Box>
@@ -372,10 +391,10 @@ const AdvancedDashboard: React.FC = () => {
 
       {/* Date Range and Quick Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2} alignItems='center'>
           <Grid item xs={12} md={4}>
-            <Box display="flex" gap={1}>
-              <ButtonGroup size="small">
+            <Box display='flex' gap={1}>
+              <ButtonGroup size='small'>
                 <Button onClick={() => handleQuickDateRange(7)}>7D</Button>
                 <Button onClick={() => handleQuickDateRange(30)}>30D</Button>
                 <Button onClick={() => handleQuickDateRange(90)}>90D</Button>
@@ -384,34 +403,31 @@ const AdvancedDashboard: React.FC = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Box display="flex" gap={1}>
+              <Box display='flex' gap={1}>
                 <DatePicker
-                  label="Start Date"
+                  label='Start Date'
                   value={dateRange.start}
-                  onChange={(date) => date && setDateRange({ ...dateRange, start: startOfDay(date) })}
+                  onChange={date => date && setDateRange({ ...dateRange, start: startOfDay(date) })}
                   slotProps={{
-                    textField: { size: 'small' }
+                    textField: { size: 'small' },
                   }}
                 />
                 <DatePicker
-                  label="End Date"
+                  label='End Date'
                   value={dateRange.end}
-                  onChange={(date) => date && setDateRange({ ...dateRange, end: endOfDay(date) })}
+                  onChange={date => date && setDateRange({ ...dateRange, end: endOfDay(date) })}
                   slotProps={{
-                    textField: { size: 'small' }
+                    textField: { size: 'small' },
                   }}
                 />
               </Box>
             </LocalizationProvider>
           </Grid>
           <Grid item xs={12} md={4}>
-            <FormControl size="small" fullWidth>
+            <FormControl size='small' fullWidth>
               <InputLabel>Granularity</InputLabel>
-              <Select
-                value={granularity}
-                onChange={(e) => setGranularity(e.target.value)}
-              >
-                {filterOptions?.granularities.map((g) => (
+              <Select value={granularity} onChange={e => setGranularity(e.target.value)}>
+                {filterOptions?.granularities.map(g => (
                   <MenuItem key={g.value} value={g.value}>
                     {g.label}
                   </MenuItem>
@@ -427,34 +443,50 @@ const AdvancedDashboard: React.FC = () => {
         <Grid container spacing={3} mb={3}>
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
-              title="Total Forms"
-              metric={analytics.metrics.totalForms || { current: 0, trend: 'stable', format: 'number' }}
+              title='Total Forms'
+              metric={
+                analytics.metrics.totalForms || { current: 0, trend: 'stable', format: 'number' }
+              }
               icon={<WorkIcon />}
-              color="primary"
+              color='primary'
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
-              title="Completed Forms"
-              metric={analytics.metrics.completedForms || { current: 0, trend: 'stable', format: 'number' }}
+              title='Completed Forms'
+              metric={
+                analytics.metrics.completedForms || {
+                  current: 0,
+                  trend: 'stable',
+                  format: 'number',
+                }
+              }
               icon={<CheckCircleIcon />}
-              color="success"
+              color='success'
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
-              title="Completion Rate"
-              metric={analytics.metrics.completionRate || { current: 0, trend: 'stable', format: 'percentage' }}
+              title='Completion Rate'
+              metric={
+                analytics.metrics.completionRate || {
+                  current: 0,
+                  trend: 'stable',
+                  format: 'percentage',
+                }
+              }
               icon={<SpeedIcon />}
-              color="info"
+              color='info'
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
-              title="Active Users"
-              metric={analytics.metrics.activeUsers || { current: 0, trend: 'stable', format: 'number' }}
+              title='Active Users'
+              metric={
+                analytics.metrics.activeUsers || { current: 0, trend: 'stable', format: 'number' }
+              }
               icon={<PeopleIcon />}
-              color="secondary"
+              color='secondary'
             />
           </Grid>
         </Grid>
@@ -463,9 +495,9 @@ const AdvancedDashboard: React.FC = () => {
       {/* Charts Section */}
       <Box mb={3}>
         <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)} sx={{ mb: 2 }}>
-          <Tab label="Trends" icon={<TimelineIcon />} />
-          <Tab label="Distribution" icon={<AssessmentIcon />} />
-          <Tab label="Performance" icon={<SpeedIcon />} />
+          <Tab label='Trends' icon={<TimelineIcon />} />
+          <Tab label='Distribution' icon={<AssessmentIcon />} />
+          <Tab label='Performance' icon={<SpeedIcon />} />
         </Tabs>
 
         {/* Trends Tab */}
@@ -474,10 +506,15 @@ const AdvancedDashboard: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>Form Submissions Trend</Typography>
+                  <Typography variant='h6' gutterBottom>
+                    Form Submissions Trend
+                  </Typography>
                   {analytics.trends.formSubmissions && (
                     <Line
-                      data={createLineChartData(analytics.trends.formSubmissions, 'Form Submissions')}
+                      data={createLineChartData(
+                        analytics.trends.formSubmissions,
+                        'Form Submissions'
+                      )}
                       options={{
                         responsive: true,
                         maintainAspectRatio: false,
@@ -494,7 +531,9 @@ const AdvancedDashboard: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>User Activity Trend</Typography>
+                  <Typography variant='h6' gutterBottom>
+                    User Activity Trend
+                  </Typography>
                   {analytics.trends.userActivity && (
                     <Line
                       data={createLineChartData(analytics.trends.userActivity, 'Active Users')}
@@ -520,7 +559,9 @@ const AdvancedDashboard: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>Status Distribution</Typography>
+                  <Typography variant='h6' gutterBottom>
+                    Status Distribution
+                  </Typography>
                   {analytics.distributions.statusDistribution && (
                     <Doughnut
                       data={createDoughnutChartData(analytics.distributions.statusDistribution)}
@@ -537,13 +578,17 @@ const AdvancedDashboard: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>Template Usage</Typography>
+                  <Typography variant='h6' gutterBottom>
+                    Template Usage
+                  </Typography>
                   {analytics.distributions.templateUsage && (
                     <Bar
-                      data={createBarChartData(
-                        analytics.distributions.templateUsage,
-                        [chartColors.primary, chartColors.secondary, chartColors.success, chartColors.warning]
-                      )}
+                      data={createBarChartData(analytics.distributions.templateUsage, [
+                        chartColors.primary,
+                        chartColors.secondary,
+                        chartColors.success,
+                        chartColors.warning,
+                      ])}
                       options={{
                         responsive: true,
                         maintainAspectRatio: false,
@@ -566,10 +611,14 @@ const AdvancedDashboard: React.FC = () => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>Performance Overview</Typography>
+                  <Typography variant='h6' gutterBottom>
+                    Performance Overview
+                  </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                      <Typography variant="subtitle2" gutterBottom>Completion Rate Trend</Typography>
+                      <Typography variant='subtitle2' gutterBottom>
+                        Completion Rate Trend
+                      </Typography>
                       {analytics.trends.completions && (
                         <Line
                           data={createLineChartData(analytics.trends.completions, 'Completions')}
@@ -585,23 +634,25 @@ const AdvancedDashboard: React.FC = () => {
                       )}
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <Typography variant="subtitle2" gutterBottom>Key Metrics</Typography>
-                      <Box display="flex" flexDirection="column" gap={1}>
-                        <Box display="flex" justifyContent="space-between">
-                          <Typography variant="body2">Avg Completion Time:</Typography>
-                          <Typography variant="body2" fontWeight="bold">
+                      <Typography variant='subtitle2' gutterBottom>
+                        Key Metrics
+                      </Typography>
+                      <Box display='flex' flexDirection='column' gap={1}>
+                        <Box display='flex' justifyContent='space-between'>
+                          <Typography variant='body2'>Avg Completion Time:</Typography>
+                          <Typography variant='body2' fontWeight='bold'>
                             {analytics.metrics.avgCompletionTime?.current.toFixed(1) || 0}h
                           </Typography>
                         </Box>
-                        <Box display="flex" justifyContent="space-between">
-                          <Typography variant="body2">Total Forms:</Typography>
-                          <Typography variant="body2" fontWeight="bold">
+                        <Box display='flex' justifyContent='space-between'>
+                          <Typography variant='body2'>Total Forms:</Typography>
+                          <Typography variant='body2' fontWeight='bold'>
                             {analytics.metrics.totalForms?.current || 0}
                           </Typography>
                         </Box>
-                        <Box display="flex" justifyContent="space-between">
-                          <Typography variant="body2">Active Users:</Typography>
-                          <Typography variant="body2" fontWeight="bold">
+                        <Box display='flex' justifyContent='space-between'>
+                          <Typography variant='body2'>Active Users:</Typography>
+                          <Typography variant='body2' fontWeight='bold'>
                             {analytics.metrics.activeUsers?.current || 0}
                           </Typography>
                         </Box>
@@ -625,28 +676,30 @@ const AdvancedDashboard: React.FC = () => {
         }}
       >
         <Box p={2}>
-          <Typography variant="h6" gutterBottom>Filters</Typography>
-          
+          <Typography variant='h6' gutterBottom>
+            Filters
+          </Typography>
+
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>Templates ({selectedTemplates.length})</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size='small'>
                 <Select
                   multiple
                   value={selectedTemplates}
-                  onChange={(e) => setSelectedTemplates(e.target.value as string[])}
-                  renderValue={(selected) => (
-                    <Box display="flex" flexWrap="wrap" gap={0.5}>
-                      {(selected as string[]).map((value) => {
+                  onChange={e => setSelectedTemplates(e.target.value as string[])}
+                  renderValue={selected => (
+                    <Box display='flex' flexWrap='wrap' gap={0.5}>
+                      {(selected as string[]).map(value => {
                         const template = filterOptions?.templates.find(t => t.value === value);
-                        return <Chip key={value} label={template?.label} size="small" />;
+                        return <Chip key={value} label={template?.label} size='small' />;
                       })}
                     </Box>
                   )}
                 >
-                  {filterOptions?.templates.map((template) => (
+                  {filterOptions?.templates.map(template => (
                     <MenuItem key={template.value} value={template.value}>
                       {template.label}
                     </MenuItem>
@@ -661,21 +714,21 @@ const AdvancedDashboard: React.FC = () => {
               <Typography>Worksites ({selectedWorksites.length})</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size='small'>
                 <Select
                   multiple
                   value={selectedWorksites}
-                  onChange={(e) => setSelectedWorksites(e.target.value as string[])}
-                  renderValue={(selected) => (
-                    <Box display="flex" flexWrap="wrap" gap={0.5}>
-                      {(selected as string[]).map((value) => {
+                  onChange={e => setSelectedWorksites(e.target.value as string[])}
+                  renderValue={selected => (
+                    <Box display='flex' flexWrap='wrap' gap={0.5}>
+                      {(selected as string[]).map(value => {
                         const worksite = filterOptions?.worksites.find(w => w.value === value);
-                        return <Chip key={value} label={worksite?.label} size="small" />;
+                        return <Chip key={value} label={worksite?.label} size='small' />;
                       })}
                     </Box>
                   )}
                 >
-                  {filterOptions?.worksites.map((worksite) => (
+                  {filterOptions?.worksites.map(worksite => (
                     <MenuItem key={worksite.value} value={worksite.value}>
                       {worksite.label}
                     </MenuItem>
@@ -685,11 +738,11 @@ const AdvancedDashboard: React.FC = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Box display="flex" justifyContent="space-between" mt={2}>
-            <Button size="small" onClick={clearFilters}>
+          <Box display='flex' justifyContent='space-between' mt={2}>
+            <Button size='small' onClick={clearFilters}>
               Clear All
             </Button>
-            <Button size="small" variant="contained" onClick={() => setFilterMenuAnchor(null)}>
+            <Button size='small' variant='contained' onClick={() => setFilterMenuAnchor(null)}>
               Apply
             </Button>
           </Box>

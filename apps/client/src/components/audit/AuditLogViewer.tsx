@@ -27,7 +27,7 @@ import {
   Select,
   Alert,
   Collapse,
-  Paper
+  Paper,
 } from '@mui/material';
 import {
   Visibility as ViewIcon,
@@ -38,7 +38,7 @@ import {
   Security as SecurityIcon,
   Warning as WarningIcon,
   Error as ErrorIcon,
-  CheckCircle as SuccessIcon
+  CheckCircle as SuccessIcon,
 } from '@mui/icons-material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useApi } from '../../hooks/useApi';
@@ -75,7 +75,7 @@ interface AuditLogViewerProps {
 const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   organizationId,
   height = 600,
-  embedded = false
+  embedded = false,
 }) => {
   const { request } = useApi();
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -84,7 +84,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [total, setTotal] = useState(0);
-  
+
   // Filters
   const [filters, setFilters] = useState({
     startDate: null as Date | null,
@@ -94,7 +94,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
     severity: '',
     userId: '',
     resourceType: '',
-    search: ''
+    search: '',
   });
 
   // Detail view
@@ -113,7 +113,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
     try {
       const params = new URLSearchParams({
         page: (page + 1).toString(),
-        limit: rowsPerPage.toString()
+        limit: rowsPerPage.toString(),
       });
 
       // Add filters
@@ -141,7 +141,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   const handleFilterChange = (field: string, value: any) => {
     setFilters(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     setPage(0); // Reset to first page when filters change
   };
@@ -155,7 +155,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       severity: '',
       userId: '',
       resourceType: '',
-      search: ''
+      search: '',
     });
     setPage(0);
   };
@@ -169,11 +169,11 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           filters: {
             ...filters,
             startDate: filters.startDate?.toISOString(),
-            endDate: filters.endDate?.toISOString()
+            endDate: filters.endDate?.toISOString(),
           },
-          organizationId
+          organizationId,
         },
-        responseType: 'blob'
+        responseType: 'blob',
       });
 
       // Create download link
@@ -195,13 +195,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color='error' />;
       case 'high':
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color='warning' />;
       case 'medium':
-        return <SecurityIcon color="info" />;
+        return <SecurityIcon color='info' />;
       default:
-        return <SuccessIcon color="success" />;
+        return <SuccessIcon color='success' />;
     }
   };
 
@@ -248,85 +248,85 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
   const filterSection = (
     <Paper sx={{ p: 2, mb: 2 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant='h6' gutterBottom>
         Filters
       </Typography>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={2} alignItems='center'>
         <Grid item xs={12} md={3}>
           <DateTimePicker
-            label="Start Date"
+            label='Start Date'
             value={filters.startDate}
-            onChange={(date) => handleFilterChange('startDate', date)}
+            onChange={date => handleFilterChange('startDate', date)}
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
         <Grid item xs={12} md={3}>
           <DateTimePicker
-            label="End Date"
+            label='End Date'
             value={filters.endDate}
-            onChange={(date) => handleFilterChange('endDate', date)}
+            onChange={date => handleFilterChange('endDate', date)}
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
         <Grid item xs={12} md={2}>
-          <FormControl size="small" fullWidth>
+          <FormControl size='small' fullWidth>
             <InputLabel>Category</InputLabel>
             <Select
               value={filters.category}
-              onChange={(e) => handleFilterChange('category', e.target.value)}
-              label="Category"
+              onChange={e => handleFilterChange('category', e.target.value)}
+              label='Category'
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="authentication">Authentication</MenuItem>
-              <MenuItem value="data">Data</MenuItem>
-              <MenuItem value="user_management">User Management</MenuItem>
-              <MenuItem value="system">System</MenuItem>
-              <MenuItem value="security">Security</MenuItem>
-              <MenuItem value="compliance">Compliance</MenuItem>
-              <MenuItem value="integration">Integration</MenuItem>
+              <MenuItem value=''>All</MenuItem>
+              <MenuItem value='authentication'>Authentication</MenuItem>
+              <MenuItem value='data'>Data</MenuItem>
+              <MenuItem value='user_management'>User Management</MenuItem>
+              <MenuItem value='system'>System</MenuItem>
+              <MenuItem value='security'>Security</MenuItem>
+              <MenuItem value='compliance'>Compliance</MenuItem>
+              <MenuItem value='integration'>Integration</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} md={2}>
-          <FormControl size="small" fullWidth>
+          <FormControl size='small' fullWidth>
             <InputLabel>Severity</InputLabel>
             <Select
               value={filters.severity}
-              onChange={(e) => handleFilterChange('severity', e.target.value)}
-              label="Severity"
+              onChange={e => handleFilterChange('severity', e.target.value)}
+              label='Severity'
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="low">Low</MenuItem>
-              <MenuItem value="medium">Medium</MenuItem>
-              <MenuItem value="high">High</MenuItem>
-              <MenuItem value="critical">Critical</MenuItem>
+              <MenuItem value=''>All</MenuItem>
+              <MenuItem value='low'>Low</MenuItem>
+              <MenuItem value='medium'>Medium</MenuItem>
+              <MenuItem value='high'>High</MenuItem>
+              <MenuItem value='critical'>Critical</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} md={2}>
-          <Box display="flex" gap={1}>
-            <Tooltip title="Refresh">
-              <IconButton onClick={loadLogs} size="small">
+          <Box display='flex' gap={1}>
+            <Tooltip title='Refresh'>
+              <IconButton onClick={loadLogs} size='small'>
                 <RefreshIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Export">
-              <IconButton onClick={handleExport} size="small">
+            <Tooltip title='Export'>
+              <IconButton onClick={handleExport} size='small'>
                 <ExportIcon />
               </IconButton>
             </Tooltip>
-            <Button onClick={clearFilters} size="small">
+            <Button onClick={clearFilters} size='small'>
               Clear
             </Button>
           </Box>
         </Grid>
         <Grid item xs={12}>
           <TextField
-            size="small"
+            size='small'
             fullWidth
-            placeholder="Search logs..."
+            placeholder='Search logs...'
             value={filters.search}
-            onChange={(e) => handleFilterChange('search', e.target.value)}
+            onChange={e => handleFilterChange('search', e.target.value)}
           />
         </Grid>
       </Grid>
@@ -336,15 +336,15 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   const content = (
     <>
       {!embedded && filterSection}
-      
+
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity='error' sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
-      <TableContainer 
-        component={Paper} 
+      <TableContainer
+        component={Paper}
         sx={{ height: embedded ? height : 'auto', maxHeight: height }}
       >
         <Table stickyHeader>
@@ -362,46 +362,38 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {logs.map((log) => (
+            {logs.map(log => (
               <React.Fragment key={log._id}>
                 <TableRow hover>
                   <TableCell>
-                    <IconButton
-                      size="small"
-                      onClick={() => toggleRowExpansion(log._id)}
-                    >
+                    <IconButton size='small' onClick={() => toggleRowExpansion(log._id)}>
                       {expandedRows.has(log._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
+                    <Typography variant='body2'>
                       {new Date(log.timestamp).toLocaleString()}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Box>
-                      <Typography variant="body2" fontWeight="bold">
+                      <Typography variant='body2' fontWeight='bold'>
                         {log.userName || 'System'}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         {log.userEmail}
                       </Typography>
                       {log.userRole && (
-                        <Chip
-                          label={log.userRole}
-                          size="small"
-                          variant="outlined"
-                          sx={{ ml: 1 }}
-                        />
+                        <Chip label={log.userRole} size='small' variant='outlined' sx={{ ml: 1 }} />
                       )}
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Box>
-                      <Typography variant="body2" fontWeight="bold">
+                      <Typography variant='body2' fontWeight='bold'>
                         {log.action}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         {log.category}
                       </Typography>
                     </Box>
@@ -409,78 +401,74 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   <TableCell>
                     {log.resourceType && (
                       <Box>
-                        <Typography variant="body2">
+                        <Typography variant='body2'>
                           {log.resourceName || log.resourceId || log.resourceType}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {log.resourceType}
                         </Typography>
                       </Box>
                     )}
                   </TableCell>
                   <TableCell>
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <Box display='flex' alignItems='center' gap={1}>
                       {getSeverityIcon(log.severity)}
                       <Chip
                         label={log.severity}
-                        size="small"
+                        size='small'
                         color={getSeverityColor(log.severity) as any}
-                        variant="outlined"
+                        variant='outlined'
                       />
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Chip
                       label={log.status}
-                      size="small"
+                      size='small'
                       color={getStatusColor(log.status) as any}
                     />
                   </TableCell>
                   <TableCell>
-                    {log.duration && (
-                      <Typography variant="body2">
-                        {log.duration}ms
-                      </Typography>
-                    )}
+                    {log.duration && <Typography variant='body2'>{log.duration}ms</Typography>}
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="View Details">
-                      <IconButton size="small" onClick={() => viewLogDetail(log)}>
+                    <Tooltip title='View Details'>
+                      <IconButton size='small' onClick={() => viewLogDetail(log)}>
                         <ViewIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
-                
+
                 {/* Expanded row */}
                 <TableRow>
                   <TableCell colSpan={9} sx={{ p: 0 }}>
-                    <Collapse in={expandedRows.has(log._id)} timeout="auto" unmountOnExit>
+                    <Collapse in={expandedRows.has(log._id)} timeout='auto' unmountOnExit>
                       <Box sx={{ p: 2, bgcolor: 'background.default' }}>
-                        <Typography variant="body2" gutterBottom>
+                        <Typography variant='body2' gutterBottom>
                           <strong>Description:</strong> {log.description}
                         </Typography>
                         {log.ipAddress && (
-                          <Typography variant="body2" gutterBottom>
+                          <Typography variant='body2' gutterBottom>
                             <strong>IP Address:</strong> {log.ipAddress}
                           </Typography>
                         )}
                         {log.correlationId && (
-                          <Typography variant="body2" gutterBottom>
+                          <Typography variant='body2' gutterBottom>
                             <strong>Correlation ID:</strong> {log.correlationId}
                           </Typography>
                         )}
                         {log.tags && log.tags.length > 0 && (
                           <Box mt={1}>
-                            <Typography variant="body2" component="span">
+                            <Typography variant='body2' component='span'>
                               <strong>Tags:</strong>
                             </Typography>
                             {log.tags.map(tag => (
                               <Chip
                                 key={tag}
                                 label={tag}
-                                size="small"
-                                variant="outlined"
+                                size='small'
+                                variant='outlined'
                                 sx={{ ml: 0.5, mt: 0.5 }}
                               />
                             ))}
@@ -498,12 +486,12 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
       {!embedded && (
         <TablePagination
-          component="div"
+          component='div'
           count={total}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e) => {
+          onRowsPerPageChange={e => {
             setRowsPerPage(parseInt(e.target.value));
             setPage(0);
           }}
@@ -512,44 +500,37 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       )}
 
       {/* Detail Dialog */}
-      <Dialog
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          Audit Log Details
-        </DialogTitle>
+      <Dialog open={detailOpen} onClose={() => setDetailOpen(false)} maxWidth='md' fullWidth>
+        <DialogTitle>Audit Log Details</DialogTitle>
         <DialogContent>
           {selectedLog && (
             <Box>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="subtitle2">Timestamp</Typography>
-                  <Typography variant="body2">
+                  <Typography variant='subtitle2'>Timestamp</Typography>
+                  <Typography variant='body2'>
                     {new Date(selectedLog.timestamp).toLocaleString()}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="subtitle2">Event Type</Typography>
-                  <Typography variant="body2">{selectedLog.eventType}</Typography>
+                  <Typography variant='subtitle2'>Event Type</Typography>
+                  <Typography variant='body2'>{selectedLog.eventType}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="subtitle2">Action</Typography>
-                  <Typography variant="body2">{selectedLog.action}</Typography>
+                  <Typography variant='subtitle2'>Action</Typography>
+                  <Typography variant='body2'>{selectedLog.action}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="subtitle2">Category</Typography>
-                  <Typography variant="body2">{selectedLog.category}</Typography>
+                  <Typography variant='subtitle2'>Category</Typography>
+                  <Typography variant='body2'>{selectedLog.category}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="subtitle2">Description</Typography>
-                  <Typography variant="body2">{selectedLog.description}</Typography>
+                  <Typography variant='subtitle2'>Description</Typography>
+                  <Typography variant='body2'>{selectedLog.description}</Typography>
                 </Grid>
                 {selectedLog.details && (
                   <Grid item xs={12}>
-                    <Typography variant="subtitle2">Details</Typography>
+                    <Typography variant='subtitle2'>Details</Typography>
                     <Paper sx={{ p: 1, bgcolor: 'background.default' }}>
                       <pre style={{ fontSize: '12px', margin: 0, whiteSpace: 'pre-wrap' }}>
                         {JSON.stringify(selectedLog.details, null, 2)}
@@ -575,24 +556,18 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h5">
-            Audit Logs
-          </Typography>
-          <Box display="flex" gap={1}>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+          <Typography variant='h5'>Audit Logs</Typography>
+          <Box display='flex' gap={1}>
             <Button
-              variant="outlined"
+              variant='outlined'
               startIcon={<RefreshIcon />}
               onClick={loadLogs}
               disabled={loading}
             >
               Refresh
             </Button>
-            <Button
-              variant="outlined"
-              startIcon={<ExportIcon />}
-              onClick={handleExport}
-            >
+            <Button variant='outlined' startIcon={<ExportIcon />} onClick={handleExport}>
               Export
             </Button>
           </Box>

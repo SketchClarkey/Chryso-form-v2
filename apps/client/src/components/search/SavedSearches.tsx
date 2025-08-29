@@ -106,7 +106,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  
+
   const [searchData, setSearchData] = useState<Partial<SavedSearch>>({
     name: '',
     description: '',
@@ -141,7 +141,9 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
 
   const loadPopularSearches = async () => {
     try {
-      const response = await request(`/api/saved-searches/popular?entityType=${entityType}&limit=5`);
+      const response = await request(
+        `/api/saved-searches/popular?entityType=${entityType}&limit=5`
+      );
       setPopularSearches(response.data.searches);
     } catch (error) {
       console.error('Failed to load popular searches:', error);
@@ -193,7 +195,9 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
     ];
 
     setSearches(mockSearches.filter(s => s.entityType === entityType));
-    setPopularSearches(mockSearches.filter(s => s.entityType === entityType && s.usage.totalUses > 100));
+    setPopularSearches(
+      mockSearches.filter(s => s.entityType === entityType && s.usage.totalUses > 100)
+    );
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, search: SavedSearch) => {
@@ -219,7 +223,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
         data: updatedSearch,
       });
 
-      setSearches(searches.map(s => s.id === search.id ? updatedSearch : s));
+      setSearches(searches.map(s => (s.id === search.id ? updatedSearch : s)));
     } catch (error) {
       console.error('Failed to toggle pin:', error);
     }
@@ -271,7 +275,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
         data: searchData,
       });
 
-      setSearches(searches.map(s => s.id === selectedSearch.id ? response.data.search : s));
+      setSearches(searches.map(s => (s.id === selectedSearch.id ? response.data.search : s)));
       setEditDialogOpen(false);
     } catch (error) {
       console.error('Failed to update search:', error);
@@ -281,13 +285,18 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
   const updateUsage = async (searchId: string) => {
     try {
       await request(`/api/saved-searches/${searchId}/usage`, { method: 'POST' });
-      
+
       // Update local usage
-      setSearches(searches.map(s => 
-        s.id === searchId 
-          ? { ...s, usage: { ...s.usage, totalUses: s.usage.totalUses + 1, lastUsed: new Date() }}
-          : s
-      ));
+      setSearches(
+        searches.map(s =>
+          s.id === searchId
+            ? {
+                ...s,
+                usage: { ...s.usage, totalUses: s.usage.totalUses + 1, lastUsed: new Date() },
+              }
+            : s
+        )
+      );
     } catch (error) {
       console.error('Failed to update usage:', error);
     }
@@ -326,40 +335,40 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
         <Stack spacing={1}>
           {pinnedSearches.length > 0 && (
             <Box>
-              <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+              <Typography variant='caption' color='text.secondary' gutterBottom display='block'>
                 Pinned Searches
               </Typography>
-              {pinnedSearches.slice(0, 3).map((search) => (
+              {pinnedSearches.slice(0, 3).map(search => (
                 <Chip
                   key={search.id}
                   label={search.name}
                   clickable
                   onClick={() => handleRunSearch(search)}
-                  color="primary"
-                  variant="outlined"
+                  color='primary'
+                  variant='outlined'
                   icon={<StarIcon />}
-                  size="small"
+                  size='small'
                   sx={{ mr: 1, mb: 1 }}
                 />
               ))}
             </Box>
           )}
-          
+
           {popularSearches.length > 0 && (
             <Box>
-              <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+              <Typography variant='caption' color='text.secondary' gutterBottom display='block'>
                 Popular Searches
               </Typography>
-              {popularSearches.slice(0, 3).map((search) => (
+              {popularSearches.slice(0, 3).map(search => (
                 <Chip
                   key={search.id}
                   label={search.name}
                   clickable
                   onClick={() => handleRunSearch(search)}
-                  color="secondary"
-                  variant="outlined"
+                  color='secondary'
+                  variant='outlined'
                   icon={<TrendingIcon />}
-                  size="small"
+                  size='small'
                   sx={{ mr: 1, mb: 1 }}
                 />
               ))}
@@ -372,15 +381,10 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Saved Searches</Typography>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+        <Typography variant='h6'>Saved Searches</Typography>
         {showCreateButton && onSaveCurrentSearch && currentQuery && (
-          <Button
-            size="small"
-            onClick={openSaveDialog}
-            startIcon={<AddIcon />}
-            variant="outlined"
-          >
+          <Button size='small' onClick={openSaveDialog} startIcon={<AddIcon />} variant='outlined'>
             Save Current Search
           </Button>
         )}
@@ -389,20 +393,23 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
       {/* Popular Searches */}
       {popularSearches.length > 0 && (
         <Box mb={3}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          <Typography variant='subtitle2' color='text.secondary' gutterBottom>
             Popular Searches
           </Typography>
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            {popularSearches.slice(0, 5).map((search) => (
-              <Tooltip key={search.id} title={`${search.usage.totalUses} uses • ${search.usage.avgResultCount} avg results`}>
+          <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
+            {popularSearches.slice(0, 5).map(search => (
+              <Tooltip
+                key={search.id}
+                title={`${search.usage.totalUses} uses • ${search.usage.avgResultCount} avg results`}
+              >
                 <Chip
                   label={search.name}
                   clickable
                   onClick={() => handleRunSearch(search)}
-                  color="secondary"
-                  variant="outlined"
+                  color='secondary'
+                  variant='outlined'
                   icon={<TrendingIcon />}
-                  size="small"
+                  size='small'
                 />
               </Tooltip>
             ))}
@@ -412,21 +419,17 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
 
       {/* Saved Searches List */}
       {searches.length === 0 ? (
-        <Card variant="outlined">
+        <Card variant='outlined'>
           <CardContent sx={{ textAlign: 'center', py: 4 }}>
             <SearchIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant='h6' color='text.secondary' gutterBottom>
               No Saved Searches
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={2}>
+            <Typography variant='body2' color='text.secondary' mb={2}>
               Save your frequent searches for quick access
             </Typography>
             {currentQuery && (
-              <Button
-                variant="contained"
-                onClick={openSaveDialog}
-                startIcon={<AddIcon />}
-              >
+              <Button variant='contained' onClick={openSaveDialog} startIcon={<AddIcon />}>
                 Save Current Search
               </Button>
             )}
@@ -437,41 +440,46 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
           {/* Pinned Searches */}
           {pinnedSearches.length > 0 && (
             <>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ px: 2, py: 1 }}>
+              <Typography variant='subtitle2' color='text.secondary' sx={{ px: 2, py: 1 }}>
                 Pinned Searches
               </Typography>
               {pinnedSearches.map((search, index) => (
                 <React.Fragment key={search.id}>
                   <ListItemButton onClick={() => handleRunSearch(search)}>
                     <ListItemIcon>
-                      <StarIcon color="primary" />
+                      <StarIcon color='primary' />
                     </ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="subtitle1">{search.name}</Typography>
-                          {search.isPublic && <PublicIcon fontSize="small" color="action" />}
+                        <Box display='flex' alignItems='center' gap={1}>
+                          <Typography variant='subtitle1'>{search.name}</Typography>
+                          {search.isPublic && <PublicIcon fontSize='small' color='action' />}
                         </Box>
                       }
                       secondary={
                         <Box>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography variant='body2' color='text.secondary' gutterBottom>
                             {search.description || search.query}
                           </Typography>
-                          <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                            <Typography variant="caption" color="text.secondary">
+                          <Stack direction='row' spacing={1} alignItems='center' flexWrap='wrap'>
+                            <Typography variant='caption' color='text.secondary'>
                               {search.usage.totalUses} uses
                             </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Updated {formatDistanceToNow(new Date(search.updatedAt), { addSuffix: true })}
+                            <Typography variant='caption' color='text.secondary'>
+                              Updated{' '}
+                              {formatDistanceToNow(new Date(search.updatedAt), { addSuffix: true })}
                             </Typography>
                             {search.tags.length > 0 && (
-                              <Box display="flex" gap={0.5}>
+                              <Box display='flex' gap={0.5}>
                                 {search.tags.slice(0, 2).map((tag, idx) => (
-                                  <Chip key={idx} label={tag} size="small" variant="outlined" />
+                                  <Chip key={idx} label={tag} size='small' variant='outlined' />
                                 ))}
                                 {search.tags.length > 2 && (
-                                  <Chip label={`+${search.tags.length - 2}`} size="small" variant="outlined" />
+                                  <Chip
+                                    label={`+${search.tags.length - 2}`}
+                                    size='small'
+                                    variant='outlined'
+                                  />
                                 )}
                               </Box>
                             )}
@@ -480,7 +488,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
                       }
                     />
                     <IconButton
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handleMenuOpen(e, search);
                       }}
@@ -499,7 +507,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
           {regularSearches.length > 0 && (
             <>
               {pinnedSearches.length > 0 && (
-                <Typography variant="subtitle2" color="text.secondary" sx={{ px: 2, py: 1 }}>
+                <Typography variant='subtitle2' color='text.secondary' sx={{ px: 2, py: 1 }}>
                   All Searches
                 </Typography>
               )}
@@ -511,28 +519,29 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
                     </ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="subtitle1">{search.name}</Typography>
+                        <Box display='flex' alignItems='center' gap={1}>
+                          <Typography variant='subtitle1'>{search.name}</Typography>
                           {search.isPublic ? (
-                            <PublicIcon fontSize="small" color="action" />
+                            <PublicIcon fontSize='small' color='action' />
                           ) : (
-                            <PrivateIcon fontSize="small" color="action" />
+                            <PrivateIcon fontSize='small' color='action' />
                           )}
                         </Box>
                       }
                       secondary={
                         <Box>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography variant='body2' color='text.secondary' gutterBottom>
                             {search.description || search.query}
                           </Typography>
-                          <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          <Stack direction='row' spacing={1} alignItems='center' flexWrap='wrap'>
                             <Avatar sx={{ width: 16, height: 16, fontSize: 10 }}>
-                              {search.createdBy.firstName[0]}{search.createdBy.lastName[0]}
+                              {search.createdBy.firstName[0]}
+                              {search.createdBy.lastName[0]}
                             </Avatar>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant='caption' color='text.secondary'>
                               by {search.createdBy.firstName} {search.createdBy.lastName}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant='caption' color='text.secondary'>
                               {search.usage.totalUses} uses
                             </Typography>
                           </Stack>
@@ -540,7 +549,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
                       }
                     />
                     <IconButton
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handleMenuOpen(e, search);
                       }}
@@ -557,17 +566,17 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
       )}
 
       {/* Context Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={() => selectedSearch && handleRunSearch(selectedSearch)}>
           <RunIcon sx={{ mr: 1 }} />
           Run Search
         </MenuItem>
         <MenuItem onClick={() => selectedSearch && handleTogglePin(selectedSearch)}>
-          {selectedSearch?.isPinned ? <StarBorderIcon sx={{ mr: 1 }} /> : <StarIcon sx={{ mr: 1 }} />}
+          {selectedSearch?.isPinned ? (
+            <StarBorderIcon sx={{ mr: 1 }} />
+          ) : (
+            <StarIcon sx={{ mr: 1 }} />
+          )}
           {selectedSearch?.isPinned ? 'Unpin' : 'Pin'}
         </MenuItem>
         <MenuItem onClick={handleEditSearch}>
@@ -586,32 +595,37 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
       </Menu>
 
       {/* Save Search Dialog */}
-      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={saveDialogOpen}
+        onClose={() => setSaveDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Save Search</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Search Name"
+              label='Search Name'
               value={searchData.name}
-              onChange={(e) => setSearchData({ ...searchData, name: e.target.value })}
+              onChange={e => setSearchData({ ...searchData, name: e.target.value })}
               fullWidth
               required
             />
             <TextField
-              label="Description"
+              label='Description'
               value={searchData.description}
-              onChange={(e) => setSearchData({ ...searchData, description: e.target.value })}
+              onChange={e => setSearchData({ ...searchData, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
             />
             <TextField
-              label="Search Query"
+              label='Search Query'
               value={searchData.query}
-              onChange={(e) => setSearchData({ ...searchData, query: e.target.value })}
+              onChange={e => setSearchData({ ...searchData, query: e.target.value })}
               fullWidth
               InputProps={{ readOnly: true }}
-              helperText="This is the current search query"
+              helperText='This is the current search query'
             />
             <Autocomplete
               multiple
@@ -619,59 +633,66 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
               options={[]}
               value={searchData.tags || []}
               onChange={(_, newValue) => setSearchData({ ...searchData, tags: newValue })}
-              renderInput={(params) => <TextField {...params} label="Tags" placeholder="Add tags..." />}
+              renderInput={params => (
+                <TextField {...params} label='Tags' placeholder='Add tags...' />
+              )}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip variant="outlined" label={option} {...getTagProps({ index })} key={index} />
+                  <Chip variant='outlined' label={option} {...getTagProps({ index })} key={index} />
                 ))
               }
             />
-            <Stack direction="row" spacing={2}>
+            <Stack direction='row' spacing={2}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={searchData.isPublic || false}
-                    onChange={(e) => setSearchData({ ...searchData, isPublic: e.target.checked })}
+                    onChange={e => setSearchData({ ...searchData, isPublic: e.target.checked })}
                   />
                 }
-                label="Make Public"
+                label='Make Public'
               />
               <FormControlLabel
                 control={
                   <Switch
                     checked={searchData.isPinned || false}
-                    onChange={(e) => setSearchData({ ...searchData, isPinned: e.target.checked })}
+                    onChange={e => setSearchData({ ...searchData, isPinned: e.target.checked })}
                   />
                 }
-                label="Pin to Top"
+                label='Pin to Top'
               />
             </Stack>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSaveDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleSaveSearch} variant="contained">
+          <Button onClick={handleSaveSearch} variant='contained'>
             Save Search
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Edit Search Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Edit Search</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Search Name"
+              label='Search Name'
               value={searchData.name}
-              onChange={(e) => setSearchData({ ...searchData, name: e.target.value })}
+              onChange={e => setSearchData({ ...searchData, name: e.target.value })}
               fullWidth
               required
             />
             <TextField
-              label="Description"
+              label='Description'
               value={searchData.description}
-              onChange={(e) => setSearchData({ ...searchData, description: e.target.value })}
+              onChange={e => setSearchData({ ...searchData, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
@@ -682,33 +703,35 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
               options={[]}
               value={searchData.tags || []}
               onChange={(_, newValue) => setSearchData({ ...searchData, tags: newValue })}
-              renderInput={(params) => <TextField {...params} label="Tags" placeholder="Add tags..." />}
+              renderInput={params => (
+                <TextField {...params} label='Tags' placeholder='Add tags...' />
+              )}
             />
-            <Stack direction="row" spacing={2}>
+            <Stack direction='row' spacing={2}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={searchData.isPublic || false}
-                    onChange={(e) => setSearchData({ ...searchData, isPublic: e.target.checked })}
+                    onChange={e => setSearchData({ ...searchData, isPublic: e.target.checked })}
                   />
                 }
-                label="Make Public"
+                label='Make Public'
               />
               <FormControlLabel
                 control={
                   <Switch
                     checked={searchData.isPinned || false}
-                    onChange={(e) => setSearchData({ ...searchData, isPinned: e.target.checked })}
+                    onChange={e => setSearchData({ ...searchData, isPinned: e.target.checked })}
                   />
                 }
-                label="Pin to Top"
+                label='Pin to Top'
               />
             </Stack>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleUpdateSearch} variant="contained">
+          <Button onClick={handleUpdateSearch} variant='contained'>
             Update Search
           </Button>
         </DialogActions>
@@ -724,7 +747,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteSearch} color="error" variant="contained">
+          <Button onClick={handleDeleteSearch} color='error' variant='contained'>
             Delete
           </Button>
         </DialogActions>

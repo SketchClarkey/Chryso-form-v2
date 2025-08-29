@@ -10,7 +10,7 @@ async function validateSchema() {
   try {
     console.log('Connecting to MongoDB for schema validation...');
     await mongoose.connect(MONGODB_URI);
-    
+
     console.log('✅ Connected to MongoDB successfully');
 
     // Test model creation and validation
@@ -20,7 +20,7 @@ async function validateSchema() {
     const userValidation = User.schema.obj;
     console.log('✅ User schema loaded:', Object.keys(userValidation).length, 'fields');
 
-    // Test Form schema  
+    // Test Form schema
     const formValidation = Form.schema.obj;
     console.log('✅ Form schema loaded:', Object.keys(formValidation).length, 'fields');
 
@@ -40,11 +40,10 @@ async function validateSchema() {
     const formIndexes = Form.schema.indexes();
     console.log('✅ Form model has', formIndexes.length, 'indexes');
 
-    const worksiteIndexes = Worksite.schema.indexes();  
+    const worksiteIndexes = Worksite.schema.indexes();
     console.log('✅ Worksite model has', worksiteIndexes.length, 'indexes');
 
     console.log('\n🎉 Schema validation completed successfully!');
-
   } catch (error) {
     console.error('❌ Schema validation failed:', error);
     process.exit(1);

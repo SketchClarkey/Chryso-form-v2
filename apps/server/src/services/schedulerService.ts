@@ -79,7 +79,7 @@ export class SchedulerService {
     try {
       const reports = await Report.find({
         'schedule.enabled': true,
-        status: 'published'
+        status: 'published',
       }).lean();
 
       for (const report of reports) {
@@ -100,7 +100,9 @@ export class SchedulerService {
 
       // Validate cron expression
       if (!cron.validate(report.schedule.cronExpression)) {
-        console.error(`Invalid cron expression for report ${report.name}: ${report.schedule.cronExpression}`);
+        console.error(
+          `Invalid cron expression for report ${report.name}: ${report.schedule.cronExpression}`
+        );
         return false;
       }
 
@@ -132,7 +134,7 @@ export class SchedulerService {
 
       this.jobs.set(job.id, job);
       console.log(`Scheduled report: ${report.name} (${report.schedule.cronExpression})`);
-      
+
       return true;
     } catch (error) {
       console.error(`Failed to schedule report ${report.name}:`, error);
@@ -163,10 +165,12 @@ export class SchedulerService {
 
     try {
       console.log(`Executing scheduled report: ${reportId}`);
-      
+
       // Load report
-      const report = await Report.findById(reportId)
-        .populate('createdBy', 'firstName lastName email');
+      const report = await Report.findById(reportId).populate(
+        'createdBy',
+        'firstName lastName email'
+      );
 
       if (!report) {
         console.error(`Report not found: ${reportId}`);
@@ -214,13 +218,13 @@ export class SchedulerService {
     // This is a simplified version - in production, you'd want to reuse
     // the same logic from the reports route
     const data: any = {};
-    
+
     for (const dataSource of report.dataSources) {
       // Apply filters and generate data based on data source type
       // For now, return empty data - this should be implemented properly
       data[dataSource.id] = [];
     }
-    
+
     return data;
   }
 
@@ -237,7 +241,7 @@ export class SchedulerService {
 
     try {
       const fileBuffer = await fs.readFile(filePath);
-      
+
       const mailOptions = {
         from: this.emailConfig!.from,
         to: recipients.join(', '),
@@ -359,7 +363,7 @@ export class SchedulerService {
   async updateEmailConfig(config: Partial<EmailConfig>): Promise<boolean> {
     try {
       this.emailConfig = { ...this.emailConfig!, ...config };
-      
+
       if (this.emailConfig.auth.user && this.emailConfig.auth.pass) {
         this.emailTransporter = nodemailer.createTransporter(this.emailConfig);
         return true;
@@ -388,85 +392,101 @@ export class SchedulerService {
   // Initialize system jobs (data retention, cleanup, etc.)
   private initializeSystemJobs(): void {
     console.log('🕐 Initializing system jobs...');
-    
+
     // Data retention job - runs every hour
-    const retentionJob = cron.schedule('0 * * * *', async () => {
-      try {
-        console.log('🗄️ Running scheduled data retention check...');
-        const results = await this.dataRetentionService.executeReadyPolicies();
-        
-        if (results.length > 0) {
-          console.log(`✅ Executed ${results.length} data retention policies`);
-          const successful = results.filter(r => r.success).length;
-          const failed = results.length - successful;
-          
-          if (failed > 0) {
-            console.warn(`⚠️ ${failed} retention policies failed to execute`);
+    const retentionJob = cron.schedule(
+      '0 * * * *',
+      async () => {
+        try {
+          console.log('🗄️ Running scheduled data retention check...');
+          const results = await this.dataRetentionService.executeReadyPolicies();
+
+          if (results.length > 0) {
+            console.log(`✅ Executed ${results.length} data retention policies`);
+            const successful = results.filter(r => r.success).length;
+            const failed = results.length - successful;
+
+            if (failed > 0) {
+              console.warn(`⚠️ ${failed} retention policies failed to execute`);
+            }
           }
+        } catch (error) {
+          console.error('❌ Failed to execute data retention policies:', error);
         }
-      } catch (error) {
-        console.error('❌ Failed to execute data retention policies:', error);
+      },
+      {
+        scheduled: true,
+        timezone: 'UTC',
       }
-    }, {
-      scheduled: true,
-      timezone: 'UTC'
-    });
-    
+    );
+
     this.systemJobs.set('dataRetention', retentionJob);
     console.log('📅 Data retention job scheduled (every hour)');
 
     // Daily cleanup job - runs at 2 AM UTC
-    const cleanupJob = cron.schedule('0 2 * * *', async () => {
-      try {
-        console.log('🧹 Running daily cleanup tasks...');
-        await this.cleanupExpiredSessions();
-        await this.cleanupTemporaryFiles();
-        await this.optimizeDatabaseIndexes();
-        console.log('✅ Daily cleanup completed');
-      } catch (error) {
-        console.error('❌ Failed to run cleanup tasks:', error);
+    const cleanupJob = cron.schedule(
+      '0 2 * * *',
+      async () => {
+        try {
+          console.log('🧹 Running daily cleanup tasks...');
+          await this.cleanupExpiredSessions();
+          await this.cleanupTemporaryFiles();
+          await this.optimizeDatabaseIndexes();
+          console.log('✅ Daily cleanup completed');
+        } catch (error) {
+          console.error('❌ Failed to run cleanup tasks:', error);
+        }
+      },
+      {
+        scheduled: true,
+        timezone: 'UTC',
       }
-    }, {
-      scheduled: true,
-      timezone: 'UTC'
-    });
+    );
 
     this.systemJobs.set('dailyCleanup', cleanupJob);
     console.log('📅 Daily cleanup job scheduled (2 AM UTC)');
 
     // Weekly database optimization - runs every Sunday at 3 AM UTC
-    const optimizeJob = cron.schedule('0 3 * * 0', async () => {
-      try {
-        console.log('🗃️ Running weekly database optimization...');
-        await this.optimizeDatabaseIndexes();
-        await this.compactCollections();
-        console.log('✅ Weekly optimization completed');
-      } catch (error) {
-        console.error('❌ Failed to run optimization tasks:', error);
+    const optimizeJob = cron.schedule(
+      '0 3 * * 0',
+      async () => {
+        try {
+          console.log('🗃️ Running weekly database optimization...');
+          await this.optimizeDatabaseIndexes();
+          await this.compactCollections();
+          console.log('✅ Weekly optimization completed');
+        } catch (error) {
+          console.error('❌ Failed to run optimization tasks:', error);
+        }
+      },
+      {
+        scheduled: true,
+        timezone: 'UTC',
       }
-    }, {
-      scheduled: true,
-      timezone: 'UTC'
-    });
+    );
 
     this.systemJobs.set('weeklyOptimization', optimizeJob);
     console.log('📅 Weekly optimization job scheduled (Sunday 3 AM UTC)');
 
     // Threat detection job - runs every 15 minutes
-    const threatDetectionJob = cron.schedule('*/15 * * * *', async () => {
-      try {
-        console.log('🛡️ Running threat detection analysis...');
-        
-        // This would normally get all organization IDs from a configuration or database
-        // For now, we'll skip automatic threat detection and let it be triggered by API calls
-        console.log('🛡️ Threat detection ready (triggered via API)');
-      } catch (error) {
-        console.error('❌ Failed to run threat detection:', error);
+    const threatDetectionJob = cron.schedule(
+      '*/15 * * * *',
+      async () => {
+        try {
+          console.log('🛡️ Running threat detection analysis...');
+
+          // This would normally get all organization IDs from a configuration or database
+          // For now, we'll skip automatic threat detection and let it be triggered by API calls
+          console.log('🛡️ Threat detection ready (triggered via API)');
+        } catch (error) {
+          console.error('❌ Failed to run threat detection:', error);
+        }
+      },
+      {
+        scheduled: true,
+        timezone: 'UTC',
       }
-    }, {
-      scheduled: true,
-      timezone: 'UTC'
-    });
+    );
 
     this.systemJobs.set('threatDetection', threatDetectionJob);
     console.log('📅 Threat detection job scheduled (every 15 minutes)');
@@ -485,7 +505,7 @@ export class SchedulerService {
   private async cleanupTemporaryFiles(): Promise<void> {
     console.log('🧹 Cleaning up temporary files...');
     const tempDir = path.join(process.cwd(), 'temp');
-    
+
     try {
       // Check if temp directory exists
       try {
@@ -493,20 +513,20 @@ export class SchedulerService {
       } catch {
         return; // Directory doesn't exist
       }
-      
+
       const files = await fs.readdir(tempDir, { withFileTypes: true });
       const now = Date.now();
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-      
+
       let deletedCount = 0;
-      
+
       for (const file of files) {
         const filePath = path.join(tempDir, file.name);
-        
+
         try {
           const stats = await fs.stat(filePath);
           const age = now - stats.mtime.getTime();
-          
+
           if (age > maxAge) {
             if (file.isDirectory()) {
               await fs.rmdir(filePath, { recursive: true });
@@ -519,7 +539,7 @@ export class SchedulerService {
           console.warn(`Failed to clean up ${filePath}:`, error);
         }
       }
-      
+
       if (deletedCount > 0) {
         console.log(`🗑️ Cleaned up ${deletedCount} temporary files`);
       }
@@ -531,18 +551,18 @@ export class SchedulerService {
   // Optimize database indexes
   private async optimizeDatabaseIndexes(): Promise<void> {
     console.log('🗃️ Optimizing database indexes...');
-    
+
     try {
       const mongoose = await import('mongoose');
       const db = mongoose.connection.db;
-      
+
       if (!db) {
         console.warn('Database connection not available for index optimization');
         return;
       }
-      
+
       const collections = await db.listCollections().toArray();
-      
+
       for (const collectionInfo of collections) {
         try {
           const collection = db.collection(collectionInfo.name);
@@ -552,7 +572,7 @@ export class SchedulerService {
           console.warn(`Failed to reindex ${collectionInfo.name}:`, error);
         }
       }
-      
+
       console.log('✅ Database index optimization completed');
     } catch (error) {
       console.error('Failed to optimize database indexes:', error);
@@ -562,18 +582,18 @@ export class SchedulerService {
   // Compact database collections
   private async compactCollections(): Promise<void> {
     console.log('🗜️ Compacting database collections...');
-    
+
     try {
       const mongoose = await import('mongoose');
       const db = mongoose.connection.db;
-      
+
       if (!db) {
         console.warn('Database connection not available for compaction');
         return;
       }
-      
+
       const collections = await db.listCollections().toArray();
-      
+
       for (const collectionInfo of collections) {
         try {
           await db.command({ compact: collectionInfo.name });
@@ -583,7 +603,7 @@ export class SchedulerService {
           console.warn(`Failed to compact ${collectionInfo.name}:`, error);
         }
       }
-      
+
       console.log('✅ Database compaction completed');
     } catch (error) {
       console.error('Failed to compact database collections:', error);
@@ -593,33 +613,33 @@ export class SchedulerService {
   // Get system job status
   getSystemJobStatus(): any {
     const jobStatuses: Record<string, any> = {};
-    
+
     this.systemJobs.forEach((job, name) => {
       jobStatuses[name] = {
         running: job.running || false,
         scheduled: job.scheduled || false,
-        destroyed: job.destroyed || false
+        destroyed: job.destroyed || false,
       };
     });
-    
+
     return {
       totalSystemJobs: this.systemJobs.size,
       jobs: jobStatuses,
       uptime: process.uptime(),
-      memoryUsage: process.memoryUsage()
+      memoryUsage: process.memoryUsage(),
     };
   }
 
   // Stop all system jobs (for graceful shutdown)
   shutdownSystemJobs(): void {
     console.log('🛑 Shutting down system jobs...');
-    
+
     this.systemJobs.forEach((job, name) => {
       job.stop();
       job.destroy();
       console.log(`🛑 Stopped system job: ${name}`);
     });
-    
+
     this.systemJobs.clear();
     console.log('✅ System jobs shut down');
   }

@@ -31,7 +31,7 @@ import {
   Paper,
   Tabs,
   Tab,
-  LinearProgress
+  LinearProgress,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -44,7 +44,7 @@ import {
   Storage as StorageIcon,
   Schedule as ScheduleIcon,
   Assessment as StatsIcon,
-  Visibility as PreviewIcon
+  Visibility as PreviewIcon,
 } from '@mui/icons-material';
 import { useApi } from '../../hooks/useApi';
 import { useForm, Controller } from 'react-hook-form';
@@ -119,7 +119,7 @@ const policySchema = z.object({
   entityType: z.enum(['form', 'auditLog', 'report', 'user', 'template', 'dashboard', 'all']),
   retentionPeriod: z.object({
     value: z.number().min(1, 'Value must be at least 1'),
-    unit: z.enum(['days', 'months', 'years'])
+    unit: z.enum(['days', 'months', 'years']),
   }),
   archiveBeforeDelete: z.boolean(),
   archiveLocation: z.string().optional(),
@@ -129,21 +129,25 @@ const policySchema = z.object({
     dayOfWeek: z.number().min(0).max(6).optional(),
     dayOfMonth: z.number().min(1).max(31).optional(),
     hour: z.number().min(0).max(23),
-    timezone: z.string()
+    timezone: z.string(),
   }),
-  legalHold: z.object({
-    enabled: z.boolean(),
-    reason: z.string().optional(),
-    holdUntil: z.string().optional(),
-    exemptFromDeletion: z.boolean()
-  }).optional(),
-  complianceRequirements: z.object({
-    gdpr: z.boolean(),
-    hipaa: z.boolean(),
-    sox: z.boolean(),
-    pci: z.boolean(),
-    custom: z.array(z.string()).optional()
-  }).optional()
+  legalHold: z
+    .object({
+      enabled: z.boolean(),
+      reason: z.string().optional(),
+      holdUntil: z.string().optional(),
+      exemptFromDeletion: z.boolean(),
+    })
+    .optional(),
+  complianceRequirements: z
+    .object({
+      gdpr: z.boolean(),
+      hipaa: z.boolean(),
+      sox: z.boolean(),
+      pci: z.boolean(),
+      custom: z.array(z.string()).optional(),
+    })
+    .optional(),
 });
 
 type PolicyFormData = z.infer<typeof policySchema>;
@@ -172,7 +176,7 @@ const DataRetentionManager: React.FC = () => {
     handleSubmit,
     reset,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm<PolicyFormData>({
     resolver: zodResolver(policySchema),
     defaultValues: {
@@ -181,19 +185,19 @@ const DataRetentionManager: React.FC = () => {
       executionSchedule: {
         frequency: 'daily',
         hour: 2,
-        timezone: 'UTC'
+        timezone: 'UTC',
       },
       legalHold: {
         enabled: false,
-        exemptFromDeletion: true
+        exemptFromDeletion: true,
       },
       complianceRequirements: {
         gdpr: false,
         hipaa: false,
         sox: false,
-        pci: false
-      }
-    }
+        pci: false,
+      },
+    },
   });
 
   const watchedFrequency = watch('executionSchedule.frequency');
@@ -245,7 +249,7 @@ const DataRetentionManager: React.FC = () => {
       archiveFormat: policy.archiveFormat as any,
       executionSchedule: policy.executionSchedule,
       legalHold: policy.legalHold,
-      complianceRequirements: policy.complianceRequirements
+      complianceRequirements: policy.complianceRequirements,
     });
     setPolicyDialogOpen(true);
   };
@@ -253,16 +257,16 @@ const DataRetentionManager: React.FC = () => {
   const handleSavePolicy = async (data: PolicyFormData) => {
     try {
       setError(null);
-      
+
       if (editingPolicy) {
         await request(`/api/data-retention/${editingPolicy._id}`, {
           method: 'PUT',
-          data
+          data,
         });
       } else {
         await request('/api/data-retention', {
           method: 'POST',
-          data
+          data,
         });
       }
 
@@ -285,7 +289,7 @@ const DataRetentionManager: React.FC = () => {
     try {
       setError(null);
       await request(`/api/data-retention/${policyToDelete._id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       setDeleteDialogOpen(false);
@@ -301,7 +305,7 @@ const DataRetentionManager: React.FC = () => {
     try {
       setError(null);
       await request(`/api/data-retention/${policy._id}/toggle`, {
-        method: 'PATCH'
+        method: 'PATCH',
       });
 
       loadPolicies();
@@ -321,7 +325,7 @@ const DataRetentionManager: React.FC = () => {
     try {
       setError(null);
       await request(`/api/data-retention/${policyToExecute._id}/execute`, {
-        method: 'POST'
+        method: 'POST',
       });
 
       setExecuteDialogOpen(false);
@@ -343,54 +347,56 @@ const DataRetentionManager: React.FC = () => {
 
   const getEntityTypeIcon = (entityType: string) => {
     switch (entityType) {
-      case 'form': return '📋';
-      case 'auditLog': return '🔍';
-      case 'report': return '📊';
-      case 'user': return '👤';
-      case 'template': return '📄';
-      case 'dashboard': return '📈';
-      case 'all': return '🗂️';
-      default: return '📄';
+      case 'form':
+        return '📋';
+      case 'auditLog':
+        return '🔍';
+      case 'report':
+        return '📊';
+      case 'user':
+        return '👤';
+      case 'template':
+        return '📄';
+      case 'dashboard':
+        return '📈';
+      case 'all':
+        return '🗂️';
+      default:
+        return '📄';
     }
   };
 
-  const getStatusColor = (isActive: boolean) => isActive ? 'success' : 'default';
+  const getStatusColor = (isActive: boolean) => (isActive ? 'success' : 'default');
 
   const TabPanel = ({ children, value, index }: any) => (
-    <div hidden={value !== index}>
-      {value === index && <Box p={3}>{children}</Box>}
-    </div>
+    <div hidden={value !== index}>{value === index && <Box p={3}>{children}</Box>}</div>
   );
 
   return (
     <Box p={3}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Data Retention Management</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreatePolicy}
-        >
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>Data Retention Management</Typography>
+        <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreatePolicy}>
           Create Policy
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
 
       <Paper sx={{ mb: 3 }}>
         <Tabs value={selectedTab} onChange={(_, newValue) => setSelectedTab(newValue)}>
-          <Tab label="Policies" icon={<SecurityIcon />} />
-          <Tab label="Statistics" icon={<StatsIcon />} />
+          <Tab label='Policies' icon={<SecurityIcon />} />
+          <Tab label='Statistics' icon={<StatsIcon />} />
         </Tabs>
 
         <TabPanel value={selectedTab} index={0}>
           {/* Policies Tab */}
           {loading && <LinearProgress />}
-          
+
           <TableContainer>
             <Table>
               <TableHead>
@@ -405,85 +411,76 @@ const DataRetentionManager: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {policies.map((policy) => (
+                {policies.map(policy => (
                   <TableRow key={policy._id}>
                     <TableCell>
                       <Box>
-                        <Typography variant="subtitle2">
-                          {policy.name}
-                        </Typography>
+                        <Typography variant='subtitle2'>{policy.name}</Typography>
                         {policy.description && (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant='caption' color='text.secondary'>
                             {policy.description}
                           </Typography>
                         )}
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Box display="flex" alignItems="center" gap={1}>
+                      <Box display='flex' alignItems='center' gap={1}>
                         <span>{getEntityTypeIcon(policy.entityType)}</span>
-                        <Typography variant="body2">
-                          {policy.entityType}
-                        </Typography>
+                        <Typography variant='body2'>{policy.entityType}</Typography>
                       </Box>
                     </TableCell>
                     <TableCell>
                       {policy.retentionPeriod.value} {policy.retentionPeriod.unit}
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {policy.executionSchedule.frequency} at {policy.executionSchedule.hour}:00 UTC
+                      <Typography variant='body2'>
+                        {policy.executionSchedule.frequency} at {policy.executionSchedule.hour}:00
+                        UTC
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Chip
                         label={policy.isActive ? 'Active' : 'Inactive'}
                         color={getStatusColor(policy.isActive)}
-                        size="small"
+                        size='small'
                       />
                     </TableCell>
                     <TableCell>
                       {policy.stats.lastExecuted ? (
-                        <Typography variant="body2">
+                        <Typography variant='body2'>
                           {new Date(policy.stats.lastExecuted).toLocaleDateString()}
                         </Typography>
                       ) : (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           Never
                         </Typography>
                       )}
                     </TableCell>
                     <TableCell>
-                      <Box display="flex" gap={0.5}>
-                        <Tooltip title="Edit Policy">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEditPolicy(policy)}
-                          >
+                      <Box display='flex' gap={0.5}>
+                        <Tooltip title='Edit Policy'>
+                          <IconButton size='small' onClick={() => handleEditPolicy(policy)}>
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title={policy.isActive ? 'Deactivate' : 'Activate'}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleTogglePolicy(policy)}
-                          >
+                          <IconButton size='small' onClick={() => handleTogglePolicy(policy)}>
                             {policy.isActive ? <PauseIcon /> : <PlayArrow />}
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Execute Now">
+                        <Tooltip title='Execute Now'>
                           <IconButton
-                            size="small"
+                            size='small'
                             onClick={() => handleExecutePolicy(policy)}
                             disabled={!policy.isActive}
                           >
                             <ExecuteIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Delete Policy">
+                        <Tooltip title='Delete Policy'>
                           <IconButton
-                            size="small"
-                            color="error"
+                            size='small'
+                            color='error'
                             onClick={() => handleDeletePolicy(policy)}
                           >
                             <DeleteIcon />
@@ -498,12 +495,12 @@ const DataRetentionManager: React.FC = () => {
           </TableContainer>
 
           <TablePagination
-            component="div"
+            component='div'
             count={total}
             page={page}
             onPageChange={(_, newPage) => setPage(newPage)}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={(e) => {
+            onRowsPerPageChange={e => {
               setRowsPerPage(parseInt(e.target.value));
               setPage(0);
             }}
@@ -518,11 +515,11 @@ const DataRetentionManager: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h4" color="primary">
+                    <Typography variant='h4' color='primary'>
                       {stats.totalPolicies}
                     </Typography>
-                    <Typography variant="h6">Total Policies</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='h6'>Total Policies</Typography>
+                    <Typography variant='body2' color='text.secondary'>
                       {stats.activePolicies} active
                     </Typography>
                   </CardContent>
@@ -531,11 +528,11 @@ const DataRetentionManager: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h4" color="success.main">
+                    <Typography variant='h4' color='success.main'>
                       {stats.totalRecordsArchived.toLocaleString()}
                     </Typography>
-                    <Typography variant="h6">Records Archived</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='h6'>Records Archived</Typography>
+                    <Typography variant='body2' color='text.secondary'>
                       {formatSize(stats.totalSizeArchived)}
                     </Typography>
                   </CardContent>
@@ -544,11 +541,11 @@ const DataRetentionManager: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h4" color="warning.main">
+                    <Typography variant='h4' color='warning.main'>
                       {stats.totalRecordsDeleted.toLocaleString()}
                     </Typography>
-                    <Typography variant="h6">Records Deleted</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='h6'>Records Deleted</Typography>
+                    <Typography variant='body2' color='text.secondary'>
                       Permanent deletions
                     </Typography>
                   </CardContent>
@@ -557,29 +554,29 @@ const DataRetentionManager: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h4" color="error.main">
+                    <Typography variant='h4' color='error.main'>
                       {stats.totalErrors}
                     </Typography>
-                    <Typography variant="h6">Total Errors</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='h6'>Total Errors</Typography>
+                    <Typography variant='body2' color='text.secondary'>
                       Policy execution errors
                     </Typography>
                   </CardContent>
                 </Card>
               </Grid>
-              
+
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant='h6' gutterBottom>
                       Policies by Entity Type
                     </Typography>
                     <Grid container spacing={2}>
                       {Object.entries(stats.policiesByEntityType).map(([entityType, count]) => (
                         <Grid item xs={6} md={3} key={entityType}>
-                          <Box display="flex" alignItems="center" gap={1}>
+                          <Box display='flex' alignItems='center' gap={1}>
                             <span>{getEntityTypeIcon(entityType)}</span>
-                            <Typography variant="body1">
+                            <Typography variant='body1'>
                               {entityType}: {count}
                             </Typography>
                           </Box>
@@ -598,7 +595,7 @@ const DataRetentionManager: React.FC = () => {
       <Dialog
         open={policyDialogOpen}
         onClose={() => setPolicyDialogOpen(false)}
-        maxWidth="md"
+        maxWidth='md'
         fullWidth
       >
         <DialogTitle>
@@ -609,13 +606,13 @@ const DataRetentionManager: React.FC = () => {
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} md={6}>
                 <Controller
-                  name="name"
+                  name='name'
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label="Policy Name"
+                      label='Policy Name'
                       error={!!errors.name}
                       helperText={errors.name?.message}
                     />
@@ -624,51 +621,45 @@ const DataRetentionManager: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Controller
-                  name="entityType"
+                  name='entityType'
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <InputLabel>Entity Type</InputLabel>
-                      <Select {...field} label="Entity Type">
-                        <MenuItem value="form">Forms</MenuItem>
-                        <MenuItem value="auditLog">Audit Logs</MenuItem>
-                        <MenuItem value="report">Reports</MenuItem>
-                        <MenuItem value="user">Users</MenuItem>
-                        <MenuItem value="template">Templates</MenuItem>
-                        <MenuItem value="dashboard">Dashboards</MenuItem>
-                        <MenuItem value="all">All Entities</MenuItem>
+                      <Select {...field} label='Entity Type'>
+                        <MenuItem value='form'>Forms</MenuItem>
+                        <MenuItem value='auditLog'>Audit Logs</MenuItem>
+                        <MenuItem value='report'>Reports</MenuItem>
+                        <MenuItem value='user'>Users</MenuItem>
+                        <MenuItem value='template'>Templates</MenuItem>
+                        <MenuItem value='dashboard'>Dashboards</MenuItem>
+                        <MenuItem value='all'>All Entities</MenuItem>
                       </Select>
                     </FormControl>
                   )}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <Controller
-                  name="description"
+                  name='description'
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Description"
-                      multiline
-                      rows={2}
-                    />
+                    <TextField {...field} fullWidth label='Description' multiline rows={2} />
                   )}
                 />
               </Grid>
 
               <Grid item xs={6} md={4}>
                 <Controller
-                  name="retentionPeriod.value"
+                  name='retentionPeriod.value'
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label="Retention Value"
-                      type="number"
+                      label='Retention Value'
+                      type='number'
                       error={!!errors.retentionPeriod?.value}
                       helperText={errors.retentionPeriod?.value?.message}
                     />
@@ -677,15 +668,15 @@ const DataRetentionManager: React.FC = () => {
               </Grid>
               <Grid item xs={6} md={4}>
                 <Controller
-                  name="retentionPeriod.unit"
+                  name='retentionPeriod.unit'
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <InputLabel>Unit</InputLabel>
-                      <Select {...field} label="Unit">
-                        <MenuItem value="days">Days</MenuItem>
-                        <MenuItem value="months">Months</MenuItem>
-                        <MenuItem value="years">Years</MenuItem>
+                      <Select {...field} label='Unit'>
+                        <MenuItem value='days'>Days</MenuItem>
+                        <MenuItem value='months'>Months</MenuItem>
+                        <MenuItem value='years'>Years</MenuItem>
                       </Select>
                     </FormControl>
                   )}
@@ -693,15 +684,15 @@ const DataRetentionManager: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Controller
-                  name="archiveFormat"
+                  name='archiveFormat'
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <InputLabel>Archive Format</InputLabel>
-                      <Select {...field} label="Archive Format">
-                        <MenuItem value="json">JSON</MenuItem>
-                        <MenuItem value="csv">CSV</MenuItem>
-                        <MenuItem value="compressed">Compressed</MenuItem>
+                      <Select {...field} label='Archive Format'>
+                        <MenuItem value='json'>JSON</MenuItem>
+                        <MenuItem value='csv'>CSV</MenuItem>
+                        <MenuItem value='compressed'>Compressed</MenuItem>
                       </Select>
                     </FormControl>
                   )}
@@ -710,12 +701,12 @@ const DataRetentionManager: React.FC = () => {
 
               <Grid item xs={12}>
                 <Controller
-                  name="archiveBeforeDelete"
+                  name='archiveBeforeDelete'
                   control={control}
                   render={({ field }) => (
                     <FormControlLabel
                       control={<Switch {...field} checked={field.value} />}
-                      label="Archive data before deletion"
+                      label='Archive data before deletion'
                     />
                   )}
                 />
@@ -723,30 +714,30 @@ const DataRetentionManager: React.FC = () => {
 
               <Grid item xs={6} md={4}>
                 <Controller
-                  name="executionSchedule.frequency"
+                  name='executionSchedule.frequency'
                   control={control}
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <InputLabel>Frequency</InputLabel>
-                      <Select {...field} label="Frequency">
-                        <MenuItem value="daily">Daily</MenuItem>
-                        <MenuItem value="weekly">Weekly</MenuItem>
-                        <MenuItem value="monthly">Monthly</MenuItem>
+                      <Select {...field} label='Frequency'>
+                        <MenuItem value='daily'>Daily</MenuItem>
+                        <MenuItem value='weekly'>Weekly</MenuItem>
+                        <MenuItem value='monthly'>Monthly</MenuItem>
                       </Select>
                     </FormControl>
                   )}
                 />
               </Grid>
-              
+
               {watchedFrequency === 'weekly' && (
                 <Grid item xs={6} md={4}>
                   <Controller
-                    name="executionSchedule.dayOfWeek"
+                    name='executionSchedule.dayOfWeek'
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
                         <InputLabel>Day of Week</InputLabel>
-                        <Select {...field} label="Day of Week">
+                        <Select {...field} label='Day of Week'>
                           <MenuItem value={0}>Sunday</MenuItem>
                           <MenuItem value={1}>Monday</MenuItem>
                           <MenuItem value={2}>Tuesday</MenuItem>
@@ -764,14 +755,14 @@ const DataRetentionManager: React.FC = () => {
               {watchedFrequency === 'monthly' && (
                 <Grid item xs={6} md={4}>
                   <Controller
-                    name="executionSchedule.dayOfMonth"
+                    name='executionSchedule.dayOfMonth'
                     control={control}
                     render={({ field }) => (
                       <TextField
                         {...field}
                         fullWidth
-                        label="Day of Month"
-                        type="number"
+                        label='Day of Month'
+                        type='number'
                         inputProps={{ min: 1, max: 31 }}
                       />
                     )}
@@ -781,14 +772,14 @@ const DataRetentionManager: React.FC = () => {
 
               <Grid item xs={6} md={4}>
                 <Controller
-                  name="executionSchedule.hour"
+                  name='executionSchedule.hour'
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label="Hour (24h format)"
-                      type="number"
+                      label='Hour (24h format)'
+                      type='number'
                       inputProps={{ min: 0, max: 23 }}
                     />
                   )}
@@ -798,49 +789,38 @@ const DataRetentionManager: React.FC = () => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPolicyDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSubmit(handleSavePolicy)}
-          >
+          <Button onClick={() => setPolicyDialogOpen(false)}>Cancel</Button>
+          <Button variant='contained' onClick={handleSubmit(handleSavePolicy)}>
             {editingPolicy ? 'Update' : 'Create'} Policy
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete the retention policy "{policyToDelete?.name}"?
-          This action cannot be undone.
+          Are you sure you want to delete the retention policy "{policyToDelete?.name}"? This action
+          cannot be undone.
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={confirmDelete}>
+          <Button color='error' variant='contained' onClick={confirmDelete}>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Execute Confirmation Dialog */}
-      <Dialog
-        open={executeDialogOpen}
-        onClose={() => setExecuteDialogOpen(false)}
-      >
+      <Dialog open={executeDialogOpen} onClose={() => setExecuteDialogOpen(false)}>
         <DialogTitle>Execute Retention Policy</DialogTitle>
         <DialogContent>
-          Are you sure you want to execute the retention policy "{policyToExecute?.name}" now?
-          This will permanently archive and/or delete data according to the policy rules.
+          Are you sure you want to execute the retention policy "{policyToExecute?.name}" now? This
+          will permanently archive and/or delete data according to the policy rules.
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setExecuteDialogOpen(false)}>Cancel</Button>
-          <Button color="warning" variant="contained" onClick={confirmExecute}>
+          <Button color='warning' variant='contained' onClick={confirmExecute}>
             Execute Now
           </Button>
         </DialogActions>

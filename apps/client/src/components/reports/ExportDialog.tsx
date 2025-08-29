@@ -67,12 +67,7 @@ const getFormatIcon = (iconName: string) => {
   return icons[iconName] || <DownloadIcon />;
 };
 
-const ExportDialog: React.FC<ExportDialogProps> = ({
-  open,
-  onClose,
-  reportId,
-  reportName,
-}) => {
+const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, reportName }) => {
   const { request } = useApi();
   const [formats, setFormats] = useState<ExportFormat[]>([]);
   const [selectedFormat, setSelectedFormat] = useState<string>('');
@@ -100,7 +95,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
       const response = await request(`/api/reports/${reportId}/export-formats`);
       setFormats(response.data.formats);
       setCanExport(response.data.canExport);
-      
+
       if (response.data.formats.length > 0) {
         setSelectedFormat(response.data.formats[0].format);
       }
@@ -131,11 +126,11 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      
+
       const timestamp = new Date().toISOString().slice(0, 10);
       const extension = selectedFormat === 'excel' ? 'xlsx' : selectedFormat;
       link.download = `${reportName.replace(/[^a-zA-Z0-9\-_]/g, '_')}_${timestamp}.${extension}`;
-      
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -152,9 +147,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
   const selectedFormatObj = formats.find(f => f.format === selectedFormat);
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth='md' fullWidth>
       <DialogTitle>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box display='flex' alignItems='center' gap={1}>
           <DownloadIcon />
           Export Report: {reportName}
         </Box>
@@ -162,25 +157,25 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
 
       <DialogContent>
         {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+          <Box display='flex' justifyContent='center' alignItems='center' height='200px'>
             <LinearProgress sx={{ width: '100%' }} />
           </Box>
         ) : error ? (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity='error' sx={{ mb: 2 }}>
             {error}
           </Alert>
         ) : !canExport ? (
-          <Alert severity="warning" sx={{ mb: 2 }}>
+          <Alert severity='warning' sx={{ mb: 2 }}>
             You don't have permission to export this report.
           </Alert>
         ) : (
           <>
             {/* Format Selection */}
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Choose Export Format
             </Typography>
             <Grid container spacing={2} sx={{ mb: 3 }}>
-              {formats.map((format) => (
+              {formats.map(format => (
                 <Grid item xs={12} sm={6} md={3} key={format.format}>
                   <Card
                     sx={{
@@ -192,13 +187,13 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                     onClick={() => setSelectedFormat(format.format)}
                   >
                     <CardContent sx={{ textAlign: 'center', p: 2 }}>
-                      <Box color="primary.main" mb={1}>
+                      <Box color='primary.main' mb={1}>
                         {getFormatIcon(format.icon)}
                       </Box>
-                      <Typography variant="subtitle2" gutterBottom>
+                      <Typography variant='subtitle2' gutterBottom>
                         {format.name}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         {format.description}
                       </Typography>
                     </CardContent>
@@ -211,7 +206,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
             {selectedFormatObj && (
               <>
                 <Divider sx={{ my: 2 }} />
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   <SettingsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                   Export Options
                 </Typography>
@@ -219,15 +214,15 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                 <Grid container spacing={3}>
                   {/* Include Options */}
                   <Grid item xs={12} md={6}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Include</FormLabel>
+                    <FormControl component='fieldset'>
+                      <FormLabel component='legend'>Include</FormLabel>
                       <FormGroup>
                         {selectedFormatObj.options.includeCharts && (
                           <FormControlLabel
                             control={
                               <Checkbox
                                 checked={exportOptions.includeCharts}
-                                onChange={(e) =>
+                                onChange={e =>
                                   setExportOptions({
                                     ...exportOptions,
                                     includeCharts: e.target.checked,
@@ -235,7 +230,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                                 }
                               />
                             }
-                            label="Charts and Visualizations"
+                            label='Charts and Visualizations'
                           />
                         )}
                         {selectedFormatObj.options.includeData && (
@@ -243,7 +238,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             control={
                               <Checkbox
                                 checked={exportOptions.includeData}
-                                onChange={(e) =>
+                                onChange={e =>
                                   setExportOptions({
                                     ...exportOptions,
                                     includeData: e.target.checked,
@@ -251,7 +246,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                                 }
                               />
                             }
-                            label="Raw Data Tables"
+                            label='Raw Data Tables'
                           />
                         )}
                       </FormGroup>
@@ -261,18 +256,18 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                   {/* Page Options (for PDF) */}
                   {selectedFormatObj.options.pageSize && (
                     <Grid item xs={12} md={6}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Page Size</FormLabel>
+                      <FormControl component='fieldset'>
+                        <FormLabel component='legend'>Page Size</FormLabel>
                         <RadioGroup
                           value={exportOptions.pageSize}
-                          onChange={(e) =>
+                          onChange={e =>
                             setExportOptions({
                               ...exportOptions,
                               pageSize: e.target.value,
                             })
                           }
                         >
-                          {selectedFormatObj.options.pageSize.map((size) => (
+                          {selectedFormatObj.options.pageSize.map(size => (
                             <FormControlLabel
                               key={size}
                               value={size}
@@ -288,18 +283,18 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                   {/* Orientation Options (for PDF) */}
                   {selectedFormatObj.options.orientation && (
                     <Grid item xs={12} md={6}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Orientation</FormLabel>
+                      <FormControl component='fieldset'>
+                        <FormLabel component='legend'>Orientation</FormLabel>
                         <RadioGroup
                           value={exportOptions.orientation}
-                          onChange={(e) =>
+                          onChange={e =>
                             setExportOptions({
                               ...exportOptions,
                               orientation: e.target.value,
                             })
                           }
                         >
-                          {selectedFormatObj.options.orientation.map((orientation) => (
+                          {selectedFormatObj.options.orientation.map(orientation => (
                             <FormControlLabel
                               key={orientation}
                               value={orientation}
@@ -315,10 +310,10 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
 
                 {/* Format-specific Information */}
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography variant='subtitle2' gutterBottom>
                     About {selectedFormatObj.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant='body2' color='text.secondary'>
                     {selectedFormatObj.description}
                   </Typography>
 
@@ -326,8 +321,8 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                     <List dense>
                       <ListItem>
                         <ListItemText
-                          primary="Perfect for: Reports, presentations, sharing"
-                          secondary="Includes formatted charts, tables, and text with consistent layout"
+                          primary='Perfect for: Reports, presentations, sharing'
+                          secondary='Includes formatted charts, tables, and text with consistent layout'
                         />
                       </ListItem>
                     </List>
@@ -337,8 +332,8 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                     <List dense>
                       <ListItem>
                         <ListItemText
-                          primary="Perfect for: Data analysis, further processing"
-                          secondary="Multiple sheets with raw data, formulas, and pivot table ready"
+                          primary='Perfect for: Data analysis, further processing'
+                          secondary='Multiple sheets with raw data, formulas, and pivot table ready'
                         />
                       </ListItem>
                     </List>
@@ -348,8 +343,8 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                     <List dense>
                       <ListItem>
                         <ListItemText
-                          primary="Perfect for: Data import, simple analysis"
-                          secondary="Plain text format compatible with any spreadsheet application"
+                          primary='Perfect for: Data import, simple analysis'
+                          secondary='Plain text format compatible with any spreadsheet application'
                         />
                       </ListItem>
                     </List>
@@ -359,8 +354,8 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                     <List dense>
                       <ListItem>
                         <ListItemText
-                          primary="Perfect for: Presentations, web sharing"
-                          secondary="High-resolution image suitable for embedding in documents"
+                          primary='Perfect for: Presentations, web sharing'
+                          secondary='High-resolution image suitable for embedding in documents'
                         />
                       </ListItem>
                     </List>
@@ -378,7 +373,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
         </Button>
         <Button
           onClick={handleExport}
-          variant="contained"
+          variant='contained'
           disabled={!selectedFormat || !canExport || exporting}
           startIcon={exporting ? <LinearProgress size={20} /> : <DownloadIcon />}
         >

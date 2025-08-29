@@ -132,7 +132,17 @@ export function useAsyncOperation<T = any>(
         cleanup();
       }
     },
-    [operation, retries, retryDelay, timeout, showSuccessToast, showErrorToast, successMessage, toast, cleanup]
+    [
+      operation,
+      retries,
+      retryDelay,
+      timeout,
+      showSuccessToast,
+      showErrorToast,
+      successMessage,
+      toast,
+      cleanup,
+    ]
   );
 
   // Reset state
@@ -176,7 +186,7 @@ export function useDataFetching<T = any>(
   options: AsyncOperationOptions & { autoExecute?: boolean } = {}
 ) {
   const { autoExecute = false, ...asyncOptions } = options;
-  
+
   const defaultOptions: AsyncOperationOptions = {
     showSuccessToast: false,
     showErrorToast: true,
@@ -233,7 +243,7 @@ export function useMultipleAsyncOperations<T extends Record<string, any>>(
 
       try {
         const result = await operation();
-        
+
         setStates(prev => ({
           ...prev,
           [key]: {
@@ -247,7 +257,7 @@ export function useMultipleAsyncOperations<T extends Record<string, any>>(
         return result;
       } catch (error: any) {
         const apiError = errorService.parseApiError(error);
-        
+
         setStates(prev => ({
           ...prev,
           [key]: {
@@ -267,22 +277,19 @@ export function useMultipleAsyncOperations<T extends Record<string, any>>(
     [operations, options.showErrorToast, toast]
   );
 
-  const executeAll = useCallback(
-    async (): Promise<Partial<T>> => {
-      const promises = Object.entries(operations).map(async ([key, operation]) => {
-        try {
-          const result = await executeOne(key as keyof T);
-          return [key, result];
-        } catch (error) {
-          return [key, null];
-        }
-      });
+  const executeAll = useCallback(async (): Promise<Partial<T>> => {
+    const promises = Object.entries(operations).map(async ([key, operation]) => {
+      try {
+        const result = await executeOne(key as keyof T);
+        return [key, result];
+      } catch (error) {
+        return [key, null];
+      }
+    });
 
-      const results = await Promise.all(promises);
-      return Object.fromEntries(results) as Partial<T>;
-    },
-    [operations, executeOne]
-  );
+    const results = await Promise.all(promises);
+    return Object.fromEntries(results) as Partial<T>;
+  }, [operations, executeOne]);
 
   const reset = useCallback((key?: keyof T) => {
     if (key) {

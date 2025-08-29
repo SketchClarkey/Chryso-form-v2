@@ -76,12 +76,12 @@ export function MobileCameraCapture({
   const theme = useTheme();
   const { vibrate } = useMobileBehavior();
   const toast = useToastNotifications();
-  
+
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  
+
   // State
   const [isStreaming, setIsStreaming] = useState(false);
   const [capturedMedia, setCapturedMedia] = useState<CapturedMedia[]>([]);
@@ -94,7 +94,7 @@ export function MobileCameraCapture({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -105,7 +105,7 @@ export function MobileCameraCapture({
     } else {
       cleanup();
     }
-    
+
     return cleanup;
   }, [open, currentCamera]);
 
@@ -121,7 +121,7 @@ export function MobileCameraCapture({
       }
       setRecordingTime(0);
     }
-    
+
     return () => {
       if (recordingIntervalRef.current) {
         clearInterval(recordingIntervalRef.current);
@@ -155,7 +155,7 @@ export function MobileCameraCapture({
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
@@ -166,14 +166,13 @@ export function MobileCameraCapture({
       if (stream.getVideoTracks().length > 0) {
         const track = stream.getVideoTracks()[0];
         const capabilities = track.getCapabilities();
-        
+
         if (capabilities.torch && flashMode === 'on') {
           await track.applyConstraints({
-            advanced: [{ torch: true }] as any
+            advanced: [{ torch: true }] as any,
           });
         }
       }
-
     } catch (error) {
       console.error('Camera initialization failed:', error);
       toast.showError('Failed to access camera. Please check permissions.');
@@ -197,7 +196,7 @@ export function MobileCameraCapture({
 
       // Apply filters and effects
       context.filter = `brightness(${brightness}%)`;
-      
+
       // Draw the video frame to canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -234,7 +233,6 @@ export function MobileCameraCapture({
 
       setCapturedMedia(prev => [...prev, capturedPhoto]);
       toast.showSuccess('Photo captured');
-
     } catch (error) {
       console.error('Photo capture failed:', error);
       toast.showError('Failed to capture photo');
@@ -253,7 +251,7 @@ export function MobileCameraCapture({
 
       const chunks: Blob[] = [];
 
-      mediaRecorder.ondataavailable = (event) => {
+      mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) {
           chunks.push(event.data);
         }
@@ -288,7 +286,6 @@ export function MobileCameraCapture({
       mediaRecorder.start();
       setIsRecording(true);
       vibrate(100);
-
     } catch (error) {
       console.error('Video recording failed:', error);
       toast.showError('Failed to start recording');
@@ -304,7 +301,7 @@ export function MobileCameraCapture({
   };
 
   const compressImage = async (blob: Blob, maxResolution: number): Promise<Blob> => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const img = new Image();
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d')!;
@@ -313,7 +310,7 @@ export function MobileCameraCapture({
         // Calculate new dimensions
         let { width, height } = img;
         const maxDimension = Math.max(width, height);
-        
+
         if (maxDimension > maxResolution) {
           const ratio = maxResolution / maxDimension;
           width *= ratio;
@@ -322,12 +319,16 @@ export function MobileCameraCapture({
 
         canvas.width = width;
         canvas.height = height;
-        
+
         // Draw and compress
         ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob((compressedBlob) => {
-          resolve(compressedBlob || blob);
-        }, 'image/jpeg', compressionQuality);
+        canvas.toBlob(
+          compressedBlob => {
+            resolve(compressedBlob || blob);
+          },
+          'image/jpeg',
+          compressionQuality
+        );
       };
 
       img.src = URL.createObjectURL(blob);
@@ -342,7 +343,7 @@ export function MobileCameraCapture({
       }
 
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           resolve({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -355,12 +356,12 @@ export function MobileCameraCapture({
   };
 
   const switchCamera = async () => {
-    setCurrentCamera(prev => prev === 'user' ? 'environment' : 'user');
+    setCurrentCamera(prev => (prev === 'user' ? 'environment' : 'user'));
     vibrate(50);
   };
 
   const toggleFlash = async () => {
-    const modes: typeof flashMode[] = ['off', 'on', 'auto'];
+    const modes: (typeof flashMode)[] = ['off', 'on', 'auto'];
     const currentIndex = modes.indexOf(flashMode);
     const nextMode = modes[(currentIndex + 1) % modes.length];
     setFlashMode(nextMode);
@@ -369,7 +370,7 @@ export function MobileCameraCapture({
       const track = streamRef.current.getVideoTracks()[0];
       if (track?.getCapabilities().torch) {
         await track.applyConstraints({
-          advanced: [{ torch: nextMode === 'on' }] as any
+          advanced: [{ torch: nextMode === 'on' }] as any,
         });
       }
     }
@@ -434,10 +435,7 @@ export function MobileCameraCapture({
             }}
           />
 
-          <canvas
-            ref={canvasRef}
-            style={{ display: 'none' }}
-          />
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Grid Overlay */}
           {showGrid && (
@@ -491,7 +489,7 @@ export function MobileCameraCapture({
               <IconButton onClick={toggleFlash} sx={{ color: 'white' }}>
                 <FlashIcon />
               </IconButton>
-              
+
               <IconButton
                 onClick={() => setShowGrid(!showGrid)}
                 sx={{ color: showGrid ? theme.palette.primary.main : 'white' }}
@@ -527,9 +525,7 @@ export function MobileCameraCapture({
                   animation: 'pulse 1s infinite',
                 }}
               />
-              <Typography variant="caption">
-                REC {formatTime(recordingTime)}
-              </Typography>
+              <Typography variant='caption'>REC {formatTime(recordingTime)}</Typography>
             </Paper>
           )}
 
@@ -547,20 +543,20 @@ export function MobileCameraCapture({
           >
             {/* Zoom Control */}
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <IconButton size="small" onClick={() => setZoom(Math.min(3, zoom + 0.2))}>
+              <IconButton size='small' onClick={() => setZoom(Math.min(3, zoom + 0.2))}>
                 <ZoomIn sx={{ color: 'white', fontSize: 20 }} />
               </IconButton>
               <Slider
-                orientation="vertical"
+                orientation='vertical'
                 value={zoom}
                 min={1}
                 max={3}
                 step={0.1}
                 onChange={(_, value) => setZoom(value as number)}
                 sx={{ height: 80, color: 'white' }}
-                size="small"
+                size='small'
               />
-              <IconButton size="small" onClick={() => setZoom(Math.max(1, zoom - 0.2))}>
+              <IconButton size='small' onClick={() => setZoom(Math.max(1, zoom - 0.2))}>
                 <ZoomOut sx={{ color: 'white', fontSize: 20 }} />
               </IconButton>
             </Box>
@@ -569,13 +565,13 @@ export function MobileCameraCapture({
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Brightness6 sx={{ color: 'white', fontSize: 20, mb: 1 }} />
               <Slider
-                orientation="vertical"
+                orientation='vertical'
                 value={brightness}
                 min={50}
                 max={150}
                 onChange={(_, value) => setBrightness(value as number)}
                 sx={{ height: 80, color: 'white' }}
-                size="small"
+                size='small'
               />
             </Box>
           </Box>
@@ -605,11 +601,11 @@ export function MobileCameraCapture({
                     },
                   }}
                 >
-                  <ToggleButton value="photo" size="small">
+                  <ToggleButton value='photo' size='small'>
                     <CameraAlt sx={{ mr: 1 }} />
                     Photo
                   </ToggleButton>
-                  <ToggleButton value="video" size="small">
+                  <ToggleButton value='video' size='small'>
                     <Videocam sx={{ mr: 1 }} />
                     Video
                   </ToggleButton>
@@ -630,8 +626,8 @@ export function MobileCameraCapture({
                 {capturedMedia.length > 0 && (
                   <Chip
                     label={`${capturedMedia.length}/${maxPhotos}`}
-                    color="primary"
-                    size="small"
+                    color='primary'
+                    size='small'
                   />
                 )}
               </Box>
@@ -643,17 +639,16 @@ export function MobileCameraCapture({
                 ) : (
                   <Fab
                     color={isRecording ? 'error' : 'primary'}
-                    size="large"
+                    size='large'
                     onClick={
                       captureMode === 'photo'
                         ? capturePhoto
                         : isRecording
-                        ? stopVideoRecording
-                        : startVideoRecording
+                          ? stopVideoRecording
+                          : startVideoRecording
                     }
                     disabled={
-                      !isStreaming ||
-                      (captureMode === 'photo' && capturedMedia.length >= maxPhotos)
+                      !isStreaming || (captureMode === 'photo' && capturedMedia.length >= maxPhotos)
                     }
                     sx={{
                       width: 80,
@@ -685,7 +680,7 @@ export function MobileCameraCapture({
                 <IconButton onClick={switchCamera} sx={{ color: 'white' }}>
                   <FlipCameraAndroid />
                 </IconButton>
-                
+
                 {capturedMedia.length > 0 && (
                   <IconButton
                     onClick={handleFinish}

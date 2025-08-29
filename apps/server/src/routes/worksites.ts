@@ -20,13 +20,17 @@ const createWorksiteSchema = z.object({
     zipCode: z.string().min(1, 'ZIP code is required'),
     country: z.string().default('Australia'),
   }),
-  contacts: z.array(z.object({
-    name: z.string().min(1, 'Contact name is required'),
-    position: z.string().optional(),
-    phone: z.string().optional(),
-    email: z.string().email().optional(),
-    isPrimary: z.boolean().default(false),
-  })).default([]),
+  contacts: z
+    .array(
+      z.object({
+        name: z.string().min(1, 'Contact name is required'),
+        position: z.string().optional(),
+        phone: z.string().optional(),
+        email: z.string().email().optional(),
+        isPrimary: z.boolean().default(false),
+      })
+    )
+    .default([]),
   equipment: z.array(z.any()).default([]),
   defaultTemplate: z.string().optional(),
 });
@@ -35,7 +39,7 @@ const createWorksiteSchema = z.object({
 router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const user = req.user!;
-    
+
     let worksites;
     if (user.role === 'admin') {
       // Admins can see all worksites
@@ -44,8 +48,8 @@ router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> 
         .sort({ name: 1 });
     } else {
       // Users can only see worksites they're assigned to
-      worksites = await Worksite.find({ 
-        _id: { $in: user.worksiteIds } 
+      worksites = await Worksite.find({
+        _id: { $in: user.worksiteIds },
       })
         .populate('metadata.defaultFormTemplate', 'name category status')
         .sort({ name: 1 });
@@ -79,159 +83,169 @@ router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> 
 });
 
 // Create a new worksite (admin only)
-router.post('/', authorize('admin'), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const validatedData = createWorksiteSchema.parse(req.body);
-    
-    // Validate template if provided
-    let defaultTemplate = null;
-    if (validatedData.defaultTemplate) {
-      defaultTemplate = await Template.findById(validatedData.defaultTemplate);
-      if (!defaultTemplate) {
+router.post(
+  '/',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const validatedData = createWorksiteSchema.parse(req.body);
+
+      // Validate template if provided
+      let defaultTemplate = null;
+      if (validatedData.defaultTemplate) {
+        defaultTemplate = await Template.findById(validatedData.defaultTemplate);
+        if (!defaultTemplate) {
+          res.status(400).json({
+            success: false,
+            message: 'Invalid template ID provided',
+            code: 'INVALID_TEMPLATE',
+          });
+          return;
+        }
+      }
+
+      const worksite = new Worksite({
+        name: validatedData.name,
+        customerName: validatedData.customerName,
+        address: validatedData.address,
+        contacts: validatedData.contacts,
+        equipment: validatedData.equipment,
+        isActive: true,
+        metadata: {
+          createdBy: req.user!.id,
+          defaultFormTemplate: defaultTemplate?._id,
+          serviceHistory: {
+            totalForms: 0,
+          },
+        },
+        preferences: {
+          autoFillEquipment: false,
+          defaultChemicals: [],
+          notifications: {
+            serviceReminders: true,
+            equipmentAlerts: true,
+          },
+        },
+      });
+
+      await worksite.save();
+
+      res.status(201).json({
+        success: true,
+        message: 'Worksite created successfully',
+        data: {
+          worksite: {
+            id: worksite._id,
+            name: worksite.name,
+            customerName: worksite.customerName,
+            address: worksite.address,
+            contacts: worksite.contacts,
+            equipment: worksite.equipment || [],
+            isActive: worksite.isActive,
+            defaultTemplate: worksite.metadata?.defaultFormTemplate,
+            createdAt: worksite.createdAt,
+            updatedAt: worksite.updatedAt,
+          },
+        },
+      });
+    } catch (error: any) {
+      console.error('Worksite creation error:', error);
+
+      if (error.name === 'ZodError') {
         res.status(400).json({
           success: false,
-          message: 'Invalid template ID provided',
-          code: 'INVALID_TEMPLATE',
+          message: 'Validation error',
+          code: 'VALIDATION_ERROR',
+          errors: error.errors,
         });
         return;
       }
-    }
 
-    const worksite = new Worksite({
-      name: validatedData.name,
-      customerName: validatedData.customerName,
-      address: validatedData.address,
-      contacts: validatedData.contacts,
-      equipment: validatedData.equipment,
-      isActive: true,
-      metadata: {
-        createdBy: req.user!.id,
-        defaultFormTemplate: defaultTemplate?._id,
-        serviceHistory: {
-          totalForms: 0,
-        },
-      },
-      preferences: {
-        autoFillEquipment: false,
-        defaultChemicals: [],
-        notifications: {
-          serviceReminders: true,
-          equipmentAlerts: true,
-        },
-      },
-    });
-
-    await worksite.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Worksite created successfully',
-      data: {
-        worksite: {
-          id: worksite._id,
-          name: worksite.name,
-          customerName: worksite.customerName,
-          address: worksite.address,
-          contacts: worksite.contacts,
-          equipment: worksite.equipment || [],
-          isActive: worksite.isActive,
-          defaultTemplate: worksite.metadata?.defaultFormTemplate,
-          createdAt: worksite.createdAt,
-          updatedAt: worksite.updatedAt,
-        },
-      },
-    });
-  } catch (error: any) {
-    console.error('Worksite creation error:', error);
-    
-    if (error.name === 'ZodError') {
-      res.status(400).json({
+      res.status(500).json({
         success: false,
-        message: 'Validation error',
-        code: 'VALIDATION_ERROR',
-        errors: error.errors,
+        message: 'Failed to create worksite',
+        code: 'CREATION_ERROR',
       });
-      return;
     }
-    
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create worksite',
-      code: 'CREATION_ERROR',
-    });
   }
-});
+);
 
 // Update worksite default template
-router.patch('/:id/template', authorize('admin'), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const { templateId } = req.body;
+router.patch(
+  '/:id/template',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { templateId } = req.body;
 
-    // Find the worksite
-    const worksite = await Worksite.findById(id);
-    if (!worksite) {
-      res.status(404).json({
-        success: false,
-        message: 'Worksite not found',
-        code: 'WORKSITE_NOT_FOUND',
-      });
-      return;
-    }
-
-    // Validate template if provided
-    let template = null;
-    if (templateId) {
-      template = await Template.findById(templateId);
-      if (!template) {
-        res.status(400).json({
+      // Find the worksite
+      const worksite = await Worksite.findById(id);
+      if (!worksite) {
+        res.status(404).json({
           success: false,
-          message: 'Invalid template ID provided',
-          code: 'INVALID_TEMPLATE',
+          message: 'Worksite not found',
+          code: 'WORKSITE_NOT_FOUND',
         });
         return;
       }
 
-      // Check if template is active
-      if (template.status !== 'active') {
-        res.status(400).json({
-          success: false,
-          message: 'Template must be active to be assigned to worksite',
-          code: 'TEMPLATE_NOT_ACTIVE',
-        });
-        return;
+      // Validate template if provided
+      let template = null;
+      if (templateId) {
+        template = await Template.findById(templateId);
+        if (!template) {
+          res.status(400).json({
+            success: false,
+            message: 'Invalid template ID provided',
+            code: 'INVALID_TEMPLATE',
+          });
+          return;
+        }
+
+        // Check if template is active
+        if (template.status !== 'active') {
+          res.status(400).json({
+            success: false,
+            message: 'Template must be active to be assigned to worksite',
+            code: 'TEMPLATE_NOT_ACTIVE',
+          });
+          return;
+        }
       }
-    }
 
-    // Update worksite
-    worksite.metadata.defaultFormTemplate = template?._id || undefined;
-    worksite.metadata.lastModifiedBy = req.user!.id;
-    await worksite.save();
+      // Update worksite
+      worksite.metadata.defaultFormTemplate = template?._id || undefined;
+      worksite.metadata.lastModifiedBy = req.user!.id;
+      await worksite.save();
 
-    // Populate template data for response
-    await worksite.populate('metadata.defaultFormTemplate', 'name category status');
+      // Populate template data for response
+      await worksite.populate('metadata.defaultFormTemplate', 'name category status');
 
-    res.json({
-      success: true,
-      message: template ? 'Default template assigned successfully' : 'Default template removed successfully',
-      data: {
-        worksite: {
-          id: worksite._id,
-          name: worksite.name,
-          customerName: worksite.customerName,
-          defaultTemplate: worksite.metadata.defaultFormTemplate,
+      res.json({
+        success: true,
+        message: template
+          ? 'Default template assigned successfully'
+          : 'Default template removed successfully',
+        data: {
+          worksite: {
+            id: worksite._id,
+            name: worksite.name,
+            customerName: worksite.customerName,
+            defaultTemplate: worksite.metadata.defaultFormTemplate,
+          },
         },
-      },
-    });
-  } catch (error: any) {
-    console.error('Template assignment error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update template assignment',
-      code: 'ASSIGNMENT_ERROR',
-    });
+      });
+    } catch (error: any) {
+      console.error('Template assignment error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to update template assignment',
+        code: 'ASSIGNMENT_ERROR',
+      });
+    }
   }
-});
+);
 
 // Get worksite by ID with template details
 router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {

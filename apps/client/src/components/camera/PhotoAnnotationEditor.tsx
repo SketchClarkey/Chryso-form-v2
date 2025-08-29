@@ -76,11 +76,11 @@ export function PhotoAnnotationEditor({
   const theme = useTheme();
   const { vibrate } = useMobileBehavior();
   const toast = useToastNotifications();
-  
+
   // Refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  
+
   // State
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [currentTool, setCurrentTool] = useState<Annotation['type']>('arrow');
@@ -93,16 +93,25 @@ export function PhotoAnnotationEditor({
   const [showTextDialog, setShowTextDialog] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [toolsDrawerOpen, setToolsDrawerOpen] = useState(false);
-  
+
   // Image adjustments
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
-  
+
   // History for undo/redo
   const [history, setHistory] = useState<Annotation[][]>([[]]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
-  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080'];
+  const colors = [
+    '#FF0000',
+    '#00FF00',
+    '#0000FF',
+    '#FFFF00',
+    '#FF00FF',
+    '#00FFFF',
+    '#FFA500',
+    '#800080',
+  ];
 
   useEffect(() => {
     if (open && imageUrl) {
@@ -137,19 +146,19 @@ export function PhotoAnnotationEditor({
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d')!;
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     // Apply filters
     ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
-    
+
     // Draw image
     ctx.drawImage(imageRef.current, 0, 0);
-    
+
     // Reset filters for annotations
     ctx.filter = 'none';
-    
+
     // Draw all annotations
     annotations.forEach(annotation => drawAnnotation(ctx, annotation));
   };
@@ -184,17 +193,17 @@ export function PhotoAnnotationEditor({
     const { x, y, width = 0, height = 0 } = annotation;
     const endX = x + width;
     const endY = y + height;
-    
+
     // Arrow line
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(endX, endY);
     ctx.stroke();
-    
+
     // Arrow head
     const angle = Math.atan2(height, width);
     const headLength = 20;
-    
+
     ctx.beginPath();
     ctx.moveTo(endX, endY);
     ctx.lineTo(
@@ -214,7 +223,7 @@ export function PhotoAnnotationEditor({
     const centerX = x + width / 2;
     const centerY = y + height / 2;
     const radius = Math.min(Math.abs(width), Math.abs(height)) / 2;
-    
+
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.stroke();
@@ -229,14 +238,14 @@ export function PhotoAnnotationEditor({
 
   const drawText = (ctx: CanvasRenderingContext2D, annotation: Annotation) => {
     if (!annotation.text) return;
-    
+
     ctx.font = `${annotation.strokeWidth * 6}px Arial`;
     ctx.fillStyle = annotation.color;
-    
+
     // Draw background for better readability
     const metrics = ctx.measureText(annotation.text);
     const textHeight = annotation.strokeWidth * 6;
-    
+
     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.fillRect(
       annotation.x - 4,
@@ -244,21 +253,21 @@ export function PhotoAnnotationEditor({
       metrics.width + 8,
       textHeight + 8
     );
-    
+
     ctx.fillStyle = annotation.color;
     ctx.fillText(annotation.text, annotation.x, annotation.y);
   };
 
   const drawFreehand = (ctx: CanvasRenderingContext2D, annotation: Annotation) => {
     if (!annotation.points || annotation.points.length < 2) return;
-    
+
     ctx.beginPath();
     ctx.moveTo(annotation.points[0].x, annotation.points[0].y);
-    
+
     for (let i = 1; i < annotation.points.length; i++) {
       ctx.lineTo(annotation.points[i].x, annotation.points[i].y);
     }
-    
+
     ctx.stroke();
   };
 
@@ -271,7 +280,7 @@ export function PhotoAnnotationEditor({
     const scaleY = canvas.height / rect.height;
 
     let clientX, clientY;
-    
+
     if ('touches' in event) {
       clientX = event.touches[0]?.clientX || event.changedTouches[0]?.clientX || 0;
       clientY = event.touches[0]?.clientY || event.changedTouches[0]?.clientY || 0;
@@ -288,10 +297,10 @@ export function PhotoAnnotationEditor({
 
   const handleStart = (event: React.MouseEvent | React.TouchEvent) => {
     if (readOnly) return;
-    
+
     event.preventDefault();
     const { x, y } = getCanvasCoordinates(event);
-    
+
     if (currentTool === 'text') {
       setTextPosition({ x, y });
       setShowTextDialog(true);
@@ -318,7 +327,7 @@ export function PhotoAnnotationEditor({
 
   const handleMove = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing || !currentAnnotation || readOnly) return;
-    
+
     event.preventDefault();
     const { x, y } = getCanvasCoordinates(event);
 
@@ -328,7 +337,7 @@ export function PhotoAnnotationEditor({
         points: [...(currentAnnotation.points || []), { x, y }],
       };
       setCurrentAnnotation(updatedAnnotation);
-      
+
       // Draw current stroke immediately
       const ctx = canvasRef.current?.getContext('2d');
       if (ctx) {
@@ -342,7 +351,7 @@ export function PhotoAnnotationEditor({
         height: y - currentAnnotation.y,
       };
       setCurrentAnnotation(updatedAnnotation);
-      
+
       // Draw current annotation immediately
       const ctx = canvasRef.current?.getContext('2d');
       if (ctx) {
@@ -354,7 +363,7 @@ export function PhotoAnnotationEditor({
 
   const handleEnd = () => {
     if (!isDrawing || !currentAnnotation || readOnly) return;
-    
+
     setIsDrawing(false);
     addAnnotation(currentAnnotation);
     setCurrentAnnotation(null);
@@ -364,7 +373,7 @@ export function PhotoAnnotationEditor({
   const addAnnotation = (annotation: Annotation) => {
     const newAnnotations = [...annotations, annotation];
     setAnnotations(newAnnotations);
-    
+
     // Add to history
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(newAnnotations);
@@ -374,7 +383,7 @@ export function PhotoAnnotationEditor({
 
   const addTextAnnotation = () => {
     if (!textPosition || !textInput.trim()) return;
-    
+
     const textAnnotation: Annotation = {
       id: `text_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type: 'text',
@@ -384,7 +393,7 @@ export function PhotoAnnotationEditor({
       color: currentColor,
       strokeWidth,
     };
-    
+
     addAnnotation(textAnnotation);
     setTextInput('');
     setTextPosition(null);
@@ -409,7 +418,7 @@ export function PhotoAnnotationEditor({
 
   const handleSave = async () => {
     if (!canvasRef.current) return;
-    
+
     try {
       const canvas = canvasRef.current;
       const annotatedImageUrl = canvas.toDataURL('image/jpeg', 0.9);
@@ -487,7 +496,7 @@ export function PhotoAnnotationEditor({
               <Close />
             </IconButton>
 
-            <Typography variant="h6" sx={{ color: 'white' }}>
+            <Typography variant='h6' sx={{ color: 'white' }}>
               Annotate Photo
             </Typography>
 
@@ -497,7 +506,11 @@ export function PhotoAnnotationEditor({
                   <IconButton onClick={undo} disabled={historyIndex <= 0} sx={{ color: 'white' }}>
                     <Undo />
                   </IconButton>
-                  <IconButton onClick={redo} disabled={historyIndex >= history.length - 1} sx={{ color: 'white' }}>
+                  <IconButton
+                    onClick={redo}
+                    disabled={historyIndex >= history.length - 1}
+                    sx={{ color: 'white' }}
+                  >
                     <Redo />
                   </IconButton>
                 </>
@@ -530,7 +543,8 @@ export function PhotoAnnotationEditor({
                   }}
                   sx={{
                     color: currentTool === type ? theme.palette.primary.main : 'white',
-                    background: currentTool === type ? alpha(theme.palette.primary.main, 0.2) : 'transparent',
+                    background:
+                      currentTool === type ? alpha(theme.palette.primary.main, 0.2) : 'transparent',
                   }}
                   title={label}
                 >
@@ -560,7 +574,7 @@ export function PhotoAnnotationEditor({
             >
               {/* Color Palette */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {colors.map((color) => (
+                {colors.map(color => (
                   <Box
                     key={color}
                     onClick={() => {
@@ -581,18 +595,18 @@ export function PhotoAnnotationEditor({
 
               {/* Stroke Width */}
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography variant="caption" sx={{ color: 'white', mb: 1 }}>
+                <Typography variant='caption' sx={{ color: 'white', mb: 1 }}>
                   Size
                 </Typography>
                 <Slider
-                  orientation="vertical"
+                  orientation='vertical'
                   value={strokeWidth}
                   min={1}
                   max={10}
                   step={1}
                   onChange={(_, value) => setStrokeWidth(value as number)}
                   sx={{ height: 80, color: 'white' }}
-                  size="small"
+                  size='small'
                 />
               </Box>
 
@@ -600,26 +614,26 @@ export function PhotoAnnotationEditor({
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Brightness4 sx={{ color: 'white', fontSize: 16, mb: 1 }} />
                 <Slider
-                  orientation="vertical"
+                  orientation='vertical'
                   value={brightness}
                   min={50}
                   max={150}
                   onChange={(_, value) => setBrightness(value as number)}
                   sx={{ height: 60, color: 'white' }}
-                  size="small"
+                  size='small'
                 />
               </Box>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Contrast sx={{ color: 'white', fontSize: 16, mb: 1 }} />
                 <Slider
-                  orientation="vertical"
+                  orientation='vertical'
                   value={contrast}
                   min={50}
                   max={150}
                   onChange={(_, value) => setContrast(value as number)}
                   sx={{ height: 60, color: 'white' }}
-                  size="small"
+                  size='small'
                 />
               </Box>
             </Paper>
@@ -640,11 +654,11 @@ export function PhotoAnnotationEditor({
           >
             {!readOnly && (
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 onClick={handleSave}
                 startIcon={<Save />}
-                size="large"
+                size='large'
               >
                 Save Annotations
               </Button>
@@ -656,7 +670,7 @@ export function PhotoAnnotationEditor({
       {/* Text Input Dialog */}
       <Dialog open={showTextDialog} onClose={() => setShowTextDialog(false)}>
         <DialogContent>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             Add Text Annotation
           </Typography>
           <TextField
@@ -665,14 +679,14 @@ export function PhotoAnnotationEditor({
             multiline
             rows={3}
             value={textInput}
-            onChange={(e) => setTextInput(e.target.value)}
-            placeholder="Enter your text annotation..."
+            onChange={e => setTextInput(e.target.value)}
+            placeholder='Enter your text annotation...'
             sx={{ mt: 2 }}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowTextDialog(false)}>Cancel</Button>
-          <Button onClick={addTextAnnotation} variant="contained" disabled={!textInput.trim()}>
+          <Button onClick={addTextAnnotation} variant='contained' disabled={!textInput.trim()}>
             Add Text
           </Button>
         </DialogActions>

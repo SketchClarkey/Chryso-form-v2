@@ -9,11 +9,7 @@ import {
   CardContent,
   Stack,
 } from '@mui/material';
-import {
-  Refresh as RefreshIcon,
-  Bug as BugIcon,
-  Home as HomeIcon,
-} from '@mui/icons-material';
+import { Refresh as RefreshIcon, Bug as BugIcon, Home as HomeIcon } from '@mui/icons-material';
 
 interface Props {
   children: ReactNode;
@@ -54,7 +50,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error to monitoring service
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -90,50 +86,51 @@ export class ErrorBoundary extends Component<Props, State> {
         >
           <Card sx={{ maxWidth: 600, width: '100%' }}>
             <CardContent>
-              <Stack spacing={3} alignItems="center" textAlign="center">
+              <Stack spacing={3} alignItems='center' textAlign='center'>
                 <BugIcon sx={{ fontSize: 64, color: 'error.main' }} />
-                
+
                 <Box>
-                  <Typography variant="h4" gutterBottom>
+                  <Typography variant='h4' gutterBottom>
                     Something went wrong
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    An unexpected error has occurred. Our team has been notified and is working to fix it.
+                  <Typography variant='body1' color='text.secondary'>
+                    An unexpected error has occurred. Our team has been notified and is working to
+                    fix it.
                   </Typography>
                 </Box>
 
                 {this.props.showDetails && this.state.error && (
-                  <Alert severity="error" sx={{ width: '100%', textAlign: 'left' }}>
+                  <Alert severity='error' sx={{ width: '100%', textAlign: 'left' }}>
                     <AlertTitle>Error Details</AlertTitle>
-                    <Typography variant="body2" component="pre" sx={{ whiteSpace: 'pre-wrap' }}>
+                    <Typography variant='body2' component='pre' sx={{ whiteSpace: 'pre-wrap' }}>
                       {this.state.error.message}
                     </Typography>
                     {this.state.errorInfo && (
-                      <Typography variant="caption" component="pre" sx={{ whiteSpace: 'pre-wrap', mt: 1 }}>
+                      <Typography
+                        variant='caption'
+                        component='pre'
+                        sx={{ whiteSpace: 'pre-wrap', mt: 1 }}
+                      >
                         {this.state.errorInfo.componentStack}
                       </Typography>
                     )}
                   </Alert>
                 )}
 
-                <Stack direction="row" spacing={2}>
+                <Stack direction='row' spacing={2}>
                   <Button
-                    variant="contained"
+                    variant='contained'
                     startIcon={<RefreshIcon />}
                     onClick={this.handleRefresh}
                   >
                     Refresh Page
                   </Button>
-                  <Button
-                    variant="outlined"
-                    startIcon={<HomeIcon />}
-                    onClick={this.handleGoHome}
-                  >
+                  <Button variant='outlined' startIcon={<HomeIcon />} onClick={this.handleGoHome}>
                     Go Home
                   </Button>
                 </Stack>
 
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Error ID: {Date.now().toString(36).toUpperCase()}
                 </Typography>
               </Stack>
@@ -151,7 +148,7 @@ export class ErrorBoundary extends Component<Props, State> {
 export function useErrorHandler() {
   return (error: Error, errorInfo?: React.ErrorInfo) => {
     console.error('Error caught by useErrorHandler:', error, errorInfo);
-    
+
     // In a real app, report to error service
     // reportError(error, errorInfo);
   };

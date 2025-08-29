@@ -93,7 +93,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
   const [recipients, setRecipients] = useState<string[]>(currentSchedule?.recipients || []);
   const [newRecipient, setNewRecipient] = useState('');
   const [exportFormat, setExportFormat] = useState(currentSchedule?.exportFormat || 'pdf');
-  
+
   const [cronPresets, setCronPresets] = useState<CronPreset[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -192,7 +192,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
   const getNextRunDescription = () => {
     if (!cronExpression) return 'No schedule set';
-    
+
     // Simple description based on common patterns
     if (cronExpression === '0 * * * *') return 'Every hour';
     if (cronExpression === '0 9 * * *') return 'Daily at 9:00 AM';
@@ -201,14 +201,14 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
     if (cronExpression === '0 8 * * MON-FRI') return 'Weekdays at 8:00 AM';
     if (cronExpression === '*/15 * * * *') return 'Every 15 minutes';
     if (cronExpression === '0 9 1 */3 *') return 'Quarterly on the 1st at 9:00 AM';
-    
+
     return cronExpression;
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth='md' fullWidth>
       <DialogTitle>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box display='flex' alignItems='center' gap={1}>
           <ScheduleIcon />
           Schedule Report: {reportName}
         </Box>
@@ -216,7 +216,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
       <DialogContent>
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity='error' sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
@@ -227,11 +227,11 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
             control={
               <Switch
                 checked={enabled}
-                onChange={(e) => setEnabled(e.target.checked)}
-                color="primary"
+                onChange={e => setEnabled(e.target.checked)}
+                color='primary'
               />
             }
-            label="Enable scheduled report delivery"
+            label='Enable scheduled report delivery'
           />
         </Box>
 
@@ -239,17 +239,17 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
           <>
             {/* Schedule Configuration */}
             <Box mb={3}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 <TimeIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                 Schedule Configuration
               </Typography>
 
               {/* Preset Schedules */}
-              <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
+              <Typography variant='subtitle2' gutterBottom sx={{ mt: 2 }}>
                 Common Schedules
               </Typography>
               <Grid container spacing={1} sx={{ mb: 2 }}>
-                {cronPresets.map((preset) => (
+                {cronPresets.map(preset => (
                   <Grid item key={preset.name}>
                     <Chip
                       label={preset.name}
@@ -264,19 +264,15 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               {/* Custom Cron Expression */}
               <TextField
                 fullWidth
-                label="Custom Cron Expression"
+                label='Custom Cron Expression'
                 value={customCron}
-                onChange={(e) => handleCustomCronChange(e.target.value)}
-                placeholder="0 9 * * MON (Every Monday at 9:00 AM)"
+                onChange={e => handleCustomCronChange(e.target.value)}
+                placeholder='0 9 * * MON (Every Monday at 9:00 AM)'
                 helperText={
                   <Box>
                     Format: minute hour day month day-of-week
                     <br />
-                    <a
-                      href="https://crontab.guru"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a href='https://crontab.guru' target='_blank' rel='noopener noreferrer'>
                       Learn more about cron expressions
                     </a>
                   </Box>
@@ -287,11 +283,8 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               {/* Timezone */}
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Timezone</InputLabel>
-                <Select
-                  value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
-                >
-                  {timezones.map((tz) => (
+                <Select value={timezone} onChange={e => setTimezone(e.target.value)}>
+                  {timezones.map(tz => (
                     <MenuItem key={tz} value={tz}>
                       {tz}
                     </MenuItem>
@@ -301,14 +294,14 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
               {/* Schedule Preview */}
               {cronExpression && (
-                <Card variant="outlined" sx={{ mb: 3 }}>
+                <Card variant='outlined' sx={{ mb: 3 }}>
                   <CardContent>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant='subtitle2' gutterBottom>
                       Schedule Preview
                     </Typography>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <InfoIcon color="info" fontSize="small" />
-                      <Typography variant="body2">
+                    <Box display='flex' alignItems='center' gap={1}>
+                      <InfoIcon color='info' fontSize='small' />
+                      <Typography variant='body2'>
                         {getNextRunDescription()} ({timezone})
                       </Typography>
                     </Box>
@@ -321,7 +314,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
             {/* Email Configuration */}
             <Box mb={3}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 <EmailIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                 Email Configuration
               </Typography>
@@ -329,55 +322,45 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               {/* Export Format */}
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Export Format</InputLabel>
-                <Select
-                  value={exportFormat}
-                  onChange={(e) => setExportFormat(e.target.value)}
-                >
-                  <MenuItem value="pdf">PDF Document</MenuItem>
-                  <MenuItem value="excel">Excel Workbook</MenuItem>
-                  <MenuItem value="csv">CSV File</MenuItem>
+                <Select value={exportFormat} onChange={e => setExportFormat(e.target.value)}>
+                  <MenuItem value='pdf'>PDF Document</MenuItem>
+                  <MenuItem value='excel'>Excel Workbook</MenuItem>
+                  <MenuItem value='csv'>CSV File</MenuItem>
                 </Select>
               </FormControl>
 
               {/* Recipients */}
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Email Recipients
               </Typography>
-              
-              <Box display="flex" gap={1} mb={2}>
+
+              <Box display='flex' gap={1} mb={2}>
                 <TextField
                   fullWidth
-                  label="Email Address"
-                  type="email"
+                  label='Email Address'
+                  type='email'
                   value={newRecipient}
-                  onChange={(e) => setNewRecipient(e.target.value)}
-                  onKeyPress={(e) => {
+                  onChange={e => setNewRecipient(e.target.value)}
+                  onKeyPress={e => {
                     if (e.key === 'Enter') {
                       handleAddRecipient();
                     }
                   }}
                 />
-                <Button
-                  variant="outlined"
-                  onClick={handleAddRecipient}
-                  disabled={!newRecipient}
-                >
+                <Button variant='outlined' onClick={handleAddRecipient} disabled={!newRecipient}>
                   <AddIcon />
                 </Button>
               </Box>
 
               {/* Recipients List */}
               {recipients.length > 0 && (
-                <Card variant="outlined">
+                <Card variant='outlined'>
                   <List dense>
                     {recipients.map((email, index) => (
                       <ListItem
                         key={email}
                         secondaryAction={
-                          <IconButton
-                            edge="end"
-                            onClick={() => handleRemoveRecipient(email)}
-                          >
+                          <IconButton edge='end' onClick={() => handleRemoveRecipient(email)}>
                             <DeleteIcon />
                           </IconButton>
                         }
@@ -393,7 +376,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               )}
 
               {recipients.length === 0 && (
-                <Alert severity="warning">
+                <Alert severity='warning'>
                   Please add at least one email recipient to receive scheduled reports.
                 </Alert>
               )}
@@ -401,32 +384,30 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
             {/* Current Schedule Info */}
             {currentSchedule?.enabled && (
-              <Card variant="outlined" sx={{ bgcolor: 'grey.50' }}>
+              <Card variant='outlined' sx={{ bgcolor: 'grey.50' }}>
                 <CardContent>
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography variant='subtitle2' gutterBottom>
                     Current Schedule Status
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Last Run
                       </Typography>
-                      <Typography variant="body2">
-                        {currentSchedule.lastRun 
+                      <Typography variant='body2'>
+                        {currentSchedule.lastRun
                           ? new Date(currentSchedule.lastRun).toLocaleString()
-                          : 'Never'
-                        }
+                          : 'Never'}
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Next Run
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant='body2'>
                         {currentSchedule.nextRun
                           ? new Date(currentSchedule.nextRun).toLocaleString()
-                          : 'Not scheduled'
-                        }
+                          : 'Not scheduled'}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -443,7 +424,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
         </Button>
         <Button
           onClick={handleSave}
-          variant="contained"
+          variant='contained'
           disabled={saving}
           startIcon={<ScheduleIcon />}
         >

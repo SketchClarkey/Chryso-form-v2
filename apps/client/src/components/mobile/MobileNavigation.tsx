@@ -106,95 +106,132 @@ export function MobileNavigation({ children, showBottomNav = true }: MobileNavig
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* Top App Bar */}
-      <AppBar position="static" sx={{ zIndex: 1201 }}>
+      <AppBar position='static' sx={{ zIndex: 1201 }}>
         <Toolbar>
           <IconButton
-            edge="start"
-            color="inherit"
+            edge='start'
+            color='inherit'
             onClick={() => setDrawerOpen(true)}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
-          
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+
+          <Typography variant='h6' sx={{ flexGrow: 1 }}>
             {getPageTitle()}
           </Typography>
 
           {isOffline && (
-            <IconButton color="inherit" onClick={handleSync}>
-              <Badge color="warning" variant="dot">
+            <IconButton color='inherit' onClick={handleSync}>
+              <Badge color='warning' variant='dot'>
                 <OfflineIcon />
               </Badge>
             </IconButton>
           )}
 
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="error">
+          <IconButton color='inherit'>
+            <Badge badgeContent={0} color='error'>
               <NotificationsIcon />
             </Badge>
           </IconButton>
 
-          <IconButton
-            color="inherit"
-            onClick={handleMenuClick}
-          >
+          <IconButton color='inherit' onClick={handleMenuClick}>
             <ProfileIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
       {/* Side Drawer */}
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      >
+      <Drawer anchor='left' open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <Box sx={{ width: 280, pt: 2 }}>
           <Box sx={{ px: 2, pb: 2 }}>
-            <Typography variant="h6">Chryso Forms</Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='h6'>Chryso Forms</Typography>
+            <Typography variant='body2' color='text.secondary'>
               {user?.name} ({user?.role})
             </Typography>
           </Box>
           <Divider />
-          
+
           <List>
-            <ListItem button onClick={() => { navigate('/dashboard'); setDrawerOpen(false); }}>
-              <ListItemIcon><DashboardIcon /></ListItemIcon>
-              <ListItemText primary="Dashboard" />
+            <ListItem
+              button
+              onClick={() => {
+                navigate('/dashboard');
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary='Dashboard' />
             </ListItem>
-            
-            <ListItem button onClick={() => { navigate('/forms'); setDrawerOpen(false); }}>
-              <ListItemIcon><FormsIcon /></ListItemIcon>
-              <ListItemText primary="Forms" />
+
+            <ListItem
+              button
+              onClick={() => {
+                navigate('/forms');
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <FormsIcon />
+              </ListItemIcon>
+              <ListItemText primary='Forms' />
             </ListItem>
-            
-            <ListItem button onClick={() => { navigate('/forms/new'); setDrawerOpen(false); }}>
-              <ListItemIcon><AddIcon /></ListItemIcon>
-              <ListItemText primary="New Form" />
+
+            <ListItem
+              button
+              onClick={() => {
+                navigate('/forms/new');
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText primary='New Form' />
             </ListItem>
-            
-            <ListItem button onClick={() => { navigate('/analytics'); setDrawerOpen(false); }}>
-              <ListItemIcon><AnalyticsIcon /></ListItemIcon>
-              <ListItemText primary="Analytics" />
+
+            <ListItem
+              button
+              onClick={() => {
+                navigate('/analytics');
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <AnalyticsIcon />
+              </ListItemIcon>
+              <ListItemText primary='Analytics' />
             </ListItem>
-            
+
             <Divider sx={{ my: 1 }} />
-            
-            <ListItem button onClick={() => { navigate('/settings'); setDrawerOpen(false); }}>
-              <ListItemIcon><SettingsIcon /></ListItemIcon>
-              <ListItemText primary="Settings" />
+
+            <ListItem
+              button
+              onClick={() => {
+                navigate('/settings');
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary='Settings' />
             </ListItem>
-            
+
             <ListItem button onClick={handleSync}>
-              <ListItemIcon><SyncIcon /></ListItemIcon>
-              <ListItemText primary="Sync Data" />
+              <ListItemIcon>
+                <SyncIcon />
+              </ListItemIcon>
+              <ListItemText primary='Sync Data' />
             </ListItem>
-            
+
             <ListItem button onClick={handleLogout}>
-              <ListItemIcon><LogoutIcon /></ListItemIcon>
-              <ListItemText primary="Logout" />
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary='Logout' />
             </ListItem>
           </List>
         </Box>
@@ -208,11 +245,21 @@ export function MobileNavigation({ children, showBottomNav = true }: MobileNavig
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={() => { navigate('/profile'); handleMenuClose(); }}>
+        <MenuItem
+          onClick={() => {
+            navigate('/profile');
+            handleMenuClose();
+          }}
+        >
           <ProfileIcon sx={{ mr: 1 }} />
           Profile
         </MenuItem>
-        <MenuItem onClick={() => { navigate('/settings'); handleMenuClose(); }}>
+        <MenuItem
+          onClick={() => {
+            navigate('/settings');
+            handleMenuClose();
+          }}
+        >
           <SettingsIcon sx={{ mr: 1 }} />
           Settings
         </MenuItem>
@@ -227,31 +274,30 @@ export function MobileNavigation({ children, showBottomNav = true }: MobileNavig
       </Menu>
 
       {/* Main Content */}
-      <Box sx={{ 
-        flex: 1, 
-        overflow: 'auto',
-        pb: showBottomNav ? 7 : 0 
-      }}>
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'auto',
+          pb: showBottomNav ? 7 : 0,
+        }}
+      >
         {children}
       </Box>
 
       {/* Bottom Navigation */}
       {showBottomNav && (
-        <Paper 
-          sx={{ 
-            position: 'fixed', 
-            bottom: 0, 
-            left: 0, 
-            right: 0, 
-            zIndex: 1000 
-          }} 
+        <Paper
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+          }}
           elevation={3}
         >
-          <BottomNavigation
-            value={getCurrentBottomNavValue()}
-            onChange={handleBottomNavChange}
-          >
-            {bottomNavItems.map((item) => (
+          <BottomNavigation value={getCurrentBottomNavValue()} onChange={handleBottomNavChange}>
+            {bottomNavItems.map(item => (
               <BottomNavigationAction
                 key={item.value}
                 value={item.value}

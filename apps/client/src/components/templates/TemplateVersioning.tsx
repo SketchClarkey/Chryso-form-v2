@@ -64,10 +64,7 @@ interface TemplateVersioningProps {
   onVersionRestore?: (version: number) => void;
 }
 
-export function TemplateVersioning({
-  template,
-  onVersionRestore,
-}: TemplateVersioningProps) {
+export function TemplateVersioning({ template, onVersionRestore }: TemplateVersioningProps) {
   const { user } = useAuth();
   const toast = useToastNotifications();
   const queryClient = useQueryClient();
@@ -141,7 +138,7 @@ export function TemplateVersioning({
 
   const confirmRestore = () => {
     if (!restoreDialog.version) return;
-    
+
     restoreVersionMutation.mutate({
       version: restoreDialog.version,
       changes: `Restored to version ${restoreDialog.version}`,
@@ -161,7 +158,7 @@ export function TemplateVersioning({
       const response = await api.get(`/templates/${template._id}/export?version=${version}`, {
         responseType: 'blob',
       });
-      
+
       const blob = new Blob([response.data], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -171,7 +168,7 @@ export function TemplateVersioning({
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       toast.showSuccess(`Version ${version} exported successfully`);
     } catch (error) {
       toast.showError('Failed to export version');
@@ -186,14 +183,14 @@ export function TemplateVersioning({
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h6" display="flex" alignItems="center" gap={1}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h6' display='flex' alignItems='center' gap={1}>
           <HistoryIcon />
           Version History
         </Typography>
         {canEdit && (
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={() => setCreateVersionDialog(true)}
             disabled={createVersionMutation.isPending}
           >
@@ -204,12 +201,13 @@ export function TemplateVersioning({
 
       <Card>
         <CardContent>
-          <Alert severity="info" sx={{ mb: 2 }}>
-            Current version: v{template.version}. You can restore to any previous version or compare changes.
+          <Alert severity='info' sx={{ mb: 2 }}>
+            Current version: v{template.version}. You can restore to any previous version or compare
+            changes.
           </Alert>
 
-          <TableContainer component={Paper} variant="outlined">
-            <Table size="small">
+          <TableContainer component={Paper} variant='outlined'>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
                   <TableCell>Version</TableCell>
@@ -217,52 +215,49 @@ export function TemplateVersioning({
                   <TableCell>Modified By</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell align='right'>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {template.versionHistory
                   .sort((a, b) => b.version - a.version)
-                  .map((item) => (
+                  .map(item => (
                     <TableRow key={item.version}>
                       <TableCell>
-                        <Typography variant="body2" fontWeight="bold">
+                        <Typography variant='body2' fontWeight='bold'>
                           v{item.version}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2" sx={{ maxWidth: 200 }} noWrap>
+                        <Typography variant='body2' sx={{ maxWidth: 200 }} noWrap>
                           {item.changes}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
+                        <Typography variant='body2'>
                           {item.modifiedBy.firstName} {item.modifiedBy.lastName}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {item.modifiedBy.email}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
+                        <Typography variant='body2'>
                           {new Date(item.timestamp).toLocaleDateString()}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {new Date(item.timestamp).toLocaleTimeString()}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Chip
                           label={item.version === template.version ? 'Current' : 'Previous'}
-                          size="small"
+                          size='small'
                           color={getStatusColor(item.version) as any}
                         />
                       </TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleMenuOpen(item.version, e)}
-                        >
+                      <TableCell align='right'>
+                        <IconButton size='small' onClick={e => handleMenuOpen(item.version, e)}>
                           <MoreIcon />
                         </IconButton>
                         <Menu
@@ -270,33 +265,41 @@ export function TemplateVersioning({
                           open={Boolean(anchorEl[item.version])}
                           onClose={() => handleMenuClose(item.version)}
                         >
-                          <MenuItem onClick={() => {
-                            // View version details - would open a dialog or navigate
-                            handleMenuClose(item.version);
-                          }}>
+                          <MenuItem
+                            onClick={() => {
+                              // View version details - would open a dialog or navigate
+                              handleMenuClose(item.version);
+                            }}
+                          >
                             <ViewIcon sx={{ mr: 1 }} /> View Details
                           </MenuItem>
-                          
+
                           {item.version !== template.version && canEdit && (
-                            <MenuItem onClick={() => {
-                              handleRestoreVersion(item.version, item.changes);
-                              handleMenuClose(item.version);
-                            }}>
+                            <MenuItem
+                              onClick={() => {
+                                handleRestoreVersion(item.version, item.changes);
+                                handleMenuClose(item.version);
+                              }}
+                            >
                               <RestoreIcon sx={{ mr: 1 }} /> Restore Version
                             </MenuItem>
                           )}
-                          
-                          <MenuItem onClick={() => {
-                            handleCompareVersions(item.version);
-                            handleMenuClose(item.version);
-                          }}>
+
+                          <MenuItem
+                            onClick={() => {
+                              handleCompareVersions(item.version);
+                              handleMenuClose(item.version);
+                            }}
+                          >
                             <CompareIcon sx={{ mr: 1 }} /> Compare with Current
                           </MenuItem>
-                          
-                          <MenuItem onClick={() => {
-                            handleExportVersion(item.version);
-                            handleMenuClose(item.version);
-                          }}>
+
+                          <MenuItem
+                            onClick={() => {
+                              handleExportVersion(item.version);
+                              handleMenuClose(item.version);
+                            }}
+                          >
                             <DownloadIcon sx={{ mr: 1 }} /> Export Version
                           </MenuItem>
                         </Menu>
@@ -308,8 +311,8 @@ export function TemplateVersioning({
           </TableContainer>
 
           {template.versionHistory.length === 0 && (
-            <Box textAlign="center" py={4}>
-              <Typography variant="body1" color="text.secondary">
+            <Box textAlign='center' py={4}>
+              <Typography variant='body1' color='text.secondary'>
                 No version history available
               </Typography>
             </Box>
@@ -318,29 +321,32 @@ export function TemplateVersioning({
       </Card>
 
       {/* Create Version Dialog */}
-      <Dialog open={createVersionDialog} onClose={() => setCreateVersionDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={createVersionDialog}
+        onClose={() => setCreateVersionDialog(false)}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>Create New Version</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
-            margin="dense"
-            label="Version Changes"
+            margin='dense'
+            label='Version Changes'
             fullWidth
             multiline
             rows={4}
             value={versionChanges}
-            onChange={(e) => setVersionChanges(e.target.value)}
-            placeholder="Describe the changes made in this version..."
+            onChange={e => setVersionChanges(e.target.value)}
+            placeholder='Describe the changes made in this version...'
             required
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCreateVersionDialog(false)}>
-            Cancel
-          </Button>
+          <Button onClick={() => setCreateVersionDialog(false)}>Cancel</Button>
           <Button
             onClick={() => createVersionMutation.mutate({ changes: versionChanges })}
-            variant="contained"
+            variant='contained'
             disabled={!versionChanges.trim() || createVersionMutation.isPending}
           >
             Create Version
@@ -349,28 +355,31 @@ export function TemplateVersioning({
       </Dialog>
 
       {/* Restore Version Dialog */}
-      <Dialog open={restoreDialog.open} onClose={() => setRestoreDialog({ open: false })} maxWidth="sm" fullWidth>
+      <Dialog
+        open={restoreDialog.open}
+        onClose={() => setRestoreDialog({ open: false })}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>Restore Version</DialogTitle>
         <DialogContent>
-          <Alert severity="warning" sx={{ mb: 2 }}>
-            This will restore the template to version {restoreDialog.version} and create a new version. 
-            Current changes will be preserved in the version history.
+          <Alert severity='warning' sx={{ mb: 2 }}>
+            This will restore the template to version {restoreDialog.version} and create a new
+            version. Current changes will be preserved in the version history.
           </Alert>
-          <Typography variant="body2" gutterBottom>
+          <Typography variant='body2' gutterBottom>
             Version {restoreDialog.version} changes:
           </Typography>
-          <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 2 }}>
+          <Typography variant='body2' sx={{ fontStyle: 'italic', mb: 2 }}>
             "{restoreDialog.changes}"
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRestoreDialog({ open: false })}>
-            Cancel
-          </Button>
+          <Button onClick={() => setRestoreDialog({ open: false })}>Cancel</Button>
           <Button
             onClick={confirmRestore}
-            variant="contained"
-            color="warning"
+            variant='contained'
+            color='warning'
             disabled={restoreVersionMutation.isPending}
           >
             Restore Version
@@ -379,20 +388,24 @@ export function TemplateVersioning({
       </Dialog>
 
       {/* Compare Versions Dialog */}
-      <Dialog open={compareDialog.open} onClose={() => setCompareDialog({ open: false })} maxWidth="md" fullWidth>
+      <Dialog
+        open={compareDialog.open}
+        onClose={() => setCompareDialog({ open: false })}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Compare Versions</DialogTitle>
         <DialogContent>
-          <Alert severity="info" sx={{ mb: 2 }}>
+          <Alert severity='info' sx={{ mb: 2 }}>
             Comparing version {compareDialog.version1} with version {compareDialog.version2}
           </Alert>
-          <Typography variant="body2">
-            Version comparison feature would be implemented here, showing side-by-side diff of template structures.
+          <Typography variant='body2'>
+            Version comparison feature would be implemented here, showing side-by-side diff of
+            template structures.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCompareDialog({ open: false })}>
-            Close
-          </Button>
+          <Button onClick={() => setCompareDialog({ open: false })}>Close</Button>
         </DialogActions>
       </Dialog>
     </Box>

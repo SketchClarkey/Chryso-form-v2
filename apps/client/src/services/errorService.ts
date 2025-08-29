@@ -33,12 +33,12 @@ export interface NetworkError {
 class ErrorService {
   private errorQueue: ErrorDetails[] = [];
   private isReporting = false;
-  
+
   // Report error to monitoring service
   async reportError(error: ErrorDetails): Promise<void> {
     try {
       this.errorQueue.push(error);
-      
+
       if (!this.isReporting) {
         await this.flushErrorQueue();
       }
@@ -49,23 +49,23 @@ class ErrorService {
 
   private async flushErrorQueue(): Promise<void> {
     if (this.errorQueue.length === 0 || this.isReporting) return;
-    
+
     this.isReporting = true;
-    
+
     try {
       const errors = [...this.errorQueue];
       this.errorQueue = [];
-      
+
       // In a real app, send to error reporting service
       await fetch('/api/errors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(this.getAuthHeader()),
+          ...this.getAuthHeader(),
         },
         body: JSON.stringify({ errors }),
       });
-      
+
       console.log('Errors reported successfully:', errors.length);
     } catch (err) {
       console.error('Failed to flush error queue:', err);
@@ -112,10 +112,10 @@ class ErrorService {
   // Parse validation errors
   parseValidationErrors(error: any): ValidationError[] {
     const errors: ValidationError[] = [];
-    
+
     if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
-      
+
       // Handle different validation error formats
       if (Array.isArray(validationErrors)) {
         // Array format: [{ field, message, value }]
@@ -130,7 +130,7 @@ class ErrorService {
         });
       }
     }
-    
+
     return errors;
   }
 
@@ -148,25 +148,25 @@ class ErrorService {
     switch (error.code) {
       case 'NETWORK_ERROR':
         return 'Unable to connect to the server. Please check your internet connection and try again.';
-      
+
       case 'UNAUTHORIZED':
         return 'Your session has expired. Please log in again.';
-      
+
       case 'FORBIDDEN':
         return 'You do not have permission to perform this action.';
-      
+
       case 'NOT_FOUND':
         return 'The requested resource was not found.';
-      
+
       case 'VALIDATION_ERROR':
         return 'Please check your input and try again.';
-      
+
       case 'RATE_LIMITED':
         return 'Too many requests. Please wait a moment and try again.';
-      
+
       case 'MAINTENANCE':
         return 'The system is currently under maintenance. Please try again later.';
-      
+
       default:
         if (error.status >= 500) {
           return 'A server error occurred. Our team has been notified and is working to fix it.';
@@ -208,14 +208,9 @@ class ErrorService {
   }
 
   // Log API error with context
-  logApiError(
-    endpoint: string,
-    method: string,
-    error: any,
-    requestData?: any
-  ): ApiError {
+  logApiError(endpoint: string, method: string, error: any, requestData?: any): ApiError {
     const apiError = this.parseApiError(error);
-    
+
     this.logError(new Error(apiError.message), {
       type: 'api_error',
       endpoint,
@@ -252,20 +247,16 @@ class ErrorService {
   }
 
   // Retry mechanism for failed requests
-  async withRetry<T>(
-    fn: () => Promise<T>,
-    maxRetries = 3,
-    backoffMs = 1000
-  ): Promise<T> {
+  async withRetry<T>(fn: () => Promise<T>, maxRetries = 3, backoffMs = 1000): Promise<T> {
     let lastError: any;
-    
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         return await fn();
       } catch (error) {
         lastError = error;
         const apiError = this.parseApiError(error);
-        
+
         if (!this.isRetryableError(apiError) || attempt === maxRetries) {
           throw error;
         }
@@ -273,27 +264,27 @@ class ErrorService {
         // Exponential backoff
         const delay = backoffMs * Math.pow(2, attempt - 1);
         await new Promise(resolve => setTimeout(resolve, delay));
-        
+
         console.log(`Retrying request (attempt ${attempt + 1}/${maxRetries})`);
       }
     }
-    
+
     throw lastError;
   }
 
   // Handle uncaught promise rejections
   setupGlobalErrorHandling(): void {
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.logError(
         event.reason instanceof Error ? event.reason : new Error(String(event.reason)),
         { type: 'unhandled_promise_rejection' }
       );
-      
+
       // Prevent default browser error console
       event.preventDefault();
     });
 
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.logError(event.error || new Error(event.message), {
         type: 'uncaught_exception',
         filename: event.filename,

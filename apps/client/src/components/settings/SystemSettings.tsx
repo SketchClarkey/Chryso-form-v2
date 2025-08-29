@@ -38,7 +38,7 @@ interface TabPanelProps {
 function TabPanel({ children, value, index }: TabPanelProps) {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`settings-tabpanel-${index}`}
       aria-labelledby={`settings-tab-${index}`}
@@ -74,7 +74,7 @@ const SystemSettings: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const [settingsResponse, sectionsResponse] = await Promise.all([
         request('/api/settings/organization'),
@@ -148,32 +148,28 @@ const SystemSettings: React.FC = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Typography variant="h4" gutterBottom>
+      <Container maxWidth='xl' sx={{ py: 4 }}>
+        <Typography variant='h4' gutterBottom>
           System Settings
         </Typography>
         <Box sx={{ width: '100%' }}>
-          <Skeleton variant="rectangular" height={48} sx={{ mb: 2 }} />
-          <Skeleton variant="rectangular" height={400} />
+          <Skeleton variant='rectangular' height={48} sx={{ mb: 2 }} />
+          <Skeleton variant='rectangular' height={400} />
         </Box>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">System Settings</Typography>
-        <Stack direction="row" spacing={1}>
-          <Button
-            onClick={handleRefresh}
-            startIcon={<RefreshIcon />}
-            disabled={saving}
-          >
+    <Container maxWidth='xl' sx={{ py: 4 }}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>System Settings</Typography>
+        <Stack direction='row' spacing={1}>
+          <Button onClick={handleRefresh} startIcon={<RefreshIcon />} disabled={saving}>
             Refresh
           </Button>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={handleSave}
             startIcon={<SaveIcon />}
             disabled={!hasUnsavedChanges || saving}
@@ -184,19 +180,19 @@ const SystemSettings: React.FC = () => {
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert severity='error' sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
       {success && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+        <Alert severity='success' sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
           {success}
         </Alert>
       )}
 
       {hasUnsavedChanges && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert severity='warning' sx={{ mb: 2 }}>
           You have unsaved changes. Don't forget to save your settings.
         </Alert>
       )}
@@ -206,15 +202,15 @@ const SystemSettings: React.FC = () => {
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
-            aria-label="settings tabs"
-            variant="scrollable"
-            scrollButtons="auto"
+            aria-label='settings tabs'
+            variant='scrollable'
+            scrollButtons='auto'
           >
             {tabs.map((tab, index) => (
               <Tab
                 key={tab.id}
                 icon={tab.icon}
-                iconPosition="start"
+                iconPosition='start'
                 label={tab.label}
                 id={`settings-tab-${index}`}
                 aria-controls={`settings-tabpanel-${index}`}
@@ -227,35 +223,35 @@ const SystemSettings: React.FC = () => {
           <TabPanel value={currentTab} index={0}>
             <GeneralSettings
               settings={settings?.general}
-              onChange={(data) => handleSettingsChange('general', data)}
+              onChange={data => handleSettingsChange('general', data)}
             />
           </TabPanel>
 
           <TabPanel value={currentTab} index={1}>
             <SecuritySettings
               settings={settings?.security}
-              onChange={(data) => handleSettingsChange('security', data)}
+              onChange={data => handleSettingsChange('security', data)}
             />
           </TabPanel>
 
           <TabPanel value={currentTab} index={2}>
             <IntegrationSettings
               settings={settings?.integrations}
-              onChange={(data) => handleSettingsChange('integrations', data)}
+              onChange={data => handleSettingsChange('integrations', data)}
             />
           </TabPanel>
 
           <TabPanel value={currentTab} index={3}>
             <FeatureSettings
               settings={settings?.features}
-              onChange={(data) => handleSettingsChange('features', data)}
+              onChange={data => handleSettingsChange('features', data)}
             />
           </TabPanel>
 
           <TabPanel value={currentTab} index={4}>
             <CustomizationSettings
               settings={settings?.customization}
-              onChange={(data) => handleSettingsChange('customization', data)}
+              onChange={data => handleSettingsChange('customization', data)}
             />
           </TabPanel>
         </CardContent>

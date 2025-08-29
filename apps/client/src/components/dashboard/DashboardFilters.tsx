@@ -68,7 +68,7 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
     const newStatuses = filters.status.includes(status)
       ? filters.status.filter(s => s !== status)
       : [...filters.status, status];
-    
+
     handleFilterChange('status', newStatuses);
   };
 
@@ -90,28 +90,28 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <FilterIcon color="primary" />
-            <Typography variant="h6">Filters</Typography>
+            <FilterIcon color='primary' />
+            <Typography variant='h6'>Filters</Typography>
             {hasActiveFilters && (
               <Chip
                 label={`${filters.status.length + (filters.worksite ? 1 : 0) + (filters.technician ? 1 : 0)} active`}
-                size="small"
-                color="primary"
-                variant="outlined"
+                size='small'
+                color='primary'
+                variant='outlined'
               />
             )}
           </Box>
           <Box>
             <Button
               onClick={() => setShowFilters(!showFilters)}
-              variant="outlined"
-              size="small"
+              variant='outlined'
+              size='small'
               sx={{ mr: 1 }}
             >
               {showFilters ? 'Hide' : 'Show'} Filters
             </Button>
             {hasActiveFilters && (
-              <IconButton onClick={clearAllFilters} size="small">
+              <IconButton onClick={clearAllFilters} size='small'>
                 <ClearIcon />
               </IconButton>
             )}
@@ -120,12 +120,12 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
 
         {/* Time Range - Always visible */}
         <Box sx={{ mb: showFilters ? 2 : 0 }}>
-          <FormControl size="small" sx={{ minWidth: 200 }}>
+          <FormControl size='small' sx={{ minWidth: 200 }}>
             <InputLabel>Time Range</InputLabel>
             <Select
               value={filters.timeRange}
-              label="Time Range"
-              onChange={(e) => handleFilterChange('timeRange', e.target.value)}
+              label='Time Range'
+              onChange={e => handleFilterChange('timeRange', e.target.value)}
             >
               {timeRangeOptions.map(option => (
                 <MenuItem key={option.value} value={option.value}>
@@ -138,10 +138,12 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
 
         {/* Additional filters - Show/Hide based on state */}
         {showFilters && (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+          <Box
+            sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}
+          >
             {/* Status Filter */}
             <Box>
-              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+              <Typography variant='body2' sx={{ mb: 1, fontWeight: 500 }}>
                 Status
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -149,7 +151,7 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
                   <Chip
                     key={option.value}
                     label={option.label}
-                    size="small"
+                    size='small'
                     onClick={() => handleStatusChange(option.value)}
                     color={filters.status.includes(option.value) ? 'primary' : 'default'}
                     variant={filters.status.includes(option.value) ? 'filled' : 'outlined'}
@@ -159,30 +161,30 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
             </Box>
 
             {/* Worksite Filter */}
-            <FormControl size="small" fullWidth>
+            <FormControl size='small' fullWidth>
               <InputLabel>Worksite</InputLabel>
               <Select
                 value={filters.worksite}
-                label="Worksite"
-                onChange={(e) => handleFilterChange('worksite', e.target.value)}
+                label='Worksite'
+                onChange={e => handleFilterChange('worksite', e.target.value)}
               >
-                <MenuItem value="">All Worksites</MenuItem>
-                <MenuItem value="worksite1">Test Worksite</MenuItem>
+                <MenuItem value=''>All Worksites</MenuItem>
+                <MenuItem value='worksite1'>Test Worksite</MenuItem>
                 {/* In real app, these would come from API */}
               </Select>
             </FormControl>
 
             {/* Technician Filter */}
-            <FormControl size="small" fullWidth>
+            <FormControl size='small' fullWidth>
               <InputLabel>Technician</InputLabel>
               <Select
                 value={filters.technician}
-                label="Technician"
-                onChange={(e) => handleFilterChange('technician', e.target.value)}
+                label='Technician'
+                onChange={e => handleFilterChange('technician', e.target.value)}
               >
-                <MenuItem value="">All Technicians</MenuItem>
-                <MenuItem value="tech1">John Doe</MenuItem>
-                <MenuItem value="tech2">Jane Smith</MenuItem>
+                <MenuItem value=''>All Technicians</MenuItem>
+                <MenuItem value='tech1'>John Doe</MenuItem>
+                <MenuItem value='tech2'>Jane Smith</MenuItem>
                 {/* In real app, these would come from API */}
               </Select>
             </FormControl>
@@ -193,18 +195,18 @@ export function DashboardFilters({ onFilterChange }: DashboardFiltersProps) {
         {filters.timeRange === 'custom' && (
           <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
             <TextField
-              label="From Date"
-              type="date"
-              size="small"
+              label='From Date'
+              type='date'
+              size='small'
               InputLabelProps={{ shrink: true }}
-              onChange={(e) => handleFilterChange('dateFrom', new Date(e.target.value))}
+              onChange={e => handleFilterChange('dateFrom', new Date(e.target.value))}
             />
             <TextField
-              label="To Date"
-              type="date"
-              size="small"
+              label='To Date'
+              type='date'
+              size='small'
               InputLabelProps={{ shrink: true }}
-              onChange={(e) => handleFilterChange('dateTo', new Date(e.target.value))}
+              onChange={e => handleFilterChange('dateTo', new Date(e.target.value))}
             />
           </Box>
         )}

@@ -231,7 +231,9 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
       ],
     };
 
-    const commonFilters = systemFilters.filter(f => f.entityType === 'all' || f.entityType === entityType);
+    const commonFilters = systemFilters.filter(
+      f => f.entityType === 'all' || f.entityType === entityType
+    );
     const specificFilters = entitySpecificFilters[entityType] || [];
     setFilters([...commonFilters, ...specificFilters]);
   };
@@ -244,7 +246,7 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
       newActiveFilters.add(filterId);
     }
     setActiveFilters(newActiveFilters);
-    
+
     // Track usage
     trackFilterUsage(filterId);
   };
@@ -253,11 +255,16 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
     try {
       await request(`/api/quick-filters/${filterId}/usage`, { method: 'POST' });
       // Update local usage count
-      setFilters(prev => prev.map(f => 
-        f.id === filterId 
-          ? { ...f, usage: { ...f.usage, totalUses: f.usage.totalUses + 1, lastUsed: new Date() }}
-          : f
-      ));
+      setFilters(prev =>
+        prev.map(f =>
+          f.id === filterId
+            ? {
+                ...f,
+                usage: { ...f.usage, totalUses: f.usage.totalUses + 1, lastUsed: new Date() },
+              }
+            : f
+        )
+      );
     } catch (error) {
       console.error('Failed to track filter usage:', error);
     }
@@ -317,7 +324,7 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
         data: newFilter,
       });
 
-      setFilters(filters.map(f => f.id === selectedFilter.id ? response.data.filter : f));
+      setFilters(filters.map(f => (f.id === selectedFilter.id ? response.data.filter : f)));
       setEditDialogOpen(false);
     } catch (error) {
       console.error('Failed to update quick filter:', error);
@@ -351,49 +358,52 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
 
   const getChipColor = (color?: string) => {
     switch (color) {
-      case 'primary': return 'primary';
-      case 'secondary': return 'secondary';
-      case 'success': return 'success';
-      case 'warning': return 'warning';
-      case 'error': return 'error';
-      case 'info': return 'info';
-      default: return 'default';
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'secondary';
+      case 'success':
+        return 'success';
+      case 'warning':
+        return 'warning';
+      case 'error':
+        return 'error';
+      case 'info':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="subtitle2" color="text.secondary">
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+        <Typography variant='subtitle2' color='text.secondary'>
           Quick Filters
         </Typography>
-        <Box display="flex" gap={1}>
+        <Box display='flex' gap={1}>
           {hasActiveFilters && (
             <Button
-              size="small"
+              size='small'
               onClick={clearAllFilters}
               startIcon={<ClearIcon />}
-              color="secondary"
+              color='secondary'
             >
               Clear All
             </Button>
           )}
           {showCreateButton && (
-            <Button
-              size="small"
-              onClick={() => setCreateDialogOpen(true)}
-              startIcon={<AddIcon />}
-            >
+            <Button size='small' onClick={() => setCreateDialogOpen(true)} startIcon={<AddIcon />}>
               Create Filter
             </Button>
           )}
         </Box>
       </Box>
 
-      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-        {visibleFilters.map((filter) => (
+      <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
+        {visibleFilters.map(filter => (
           <Tooltip key={filter.id} title={filter.description || filter.name}>
-            <Box position="relative">
+            <Box position='relative'>
               <Chip
                 label={filter.name}
                 clickable
@@ -404,13 +414,13 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
                 deleteIcon={
                   !filter.isSystem ? (
                     <IconButton
-                      size="small"
-                      onClick={(e) => {
+                      size='small'
+                      onClick={e => {
                         e.stopPropagation();
                         handleMenuOpen(e, filter);
                       }}
                     >
-                      <MoreIcon fontSize="small" />
+                      <MoreIcon fontSize='small' />
                     </IconButton>
                   ) : undefined
                 }
@@ -425,7 +435,7 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
               />
               {filter.usage.totalUses > 0 && (
                 <Typography
-                  variant="caption"
+                  variant='caption'
                   sx={{
                     position: 'absolute',
                     top: -8,
@@ -451,25 +461,25 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
         {hiddenFilters.length > 0 && (
           <Chip
             label={`+${hiddenFilters.length} more`}
-            variant="outlined"
-            onClick={(e) => handleMenuOpen(e, hiddenFilters[0])}
+            variant='outlined'
+            onClick={e => handleMenuOpen(e, hiddenFilters[0])}
           />
         )}
       </Stack>
 
       {hasActiveFilters && (
         <Box mt={2}>
-          <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+          <Typography variant='caption' color='text.secondary' gutterBottom display='block'>
             Active Filters ({activeFilters.size}):
           </Typography>
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            {Array.from(activeFilters).map((filterId) => {
+          <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap>
+            {Array.from(activeFilters).map(filterId => {
               const filter = filters.find(f => f.id === filterId);
               return filter ? (
                 <Chip
                   key={filterId}
                   label={filter.name}
-                  size="small"
+                  size='small'
                   color={getChipColor(filter.color) as any}
                   onDelete={() => handleFilterToggle(filterId)}
                 />
@@ -480,11 +490,7 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
       )}
 
       {/* Context Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         {selectedFilter && !selectedFilter.isSystem && (
           <MenuItem onClick={handleEditFilter}>
             <EditIcon sx={{ mr: 1 }} />
@@ -505,21 +511,26 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
       </Menu>
 
       {/* Create Filter Dialog */}
-      <Dialog open={createDialogOpen} onClose={() => setCreateDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>Create Quick Filter</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Filter Name"
+              label='Filter Name'
               value={newFilter.name}
-              onChange={(e) => setNewFilter({ ...newFilter, name: e.target.value })}
+              onChange={e => setNewFilter({ ...newFilter, name: e.target.value })}
               fullWidth
               required
             />
             <TextField
-              label="Description"
+              label='Description'
               value={newFilter.description}
-              onChange={(e) => setNewFilter({ ...newFilter, description: e.target.value })}
+              onChange={e => setNewFilter({ ...newFilter, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
@@ -528,59 +539,66 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
               <InputLabel>Field</InputLabel>
               <Select
                 value={newFilter.filterCriteria?.field || ''}
-                onChange={(e) => setNewFilter({
-                  ...newFilter,
-                  filterCriteria: { ...newFilter.filterCriteria!, field: e.target.value }
-                })}
-                label="Field"
+                onChange={e =>
+                  setNewFilter({
+                    ...newFilter,
+                    filterCriteria: { ...newFilter.filterCriteria!, field: e.target.value },
+                  })
+                }
+                label='Field'
               >
-                <MenuItem value="status">Status</MenuItem>
-                <MenuItem value="priority">Priority</MenuItem>
-                <MenuItem value="createdAt">Created Date</MenuItem>
-                <MenuItem value="updatedAt">Updated Date</MenuItem>
+                <MenuItem value='status'>Status</MenuItem>
+                <MenuItem value='priority'>Priority</MenuItem>
+                <MenuItem value='createdAt'>Created Date</MenuItem>
+                <MenuItem value='updatedAt'>Updated Date</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth>
               <InputLabel>Color</InputLabel>
               <Select
                 value={newFilter.color}
-                onChange={(e) => setNewFilter({ ...newFilter, color: e.target.value })}
-                label="Color"
+                onChange={e => setNewFilter({ ...newFilter, color: e.target.value })}
+                label='Color'
               >
-                <MenuItem value="primary">Primary</MenuItem>
-                <MenuItem value="secondary">Secondary</MenuItem>
-                <MenuItem value="success">Success</MenuItem>
-                <MenuItem value="warning">Warning</MenuItem>
-                <MenuItem value="error">Error</MenuItem>
-                <MenuItem value="info">Info</MenuItem>
+                <MenuItem value='primary'>Primary</MenuItem>
+                <MenuItem value='secondary'>Secondary</MenuItem>
+                <MenuItem value='success'>Success</MenuItem>
+                <MenuItem value='warning'>Warning</MenuItem>
+                <MenuItem value='error'>Error</MenuItem>
+                <MenuItem value='info'>Info</MenuItem>
               </Select>
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCreateDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleCreateFilter} variant="contained">
+          <Button onClick={handleCreateFilter} variant='contained'>
             Create
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Edit Filter Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>Edit Quick Filter</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
+          <Box display='flex' flexDirection='column' gap={2} mt={1}>
             <TextField
-              label="Filter Name"
+              label='Filter Name'
               value={newFilter.name}
-              onChange={(e) => setNewFilter({ ...newFilter, name: e.target.value })}
+              onChange={e => setNewFilter({ ...newFilter, name: e.target.value })}
               fullWidth
               required
             />
             <TextField
-              label="Description"
+              label='Description'
               value={newFilter.description}
-              onChange={(e) => setNewFilter({ ...newFilter, description: e.target.value })}
+              onChange={e => setNewFilter({ ...newFilter, description: e.target.value })}
               fullWidth
               multiline
               rows={2}
@@ -589,22 +607,22 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
               <InputLabel>Color</InputLabel>
               <Select
                 value={newFilter.color}
-                onChange={(e) => setNewFilter({ ...newFilter, color: e.target.value })}
-                label="Color"
+                onChange={e => setNewFilter({ ...newFilter, color: e.target.value })}
+                label='Color'
               >
-                <MenuItem value="primary">Primary</MenuItem>
-                <MenuItem value="secondary">Secondary</MenuItem>
-                <MenuItem value="success">Success</MenuItem>
-                <MenuItem value="warning">Warning</MenuItem>
-                <MenuItem value="error">Error</MenuItem>
-                <MenuItem value="info">Info</MenuItem>
+                <MenuItem value='primary'>Primary</MenuItem>
+                <MenuItem value='secondary'>Secondary</MenuItem>
+                <MenuItem value='success'>Success</MenuItem>
+                <MenuItem value='warning'>Warning</MenuItem>
+                <MenuItem value='error'>Error</MenuItem>
+                <MenuItem value='info'>Info</MenuItem>
               </Select>
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleUpdateFilter} variant="contained">
+          <Button onClick={handleUpdateFilter} variant='contained'>
             Update
           </Button>
         </DialogActions>

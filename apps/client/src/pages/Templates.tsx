@@ -77,7 +77,13 @@ interface TemplateFilters {
   sortOrder: 'asc' | 'desc';
 }
 
-function TemplateCard({ template, onView, onEdit, onDelete, onClone }: {
+function TemplateCard({
+  template,
+  onView,
+  onEdit,
+  onDelete,
+  onClone,
+}: {
   template: ITemplate;
   onView: (id: string) => void;
   onEdit: (id: string) => void;
@@ -92,86 +98,92 @@ function TemplateCard({ template, onView, onEdit, onDelete, onClone }: {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'draft': return 'warning';
-      case 'archived': return 'default';
-      case 'pending_approval': return 'info';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'draft':
+        return 'warning';
+      case 'archived':
+        return 'default';
+      case 'pending_approval':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <CardContent sx={{ flexGrow: 1 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Typography variant="h6" component="div" noWrap>
+        <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={2}>
+          <Typography variant='h6' component='div' noWrap>
             {template.name}
           </Typography>
           <Box>
-            <Chip 
-              label={template.status} 
-              size="small" 
+            <Chip
+              label={template.status}
+              size='small'
               color={getStatusColor(template.status) as any}
             />
-            <IconButton 
-              size="small" 
-              onClick={(e) => setAnchorEl(e.currentTarget)}
-            >
+            <IconButton size='small' onClick={e => setAnchorEl(e.currentTarget)}>
               <MoreIcon />
             </IconButton>
           </Box>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
           {template.description || 'No description provided'}
         </Typography>
 
-        <Box display="flex" flexWrap="wrap" gap={0.5} mb={2}>
-          <Chip label={template.category} size="small" variant="outlined" />
+        <Box display='flex' flexWrap='wrap' gap={0.5} mb={2}>
+          <Chip label={template.category} size='small' variant='outlined' />
           {template.tags.map((tag, index) => (
-            <Chip key={index} label={tag} size="small" variant="outlined" />
+            <Chip key={index} label={tag} size='small' variant='outlined' />
           ))}
         </Box>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="caption" color="text.secondary">
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='caption' color='text.secondary'>
             Version {template.version}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant='caption' color='text.secondary'>
             {template.usage.totalForms} forms created
           </Typography>
         </Box>
 
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant='caption' color='text.secondary'>
           By {template.createdBy.firstName} {template.createdBy.lastName}
         </Typography>
       </CardContent>
 
       <CardActions>
-        <Button size="small" startIcon={<ViewIcon />} onClick={() => onView(template._id)}>
+        <Button size='small' startIcon={<ViewIcon />} onClick={() => onView(template._id)}>
           View
         </Button>
         {canEdit && (
-          <Button size="small" startIcon={<EditIcon />} onClick={() => onEdit(template._id)}>
+          <Button size='small' startIcon={<EditIcon />} onClick={() => onEdit(template._id)}>
             Edit
           </Button>
         )}
       </CardActions>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        <MenuItem onClick={() => { onClone(template._id); setAnchorEl(null); }}>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+        <MenuItem
+          onClick={() => {
+            onClone(template._id);
+            setAnchorEl(null);
+          }}
+        >
           <CloneIcon sx={{ mr: 1 }} /> Clone Template
         </MenuItem>
         <MenuItem onClick={() => setAnchorEl(null)}>
           <ExportIcon sx={{ mr: 1 }} /> Export Template
         </MenuItem>
         {canDelete && (
-          <MenuItem 
-            onClick={() => { onDelete(template._id); setAnchorEl(null); }}
+          <MenuItem
+            onClick={() => {
+              onDelete(template._id);
+              setAnchorEl(null);
+            }}
             sx={{ color: 'error.main' }}
           >
             <DeleteIcon sx={{ mr: 1 }} /> Delete Template
@@ -197,7 +209,7 @@ function TemplateList() {
   });
   const [page, setPage] = useState(1);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; templateId?: string }>({
-    open: false
+    open: false,
   });
 
   const limit = 12;
@@ -244,7 +256,7 @@ function TemplateList() {
       });
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
       toast.showSuccess('Template cloned successfully');
       navigate(`/templates/${data.data.template._id}/edit`);
@@ -286,11 +298,11 @@ function TemplateList() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Templates</Typography>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>Templates</Typography>
         {canCreateTemplate && (
           <Button
-            variant="contained"
+            variant='contained'
             startIcon={<AddIcon />}
             onClick={() => navigate('/templates/new')}
           >
@@ -302,16 +314,16 @@ function TemplateList() {
       {/* Filters */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems='center'>
             <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
-                placeholder="Search templates..."
+                placeholder='Search templates...'
                 value={filters.search}
-                onChange={(e) => updateFilter('search', e.target.value)}
+                onChange={e => updateFilter('search', e.target.value)}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <SearchIcon />
                     </InputAdornment>
                   ),
@@ -323,17 +335,17 @@ function TemplateList() {
                 <InputLabel>Category</InputLabel>
                 <Select
                   value={filters.category}
-                  onChange={(e) => updateFilter('category', e.target.value)}
-                  label="Category"
+                  onChange={e => updateFilter('category', e.target.value)}
+                  label='Category'
                 >
-                  <MenuItem value="">All Categories</MenuItem>
-                  <MenuItem value="maintenance">Maintenance</MenuItem>
-                  <MenuItem value="inspection">Inspection</MenuItem>
-                  <MenuItem value="service">Service</MenuItem>
-                  <MenuItem value="installation">Installation</MenuItem>
-                  <MenuItem value="calibration">Calibration</MenuItem>
-                  <MenuItem value="breakdown">Breakdown</MenuItem>
-                  <MenuItem value="custom">Custom</MenuItem>
+                  <MenuItem value=''>All Categories</MenuItem>
+                  <MenuItem value='maintenance'>Maintenance</MenuItem>
+                  <MenuItem value='inspection'>Inspection</MenuItem>
+                  <MenuItem value='service'>Service</MenuItem>
+                  <MenuItem value='installation'>Installation</MenuItem>
+                  <MenuItem value='calibration'>Calibration</MenuItem>
+                  <MenuItem value='breakdown'>Breakdown</MenuItem>
+                  <MenuItem value='custom'>Custom</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -342,14 +354,14 @@ function TemplateList() {
                 <InputLabel>Status</InputLabel>
                 <Select
                   value={filters.status}
-                  onChange={(e) => updateFilter('status', e.target.value)}
-                  label="Status"
+                  onChange={e => updateFilter('status', e.target.value)}
+                  label='Status'
                 >
-                  <MenuItem value="">All Status</MenuItem>
-                  <MenuItem value="draft">Draft</MenuItem>
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="archived">Archived</MenuItem>
-                  <MenuItem value="pending_approval">Pending Approval</MenuItem>
+                  <MenuItem value=''>All Status</MenuItem>
+                  <MenuItem value='draft'>Draft</MenuItem>
+                  <MenuItem value='active'>Active</MenuItem>
+                  <MenuItem value='archived'>Archived</MenuItem>
+                  <MenuItem value='pending_approval'>Pending Approval</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -358,13 +370,13 @@ function TemplateList() {
                 <InputLabel>Sort By</InputLabel>
                 <Select
                   value={filters.sortBy}
-                  onChange={(e) => updateFilter('sortBy', e.target.value)}
-                  label="Sort By"
+                  onChange={e => updateFilter('sortBy', e.target.value)}
+                  label='Sort By'
                 >
-                  <MenuItem value="updatedAt">Last Modified</MenuItem>
-                  <MenuItem value="name">Name</MenuItem>
-                  <MenuItem value="createdAt">Created Date</MenuItem>
-                  <MenuItem value="usage.totalForms">Usage</MenuItem>
+                  <MenuItem value='updatedAt'>Last Modified</MenuItem>
+                  <MenuItem value='name'>Name</MenuItem>
+                  <MenuItem value='createdAt'>Created Date</MenuItem>
+                  <MenuItem value='usage.totalForms'>Usage</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -373,11 +385,11 @@ function TemplateList() {
                 <InputLabel>Order</InputLabel>
                 <Select
                   value={filters.sortOrder}
-                  onChange={(e) => updateFilter('sortOrder', e.target.value as 'asc' | 'desc')}
-                  label="Order"
+                  onChange={e => updateFilter('sortOrder', e.target.value as 'asc' | 'desc')}
+                  label='Order'
                 >
-                  <MenuItem value="desc">Descending</MenuItem>
-                  <MenuItem value="asc">Ascending</MenuItem>
+                  <MenuItem value='desc'>Descending</MenuItem>
+                  <MenuItem value='asc'>Ascending</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -387,7 +399,7 @@ function TemplateList() {
 
       {/* Templates Grid */}
       {isLoading ? (
-        <Box display="flex" justifyContent="center" py={4}>
+        <Box display='flex' justifyContent='center' py={4}>
           <Typography>Loading templates...</Typography>
         </Box>
       ) : templatesData?.templates?.length > 0 ? (
@@ -407,12 +419,12 @@ function TemplateList() {
           </Grid>
 
           {templatesData.pagination && templatesData.pagination.pages > 1 && (
-            <Box display="flex" justifyContent="center" mt={4}>
+            <Box display='flex' justifyContent='center' mt={4}>
               <Pagination
                 count={templatesData.pagination.pages}
                 page={page}
                 onChange={(_, value) => setPage(value)}
-                color="primary"
+                color='primary'
               />
             </Box>
           )}
@@ -420,18 +432,17 @@ function TemplateList() {
       ) : (
         <Card>
           <CardContent sx={{ textAlign: 'center', py: 8 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               No templates found
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              {canCreateTemplate ? 
-                "Start building your first template to streamline form creation." :
-                "No templates are available for your role."
-              }
+            <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
+              {canCreateTemplate
+                ? 'Start building your first template to streamline form creation.'
+                : 'No templates are available for your role.'}
             </Typography>
             {canCreateTemplate && (
               <Button
-                variant="contained"
+                variant='contained'
                 startIcon={<AddIcon />}
                 onClick={() => navigate('/templates/new')}
               >
@@ -446,21 +457,17 @@ function TemplateList() {
       <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false })}>
         <DialogTitle>Delete Template</DialogTitle>
         <DialogContent>
-          <Alert severity="warning" sx={{ mb: 2 }}>
+          <Alert severity='warning' sx={{ mb: 2 }}>
             This action cannot be undone. The template and all its data will be permanently deleted.
           </Alert>
-          <Typography>
-            Are you sure you want to delete this template?
-          </Typography>
+          <Typography>Are you sure you want to delete this template?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialog({ open: false })}>
-            Cancel
-          </Button>
-          <Button 
-            onClick={confirmDelete} 
-            color="error" 
-            variant="contained"
+          <Button onClick={() => setDeleteDialog({ open: false })}>Cancel</Button>
+          <Button
+            onClick={confirmDelete}
+            color='error'
+            variant='contained'
             disabled={deleteTemplateMutation.isPending}
           >
             Delete Template
@@ -473,13 +480,13 @@ function TemplateList() {
 
 export function Templates() {
   const location = useLocation();
-  
+
   return (
     <Routes>
-      <Route path="/" element={<TemplateList />} />
-      <Route path="/new" element={<TemplateBuilder />} />
-      <Route path="/:id" element={<TemplateDetail />} />
-      <Route path="/:id/edit" element={<TemplateBuilder />} />
+      <Route path='/' element={<TemplateList />} />
+      <Route path='/new' element={<TemplateBuilder />} />
+      <Route path='/:id' element={<TemplateDetail />} />
+      <Route path='/:id/edit' element={<TemplateBuilder />} />
     </Routes>
   );
 }

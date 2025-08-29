@@ -20,26 +20,30 @@ export function createTestApp(): Express {
   // Basic middleware
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-  
+
   // CORS
-  app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-    credentials: true
-  }));
+  app.use(
+    cors({
+      origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+      credentials: true,
+    })
+  );
 
   // Security
-  app.use(helmet({
-    contentSecurityPolicy: false, // Disabled for testing
-  }));
+  app.use(
+    helmet({
+      contentSecurityPolicy: false, // Disabled for testing
+    })
+  );
 
   // Rate limiting (very permissive for testing)
   const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 10000, // Very high limit for tests
-    message: { 
-      success: false, 
-      code: 'RATE_LIMITED', 
-      message: 'Too many requests from this IP' 
+    message: {
+      success: false,
+      code: 'RATE_LIMITED',
+      message: 'Too many requests from this IP',
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -53,8 +57,8 @@ export function createTestApp(): Express {
       data: {
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
-      }
+        environment: process.env.NODE_ENV || 'development',
+      },
     });
   });
 
@@ -72,8 +76,8 @@ export function createTestApp(): Express {
       data: {
         version: '2.0.0',
         environment: process.env.NODE_ENV || 'development',
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
   });
 
@@ -82,7 +86,7 @@ export function createTestApp(): Express {
     res.status(404).json({
       success: false,
       code: 'ENDPOINT_NOT_FOUND',
-      message: `API endpoint ${req.originalUrl} not found`
+      message: `API endpoint ${req.originalUrl} not found`,
     });
   });
 
@@ -91,7 +95,7 @@ export function createTestApp(): Express {
     res.status(404).json({
       success: false,
       code: 'ROUTE_NOT_FOUND',
-      message: `Route ${req.originalUrl} not found`
+      message: `Route ${req.originalUrl} not found`,
     });
   });
 

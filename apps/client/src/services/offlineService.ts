@@ -58,7 +58,7 @@ class OfflineService {
     // Monitor connection quality if available
     if ('connection' in navigator) {
       const connection = (navigator as any).connection;
-      
+
       const updateConnectionInfo = () => {
         this.networkStatus.connectionType = connection.type;
         this.networkStatus.effectiveType = connection.effectiveType;
@@ -92,7 +92,7 @@ class OfflineService {
   private onConnectionRestored(): void {
     console.log('Connection restored, attempting sync...');
     this.notifySyncStatus('Connection restored', 0);
-    
+
     // Wait a moment for connection to stabilize
     setTimeout(() => {
       this.processSync();
@@ -115,12 +115,12 @@ class OfflineService {
 
   public hasGoodConnection(): boolean {
     if (!this.networkStatus.isOnline) return false;
-    
+
     // Check connection quality
     if (this.networkStatus.effectiveType) {
       return ['4g', '3g'].includes(this.networkStatus.effectiveType);
     }
-    
+
     return true; // Assume good connection if we can't determine quality
   }
 
@@ -133,11 +133,11 @@ class OfflineService {
       id: formId,
       data: formData,
       lastModified: Date.now(),
-      syncStatus: 'pending'
+      syncStatus: 'pending',
     };
 
     await this.pwaService.storeOfflineData(`form_${formId}`, offlineForm, 'form');
-    
+
     // Add to sync queue
     this.addToSyncQueue({
       id: `form_${formId}_${Date.now()}`,
@@ -145,7 +145,7 @@ class OfflineService {
       action: formId.startsWith('new_') ? 'create' : 'update',
       data: formData,
       timestamp: Date.now(),
-      retryCount: 0
+      retryCount: 0,
     });
   }
 
@@ -169,12 +169,16 @@ class OfflineService {
     }
   }
 
-  public async storeAttachmentOffline(attachmentId: string, blob: Blob, metadata: any): Promise<void> {
+  public async storeAttachmentOffline(
+    attachmentId: string,
+    blob: Blob,
+    metadata: any
+  ): Promise<void> {
     try {
       // Store blob data
       const arrayBuffer = await blob.arrayBuffer();
       const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-      
+
       const attachmentData = {
         id: attachmentId,
         base64Data: base64,
@@ -184,11 +188,15 @@ class OfflineService {
           type: blob.type,
         },
         lastModified: Date.now(),
-        syncStatus: 'pending'
+        syncStatus: 'pending',
       };
 
-      await this.pwaService.storeOfflineData(`attachment_${attachmentId}`, attachmentData, 'attachment');
-      
+      await this.pwaService.storeOfflineData(
+        `attachment_${attachmentId}`,
+        attachmentData,
+        'attachment'
+      );
+
       // Add to sync queue
       this.addToSyncQueue({
         id: `attachment_${attachmentId}_${Date.now()}`,
@@ -196,7 +204,7 @@ class OfflineService {
         action: 'create',
         data: attachmentData,
         timestamp: Date.now(),
-        retryCount: 0
+        retryCount: 0,
       });
     } catch (error) {
       console.error('Failed to store attachment offline:', error);
@@ -207,7 +215,7 @@ class OfflineService {
   private addToSyncQueue(item: SyncQueueItem): void {
     this.syncQueue.push(item);
     this.saveSyncQueue();
-    
+
     // Try immediate sync if online
     if (this.isOnline() && !this.isSync) {
       this.processSync();
@@ -228,21 +236,21 @@ class OfflineService {
 
       for (let i = this.syncQueue.length - 1; i >= 0; i--) {
         const item = this.syncQueue[i];
-        
+
         try {
           const success = await this.syncItem(item);
-          
+
           if (success) {
             // Remove from queue
             this.syncQueue.splice(i, 1);
             syncedItems++;
-            
+
             const progress = (syncedItems / totalItems) * 100;
             this.notifySyncStatus(`Synced ${syncedItems} of ${totalItems} items`, progress);
           } else {
             // Increment retry count
             item.retryCount++;
-            
+
             // Remove if too many retries
             if (item.retryCount >= 3) {
               console.warn('Item failed too many times, removing:', item.id);
@@ -259,19 +267,18 @@ class OfflineService {
       }
 
       await this.saveSyncQueue();
-      
+
       if (syncedItems > 0) {
         this.notifySyncStatus(`Sync complete - ${syncedItems} items synced`, 100);
       } else {
         this.notifySyncStatus('No items to sync', 100);
       }
-
     } catch (error) {
       console.error('Sync process error:', error);
       this.notifySyncStatus('Sync failed', 0);
     } finally {
       this.isSync = false;
-      
+
       // Clear status after delay
       setTimeout(() => {
         this.notifySyncStatus('', 0);
@@ -298,15 +305,15 @@ class OfflineService {
 
   private async syncForm(item: SyncQueueItem): Promise<boolean> {
     const { action, data } = item;
-    
+
     try {
       const response = await fetch(`/api/forms${action === 'update' ? `/${data.id}` : ''}`, {
         method: action === 'create' ? 'POST' : 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
@@ -317,7 +324,7 @@ class OfflineService {
           offlineForm.syncStatus = 'synced';
           await this.pwaService.storeOfflineData(formKey, offlineForm, 'form');
         }
-        
+
         return true;
       } else {
         console.error('Form sync failed:', response.status, response.statusText);
@@ -331,7 +338,7 @@ class OfflineService {
 
   private async syncAttachment(item: SyncQueueItem): Promise<boolean> {
     const { data } = item;
-    
+
     try {
       // Convert base64 back to blob
       const binaryString = atob(data.base64Data);
@@ -349,9 +356,9 @@ class OfflineService {
       const response = await fetch('/api/attachments', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: formData
+        body: formData,
       });
 
       return response.ok;
@@ -364,7 +371,7 @@ class OfflineService {
   public getSyncQueueStatus(): { pending: number; failed: number } {
     const pending = this.syncQueue.filter(item => item.retryCount < 3).length;
     const failed = this.syncQueue.filter(item => item.retryCount >= 3).length;
-    
+
     return { pending, failed };
   }
 
@@ -373,16 +380,20 @@ class OfflineService {
     await this.saveSyncQueue();
   }
 
-  public async getOfflineStorageInfo(): Promise<{ size: number; formCount: number; attachmentCount: number }> {
+  public async getOfflineStorageInfo(): Promise<{
+    size: number;
+    formCount: number;
+    attachmentCount: number;
+  }> {
     try {
       const forms = await this.getOfflineForms();
       const attachmentsData = await this.pwaService.getOfflineDataByType('attachment');
       const cacheInfo = await this.pwaService.getCacheInfo();
-      
+
       return {
         size: cacheInfo.size,
         formCount: forms.length,
-        attachmentCount: attachmentsData.length
+        attachmentCount: attachmentsData.length,
       };
     } catch (error) {
       console.error('Failed to get storage info:', error);

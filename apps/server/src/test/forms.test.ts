@@ -26,7 +26,7 @@ const createTestApp = () => {
 describe('Forms Routes', () => {
   beforeEach(async () => {
     app = createTestApp();
-    
+
     // Clean up before each test
     await User.deleteMany({});
     await Worksite.deleteMany({});
@@ -56,15 +56,14 @@ describe('Forms Routes', () => {
 
     // Generate access token
     accessToken = jwt.sign(
-      { 
-        userId: testUser._id.toString(), 
-        role: testUser.role 
+      {
+        userId: testUser._id.toString(),
+        role: testUser.role,
       },
       'test-jwt-secret',
       { expiresIn: '1h' }
     );
   });
-
 
   describe('GET /forms', () => {
     beforeEach(async () => {
@@ -151,9 +150,7 @@ describe('Forms Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/forms')
-        .expect(401);
+      const response = await request(app).get('/forms').expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -212,10 +209,7 @@ describe('Forms Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/forms')
-        .send({})
-        .expect(401);
+      const response = await request(app).post('/forms').send({}).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -266,9 +260,7 @@ describe('Forms Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get(`/forms/${testForm._id}`)
-        .expect(401);
+      const response = await request(app).get(`/forms/${testForm._id}`).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -334,10 +326,7 @@ describe('Forms Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .put(`/forms/${testForm._id}`)
-        .send({})
-        .expect(401);
+      const response = await request(app).put(`/forms/${testForm._id}`).send({}).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -390,9 +379,7 @@ describe('Forms Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .delete(`/forms/${testForm._id}`)
-        .expect(401);
+      const response = await request(app).delete(`/forms/${testForm._id}`).expect(401);
 
       expect(response.body.success).toBe(false);
     });

@@ -15,7 +15,7 @@ const searchValidation = [
   query('types')
     .optional()
     .isString()
-    .custom((value) => {
+    .custom(value => {
       if (value) {
         const validTypes = ['form', 'template', 'user', 'worksite', 'dashboard'];
         const types = value.split(',').map((t: string) => t.trim());
@@ -28,18 +28,9 @@ const searchValidation = [
     .optional()
     .isInt({ min: 1, max: 100 })
     .withMessage('Limit must be between 1 and 100'),
-  query('offset')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Offset must be non-negative'),
-  query('sortBy')
-    .optional()
-    .isIn(['relevance', 'date', 'name'])
-    .withMessage('Invalid sort field'),
-  query('sortOrder')
-    .optional()
-    .isIn(['asc', 'desc'])
-    .withMessage('Invalid sort order'),
+  query('offset').optional().isInt({ min: 0 }).withMessage('Offset must be non-negative'),
+  query('sortBy').optional().isIn(['relevance', 'date', 'name']).withMessage('Invalid sort field'),
+  query('sortOrder').optional().isIn(['asc', 'desc']).withMessage('Invalid sort order'),
 ];
 
 const suggestionValidation = [
@@ -107,11 +98,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
       filters,
     };
 
-    const results = await searchService.globalSearch(
-      searchOptions,
-      req.user.role,
-      req.user.id
-    );
+    const results = await searchService.globalSearch(searchOptions, req.user.role, req.user.id);
 
     res.json({
       success: true,

@@ -49,7 +49,11 @@ export class SearchService {
     return SearchService.instance;
   }
 
-  async globalSearch(options: SearchOptions, userRole: string, userId: string): Promise<{
+  async globalSearch(
+    options: SearchOptions,
+    userRole: string,
+    userId: string
+  ): Promise<{
     results: SearchResult[];
     total: number;
     facets: {
@@ -65,7 +69,7 @@ export class SearchService {
       offset = 0,
       sortBy = 'relevance',
       sortOrder = 'desc',
-      filters = {}
+      filters = {},
     } = options;
 
     const searchPromises: Promise<SearchResult[]>[] = [];
@@ -140,10 +144,7 @@ export class SearchService {
 
     // Access control
     if (userRole !== 'admin') {
-      searchCriteria.$or = [
-        { technician: userId },
-        { 'permissions.canView': { $in: [userRole] } },
-      ];
+      searchCriteria.$or = [{ technician: userId }, { 'permissions.canView': { $in: [userRole] } }];
     }
 
     const forms = await Form.find(searchCriteria)
@@ -153,27 +154,35 @@ export class SearchService {
       .limit(100)
       .lean();
 
-    return forms.map((form): SearchResult => ({
-      id: form._id.toString(),
-      type: 'form',
-      title: form.formId || `Form #${form._id.toString().slice(-6)}`,
-      description: form.customerInfo?.customerName || 'No customer',
-      excerpt: this.extractExcerpt(form.additionalInfo?.notes || form.maintenanceDetails?.maintenanceProcedures, query),
-      metadata: {
-        createdAt: form.createdAt,
-        updatedAt: form.updatedAt,
-        status: form.status,
-        category: 'form',
-        createdBy: form.technician ? `${(form.technician as any)?.firstName || ''} ${(form.technician as any)?.lastName || ''}`.trim() || undefined : undefined,
-        location: (form.worksite as any)?.name,
-      },
-      relevanceScore: this.calculateRelevance(query, [
-        form.formId || '',
-        form.customerInfo?.customerName || '',
-        form.additionalInfo?.notes || '',
-        form.maintenanceDetails?.maintenanceProcedures || '',
-      ]),
-    }));
+    return forms.map(
+      (form): SearchResult => ({
+        id: form._id.toString(),
+        type: 'form',
+        title: form.formId || `Form #${form._id.toString().slice(-6)}`,
+        description: form.customerInfo?.customerName || 'No customer',
+        excerpt: this.extractExcerpt(
+          form.additionalInfo?.notes || form.maintenanceDetails?.maintenanceProcedures,
+          query
+        ),
+        metadata: {
+          createdAt: form.createdAt,
+          updatedAt: form.updatedAt,
+          status: form.status,
+          category: 'form',
+          createdBy: form.technician
+            ? `${(form.technician as any)?.firstName || ''} ${(form.technician as any)?.lastName || ''}`.trim() ||
+              undefined
+            : undefined,
+          location: (form.worksite as any)?.name,
+        },
+        relevanceScore: this.calculateRelevance(query, [
+          form.formId || '',
+          form.customerInfo?.customerName || '',
+          form.additionalInfo?.notes || '',
+          form.maintenanceDetails?.maintenanceProcedures || '',
+        ]),
+      })
+    );
   }
 
   private async searchTemplates(
@@ -204,25 +213,30 @@ export class SearchService {
       .limit(100)
       .lean();
 
-    return templates.map((template): SearchResult => ({
-      id: template._id.toString(),
-      type: 'template',
-      title: template.name,
-      description: template.description,
-      excerpt: this.extractExcerpt(template.description, query),
-      metadata: {
-        createdAt: template.createdAt,
-        updatedAt: template.updatedAt,
-        category: template.category,
-        tags: template.tags,
-        createdBy: template.createdBy ? `${(template.createdBy as any)?.firstName || ''} ${(template.createdBy as any)?.lastName || ''}`.trim() || undefined : undefined,
-      },
-      relevanceScore: this.calculateRelevance(query, [
-        template.name,
-        template.description || '',
-        ...(template.tags || []),
-      ]),
-    }));
+    return templates.map(
+      (template): SearchResult => ({
+        id: template._id.toString(),
+        type: 'template',
+        title: template.name,
+        description: template.description,
+        excerpt: this.extractExcerpt(template.description, query),
+        metadata: {
+          createdAt: template.createdAt,
+          updatedAt: template.updatedAt,
+          category: template.category,
+          tags: template.tags,
+          createdBy: template.createdBy
+            ? `${(template.createdBy as any)?.firstName || ''} ${(template.createdBy as any)?.lastName || ''}`.trim() ||
+              undefined
+            : undefined,
+        },
+        relevanceScore: this.calculateRelevance(query, [
+          template.name,
+          template.description || '',
+          ...(template.tags || []),
+        ]),
+      })
+    );
   }
 
   private async searchUsers(
@@ -245,28 +259,27 @@ export class SearchService {
       ];
     }
 
-    const users = await User.find(searchCriteria)
-      .select('-password')
-      .limit(50)
-      .lean();
+    const users = await User.find(searchCriteria).select('-password').limit(50).lean();
 
-    return users.map((user): SearchResult => ({
-      id: user._id.toString(),
-      type: 'user',
-      title: `${user.firstName} ${user.lastName}`,
-      description: user.email,
-      excerpt: `${user.role} - ${user.isActive ? 'Active' : 'Inactive'}`,
-      metadata: {
-        createdAt: user.createdAt,
-        category: user.role,
-      },
-      relevanceScore: this.calculateRelevance(query, [
-        user.firstName,
-        user.lastName,
-        user.email,
-        user.role || '',
-      ]),
-    }));
+    return users.map(
+      (user): SearchResult => ({
+        id: user._id.toString(),
+        type: 'user',
+        title: `${user.firstName} ${user.lastName}`,
+        description: user.email,
+        excerpt: `${user.role} - ${user.isActive ? 'Active' : 'Inactive'}`,
+        metadata: {
+          createdAt: user.createdAt,
+          category: user.role,
+        },
+        relevanceScore: this.calculateRelevance(query, [
+          user.firstName,
+          user.lastName,
+          user.email,
+          user.role || '',
+        ]),
+      })
+    );
   }
 
   private async searchWorksites(
@@ -291,25 +304,27 @@ export class SearchService {
       .limit(100)
       .lean();
 
-    return worksites.map((worksite): SearchResult => ({
-      id: worksite._id.toString(),
-      type: 'worksite',
-      title: worksite.name,
-      description: `${worksite.address.street}, ${worksite.address.city}`,
-      excerpt: worksite.customerName,
-      metadata: {
-        createdAt: worksite.createdAt,
-        updatedAt: worksite.updatedAt,
-        category: 'worksite',
-        location: `${worksite.address.city}, ${worksite.address.state}`,
-      },
-      relevanceScore: this.calculateRelevance(query, [
-        worksite.name,
-        worksite.address.street || '',
-        worksite.address.city || '',
-        worksite.customerName || '',
-      ]),
-    }));
+    return worksites.map(
+      (worksite): SearchResult => ({
+        id: worksite._id.toString(),
+        type: 'worksite',
+        title: worksite.name,
+        description: `${worksite.address.street}, ${worksite.address.city}`,
+        excerpt: worksite.customerName,
+        metadata: {
+          createdAt: worksite.createdAt,
+          updatedAt: worksite.updatedAt,
+          category: 'worksite',
+          location: `${worksite.address.city}, ${worksite.address.state}`,
+        },
+        relevanceScore: this.calculateRelevance(query, [
+          worksite.name,
+          worksite.address.street || '',
+          worksite.address.city || '',
+          worksite.customerName || '',
+        ]),
+      })
+    );
   }
 
   private async searchDashboards(
@@ -345,25 +360,30 @@ export class SearchService {
       .limit(100)
       .lean();
 
-    return dashboards.map((dashboard): SearchResult => ({
-      id: dashboard._id.toString(),
-      type: 'dashboard',
-      title: dashboard.name,
-      description: dashboard.description,
-      excerpt: this.extractExcerpt(dashboard.description, query),
-      metadata: {
-        createdAt: (dashboard as any).createdAt,
-        updatedAt: (dashboard as any).updatedAt,
-        category: dashboard.category,
-        tags: dashboard.tags,
-        createdBy: dashboard.createdBy ? `${(dashboard.createdBy as any)?.firstName || ''} ${(dashboard.createdBy as any)?.lastName || ''}`.trim() || undefined : undefined,
-      },
-      relevanceScore: this.calculateRelevance(query, [
-        dashboard.name,
-        dashboard.description || '',
-        ...(dashboard.tags || []),
-      ]),
-    }));
+    return dashboards.map(
+      (dashboard): SearchResult => ({
+        id: dashboard._id.toString(),
+        type: 'dashboard',
+        title: dashboard.name,
+        description: dashboard.description,
+        excerpt: this.extractExcerpt(dashboard.description, query),
+        metadata: {
+          createdAt: (dashboard as any).createdAt,
+          updatedAt: (dashboard as any).updatedAt,
+          category: dashboard.category,
+          tags: dashboard.tags,
+          createdBy: dashboard.createdBy
+            ? `${(dashboard.createdBy as any)?.firstName || ''} ${(dashboard.createdBy as any)?.lastName || ''}`.trim() ||
+              undefined
+            : undefined,
+        },
+        relevanceScore: this.calculateRelevance(query, [
+          dashboard.name,
+          dashboard.description || '',
+          ...(dashboard.tags || []),
+        ]),
+      })
+    );
   }
 
   private extractExcerpt(text: string | undefined, query: string, maxLength = 150): string {
@@ -371,7 +391,7 @@ export class SearchService {
 
     const queryWords = query.toLowerCase().split(/\s+/);
     const sentences = text.split(/[.!?]+/);
-    
+
     // Find sentence containing query words
     for (const sentence of sentences) {
       const lowerSentence = sentence.toLowerCase();
@@ -394,9 +414,9 @@ export class SearchService {
 
     fields.forEach(field => {
       if (!field) return;
-      
+
       const fieldLower = field.toLowerCase();
-      
+
       // Exact match gets highest score
       if (fieldLower.includes(query.toLowerCase())) {
         score += 10;
@@ -462,7 +482,8 @@ export class SearchService {
 
       // Category facets
       if (result.metadata.category) {
-        categoryCounts[result.metadata.category] = (categoryCounts[result.metadata.category] || 0) + 1;
+        categoryCounts[result.metadata.category] =
+          (categoryCounts[result.metadata.category] || 0) + 1;
       }
     });
 
@@ -483,8 +504,11 @@ export class SearchService {
       $or: [
         { formId: { $regex: `^${query}`, $options: 'i' } },
         { 'customerInfo.customerName': { $regex: `^${query}`, $options: 'i' } },
-      ]
-    }).select('formId customerInfo.customerName').limit(5).lean();
+      ],
+    })
+      .select('formId customerInfo.customerName')
+      .limit(5)
+      .lean();
 
     forms.forEach(form => {
       if (form.formId?.toLowerCase().startsWith(query.toLowerCase())) {
@@ -497,8 +521,11 @@ export class SearchService {
 
     // Get template suggestions
     const templates = await Template.find({
-      name: { $regex: `^${query}`, $options: 'i' }
-    }).select('name').limit(5).lean();
+      name: { $regex: `^${query}`, $options: 'i' },
+    })
+      .select('name')
+      .limit(5)
+      .lean();
 
     templates.forEach(template => {
       if (template.name.toLowerCase().startsWith(query.toLowerCase())) {
@@ -511,8 +538,11 @@ export class SearchService {
       $or: [
         { name: { $regex: `^${query}`, $options: 'i' } },
         { 'address.city': { $regex: `^${query}`, $options: 'i' } },
-      ]
-    }).select('name address.city').limit(5).lean();
+      ],
+    })
+      .select('name address.city')
+      .limit(5)
+      .lean();
 
     worksites.forEach(worksite => {
       if (worksite.name.toLowerCase().startsWith(query.toLowerCase())) {

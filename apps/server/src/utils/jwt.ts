@@ -35,7 +35,7 @@ export const verifyAccessToken = (token: string): JwtPayload => {
       issuer: 'chryso-forms-v2',
       audience: 'chryso-forms-client',
     }) as JwtPayload;
-    
+
     return decoded;
   } catch (error) {
     throw new Error('Invalid access token');
@@ -48,7 +48,7 @@ export const verifyRefreshToken = (token: string): RefreshTokenPayload => {
       issuer: 'chryso-forms-v2',
       audience: 'chryso-forms-client',
     }) as RefreshTokenPayload;
-    
+
     return decoded;
   } catch (error) {
     throw new Error('Invalid refresh token');

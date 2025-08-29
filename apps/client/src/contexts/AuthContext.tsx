@@ -68,12 +68,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient();
 
   // Get current user profile
-  const { data: userData, isLoading: isUserLoading, error } = useQuery({
+  const {
+    data: userData,
+    isLoading: isUserLoading,
+    error,
+  } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error('No token');
-      
+
       const response = await api.get('/auth/me');
       return response.data.data.user;
     },
@@ -88,11 +92,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await api.post('/auth/login', credentials);
       return response.data.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       localStorage.setItem(TOKEN_KEY, data.tokens.accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, data.tokens.refreshToken);
       setUser(data.user);
-      
+
       // Invalidate and refetch user data
       queryClient.invalidateQueries({ queryKey: ['auth'] });
       queryClient.setQueryData(['auth', 'me'], data.user);
@@ -105,7 +109,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await api.post('/auth/register', data);
       return response.data.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.tokens) {
         localStorage.setItem(TOKEN_KEY, data.tokens.accessToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, data.tokens.refreshToken);
@@ -138,11 +142,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     mutationFn: async () => {
       const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
       if (!refreshToken) throw new Error('No refresh token');
-      
+
       const response = await api.post('/auth/refresh', { refreshToken });
       return response.data.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       localStorage.setItem(TOKEN_KEY, data.accessToken);
     },
     onError: () => {
@@ -174,8 +178,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Axios response interceptor for token refresh
   useEffect(() => {
     const interceptor = api.interceptors.response.use(
-      (response) => response,
-      async (error) => {
+      response => response,
+      async error => {
         const originalRequest = error.config;
 
         if (
@@ -227,18 +231,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
-    isLoading: isUserLoading || !isInitialized || loginMutation.isPending || registerMutation.isPending,
+    isLoading:
+      isUserLoading || !isInitialized || loginMutation.isPending || registerMutation.isPending,
     login,
     register,
     logout,
     refreshToken,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

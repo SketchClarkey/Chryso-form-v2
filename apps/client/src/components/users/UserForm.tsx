@@ -135,22 +135,21 @@ export function UserForm({
     return Object.keys(errors).length === 0;
   };
 
-  const handleInputChange = (field: keyof UserFormData) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear error when user starts typing
-    if (formErrors[field]) {
-      setFormErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
+  const handleInputChange =
+    (field: keyof UserFormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+      setFormData(prev => ({ ...prev, [field]: value }));
+
+      // Clear error when user starts typing
+      if (formErrors[field]) {
+        setFormErrors(prev => ({ ...prev, [field]: '' }));
+      }
+    };
 
   const handleRoleChange = (event: SelectChangeEvent<string>) => {
     const role = event.target.value as UserFormData['role'];
     setFormData(prev => ({ ...prev, role }));
-    
+
     // Clear worksite assignments for admins
     if (role === 'admin') {
       setFormData(prev => ({ ...prev, worksiteIds: [] }));
@@ -164,7 +163,7 @@ export function UserForm({
   const handleWorksiteChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value as string[];
     setFormData(prev => ({ ...prev, worksiteIds: value }));
-    
+
     if (formErrors.worksiteIds) {
       setFormErrors(prev => ({ ...prev, worksiteIds: '' }));
     }
@@ -172,7 +171,7 @@ export function UserForm({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -198,20 +197,18 @@ export function UserForm({
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="md"
+      maxWidth='md'
       fullWidth
       PaperProps={{
         component: 'form',
         onSubmit: handleSubmit,
       }}
     >
-      <DialogTitle>
-        {isEditing ? 'Edit User' : 'Create New User'}
-      </DialogTitle>
+      <DialogTitle>{isEditing ? 'Edit User' : 'Create New User'}</DialogTitle>
 
       <DialogContent dividers>
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity='error' sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
@@ -219,12 +216,12 @@ export function UserForm({
         <Box sx={{ display: 'grid', gap: 3 }}>
           {/* Basic Information */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Basic Information
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
               <TextField
-                label="First Name"
+                label='First Name'
                 value={formData.firstName}
                 onChange={handleInputChange('firstName')}
                 error={Boolean(formErrors.firstName)}
@@ -233,7 +230,7 @@ export function UserForm({
                 disabled={submitting}
               />
               <TextField
-                label="Last Name"
+                label='Last Name'
                 value={formData.lastName}
                 onChange={handleInputChange('lastName')}
                 error={Boolean(formErrors.lastName)}
@@ -243,8 +240,8 @@ export function UserForm({
               />
             </Box>
             <TextField
-              label="Email Address"
-              type="email"
+              label='Email Address'
+              type='email'
               value={formData.email}
               onChange={handleInputChange('email')}
               error={Boolean(formErrors.email)}
@@ -260,31 +257,27 @@ export function UserForm({
 
           {/* Role & Access */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Role & Access
             </Typography>
             <FormControl fullWidth error={Boolean(formErrors.role)} disabled={submitting}>
               <InputLabel>Role</InputLabel>
-              <Select
-                value={formData.role}
-                onChange={handleRoleChange}
-                label="Role"
-              >
-                <MenuItem value="admin">
+              <Select value={formData.role} onChange={handleRoleChange} label='Role'>
+                <MenuItem value='admin'>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Chip label="Admin" color="error" size="small" />
+                    <Chip label='Admin' color='error' size='small' />
                     <span>Full system access</span>
                   </Box>
                 </MenuItem>
-                <MenuItem value="manager">
+                <MenuItem value='manager'>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Chip label="Manager" color="warning" size="small" />
+                    <Chip label='Manager' color='warning' size='small' />
                     <span>Worksite oversight and reporting</span>
                   </Box>
                 </MenuItem>
-                <MenuItem value="technician">
+                <MenuItem value='technician'>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Chip label="Technician" color="info" size="small" />
+                    <Chip label='Technician' color='info' size='small' />
                     <span>Field service and form creation</span>
                   </Box>
                 </MenuItem>
@@ -293,9 +286,9 @@ export function UserForm({
 
             {/* Worksite Assignment */}
             {formData.role !== 'admin' && (
-              <FormControl 
-                fullWidth 
-                sx={{ mt: 2 }} 
+              <FormControl
+                fullWidth
+                sx={{ mt: 2 }}
                 error={Boolean(formErrors.worksiteIds)}
                 disabled={submitting}
               >
@@ -304,30 +297,24 @@ export function UserForm({
                   multiple
                   value={formData.worksiteIds}
                   onChange={handleWorksiteChange}
-                  input={<OutlinedInput label="Assigned Worksites" />}
-                  renderValue={(selected) => (
+                  input={<OutlinedInput label='Assigned Worksites' />}
+                  renderValue={selected => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => {
+                      {selected.map(value => {
                         const worksite = worksites.find(w => w.id === value);
-                        return (
-                          <Chip 
-                            key={value} 
-                            label={worksite?.name || value} 
-                            size="small" 
-                          />
-                        );
+                        return <Chip key={value} label={worksite?.name || value} size='small' />;
                       })}
                     </Box>
                   )}
                 >
-                  {worksites.map((worksite) => (
+                  {worksites.map(worksite => (
                     <MenuItem key={worksite.id} value={worksite.id}>
                       {worksite.name}
                     </MenuItem>
                   ))}
                 </Select>
                 {formErrors.worksiteIds && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
+                  <Typography variant='caption' color='error' sx={{ mt: 0.5, ml: 1.75 }}>
                     {formErrors.worksiteIds}
                   </Typography>
                 )}
@@ -342,7 +329,7 @@ export function UserForm({
                   disabled={submitting}
                 />
               }
-              label="Active User"
+              label='Active User'
               sx={{ mt: 2 }}
             />
           </Box>
@@ -351,19 +338,18 @@ export function UserForm({
 
           {/* Password */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               {isEditing ? 'Change Password (Optional)' : 'Password'}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              {isEditing 
+            <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+              {isEditing
                 ? 'Leave blank to keep current password'
-                : 'Password must be at least 8 characters long'
-              }
+                : 'Password must be at least 8 characters long'}
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
               <TextField
                 label={isEditing ? 'New Password' : 'Password'}
-                type="password"
+                type='password'
                 value={formData.password}
                 onChange={handleInputChange('password')}
                 error={Boolean(formErrors.password)}
@@ -372,8 +358,8 @@ export function UserForm({
                 disabled={submitting}
               />
               <TextField
-                label="Confirm Password"
-                type="password"
+                label='Confirm Password'
+                type='password'
                 value={formData.confirmPassword}
                 onChange={handleInputChange('confirmPassword')}
                 error={Boolean(formErrors.confirmPassword)}
@@ -391,8 +377,8 @@ export function UserForm({
           Cancel
         </Button>
         <Button
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           disabled={submitting || loading}
           startIcon={submitting && <CircularProgress size={16} />}
         >

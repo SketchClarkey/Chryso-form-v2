@@ -7,10 +7,10 @@ import { authenticate, authorize } from '../middleware/auth.js';
 const router = express.Router();
 
 // Organization Settings Routes (Admin only)
-router.get('/organization', authorize("admin"), async (req, res) => {
+router.get('/organization', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
-    
+
     let settings = await OrganizationSettings.findOne({ organizationId })
       .populate('createdBy', 'firstName lastName email')
       .populate('updatedBy', 'firstName lastName email');
@@ -30,13 +30,13 @@ router.get('/organization', authorize("admin"), async (req, res) => {
           workWeek: {
             startDay: 1,
             workDays: [1, 2, 3, 4, 5],
-            workHours: { start: '09:00', end: '17:00' }
+            workHours: { start: '09:00', end: '17:00' },
           },
           address: { country: 'US' },
-          contact: { email: req.user!.email }
+          contact: { email: req.user!.email },
         },
         createdBy: req.user!.userId,
-        updatedBy: req.user!.userId
+        updatedBy: req.user!.userId,
       });
       await settings.save();
     }
@@ -48,16 +48,16 @@ router.get('/organization', authorize("admin"), async (req, res) => {
   }
 });
 
-router.put('/organization', authorize("admin"), async (req, res) => {
+router.put('/organization', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
     const updateData = { ...req.body, updatedBy: req.user!.userId };
 
-    let settings = await OrganizationSettings.findOneAndUpdate(
-      { organizationId },
-      updateData,
-      { new: true, upsert: true, runValidators: true }
-    ).populate('createdBy updatedBy', 'firstName lastName email');
+    let settings = await OrganizationSettings.findOneAndUpdate({ organizationId }, updateData, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    }).populate('createdBy updatedBy', 'firstName lastName email');
 
     res.json({ settings, message: 'Organization settings updated successfully' });
   } catch (error) {
@@ -66,7 +66,7 @@ router.put('/organization', authorize("admin"), async (req, res) => {
   }
 });
 
-router.get('/organization/sections', authorize("admin"), async (req, res) => {
+router.get('/organization/sections', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
     const settings = await OrganizationSettings.findOne({ organizationId });
@@ -77,36 +77,36 @@ router.get('/organization/sections', authorize("admin"), async (req, res) => {
         name: 'General Settings',
         description: 'Company information, timezone, and basic preferences',
         icon: 'business',
-        enabled: true
+        enabled: true,
       },
       {
         id: 'security',
         name: 'Security & Authentication',
         description: 'Password policies, MFA, and access controls',
         icon: 'security',
-        enabled: true
+        enabled: true,
       },
       {
         id: 'integrations',
         name: 'Integrations',
         description: 'Email, storage, notifications, and SSO configuration',
         icon: 'integration_instructions',
-        enabled: true
+        enabled: true,
       },
       {
         id: 'features',
         name: 'Features & Limits',
         description: 'Module access and usage limits',
         icon: 'tune',
-        enabled: true
+        enabled: true,
       },
       {
         id: 'customization',
         name: 'Branding & Customization',
         description: 'Themes, logos, and custom fields',
         icon: 'palette',
-        enabled: true
-      }
+        enabled: true,
+      },
     ];
 
     res.json({ sections, currentSettings: settings });
@@ -120,7 +120,7 @@ router.get('/organization/sections', authorize("admin"), async (req, res) => {
 router.get('/preferences', authenticate, async (req, res) => {
   try {
     const { userId } = req.user!;
-    
+
     let preferences = await UserPreferences.findOne({ userId });
 
     if (!preferences) {
@@ -132,13 +132,13 @@ router.get('/preferences', authenticate, async (req, res) => {
           colorScheme: 'default',
           density: 'standard',
           sidebarCollapsed: false,
-          language: 'en'
+          language: 'en',
         },
         dashboard: {
           layout: 'grid',
           widgets: [],
-          refreshInterval: 300
-        }
+          refreshInterval: 300,
+        },
       });
       await preferences.save();
     }
@@ -155,11 +155,11 @@ router.put('/preferences', authenticate, async (req, res) => {
     const { userId } = req.user!;
     const updateData = req.body;
 
-    const preferences = await UserPreferences.findOneAndUpdate(
-      { userId },
-      updateData,
-      { new: true, upsert: true, runValidators: true }
-    );
+    const preferences = await UserPreferences.findOneAndUpdate({ userId }, updateData, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    });
 
     res.json({ preferences, message: 'User preferences updated successfully' });
   } catch (error) {
@@ -180,9 +180,9 @@ router.post('/preferences/activity', authenticate, async (req, res) => {
           recentActivity: {
             $each: [{ type, itemId, itemName, action, timestamp: new Date() }],
             $position: 0,
-            $slice: 50 // Keep only the latest 50 activities
-          }
-        }
+            $slice: 50, // Keep only the latest 50 activities
+          },
+        },
       },
       { upsert: true }
     );
@@ -238,26 +238,26 @@ router.delete('/preferences/pin', authenticate, async (req, res) => {
 });
 
 // System Information Routes (Admin only)
-router.get('/system/info', authorize("admin"), async (req, res) => {
+router.get('/system/info', authorize('admin'), async (req, res) => {
   try {
     const systemInfo = {
       version: process.env.APP_VERSION || '1.0.0',
       environment: process.env.NODE_ENV || 'development',
       database: {
         status: 'connected', // This would need actual DB health check
-        version: 'MongoDB 5.0+'
+        version: 'MongoDB 5.0+',
       },
       server: {
         uptime: process.uptime(),
         memory: process.memoryUsage(),
         platform: process.platform,
-        nodeVersion: process.version
+        nodeVersion: process.version,
       },
       features: {
         emailEnabled: !!process.env.SMTP_HOST || !!process.env.SENDGRID_API_KEY,
         storageProvider: process.env.STORAGE_PROVIDER || 'local',
-        authProvider: process.env.AUTH_PROVIDER || 'local'
-      }
+        authProvider: process.env.AUTH_PROVIDER || 'local',
+      },
     };
 
     res.json({ systemInfo });
@@ -268,24 +268,24 @@ router.get('/system/info', authorize("admin"), async (req, res) => {
 });
 
 // Test Configuration Routes (Admin only)
-router.post('/test/email', authorize("admin"), async (req, res) => {
+router.post('/test/email', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
     const { testEmail } = req.body;
 
     // Get email settings
     const settings = await OrganizationSettings.findOne({ organizationId });
-    
+
     if (!settings?.integrations?.email?.provider) {
       return res.status(400).json({ message: 'Email provider not configured' });
     }
 
     // Here you would implement actual email sending test
     // For now, just simulate success
-    
-    res.json({ 
-      success: true, 
-      message: `Test email sent successfully to ${testEmail}` 
+
+    res.json({
+      success: true,
+      message: `Test email sent successfully to ${testEmail}`,
     });
   } catch (error) {
     console.error('Failed to test email:', error);
@@ -293,23 +293,23 @@ router.post('/test/email', authorize("admin"), async (req, res) => {
   }
 });
 
-router.post('/test/storage', authorize("admin"), async (req, res) => {
+router.post('/test/storage', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
 
     // Get storage settings
     const settings = await OrganizationSettings.findOne({ organizationId });
-    
+
     if (!settings?.integrations?.storage) {
       return res.status(400).json({ message: 'Storage provider not configured' });
     }
 
     // Here you would implement actual storage connectivity test
     // For now, just simulate success
-    
-    res.json({ 
-      success: true, 
-      message: 'Storage connectivity test successful' 
+
+    res.json({
+      success: true,
+      message: 'Storage connectivity test successful',
     });
   } catch (error) {
     console.error('Failed to test storage:', error);

@@ -4,7 +4,7 @@ import { env } from './environment.js';
 export async function connectDB(): Promise<void> {
   try {
     mongoose.set('strictQuery', false);
-    
+
     const conn = await mongoose.connect(env.MONGODB_URI, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
@@ -14,7 +14,7 @@ export async function connectDB(): Promise<void> {
     console.log(`📊 MongoDB connected: ${conn.connection.host}:${conn.connection.port}`);
 
     // Handle connection events
-    mongoose.connection.on('error', (err) => {
+    mongoose.connection.on('error', err => {
       console.error('❌ MongoDB connection error:', err);
     });
 
@@ -28,7 +28,6 @@ export async function connectDB(): Promise<void> {
       console.log('📊 MongoDB connection closed through app termination');
       process.exit(0);
     });
-
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error);
     process.exit(1);

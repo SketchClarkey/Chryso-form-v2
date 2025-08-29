@@ -83,7 +83,7 @@ const steps = [
   'Customer Information',
   'Service Details',
   'Service Checklist',
-  'Additional Information'
+  'Additional Information',
 ];
 
 const initialFormData: Partial<FormData> = {
@@ -206,7 +206,7 @@ export function FormEditor() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
       queryClient.invalidateQueries({ queryKey: ['form', id] });
-      
+
       // Show appropriate toast based on status
       switch (variables.status) {
         case 'approved':
@@ -292,9 +292,10 @@ export function FormEditor() {
       ...prev,
       serviceDetails: {
         ...prev.serviceDetails,
-        partsUsed: prev.serviceDetails?.partsUsed?.map((part, i) =>
-          i === index ? { ...part, [field]: value } : part
-        ) || [],
+        partsUsed:
+          prev.serviceDetails?.partsUsed?.map((part, i) =>
+            i === index ? { ...part, [field]: value } : part
+          ) || [],
       },
     }));
   };
@@ -321,7 +322,7 @@ export function FormEditor() {
 
   if (isLoadingForm) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -331,12 +332,14 @@ export function FormEditor() {
   const canEdit = () => {
     if (!user || !formData.status) return false;
     if (user.role === 'admin') return true;
-    if (user.role === 'manager') return formData.status !== 'approved' && formData.status !== 'archived';
-    if (user.role === 'technician') return (
-      formData.status !== 'approved' && 
-      formData.status !== 'archived' &&
-      existingForm?.technician === user.id
-    );
+    if (user.role === 'manager')
+      return formData.status !== 'approved' && formData.status !== 'archived';
+    if (user.role === 'technician')
+      return (
+        formData.status !== 'approved' &&
+        formData.status !== 'archived' &&
+        existingForm?.technician === user.id
+      );
     return false;
   };
 
@@ -347,12 +350,10 @@ export function FormEditor() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">
-          {isEditing ? 'Edit Form' : 'Create New Form'}
-        </Typography>
+        <Typography variant='h4'>{isEditing ? 'Edit Form' : 'Create New Form'}</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<SaveIcon />}
             onClick={handleSave}
             disabled={saveFormMutation.isPending || !canEdit()}
@@ -360,7 +361,7 @@ export function FormEditor() {
             Save Draft
           </Button>
           <Button
-            variant="contained"
+            variant='contained'
             startIcon={<SendIcon />}
             onClick={handleSubmit}
             disabled={saveFormMutation.isPending || submitFormMutation.isPending || !canEdit()}
@@ -371,7 +372,7 @@ export function FormEditor() {
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
@@ -395,241 +396,307 @@ export function FormEditor() {
         {/* Form Content */}
         <Grid item xs={12} lg={isEditing && formData.status ? 8 : 12}>
           <Card>
-        <CardContent>
-          <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-
-          {/* Customer Information */}
-          <Accordion expanded={activeStep === 0} onChange={() => setActiveStep(0)}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Customer Information</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-                <TextField
-                  label="Customer Name"
-                  value={formData.customerInfo?.customerName || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'customerName', e.target.value)}
-                  required
-                />
-                <TextField
-                  label="Plant Location"
-                  value={formData.customerInfo?.plantLocation || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'plantLocation', e.target.value)}
-                  required
-                />
-                <TextField
-                  label="Contact Person"
-                  value={formData.customerInfo?.contactPerson || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'contactPerson', e.target.value)}
-                />
-                <TextField
-                  label="Contact Email"
-                  type="email"
-                  value={formData.customerInfo?.contactEmail || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'contactEmail', e.target.value)}
-                />
-                <TextField
-                  label="Contact Phone"
-                  value={formData.customerInfo?.contactPhone || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'contactPhone', e.target.value)}
-                />
-                <TextField
-                  label="Service Date"
-                  type="date"
-                  value={formData.customerInfo?.serviceDate || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'serviceDate', e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                  label="Equipment Type"
-                  value={formData.customerInfo?.equipmentType || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'equipmentType', e.target.value)}
-                />
-                <TextField
-                  label="Equipment Model"
-                  value={formData.customerInfo?.equipmentModel || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'equipmentModel', e.target.value)}
-                />
-                <TextField
-                  label="Serial Number"
-                  value={formData.customerInfo?.serialNumber || ''}
-                  onChange={(e) => updateFormData('customerInfo', 'serialNumber', e.target.value)}
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Service Details */}
-          <Accordion expanded={activeStep === 1} onChange={() => setActiveStep(1)}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Service Details</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <TextField
-                  label="Service Type"
-                  value={formData.serviceDetails?.serviceType || ''}
-                  onChange={(e) => updateFormData('serviceDetails', 'serviceType', e.target.value)}
-                />
-                <TextField
-                  label="Work Performed"
-                  multiline
-                  rows={4}
-                  value={formData.serviceDetails?.workPerformed || ''}
-                  onChange={(e) => updateFormData('serviceDetails', 'workPerformed', e.target.value)}
-                />
-                
-                <Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6">Parts Used</Typography>
-                    <Button onClick={addPartUsed}>Add Part</Button>
-                  </Box>
-                  
-                  {formData.serviceDetails?.partsUsed?.map((part, index) => (
-                    <Card key={index} sx={{ mb: 2, p: 2 }}>
-                      <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 3fr 1fr auto auto', gap: 2, alignItems: 'center' }}>
-                        <TextField
-                          label="Part Number"
-                          value={part.partNumber}
-                          onChange={(e) => updatePartUsed(index, 'partNumber', e.target.value)}
-                          size="small"
-                        />
-                        <TextField
-                          label="Description"
-                          value={part.description}
-                          onChange={(e) => updatePartUsed(index, 'description', e.target.value)}
-                          size="small"
-                        />
-                        <TextField
-                          label="Quantity"
-                          type="number"
-                          value={part.quantity}
-                          onChange={(e) => updatePartUsed(index, 'quantity', parseInt(e.target.value))}
-                          size="small"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={part.replaced}
-                              onChange={(e) => updatePartUsed(index, 'replaced', e.target.checked)}
-                            />
-                          }
-                          label="Replaced"
-                        />
-                        <Button onClick={() => removePartUsed(index)} color="error" size="small">
-                          Remove
-                        </Button>
-                      </Box>
-                    </Card>
-                  ))}
-                </Box>
-
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-                  <TextField
-                    label="GCP Technician Hours"
-                    type="number"
-                    value={formData.serviceDetails?.gcpTechnicianHours || 0}
-                    onChange={(e) => updateFormData('serviceDetails', 'gcpTechnicianHours', parseFloat(e.target.value))}
-                  />
-                  <TextField
-                    label="Contract Hours"
-                    type="number"
-                    value={formData.serviceDetails?.contractHours || 0}
-                    onChange={(e) => updateFormData('serviceDetails', 'contractHours', parseFloat(e.target.value))}
-                  />
-                </Box>
-
-                <TextField
-                  label="Maintenance Procedures"
-                  multiline
-                  rows={3}
-                  value={formData.serviceDetails?.maintenanceProcedures || ''}
-                  onChange={(e) => updateFormData('serviceDetails', 'maintenanceProcedures', e.target.value)}
-                />
-                
-                <TextField
-                  label="Breakdown Details"
-                  multiline
-                  rows={3}
-                  value={formData.serviceDetails?.breakdownDetails || ''}
-                  onChange={(e) => updateFormData('serviceDetails', 'breakdownDetails', e.target.value)}
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Service Checklist */}
-          <Accordion expanded={activeStep === 2} onChange={() => setActiveStep(2)}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Service Checklist</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 1 }}>
-                {Object.entries({
-                  workAreaCleaned: 'Work Area Cleaned',
-                  siteTablesReplaced: 'Site Tables Replaced',
-                  systemCheckedForLeaks: 'System Checked for Leaks',
-                  pulseMetersLabeled: 'Pulse Meters Labeled',
-                  pumpsLabeled: 'Pumps Labeled',
-                  tanksLabeled: 'Tanks Labeled',
-                  dispensersLabeled: 'Dispensers Labeled',
-                  calibrationPointsReturned: 'Calibration Points Returned',
-                }).map(([field, label]) => (
-                  <FormControlLabel
-                    key={field}
-                    control={
-                      <Switch
-                        checked={formData.serviceChecklist?.[field as keyof typeof formData.serviceChecklist] || false}
-                        onChange={(e) => updateChecklistItem(field, e.target.checked)}
-                      />
-                    }
-                    label={label}
-                  />
+            <CardContent>
+              <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+                {steps.map(label => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
                 ))}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+              </Stepper>
 
-          {/* Additional Information */}
-          <Accordion expanded={activeStep === 3} onChange={() => setActiveStep(3)}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Additional Information</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <TextField
-                label="Additional Notes"
-                multiline
-                rows={4}
-                fullWidth
-                value={formData.additionalInfo?.notes || ''}
-                onChange={(e) => updateFormData('additionalInfo', 'notes', e.target.value)}
-                sx={{ mb: 3 }}
-              />
-              
-              <Box>
-                <Typography variant="subtitle2" gutterBottom>
-                  File Attachments
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Attach photos, documents, or other files related to this service report.
-                </Typography>
-                <FileUploader
-                  files={formData.additionalInfo?.attachments || []}
-                  onFilesChange={updateAttachments}
-                  maxFiles={10}
-                  maxSizeBytes={25 * 1024 * 1024} // 25MB
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </CardContent>
-      </Card>
+              {/* Customer Information */}
+              <Accordion expanded={activeStep === 0} onChange={() => setActiveStep(0)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant='h6'>Customer Information</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                      gap: 2,
+                    }}
+                  >
+                    <TextField
+                      label='Customer Name'
+                      value={formData.customerInfo?.customerName || ''}
+                      onChange={e => updateFormData('customerInfo', 'customerName', e.target.value)}
+                      required
+                    />
+                    <TextField
+                      label='Plant Location'
+                      value={formData.customerInfo?.plantLocation || ''}
+                      onChange={e =>
+                        updateFormData('customerInfo', 'plantLocation', e.target.value)
+                      }
+                      required
+                    />
+                    <TextField
+                      label='Contact Person'
+                      value={formData.customerInfo?.contactPerson || ''}
+                      onChange={e =>
+                        updateFormData('customerInfo', 'contactPerson', e.target.value)
+                      }
+                    />
+                    <TextField
+                      label='Contact Email'
+                      type='email'
+                      value={formData.customerInfo?.contactEmail || ''}
+                      onChange={e => updateFormData('customerInfo', 'contactEmail', e.target.value)}
+                    />
+                    <TextField
+                      label='Contact Phone'
+                      value={formData.customerInfo?.contactPhone || ''}
+                      onChange={e => updateFormData('customerInfo', 'contactPhone', e.target.value)}
+                    />
+                    <TextField
+                      label='Service Date'
+                      type='date'
+                      value={formData.customerInfo?.serviceDate || ''}
+                      onChange={e => updateFormData('customerInfo', 'serviceDate', e.target.value)}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                      label='Equipment Type'
+                      value={formData.customerInfo?.equipmentType || ''}
+                      onChange={e =>
+                        updateFormData('customerInfo', 'equipmentType', e.target.value)
+                      }
+                    />
+                    <TextField
+                      label='Equipment Model'
+                      value={formData.customerInfo?.equipmentModel || ''}
+                      onChange={e =>
+                        updateFormData('customerInfo', 'equipmentModel', e.target.value)
+                      }
+                    />
+                    <TextField
+                      label='Serial Number'
+                      value={formData.customerInfo?.serialNumber || ''}
+                      onChange={e => updateFormData('customerInfo', 'serialNumber', e.target.value)}
+                    />
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Service Details */}
+              <Accordion expanded={activeStep === 1} onChange={() => setActiveStep(1)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant='h6'>Service Details</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <TextField
+                      label='Service Type'
+                      value={formData.serviceDetails?.serviceType || ''}
+                      onChange={e =>
+                        updateFormData('serviceDetails', 'serviceType', e.target.value)
+                      }
+                    />
+                    <TextField
+                      label='Work Performed'
+                      multiline
+                      rows={4}
+                      value={formData.serviceDetails?.workPerformed || ''}
+                      onChange={e =>
+                        updateFormData('serviceDetails', 'workPerformed', e.target.value)
+                      }
+                    />
+
+                    <Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 2,
+                        }}
+                      >
+                        <Typography variant='h6'>Parts Used</Typography>
+                        <Button onClick={addPartUsed}>Add Part</Button>
+                      </Box>
+
+                      {formData.serviceDetails?.partsUsed?.map((part, index) => (
+                        <Card key={index} sx={{ mb: 2, p: 2 }}>
+                          <Box
+                            sx={{
+                              display: 'grid',
+                              gridTemplateColumns: '2fr 3fr 1fr auto auto',
+                              gap: 2,
+                              alignItems: 'center',
+                            }}
+                          >
+                            <TextField
+                              label='Part Number'
+                              value={part.partNumber}
+                              onChange={e => updatePartUsed(index, 'partNumber', e.target.value)}
+                              size='small'
+                            />
+                            <TextField
+                              label='Description'
+                              value={part.description}
+                              onChange={e => updatePartUsed(index, 'description', e.target.value)}
+                              size='small'
+                            />
+                            <TextField
+                              label='Quantity'
+                              type='number'
+                              value={part.quantity}
+                              onChange={e =>
+                                updatePartUsed(index, 'quantity', parseInt(e.target.value))
+                              }
+                              size='small'
+                            />
+                            <FormControlLabel
+                              control={
+                                <Switch
+                                  checked={part.replaced}
+                                  onChange={e =>
+                                    updatePartUsed(index, 'replaced', e.target.checked)
+                                  }
+                                />
+                              }
+                              label='Replaced'
+                            />
+                            <Button
+                              onClick={() => removePartUsed(index)}
+                              color='error'
+                              size='small'
+                            >
+                              Remove
+                            </Button>
+                          </Box>
+                        </Card>
+                      ))}
+                    </Box>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                      <TextField
+                        label='GCP Technician Hours'
+                        type='number'
+                        value={formData.serviceDetails?.gcpTechnicianHours || 0}
+                        onChange={e =>
+                          updateFormData(
+                            'serviceDetails',
+                            'gcpTechnicianHours',
+                            parseFloat(e.target.value)
+                          )
+                        }
+                      />
+                      <TextField
+                        label='Contract Hours'
+                        type='number'
+                        value={formData.serviceDetails?.contractHours || 0}
+                        onChange={e =>
+                          updateFormData(
+                            'serviceDetails',
+                            'contractHours',
+                            parseFloat(e.target.value)
+                          )
+                        }
+                      />
+                    </Box>
+
+                    <TextField
+                      label='Maintenance Procedures'
+                      multiline
+                      rows={3}
+                      value={formData.serviceDetails?.maintenanceProcedures || ''}
+                      onChange={e =>
+                        updateFormData('serviceDetails', 'maintenanceProcedures', e.target.value)
+                      }
+                    />
+
+                    <TextField
+                      label='Breakdown Details'
+                      multiline
+                      rows={3}
+                      value={formData.serviceDetails?.breakdownDetails || ''}
+                      onChange={e =>
+                        updateFormData('serviceDetails', 'breakdownDetails', e.target.value)
+                      }
+                    />
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Service Checklist */}
+              <Accordion expanded={activeStep === 2} onChange={() => setActiveStep(2)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant='h6'>Service Checklist</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                      gap: 1,
+                    }}
+                  >
+                    {Object.entries({
+                      workAreaCleaned: 'Work Area Cleaned',
+                      siteTablesReplaced: 'Site Tables Replaced',
+                      systemCheckedForLeaks: 'System Checked for Leaks',
+                      pulseMetersLabeled: 'Pulse Meters Labeled',
+                      pumpsLabeled: 'Pumps Labeled',
+                      tanksLabeled: 'Tanks Labeled',
+                      dispensersLabeled: 'Dispensers Labeled',
+                      calibrationPointsReturned: 'Calibration Points Returned',
+                    }).map(([field, label]) => (
+                      <FormControlLabel
+                        key={field}
+                        control={
+                          <Switch
+                            checked={
+                              formData.serviceChecklist?.[
+                                field as keyof typeof formData.serviceChecklist
+                              ] || false
+                            }
+                            onChange={e => updateChecklistItem(field, e.target.checked)}
+                          />
+                        }
+                        label={label}
+                      />
+                    ))}
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Additional Information */}
+              <Accordion expanded={activeStep === 3} onChange={() => setActiveStep(3)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant='h6'>Additional Information</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    label='Additional Notes'
+                    multiline
+                    rows={4}
+                    fullWidth
+                    value={formData.additionalInfo?.notes || ''}
+                    onChange={e => updateFormData('additionalInfo', 'notes', e.target.value)}
+                    sx={{ mb: 3 }}
+                  />
+
+                  <Box>
+                    <Typography variant='subtitle2' gutterBottom>
+                      File Attachments
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+                      Attach photos, documents, or other files related to this service report.
+                    </Typography>
+                    <FileUploader
+                      files={formData.additionalInfo?.attachments || []}
+                      onFilesChange={updateAttachments}
+                      maxFiles={10}
+                      maxSizeBytes={25 * 1024 * 1024} // 25MB
+                    />
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Box>

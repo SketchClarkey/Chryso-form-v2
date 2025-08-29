@@ -81,7 +81,7 @@ class NotificationService {
 
     this.eventSource = new EventSource(`${this.baseUrl}/stream?token=${token}`);
 
-    this.eventSource.onmessage = (event) => {
+    this.eventSource.onmessage = event => {
       try {
         const notification: Notification = JSON.parse(event.data);
         this.handleIncomingNotification(notification);
@@ -90,7 +90,7 @@ class NotificationService {
       }
     };
 
-    this.eventSource.onerror = (error) => {
+    this.eventSource.onerror = error => {
       console.error('Notification stream error:', error);
       // Attempt to reconnect after 5 seconds
       setTimeout(() => {
@@ -162,9 +162,9 @@ class NotificationService {
         notifications: Notification[];
         total: number;
         unreadCount: number;
-      }
+      };
     }>(`?${searchParams.toString()}`);
-    
+
     return response.data;
   }
 
@@ -206,7 +206,9 @@ class NotificationService {
     return response.data;
   }
 
-  async createNotification(notification: Omit<Notification, 'id' | 'isRead' | 'createdAt'>): Promise<Notification> {
+  async createNotification(
+    notification: Omit<Notification, 'id' | 'isRead' | 'createdAt'>
+  ): Promise<Notification> {
     const response = await this.request<{ data: Notification }>('', {
       method: 'POST',
       body: JSON.stringify(notification),
@@ -264,7 +266,7 @@ class NotificationService {
     message: string,
     assignedUserIds: string[]
   ): Promise<void> {
-    const notifications = assignedUserIds.map(userId => 
+    const notifications = assignedUserIds.map(userId =>
       this.createNotification({
         type: 'warning',
         title: 'Equipment Alert',

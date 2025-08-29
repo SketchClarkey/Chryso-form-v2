@@ -122,7 +122,7 @@ const DraggableComponent: React.FC<{
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.COMPONENT,
     item: { type, name },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
   }));
@@ -164,7 +164,7 @@ const DropCanvas: React.FC<{
         }
       }
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
@@ -187,7 +187,7 @@ const DropCanvas: React.FC<{
       }}
     >
       <div ref={canvasRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
-        {visualizations.map((viz) => (
+        {visualizations.map(viz => (
           <DraggableVisualization
             key={viz.id}
             visualization={viz}
@@ -197,15 +197,13 @@ const DropCanvas: React.FC<{
         ))}
         {visualizations.length === 0 && (
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="100%"
-            color="text.secondary"
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            height='100%'
+            color='text.secondary'
           >
-            <Typography variant="h6">
-              Drag components here to build your report
-            </Typography>
+            <Typography variant='h6'>Drag components here to build your report</Typography>
           </Box>
         )}
       </div>
@@ -259,7 +257,7 @@ const DraggableVisualization: React.FC<{
         }}
       >
         <Box
-          className="visualization-controls"
+          className='visualization-controls'
           sx={{
             position: 'absolute',
             top: -35,
@@ -271,24 +269,24 @@ const DraggableVisualization: React.FC<{
           }}
         >
           <IconButton
-            size="small"
+            size='small'
             onClick={() => setIsEditing(true)}
             sx={{ bgcolor: 'background.paper' }}
           >
-            <EditIcon fontSize="small" />
+            <EditIcon fontSize='small' />
           </IconButton>
           <IconButton
-            size="small"
+            size='small'
             onClick={() => onDelete(visualization.id)}
             sx={{ bgcolor: 'background.paper', color: 'error.main' }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon fontSize='small' />
           </IconButton>
         </Box>
 
-        <Box display="flex" alignItems="center" mb={1}>
+        <Box display='flex' alignItems='center' mb={1}>
           {getIcon(visualization.type)}
-          <Typography variant="subtitle2" sx={{ ml: 1 }}>
+          <Typography variant='subtitle2' sx={{ ml: 1 }}>
             {visualization.title || `${visualization.type} Component`}
           </Typography>
         </Box>
@@ -305,23 +303,23 @@ const DraggableVisualization: React.FC<{
             color: 'text.secondary',
           }}
         >
-          <Typography variant="body2">
+          <Typography variant='body2'>
             {visualization.type.charAt(0).toUpperCase() + visualization.type.slice(1)} Preview
           </Typography>
         </Box>
       </Box>
 
-      <Dialog open={isEditing} onClose={() => setIsEditing(false)} maxWidth="md" fullWidth>
+      <Dialog open={isEditing} onClose={() => setIsEditing(false)} maxWidth='md' fullWidth>
         <DialogTitle>Edit {visualization.type} Component</DialogTitle>
         <DialogContent>
           <VisualizationEditor
             visualization={visualization}
-            onChange={(updates) => onUpdate(visualization.id, updates)}
+            onChange={updates => onUpdate(visualization.id, updates)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-          <Button onClick={() => setIsEditing(false)} variant="contained">
+          <Button onClick={() => setIsEditing(false)} variant='contained'>
             Save
           </Button>
         </DialogActions>
@@ -339,9 +337,9 @@ const VisualizationEditor: React.FC<{
   return (
     <Box sx={{ width: '100%', mt: 2 }}>
       <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
-        <Tab label="General" />
-        <Tab label="Data" />
-        <Tab label="Styling" />
+        <Tab label='General' />
+        <Tab label='Data' />
+        <Tab label='Styling' />
       </Tabs>
 
       <Box sx={{ mt: 2 }}>
@@ -350,17 +348,17 @@ const VisualizationEditor: React.FC<{
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Title"
+                label='Title'
                 value={visualization.title || ''}
-                onChange={(e) => onChange({ title: e.target.value })}
+                onChange={e => onChange({ title: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Description"
+                label='Description'
                 value={visualization.description || ''}
-                onChange={(e) => onChange({ description: e.target.value })}
+                onChange={e => onChange({ description: e.target.value })}
                 multiline
                 rows={3}
               />
@@ -375,12 +373,12 @@ const VisualizationEditor: React.FC<{
                 <InputLabel>Data Source</InputLabel>
                 <Select
                   value={visualization.dataSource}
-                  onChange={(e) => onChange({ dataSource: e.target.value as string })}
+                  onChange={e => onChange({ dataSource: e.target.value as string })}
                 >
-                  <MenuItem value="forms">Form Submissions</MenuItem>
-                  <MenuItem value="templates">Templates</MenuItem>
-                  <MenuItem value="worksites">Worksites</MenuItem>
-                  <MenuItem value="users">Users</MenuItem>
+                  <MenuItem value='forms'>Form Submissions</MenuItem>
+                  <MenuItem value='templates'>Templates</MenuItem>
+                  <MenuItem value='worksites'>Worksites</MenuItem>
+                  <MenuItem value='users'>Users</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -390,18 +388,18 @@ const VisualizationEditor: React.FC<{
                   <InputLabel>Chart Type</InputLabel>
                   <Select
                     value={visualization.config?.chartType || 'bar'}
-                    onChange={(e) =>
+                    onChange={e =>
                       onChange({
                         config: { ...visualization.config, chartType: e.target.value },
                       })
                     }
                   >
-                    <MenuItem value="bar">Bar Chart</MenuItem>
-                    <MenuItem value="line">Line Chart</MenuItem>
-                    <MenuItem value="pie">Pie Chart</MenuItem>
-                    <MenuItem value="doughnut">Doughnut Chart</MenuItem>
-                    <MenuItem value="area">Area Chart</MenuItem>
-                    <MenuItem value="scatter">Scatter Chart</MenuItem>
+                    <MenuItem value='bar'>Bar Chart</MenuItem>
+                    <MenuItem value='line'>Line Chart</MenuItem>
+                    <MenuItem value='pie'>Pie Chart</MenuItem>
+                    <MenuItem value='doughnut'>Doughnut Chart</MenuItem>
+                    <MenuItem value='area'>Area Chart</MenuItem>
+                    <MenuItem value='scatter'>Scatter Chart</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -414,10 +412,10 @@ const VisualizationEditor: React.FC<{
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Background Color"
-                type="color"
+                label='Background Color'
+                type='color'
                 value={visualization.styling?.backgroundColor || '#ffffff'}
-                onChange={(e) =>
+                onChange={e =>
                   onChange({
                     styling: { ...visualization.styling, backgroundColor: e.target.value },
                   })
@@ -427,10 +425,10 @@ const VisualizationEditor: React.FC<{
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Border Color"
-                type="color"
+                label='Border Color'
+                type='color'
                 value={visualization.styling?.borderColor || '#dddddd'}
-                onChange={(e) =>
+                onChange={e =>
                   onChange({
                     styling: { ...visualization.styling, borderColor: e.target.value },
                   })
@@ -511,25 +509,25 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
       },
     };
 
-    setReport((prev) => ({
+    setReport(prev => ({
       ...prev,
       visualizations: [...prev.visualizations, newVisualization],
     }));
   };
 
   const handleVisualizationUpdate = (id: string, updates: Partial<Visualization>) => {
-    setReport((prev) => ({
+    setReport(prev => ({
       ...prev,
-      visualizations: prev.visualizations.map((viz) =>
+      visualizations: prev.visualizations.map(viz =>
         viz.id === id ? { ...viz, ...updates } : viz
       ),
     }));
   };
 
   const handleVisualizationDelete = (id: string) => {
-    setReport((prev) => ({
+    setReport(prev => ({
       ...prev,
-      visualizations: prev.visualizations.filter((viz) => viz.id !== id),
+      visualizations: prev.visualizations.filter(viz => viz.id !== id),
     }));
   };
 
@@ -558,8 +556,8 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
     <DndProvider backend={HTML5Backend}>
       <Box sx={{ display: 'flex', height: '100vh' }}>
         <Drawer
-          variant="persistent"
-          anchor="left"
+          variant='persistent'
+          anchor='left'
           open={sidebarOpen}
           sx={{
             width: 320,
@@ -572,41 +570,21 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
           }}
         >
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Report Builder
             </Typography>
-            
+
             <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Components</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <List>
-                  <DraggableComponent
-                    type="table"
-                    icon={<TableChart />}
-                    name="Data Table"
-                  />
-                  <DraggableComponent
-                    type="chart"
-                    icon={<BarChart />}
-                    name="Chart"
-                  />
-                  <DraggableComponent
-                    type="metric"
-                    icon={<Assessment />}
-                    name="Metric"
-                  />
-                  <DraggableComponent
-                    type="text"
-                    icon={<TextFields />}
-                    name="Text Block"
-                  />
-                  <DraggableComponent
-                    type="image"
-                    icon={<Image />}
-                    name="Image"
-                  />
+                  <DraggableComponent type='table' icon={<TableChart />} name='Data Table' />
+                  <DraggableComponent type='chart' icon={<BarChart />} name='Chart' />
+                  <DraggableComponent type='metric' icon={<Assessment />} name='Metric' />
+                  <DraggableComponent type='text' icon={<TextFields />} name='Text Block' />
+                  <DraggableComponent type='image' icon={<Image />} name='Image' />
                 </List>
               </AccordionDetails>
             </Accordion>
@@ -620,9 +598,9 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      label="Report Name"
+                      label='Report Name'
                       value={report.name}
-                      onChange={(e) => setReport({ ...report, name: e.target.value })}
+                      onChange={e => setReport({ ...report, name: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -630,18 +608,18 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                       <InputLabel>Category</InputLabel>
                       <Select
                         value={report.category}
-                        onChange={(e) =>
+                        onChange={e =>
                           setReport({
                             ...report,
                             category: e.target.value as Report['category'],
                           })
                         }
                       >
-                        <MenuItem value="operational">Operational</MenuItem>
-                        <MenuItem value="analytical">Analytical</MenuItem>
-                        <MenuItem value="compliance">Compliance</MenuItem>
-                        <MenuItem value="financial">Financial</MenuItem>
-                        <MenuItem value="custom">Custom</MenuItem>
+                        <MenuItem value='operational'>Operational</MenuItem>
+                        <MenuItem value='analytical'>Analytical</MenuItem>
+                        <MenuItem value='compliance'>Compliance</MenuItem>
+                        <MenuItem value='financial'>Financial</MenuItem>
+                        <MenuItem value='custom'>Custom</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -653,18 +631,18 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
 
         <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Box display="flex" justifyContent="between" alignItems="center">
-              <Typography variant="h5">{report.name}</Typography>
-              <Box display="flex" gap={1}>
+            <Box display='flex' justifyContent='between' alignItems='center'>
+              <Typography variant='h5'>{report.name}</Typography>
+              <Box display='flex' gap={1}>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   startIcon={<SettingsIcon />}
                   onClick={() => setSidebarOpen(!sidebarOpen)}
                 >
                   Settings
                 </Button>
                 <Button
-                  variant="contained"
+                  variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={handleSave}
                   disabled={saving}

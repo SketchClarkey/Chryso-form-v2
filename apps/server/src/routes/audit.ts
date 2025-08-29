@@ -12,12 +12,13 @@ const auditService = AuditService.getInstance();
 router.use(authenticate);
 
 // Get audit logs with filtering
-router.get('/logs', 
+router.get(
+  '/logs',
   authorize('admin', 'manager'),
-  auditMiddleware({ 
+  auditMiddleware({
     action: 'view_audit_logs',
     category: 'security',
-    description: 'Viewed audit logs'
+    description: 'Viewed audit logs',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -32,14 +33,14 @@ router.get('/logs',
         resourceId,
         page = 1,
         limit = 50,
-        search
+        search,
       } = req.query;
 
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
       if (!organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
         return;
       }
@@ -66,19 +67,15 @@ router.get('/logs',
           { description: { $regex: search, $options: 'i' } },
           { action: { $regex: search, $options: 'i' } },
           { userEmail: { $regex: search, $options: 'i' } },
-          { resourceName: { $regex: search, $options: 'i' } }
+          { resourceName: { $regex: search, $options: 'i' } },
         ];
       }
 
       const skip = (Number(page) - 1) * Number(limit);
-      
+
       const [logs, total] = await Promise.all([
-        AuditLog.find(query)
-          .sort({ timestamp: -1 })
-          .skip(skip)
-          .limit(Number(limit))
-          .lean(),
-        AuditLog.countDocuments(query)
+        AuditLog.find(query).sort({ timestamp: -1 }).skip(skip).limit(Number(limit)).lean(),
+        AuditLog.countDocuments(query),
       ]);
 
       res.json({
@@ -89,76 +86,80 @@ router.get('/logs',
             page: Number(page),
             limit: Number(limit),
             total,
-            pages: Math.ceil(total / Number(limit))
-          }
-        }
+            pages: Math.ceil(total / Number(limit)),
+          },
+        },
       });
     } catch (error) {
       console.error('Failed to get audit logs:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve audit logs'
+        message: 'Failed to retrieve audit logs',
       });
     }
   }
 );
 
 // Get audit summary/statistics
-router.get('/summary',
+router.get(
+  '/summary',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_audit_summary',
     category: 'security',
-    description: 'Viewed audit summary'
+    description: 'Viewed audit summary',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { startDate, endDate } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
-      const start = startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default 30 days
+      const start = startDate
+        ? new Date(startDate as string)
+        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default 30 days
       const end = endDate ? new Date(endDate as string) : new Date();
 
       const summary = await auditService.getAuditSummary(organizationId, start, end);
 
       res.json({
         success: true,
-        data: { summary }
+        data: { summary },
       });
     } catch (error) {
       console.error('Failed to get audit summary:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve audit summary'
+        message: 'Failed to retrieve audit summary',
       });
     }
   }
 );
 
 // Get security alerts
-router.get('/security-alerts',
+router.get(
+  '/security-alerts',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_security_alerts',
     category: 'security',
-    description: 'Viewed security alerts'
+    description: 'Viewed security alerts',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hours = 24 } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -166,111 +167,120 @@ router.get('/security-alerts',
 
       res.json({
         success: true,
-        data: { alerts }
+        data: { alerts },
       });
     } catch (error) {
       console.error('Failed to get security alerts:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve security alerts'
+        message: 'Failed to retrieve security alerts',
       });
     }
   }
 );
 
 // Get user activity
-router.get('/users/:userId/activity',
+router.get(
+  '/users/:userId/activity',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_user_activity',
     category: 'security',
-    description: 'Viewed user activity'
+    description: 'Viewed user activity',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { userId } = req.params;
       const { startDate, endDate } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
-      const start = startDate ? new Date(startDate as string) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Default 7 days
+      const start = startDate
+        ? new Date(startDate as string)
+        : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Default 7 days
       const end = endDate ? new Date(endDate as string) : new Date();
 
       const activity = await auditService.getUserActivity(organizationId, userId, start, end);
 
       res.json({
         success: true,
-        data: { activity }
+        data: { activity },
       });
     } catch (error) {
       console.error('Failed to get user activity:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve user activity'
+        message: 'Failed to retrieve user activity',
       });
     }
   }
 );
 
 // Get resource activity
-router.get('/resources/:resourceType/:resourceId/activity',
+router.get(
+  '/resources/:resourceType/:resourceId/activity',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_resource_activity',
     category: 'security',
-    description: 'Viewed resource activity'
+    description: 'Viewed resource activity',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { resourceType, resourceId } = req.params;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
-      const activity = await auditService.getResourceActivity(organizationId, resourceType, resourceId);
+      const activity = await auditService.getResourceActivity(
+        organizationId,
+        resourceType,
+        resourceId
+      );
 
       res.json({
         success: true,
-        data: { activity }
+        data: { activity },
       });
     } catch (error) {
       console.error('Failed to get resource activity:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve resource activity'
+        message: 'Failed to retrieve resource activity',
       });
     }
   }
 );
 
 // Get compliance report
-router.get('/compliance/report',
+router.get(
+  '/compliance/report',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_compliance_report',
     category: 'compliance',
-    description: 'Viewed compliance report'
+    description: 'Viewed compliance report',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { complianceType, startDate, endDate } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -286,35 +296,36 @@ router.get('/compliance/report',
 
       res.json({
         success: true,
-        data: { report }
+        data: { report },
       });
     } catch (error) {
       console.error('Failed to get compliance report:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve compliance report'
+        message: 'Failed to retrieve compliance report',
       });
     }
   }
 );
 
 // Get anomalous activity
-router.get('/anomalous',
+router.get(
+  '/anomalous',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'view_anomalous_activity',
     category: 'security',
-    description: 'Viewed anomalous activity'
+    description: 'Viewed anomalous activity',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { hours = 24 } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -322,26 +333,27 @@ router.get('/anomalous',
 
       res.json({
         success: true,
-        data: { anomalous }
+        data: { anomalous },
       });
     } catch (error) {
       console.error('Failed to get anomalous activity:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve anomalous activity'
+        message: 'Failed to retrieve anomalous activity',
       });
     }
   }
 );
 
 // Export audit logs
-router.post('/export',
+router.post(
+  '/export',
   authorize('admin', 'manager'),
   auditMiddleware({
     action: 'export_audit_logs',
     category: 'data',
     description: 'Exported audit logs',
-    sensitivity: 'confidential'
+    sensitivity: 'confidential',
   }),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -351,7 +363,7 @@ router.post('/export',
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -372,14 +384,17 @@ router.post('/export',
       } else {
         // Return JSON
         res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Disposition', `attachment; filename="audit-logs-${Date.now()}.json"`);
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename="audit-logs-${Date.now()}.json"`
+        );
         return res.json(logs);
       }
     } catch (error) {
       console.error('Failed to export audit logs:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to export audit logs'
+        message: 'Failed to export audit logs',
       });
     }
   }
@@ -405,7 +420,7 @@ function convertLogsToCSV(logs: any[]): string {
     'severity',
     'riskLevel',
     'status',
-    'duration'
+    'duration',
   ];
 
   const csvRows = [headers.join(',')];
@@ -413,20 +428,20 @@ function convertLogsToCSV(logs: any[]): string {
   logs.forEach(log => {
     const row = headers.map(header => {
       let value = log[header] || '';
-      
+
       // Handle special cases
       if (header === 'timestamp') {
         value = new Date(value).toISOString();
       }
-      
+
       // Escape CSV values
       if (typeof value === 'string') {
         value = `"${value.replace(/"/g, '""')}"`;
       }
-      
+
       return value;
     });
-    
+
     csvRows.push(row.join(','));
   });
 

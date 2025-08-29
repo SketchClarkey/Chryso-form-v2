@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Card, CardContent, Typography, Box, CircularProgress, Alert } from '@mui/material';
 import {
   ResponsiveContainer,
   LineChart,
@@ -65,26 +58,29 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
     // Transform data for recharts
     const chartData = data.labels.map((label, index) => ({
       name: label,
-      ...data.datasets.reduce((acc, dataset) => ({
-        ...acc,
-        [dataset.label]: dataset.data[index] || 0,
-      }), {}),
+      ...data.datasets.reduce(
+        (acc, dataset) => ({
+          ...acc,
+          [dataset.label]: dataset.data[index] || 0,
+        }),
+        {}
+      ),
     }));
 
     switch (data.chartType) {
       case 'line':
         return (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width='100%' height='100%'>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
               <YAxis />
               <Tooltip />
               <Legend />
               {data.datasets.map((dataset, index) => (
                 <Line
                   key={dataset.label}
-                  type="monotone"
+                  type='monotone'
                   dataKey={dataset.label}
                   stroke={dataset.color || CHART_COLORS[index % CHART_COLORS.length]}
                   strokeWidth={2}
@@ -96,10 +92,10 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
 
       case 'bar':
         return (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width='100%' height='100%'>
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -123,16 +119,16 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
         }));
 
         return (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
               <Pie
                 data={pieData}
-                cx="50%"
-                cy="50%"
+                cx='50%'
+                cy='50%'
                 innerRadius={data.chartType === 'doughnut' ? 40 : 0}
                 outerRadius={80}
                 paddingAngle={5}
-                dataKey="value"
+                dataKey='value'
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -146,8 +142,8 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
 
       default:
         return (
-          <Box display="flex" alignItems="center" justifyContent="center" height="100%">
-            <Typography variant="body2" color="text.secondary">
+          <Box display='flex' alignItems='center' justifyContent='center' height='100%'>
+            <Typography variant='body2' color='text.secondary'>
               Unsupported chart type: {data.chartType}
             </Typography>
           </Box>
@@ -168,12 +164,12 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
       }}
     >
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', pb: 1 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="subtitle2" color="text.secondary" noWrap>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='subtitle2' color='text.secondary' noWrap>
             {widget.title}
           </Typography>
           {lastUpdated && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               {lastUpdated.toLocaleTimeString()}
             </Typography>
           )}
@@ -181,18 +177,16 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
 
         <Box flex={1} minHeight={200}>
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+            <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
               <CircularProgress size={32} />
             </Box>
           ) : error ? (
-            <Alert severity="error">
-              {error}
-            </Alert>
+            <Alert severity='error'>{error}</Alert>
           ) : data && data.labels.length > 0 ? (
             renderChart()
           ) : (
-            <Box display="flex" alignItems="center" justifyContent="center" height="100%">
-              <Typography variant="body2" color="text.secondary">
+            <Box display='flex' alignItems='center' justifyContent='center' height='100%'>
+              <Typography variant='body2' color='text.secondary'>
                 No data available
               </Typography>
             </Box>
@@ -200,7 +194,7 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({ widget, data, error, loading,
         </Box>
 
         {widget.description && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant='caption' color='text.secondary' sx={{ mt: 1 }}>
             {widget.description}
           </Typography>
         )}

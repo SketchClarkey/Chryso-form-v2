@@ -87,7 +87,9 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
 
     try {
       const promises = availableMetrics.map(metric =>
-        request(`/api/analytics/trends/${metric.value}?startDate=${dateRange.start.toISOString()}&endDate=${dateRange.end.toISOString()}&granularity=${granularity}`)
+        request(
+          `/api/analytics/trends/${metric.value}?startDate=${dateRange.start.toISOString()}&endDate=${dateRange.end.toISOString()}&granularity=${granularity}`
+        )
       );
 
       const results = await Promise.all(promises);
@@ -121,9 +123,10 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
     const negativeChanges = changes.filter(c => c < 0).length;
     const totalChange = values[values.length - 1] - values[0];
     const avgChange = changes.reduce((sum, change) => sum + change, 0) / changes.length;
-    
+
     // Calculate volatility
-    const variance = changes.reduce((sum, change) => sum + Math.pow(change - avgChange, 2), 0) / changes.length;
+    const variance =
+      changes.reduce((sum, change) => sum + Math.pow(change - avgChange, 2), 0) / changes.length;
     const volatility = Math.sqrt(variance);
     const coefficientOfVariation = Math.abs(avgChange) > 0 ? volatility / Math.abs(avgChange) : 0;
 
@@ -240,9 +243,12 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           backgroundColor: color + '20',
           tension: 0.4,
           fill: true,
-          pointBackgroundColor: analysis.trend.map(t => 
-            t.changePercentage && t.changePercentage > 0 ? '#2e7d32' : 
-            t.changePercentage && t.changePercentage < 0 ? '#d32f2f' : color
+          pointBackgroundColor: analysis.trend.map(t =>
+            t.changePercentage && t.changePercentage > 0
+              ? '#2e7d32'
+              : t.changePercentage && t.changePercentage < 0
+                ? '#d32f2f'
+                : color
           ),
           pointBorderColor: '#fff',
           pointBorderWidth: 2,
@@ -254,53 +260,60 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
 
   const getInsightTypeColor = (type: string) => {
     switch (type) {
-      case 'growth': return 'success';
-      case 'decline': return 'error';
-      case 'volatile': return 'warning';
-      case 'seasonal': return 'info';
-      default: return 'default';
+      case 'growth':
+        return 'success';
+      case 'decline':
+        return 'error';
+      case 'volatile':
+        return 'warning';
+      case 'seasonal':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'growth': return <TrendingUpIcon />;
-      case 'decline': return <TrendingDownIcon />;
-      case 'volatile': return <ShowChartIcon />;
-      case 'seasonal': return <AnalyticsIcon />;
-      default: return <InsightsIcon />;
+      case 'growth':
+        return <TrendingUpIcon />;
+      case 'decline':
+        return <TrendingDownIcon />;
+      case 'volatile':
+        return <ShowChartIcon />;
+      case 'seasonal':
+        return <AnalyticsIcon />;
+      default:
+        return <InsightsIcon />;
     }
   };
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='300px'>
         <CircularProgress />
       </Box>
     );
   }
 
   if (error) {
-    return <Alert severity="error">{error}</Alert>;
+    return <Alert severity='error'>{error}</Alert>;
   }
 
   const selectedAnalysis = analyses.find(a => a.metric === selectedMetric);
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant='h5' gutterBottom>
         Trend Analysis
       </Typography>
 
       {/* Metric Selector */}
       <Box mb={3}>
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+        <FormControl size='small' sx={{ minWidth: 200 }}>
           <InputLabel>Select Metric</InputLabel>
-          <Select
-            value={selectedMetric}
-            onChange={(e) => setSelectedMetric(e.target.value)}
-          >
-            {availableMetrics.map((metric) => (
+          <Select value={selectedMetric} onChange={e => setSelectedMetric(e.target.value)}>
+            {availableMetrics.map(metric => (
               <MenuItem key={metric.value} value={metric.value}>
                 {metric.label}
               </MenuItem>
@@ -315,7 +328,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           <Grid item xs={12} lg={8}>
             <Card>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   {availableMetrics.find(m => m.value === selectedMetric)?.label} Trend
                 </Typography>
                 <Box height={400}>
@@ -341,7 +354,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
                       plugins: {
                         tooltip: {
                           callbacks: {
-                            afterLabel: (context) => {
+                            afterLabel: context => {
                               const point = selectedAnalysis.trend[context.dataIndex];
                               if (point.changePercentage !== undefined) {
                                 return `Change: ${point.changePercentage > 0 ? '+' : ''}${point.changePercentage.toFixed(1)}%`;
@@ -362,39 +375,39 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           <Grid item xs={12} lg={4}>
             <Card>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   AI Insights
                 </Typography>
 
                 {/* Trend Type */}
-                <Box display="flex" alignItems="center" gap={1} mb={2}>
+                <Box display='flex' alignItems='center' gap={1} mb={2}>
                   {getInsightIcon(selectedAnalysis.insights.type)}
                   <Chip
                     label={selectedAnalysis.insights.type.toUpperCase()}
                     color={getInsightTypeColor(selectedAnalysis.insights.type) as any}
-                    size="small"
+                    size='small'
                   />
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant='caption' color='text.secondary'>
                     {selectedAnalysis.insights.confidence}% confidence
                   </Typography>
                 </Box>
 
                 {/* Description */}
-                <Typography variant="body2" paragraph>
+                <Typography variant='body2' paragraph>
                   {selectedAnalysis.insights.description}
                 </Typography>
 
                 {/* Recommendations */}
                 {selectedAnalysis.insights.recommendations && (
                   <Box>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant='subtitle2' gutterBottom>
                       Recommendations:
                     </Typography>
                     {selectedAnalysis.insights.recommendations.map((rec, index) => (
                       <Typography
                         key={index}
-                        variant="caption"
-                        display="block"
+                        variant='caption'
+                        display='block'
                         sx={{ mb: 0.5, pl: 1 }}
                       >
                         • {rec}
@@ -408,39 +421,39 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
             {/* Summary Statistics */}
             <Card sx={{ mt: 2 }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   Summary Statistics
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       Total
                     </Typography>
-                    <Typography variant="h6">
+                    <Typography variant='h6'>
                       {selectedAnalysis.summary.total.toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       Average
                     </Typography>
-                    <Typography variant="h6">
+                    <Typography variant='h6'>
                       {selectedAnalysis.summary.average.toFixed(1)}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       Peak
                     </Typography>
-                    <Typography variant="h6" color="success.main">
+                    <Typography variant='h6' color='success.main'>
                       {selectedAnalysis.summary.peak.toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       Lowest
                     </Typography>
-                    <Typography variant="h6" color="error.main">
+                    <Typography variant='h6' color='error.main'>
                       {selectedAnalysis.summary.lowest.toLocaleString()}
                     </Typography>
                   </Grid>
@@ -453,59 +466,70 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   Detailed Breakdown
                 </Typography>
                 <TableContainer>
-                  <Table size="small">
+                  <Table size='small'>
                     <TableHead>
                       <TableRow>
                         <TableCell>Period</TableCell>
-                        <TableCell align="right">Value</TableCell>
-                        <TableCell align="right">Change</TableCell>
-                        <TableCell align="right">Change %</TableCell>
-                        <TableCell align="center">Trend</TableCell>
+                        <TableCell align='right'>Value</TableCell>
+                        <TableCell align='right'>Change</TableCell>
+                        <TableCell align='right'>Change %</TableCell>
+                        <TableCell align='center'>Trend</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {selectedAnalysis.trend.map((point, index) => (
                         <TableRow key={point.period}>
-                          <TableCell>
-                            {format(parseISO(point.period), 'MMM dd, yyyy')}
-                          </TableCell>
-                          <TableCell align="right">
-                            {point.value.toLocaleString()}
-                          </TableCell>
-                          <TableCell align="right">
+                          <TableCell>{format(parseISO(point.period), 'MMM dd, yyyy')}</TableCell>
+                          <TableCell align='right'>{point.value.toLocaleString()}</TableCell>
+                          <TableCell align='right'>
                             {point.change !== undefined ? (
                               <Typography
-                                color={point.change > 0 ? 'success.main' : 
-                                       point.change < 0 ? 'error.main' : 'text.secondary'}
+                                color={
+                                  point.change > 0
+                                    ? 'success.main'
+                                    : point.change < 0
+                                      ? 'error.main'
+                                      : 'text.secondary'
+                                }
                               >
-                                {point.change > 0 ? '+' : ''}{point.change}
+                                {point.change > 0 ? '+' : ''}
+                                {point.change}
                               </Typography>
-                            ) : '-'}
+                            ) : (
+                              '-'
+                            )}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align='right'>
                             {point.changePercentage !== undefined ? (
                               <Typography
-                                color={point.changePercentage > 0 ? 'success.main' : 
-                                       point.changePercentage < 0 ? 'error.main' : 'text.secondary'}
+                                color={
+                                  point.changePercentage > 0
+                                    ? 'success.main'
+                                    : point.changePercentage < 0
+                                      ? 'error.main'
+                                      : 'text.secondary'
+                                }
                               >
-                                {point.changePercentage > 0 ? '+' : ''}{point.changePercentage.toFixed(1)}%
+                                {point.changePercentage > 0 ? '+' : ''}
+                                {point.changePercentage.toFixed(1)}%
                               </Typography>
-                            ) : '-'}
+                            ) : (
+                              '-'
+                            )}
                           </TableCell>
-                          <TableCell align="center">
-                            {point.changePercentage !== undefined && (
-                              point.changePercentage > 0 ? (
-                                <TrendingUpIcon color="success" fontSize="small" />
+                          <TableCell align='center'>
+                            {point.changePercentage !== undefined &&
+                              (point.changePercentage > 0 ? (
+                                <TrendingUpIcon color='success' fontSize='small' />
                               ) : point.changePercentage < 0 ? (
-                                <TrendingDownIcon color="error" fontSize="small" />
+                                <TrendingDownIcon color='error' fontSize='small' />
                               ) : (
                                 <div style={{ width: 20, height: 20 }} />
-                              )
-                            )}
+                              ))}
                           </TableCell>
                         </TableRow>
                       ))}

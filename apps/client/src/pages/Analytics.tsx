@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Box,
-  Tabs,
-  Tab,
-  Typography,
-  Paper,
-} from '@mui/material';
+import { Container, Box, Tabs, Tab, Typography, Paper } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
   Timeline as TimelineIcon,
@@ -26,17 +19,13 @@ interface TabPanelProps {
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`analytics-tabpanel-${index}`}
       aria-labelledby={`analytics-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 };
@@ -54,45 +43,41 @@ const Analytics: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container maxWidth='xl' sx={{ py: 3 }}>
+      <Typography variant='h4' gutterBottom>
         Analytics & Insights
       </Typography>
 
       <Paper sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            aria-label="analytics tabs"
-          >
+          <Tabs value={activeTab} onChange={handleTabChange} aria-label='analytics tabs'>
             <Tab
-              label="Dashboard"
+              label='Dashboard'
               icon={<DashboardIcon />}
-              iconPosition="start"
-              id="analytics-tab-0"
-              aria-controls="analytics-tabpanel-0"
+              iconPosition='start'
+              id='analytics-tab-0'
+              aria-controls='analytics-tabpanel-0'
             />
             <Tab
-              label="Trend Analysis"
+              label='Trend Analysis'
               icon={<TimelineIcon />}
-              iconPosition="start"
-              id="analytics-tab-1"
-              aria-controls="analytics-tabpanel-1"
+              iconPosition='start'
+              id='analytics-tab-1'
+              aria-controls='analytics-tabpanel-1'
             />
             <Tab
-              label="Performance"
+              label='Performance'
               icon={<SpeedIcon />}
-              iconPosition="start"
-              id="analytics-tab-2"
-              aria-controls="analytics-tabpanel-2"
+              iconPosition='start'
+              id='analytics-tab-2'
+              aria-controls='analytics-tabpanel-2'
             />
             <Tab
-              label="Reports"
+              label='Reports'
               icon={<AssessmentIcon />}
-              iconPosition="start"
-              id="analytics-tab-3"
-              aria-controls="analytics-tabpanel-3"
+              iconPosition='start'
+              id='analytics-tab-3'
+              aria-controls='analytics-tabpanel-3'
             />
           </Tabs>
         </Box>
@@ -102,18 +87,15 @@ const Analytics: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
-          <TrendAnalysis 
-            dateRange={dateRange}
-            granularity={granularity}
-          />
+          <TrendAnalysis dateRange={dateRange} granularity={granularity} />
         </TabPanel>
 
         <TabPanel value={activeTab} index={2}>
           <Box>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant='h5' gutterBottom>
               Performance Analytics
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               Performance analytics coming soon...
             </Typography>
           </Box>
@@ -121,10 +103,10 @@ const Analytics: React.FC = () => {
 
         <TabPanel value={activeTab} index={3}>
           <Box>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant='h5' gutterBottom>
               Analytics Reports
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               Automated analytics reports coming soon...
             </Typography>
           </Box>

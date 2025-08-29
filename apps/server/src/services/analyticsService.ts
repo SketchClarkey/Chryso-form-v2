@@ -75,7 +75,10 @@ export class AnalyticsService {
     };
   }
 
-  private async calculateMetrics(query: AnalyticsQuery, userRole: string): Promise<{ [key: string]: MetricData }> {
+  private async calculateMetrics(
+    query: AnalyticsQuery,
+    userRole: string
+  ): Promise<{ [key: string]: MetricData }> {
     const { dateRange, filters } = query;
     const previousPeriod = this.getPreviousPeriod(dateRange);
 
@@ -117,7 +120,8 @@ export class AnalyticsService {
         current: totalForms,
         previous: previousForms,
         change: totalForms - previousForms,
-        changePercentage: previousForms > 0 ? ((totalForms - previousForms) / previousForms) * 100 : 0,
+        changePercentage:
+          previousForms > 0 ? ((totalForms - previousForms) / previousForms) * 100 : 0,
         trend: totalForms > previousForms ? 'up' : totalForms < previousForms ? 'down' : 'stable',
         format: 'number',
       },
@@ -125,8 +129,16 @@ export class AnalyticsService {
         current: completedForms,
         previous: previousCompleted,
         change: completedForms - previousCompleted,
-        changePercentage: previousCompleted > 0 ? ((completedForms - previousCompleted) / previousCompleted) * 100 : 0,
-        trend: completedForms > previousCompleted ? 'up' : completedForms < previousCompleted ? 'down' : 'stable',
+        changePercentage:
+          previousCompleted > 0
+            ? ((completedForms - previousCompleted) / previousCompleted) * 100
+            : 0,
+        trend:
+          completedForms > previousCompleted
+            ? 'up'
+            : completedForms < previousCompleted
+              ? 'down'
+              : 'stable',
         format: 'number',
       },
       completionRate: {
@@ -141,22 +153,39 @@ export class AnalyticsService {
         current: avgCompletionTime,
         previous: previousAvgTime,
         change: avgCompletionTime - previousAvgTime,
-        changePercentage: previousAvgTime > 0 ? ((avgCompletionTime - previousAvgTime) / previousAvgTime) * 100 : 0,
-        trend: avgCompletionTime < previousAvgTime ? 'up' : avgCompletionTime > previousAvgTime ? 'down' : 'stable',
+        changePercentage:
+          previousAvgTime > 0 ? ((avgCompletionTime - previousAvgTime) / previousAvgTime) * 100 : 0,
+        trend:
+          avgCompletionTime < previousAvgTime
+            ? 'up'
+            : avgCompletionTime > previousAvgTime
+              ? 'down'
+              : 'stable',
         format: 'time',
       },
       activeUsers: {
         current: activeUsers,
         previous: previousActiveUsers,
         change: activeUsers - previousActiveUsers,
-        changePercentage: previousActiveUsers > 0 ? ((activeUsers - previousActiveUsers) / previousActiveUsers) * 100 : 0,
-        trend: activeUsers > previousActiveUsers ? 'up' : activeUsers < previousActiveUsers ? 'down' : 'stable',
+        changePercentage:
+          previousActiveUsers > 0
+            ? ((activeUsers - previousActiveUsers) / previousActiveUsers) * 100
+            : 0,
+        trend:
+          activeUsers > previousActiveUsers
+            ? 'up'
+            : activeUsers < previousActiveUsers
+              ? 'down'
+              : 'stable',
         format: 'number',
       },
     };
   }
 
-  private async calculateTrends(query: AnalyticsQuery, userRole: string): Promise<{ [key: string]: TrendData[] }> {
+  private async calculateTrends(
+    query: AnalyticsQuery,
+    userRole: string
+  ): Promise<{ [key: string]: TrendData[] }> {
     const { dateRange, granularity, filters } = query;
     const periods = this.generatePeriods(dateRange, granularity);
 
@@ -207,7 +236,10 @@ export class AnalyticsService {
     };
   }
 
-  private async calculateDistributions(query: AnalyticsQuery, userRole: string): Promise<{ [key: string]: Array<{ label: string; value: number; percentage: number }> }> {
+  private async calculateDistributions(
+    query: AnalyticsQuery,
+    userRole: string
+  ): Promise<{ [key: string]: Array<{ label: string; value: number; percentage: number }> }> {
     const { dateRange, filters } = query;
     const baseQuery: any = {
       createdAt: { $gte: dateRange.start, $lte: dateRange.end },
@@ -224,7 +256,14 @@ export class AnalyticsService {
     // Template usage distribution
     const templateDistribution = await Form.aggregate([
       { $match: baseQuery },
-      { $lookup: { from: 'templates', localField: 'templateId', foreignField: '_id', as: 'template' } },
+      {
+        $lookup: {
+          from: 'templates',
+          localField: 'templateId',
+          foreignField: '_id',
+          as: 'template',
+        },
+      },
       { $unwind: '$template' },
       { $group: { _id: '$template.name', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -234,7 +273,9 @@ export class AnalyticsService {
     // Worksite activity distribution
     const worksiteDistribution = await Form.aggregate([
       { $match: baseQuery },
-      { $lookup: { from: 'worksites', localField: 'worksite', foreignField: '_id', as: 'worksite' } },
+      {
+        $lookup: { from: 'worksites', localField: 'worksite', foreignField: '_id', as: 'worksite' },
+      },
       { $unwind: '$worksite' },
       { $group: { _id: '$worksite.name', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -248,7 +289,12 @@ export class AnalyticsService {
         { $match: baseQuery },
         { $lookup: { from: 'users', localField: 'technician', foreignField: '_id', as: 'user' } },
         { $unwind: '$user' },
-        { $group: { _id: { $concat: ['$user.firstName', ' ', '$user.lastName'] }, count: { $sum: 1 } } },
+        {
+          $group: {
+            _id: { $concat: ['$user.firstName', ' ', '$user.lastName'] },
+            count: { $sum: 1 },
+          },
+        },
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]);
@@ -256,7 +302,7 @@ export class AnalyticsService {
 
     const totalForms = await Form.countDocuments(baseQuery);
 
-    const formatDistribution = (data: any[]) => 
+    const formatDistribution = (data: any[]) =>
       data.map(item => ({
         label: item._id || 'Unknown',
         value: item.count,
@@ -271,7 +317,10 @@ export class AnalyticsService {
     };
   }
 
-  private async calculateComparisons(query: AnalyticsQuery, userRole: string): Promise<{ [key: string]: Array<{ category: string; current: number; previous: number }> }> {
+  private async calculateComparisons(
+    query: AnalyticsQuery,
+    userRole: string
+  ): Promise<{ [key: string]: Array<{ category: string; current: number; previous: number }> }> {
     const { dateRange, filters } = query;
     const previousPeriod = this.getPreviousPeriod(dateRange);
 
@@ -289,7 +338,14 @@ export class AnalyticsService {
     const [currentTemplates, previousTemplates] = await Promise.all([
       Form.aggregate([
         { $match: baseQuery },
-        { $lookup: { from: 'templates', localField: 'templateId', foreignField: '_id', as: 'template' } },
+        {
+          $lookup: {
+            from: 'templates',
+            localField: 'templateId',
+            foreignField: '_id',
+            as: 'template',
+          },
+        },
         { $unwind: '$template' },
         { $group: { _id: '$template.name', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
@@ -297,7 +353,14 @@ export class AnalyticsService {
       ]),
       Form.aggregate([
         { $match: previousQuery },
-        { $lookup: { from: 'templates', localField: 'templateId', foreignField: '_id', as: 'template' } },
+        {
+          $lookup: {
+            from: 'templates',
+            localField: 'templateId',
+            foreignField: '_id',
+            as: 'template',
+          },
+        },
         { $unwind: '$template' },
         { $group: { _id: '$template.name', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
@@ -307,7 +370,7 @@ export class AnalyticsService {
 
     const templateComparison = this.mergeComparisons(currentTemplates, previousTemplates);
 
-    // Basic comparison data  
+    // Basic comparison data
     const [totalForms, previousForms, completedForms, previousCompleted] = await Promise.all([
       Form.countDocuments(baseQuery),
       Form.countDocuments(previousQuery),
@@ -360,7 +423,10 @@ export class AnalyticsService {
     };
   }
 
-  private generatePeriods(dateRange: { start: Date; end: Date }, granularity: string): Array<{ start: Date; end: Date; label: string }> {
+  private generatePeriods(
+    dateRange: { start: Date; end: Date },
+    granularity: string
+  ): Array<{ start: Date; end: Date; label: string }> {
     const periods: Array<{ start: Date; end: Date; label: string }> = [];
     const current = new Date(dateRange.start);
 
@@ -441,7 +507,8 @@ export class AnalyticsService {
     if (completedForms.length === 0) return 0;
 
     const totalTime = completedForms.reduce((sum, form) => {
-      const completionTime = new Date(form.updatedAt).getTime() - new Date(form.createdAt).getTime();
+      const completionTime =
+        new Date(form.updatedAt).getTime() - new Date(form.createdAt).getTime();
       return sum + completionTime;
     }, 0);
 
@@ -453,7 +520,10 @@ export class AnalyticsService {
     return uniqueUsers.length;
   }
 
-  private mergeComparisons(current: any[], previous: any[]): Array<{ category: string; current: number; previous: number }> {
+  private mergeComparisons(
+    current: any[],
+    previous: any[]
+  ): Array<{ category: string; current: number; previous: number }> {
     const merged: { [key: string]: { current: number; previous: number } } = {};
 
     current.forEach(item => {

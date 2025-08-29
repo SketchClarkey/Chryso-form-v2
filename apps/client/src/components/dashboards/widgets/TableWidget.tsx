@@ -99,11 +99,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
     // Handle different data types
     if (typeof value === 'boolean') {
       return (
-        <Chip
-          label={value ? 'Yes' : 'No'}
-          color={value ? 'success' : 'default'}
-          size="small"
-        />
+        <Chip label={value ? 'Yes' : 'No'} color={value ? 'success' : 'default'} size='small' />
       );
     }
 
@@ -136,12 +132,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
       };
 
       return (
-        <Chip
-          label={value}
-          color={getStatusColor(value) as any}
-          size="small"
-          variant="outlined"
-        />
+        <Chip label={value} color={getStatusColor(value) as any} size='small' variant='outlined' />
       );
     }
 
@@ -175,33 +166,31 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
       }}
     >
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="subtitle2" color="text.secondary" noWrap>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='subtitle2' color='text.secondary' noWrap>
             {widget.title}
           </Typography>
           {lastUpdated && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               {lastUpdated.toLocaleTimeString()}
             </Typography>
           )}
         </Box>
 
-        <Box flex={1} display="flex" flexDirection="column">
+        <Box flex={1} display='flex' flexDirection='column'>
           {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" flex={1}>
+            <Box display='flex' justifyContent='center' alignItems='center' flex={1}>
               <CircularProgress size={32} />
             </Box>
           ) : error ? (
-            <Alert severity="error">
-              {error}
-            </Alert>
+            <Alert severity='error'>{error}</Alert>
           ) : data && data.data.length > 0 ? (
             <>
               <TableContainer component={Paper} sx={{ flex: 1, mb: 1 }}>
-                <Table size="small" stickyHeader>
+                <Table size='small' stickyHeader>
                   <TableHead>
                     <TableRow>
-                      {data.columns.map((column) => (
+                      {data.columns.map(column => (
                         <TableCell key={column.field}>
                           {column.sortable !== false ? (
                             <TableSortLabel
@@ -221,7 +210,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
                   <TableBody>
                     {paginatedData.map((row, index) => (
                       <TableRow key={index} hover>
-                        {data.columns.map((column) => (
+                        {data.columns.map(column => (
                           <TableCell key={column.field}>
                             {formatCellValue(getNestedValue(row, column.field), column)}
                           </TableCell>
@@ -235,19 +224,19 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
               {data.data.length > rowsPerPage && (
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
+                  component='div'
                   count={data.data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  size="small"
+                  size='small'
                 />
               )}
             </>
           ) : (
-            <Box display="flex" alignItems="center" justifyContent="center" flex={1}>
-              <Typography variant="body2" color="text.secondary">
+            <Box display='flex' alignItems='center' justifyContent='center' flex={1}>
+              <Typography variant='body2' color='text.secondary'>
                 No data available
               </Typography>
             </Box>
@@ -255,7 +244,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, data, error, loading,
         </Box>
 
         {widget.description && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant='caption' color='text.secondary' sx={{ mt: 1 }}>
             {widget.description}
           </Typography>
         )}

@@ -37,7 +37,22 @@ interface IFieldValidation {
 
 interface IFormField {
   id: string;
-  type: 'text' | 'textarea' | 'number' | 'email' | 'phone' | 'date' | 'datetime' | 'select' | 'multiselect' | 'radio' | 'checkbox' | 'file' | 'signature' | 'separator' | 'heading';
+  type:
+    | 'text'
+    | 'textarea'
+    | 'number'
+    | 'email'
+    | 'phone'
+    | 'date'
+    | 'datetime'
+    | 'select'
+    | 'multiselect'
+    | 'radio'
+    | 'checkbox'
+    | 'file'
+    | 'signature'
+    | 'separator'
+    | 'heading';
   label: string;
   description?: string;
   placeholder?: string;
@@ -141,9 +156,9 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
   const updateOption = (index: number, key: keyof IFieldOption, value: any) => {
     setFormData(prev => ({
       ...prev,
-      options: prev.options?.map((option, i) =>
-        i === index ? { ...option, [key]: value } : option
-      ) || [],
+      options:
+        prev.options?.map((option, i) => (i === index ? { ...option, [key]: value } : option)) ||
+        [],
     }));
   };
 
@@ -189,20 +204,18 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        {field?.id ? 'Edit Field' : 'Add New Field'}
-      </DialogTitle>
-      
+    <Dialog open={open} onClose={handleClose} maxWidth='md' fullWidth>
+      <DialogTitle>{field?.id ? 'Edit Field' : 'Add New Field'}</DialogTitle>
+
       <DialogContent>
-        <Box display="flex" flexDirection="column" gap={3} pt={2}>
+        <Box display='flex' flexDirection='column' gap={3} pt={2}>
           {/* Field Type */}
           <FormControl fullWidth>
             <InputLabel>Field Type</InputLabel>
             <Select
               value={formData.type}
-              onChange={(e) => handleFieldChange('type', e.target.value)}
-              label="Field Type"
+              onChange={e => handleFieldChange('type', e.target.value)}
+              label='Field Type'
             >
               {FIELD_TYPES.map(type => (
                 <MenuItem key={type.value} value={type.value}>
@@ -217,9 +230,9 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
             <Grid item xs={12} md={8}>
               <TextField
                 fullWidth
-                label="Field Label"
+                label='Field Label'
                 value={formData.label}
-                onChange={(e) => handleFieldChange('label', e.target.value)}
+                onChange={e => handleFieldChange('label', e.target.value)}
                 required
               />
             </Grid>
@@ -228,8 +241,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                 <InputLabel>Width</InputLabel>
                 <Select
                   value={formData.layout?.width || 12}
-                  onChange={(e) => handleLayoutChange('width', e.target.value)}
-                  label="Width"
+                  onChange={e => handleLayoutChange('width', e.target.value)}
+                  label='Width'
                 >
                   <MenuItem value={12}>Full Width (12/12)</MenuItem>
                   <MenuItem value={6}>Half Width (6/12)</MenuItem>
@@ -242,74 +255,66 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
 
           <TextField
             fullWidth
-            label="Description"
+            label='Description'
             value={formData.description || ''}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
+            onChange={e => handleFieldChange('description', e.target.value)}
             multiline
             rows={2}
-            helperText="Optional help text displayed below the field"
+            helperText='Optional help text displayed below the field'
           />
 
           {formData.type !== 'separator' && formData.type !== 'heading' && (
             <TextField
               fullWidth
-              label="Placeholder"
+              label='Placeholder'
               value={formData.placeholder || ''}
-              onChange={(e) => handleFieldChange('placeholder', e.target.value)}
-              helperText="Placeholder text shown inside empty input fields"
+              onChange={e => handleFieldChange('placeholder', e.target.value)}
+              helperText='Placeholder text shown inside empty input fields'
             />
           )}
 
           {/* Options for select/radio/multiselect fields */}
           {needsOptions && (
             <Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Options</Typography>
-                <Button
-                  startIcon={<AddIcon />}
-                  onClick={addOption}
-                  size="small"
-                >
+              <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+                <Typography variant='h6'>Options</Typography>
+                <Button startIcon={<AddIcon />} onClick={addOption} size='small'>
                   Add Option
                 </Button>
               </Box>
 
               {formData.options?.map((option, index) => (
-                <Box key={index} display="flex" alignItems="center" gap={2} mb={2}>
+                <Box key={index} display='flex' alignItems='center' gap={2} mb={2}>
                   <TextField
-                    size="small"
-                    label="Label"
+                    size='small'
+                    label='Label'
                     value={option.label}
-                    onChange={(e) => updateOption(index, 'label', e.target.value)}
+                    onChange={e => updateOption(index, 'label', e.target.value)}
                   />
                   <TextField
-                    size="small"
-                    label="Value"
+                    size='small'
+                    label='Value'
                     value={option.value}
-                    onChange={(e) => updateOption(index, 'value', e.target.value)}
+                    onChange={e => updateOption(index, 'value', e.target.value)}
                   />
                   <FormControlLabel
                     control={
                       <Switch
-                        size="small"
+                        size='small'
                         checked={!option.disabled}
-                        onChange={(e) => updateOption(index, 'disabled', !e.target.checked)}
+                        onChange={e => updateOption(index, 'disabled', !e.target.checked)}
                       />
                     }
-                    label="Enabled"
+                    label='Enabled'
                   />
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => removeOption(index)}
-                  >
+                  <IconButton size='small' color='error' onClick={() => removeOption(index)}>
                     <DeleteIcon />
                   </IconButton>
                 </Box>
               ))}
 
               {(!formData.options || formData.options.length === 0) && (
-                <Typography variant="body2" color="text.secondary" textAlign="center" py={2}>
+                <Typography variant='body2' color='text.secondary' textAlign='center' py={2}>
                   No options added yet. Click "Add Option" to create the first option.
                 </Typography>
               )}
@@ -318,7 +323,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
 
           {/* Validation Rules */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Validation Rules
             </Typography>
             <Grid container spacing={2}>
@@ -327,33 +332,37 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                   control={
                     <Switch
                       checked={formData.validation?.required || false}
-                      onChange={(e) => handleValidationChange('required', e.target.checked)}
+                      onChange={e => handleValidationChange('required', e.target.checked)}
                     />
                   }
-                  label="Required Field"
+                  label='Required Field'
                 />
               </Grid>
-              
+
               {(formData.type === 'text' || formData.type === 'textarea') && (
                 <>
                   <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
-                      size="small"
-                      label="Min Length"
-                      type="number"
+                      size='small'
+                      label='Min Length'
+                      type='number'
                       value={formData.validation?.minLength || ''}
-                      onChange={(e) => handleValidationChange('minLength', parseInt(e.target.value) || undefined)}
+                      onChange={e =>
+                        handleValidationChange('minLength', parseInt(e.target.value) || undefined)
+                      }
                     />
                   </Grid>
                   <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
-                      size="small"
-                      label="Max Length"
-                      type="number"
+                      size='small'
+                      label='Max Length'
+                      type='number'
                       value={formData.validation?.maxLength || ''}
-                      onChange={(e) => handleValidationChange('maxLength', parseInt(e.target.value) || undefined)}
+                      onChange={e =>
+                        handleValidationChange('maxLength', parseInt(e.target.value) || undefined)
+                      }
                     />
                   </Grid>
                 </>
@@ -364,35 +373,41 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                   <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
-                      size="small"
-                      label="Minimum Value"
-                      type="number"
+                      size='small'
+                      label='Minimum Value'
+                      type='number'
                       value={formData.validation?.min || ''}
-                      onChange={(e) => handleValidationChange('min', parseFloat(e.target.value) || undefined)}
+                      onChange={e =>
+                        handleValidationChange('min', parseFloat(e.target.value) || undefined)
+                      }
                     />
                   </Grid>
                   <Grid item xs={6} md={3}>
                     <TextField
                       fullWidth
-                      size="small"
-                      label="Maximum Value"
-                      type="number"
+                      size='small'
+                      label='Maximum Value'
+                      type='number'
                       value={formData.validation?.max || ''}
-                      onChange={(e) => handleValidationChange('max', parseFloat(e.target.value) || undefined)}
+                      onChange={e =>
+                        handleValidationChange('max', parseFloat(e.target.value) || undefined)
+                      }
                     />
                   </Grid>
                 </>
               )}
 
-              {(formData.type === 'text' || formData.type === 'email' || formData.type === 'phone') && (
+              {(formData.type === 'text' ||
+                formData.type === 'email' ||
+                formData.type === 'phone') && (
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    size="small"
-                    label="Pattern (Regex)"
+                    size='small'
+                    label='Pattern (Regex)'
                     value={formData.validation?.pattern || ''}
-                    onChange={(e) => handleValidationChange('pattern', e.target.value || undefined)}
-                    helperText="Regular expression for validation"
+                    onChange={e => handleValidationChange('pattern', e.target.value || undefined)}
+                    helperText='Regular expression for validation'
                   />
                 </Grid>
               )}
@@ -402,10 +417,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleSave}>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button variant='contained' onClick={handleSave}>
           {field?.id ? 'Update Field' : 'Add Field'}
         </Button>
       </DialogActions>

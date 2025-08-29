@@ -191,7 +191,7 @@ describe('useMobileComponents', () => {
     });
 
     mockPWAService.isPWAInstalled.mockReturnValue(true);
-    
+
     // Mock touch support
     Object.defineProperty(window, 'ontouchstart', {
       writable: true,

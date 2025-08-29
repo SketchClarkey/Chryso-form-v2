@@ -179,35 +179,36 @@ export function UserTable({
               <TableCell>Status</TableCell>
               <TableCell>Last Login</TableCell>
               <TableCell>Created</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align='center'>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} align="center">
+                <TableCell colSpan={7} align='center'>
                   Loading...
                 </TableCell>
               </TableRow>
             ) : paginatedUsers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} align="center">
+                <TableCell colSpan={7} align='center'>
                   No users found
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedUsers.map((user) => (
+              paginatedUsers.map(user => (
                 <TableRow key={user.id} hover>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Avatar sx={{ width: 32, height: 32 }}>
-                        {user.firstName[0]}{user.lastName[0]}
+                        {user.firstName[0]}
+                        {user.lastName[0]}
                       </Avatar>
                       <Box>
-                        <Typography variant="body2" fontWeight="medium">
+                        <Typography variant='body2' fontWeight='medium'>
                           {user.fullName}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           {user.email}
                         </Typography>
                       </Box>
@@ -218,33 +219,35 @@ export function UserTable({
                       {getRoleIcon(user.role)}
                       <Chip
                         label={user.role}
-                        size="small"
+                        size='small'
                         color={getRoleColor(user.role) as any}
-                        variant="outlined"
+                        variant='outlined'
                       />
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {user.worksites.length > 0 ? (
-                        user.worksites.slice(0, 2).map((worksite) => (
-                          <Chip
-                            key={worksite.id}
-                            label={worksite.name}
-                            size="small"
-                            variant="outlined"
-                          />
-                        ))
+                        user.worksites
+                          .slice(0, 2)
+                          .map(worksite => (
+                            <Chip
+                              key={worksite.id}
+                              label={worksite.name}
+                              size='small'
+                              variant='outlined'
+                            />
+                          ))
                       ) : (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           No assignments
                         </Typography>
                       )}
                       {user.worksites.length > 2 && (
                         <Chip
                           label={`+${user.worksites.length - 2} more`}
-                          size="small"
-                          variant="outlined"
+                          size='small'
+                          variant='outlined'
                         />
                       )}
                     </Box>
@@ -253,37 +256,34 @@ export function UserTable({
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Chip
                         label={user.isActive ? 'Active' : 'Inactive'}
-                        size="small"
+                        size='small'
                         color={user.isActive ? 'success' : 'default'}
                         variant={user.isActive ? 'filled' : 'outlined'}
                       />
                       {!user.emailVerified && (
-                        <Tooltip title="Email not verified">
+                        <Tooltip title='Email not verified'>
                           <Chip
-                            label="Unverified"
-                            size="small"
-                            color="warning"
-                            variant="outlined"
+                            label='Unverified'
+                            size='small'
+                            color='warning'
+                            variant='outlined'
                           />
                         </Tooltip>
                       )}
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='body2' color='text.secondary'>
                       {formatDate(user.lastLogin)}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='body2' color='text.secondary'>
                       {formatDate(user.createdAt)}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => handleMenuOpen(e, user)}
-                    >
+                  <TableCell align='center'>
+                    <IconButton size='small' onClick={e => handleMenuOpen(e, user)}>
                       <MoreIcon />
                     </IconButton>
                   </TableCell>
@@ -296,7 +296,7 @@ export function UserTable({
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
-        component="div"
+        component='div'
         count={users.length}
         rowsPerPage={rowsPerPage}
         page={page}
@@ -343,21 +343,19 @@ export function UserTable({
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogTitle>Delete User</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete <strong>{userToDelete?.fullName}</strong>?
-            This action cannot be undone and will remove all associated data.
+            Are you sure you want to delete <strong>{userToDelete?.fullName}</strong>? This action
+            cannot be undone and will remove all associated data.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color='error' variant='contained'>
             Delete User
           </Button>
         </DialogActions>

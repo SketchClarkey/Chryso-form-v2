@@ -152,18 +152,18 @@ const DashboardSettings: React.FC = () => {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
         <Box>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant='h4' gutterBottom>
             Dashboard Configuration
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant='body1' color='text.secondary'>
             Configure global dashboard settings, permissions, and policies
           </Typography>
         </Box>
-        <Box display="flex" gap={1}>
+        <Box display='flex' gap={1}>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<RefreshIcon />}
             onClick={loadSettings}
             disabled={loading}
@@ -171,7 +171,7 @@ const DashboardSettings: React.FC = () => {
             Refresh
           </Button>
           <Button
-            variant="contained"
+            variant='contained'
             startIcon={<SaveIcon />}
             onClick={handleSave}
             disabled={loading}
@@ -182,13 +182,13 @@ const DashboardSettings: React.FC = () => {
       </Box>
 
       {success && (
-        <Alert severity="success" sx={{ mb: 3 }}>
+        <Alert severity='success' sx={{ mb: 3 }}>
           Dashboard settings saved successfully
         </Alert>
       )}
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
@@ -198,7 +198,7 @@ const DashboardSettings: React.FC = () => {
         <Grid item xs={12}>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Global Settings</Typography>
+              <Typography variant='h6'>Global Settings</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
@@ -207,93 +207,116 @@ const DashboardSettings: React.FC = () => {
                     <InputLabel>Default Theme</InputLabel>
                     <Select
                       value={config.global.defaultTheme}
-                      onChange={(e) => setConfig({
-                        ...config,
-                        global: { ...config.global, defaultTheme: e.target.value as any }
-                      })}
+                      onChange={e =>
+                        setConfig({
+                          ...config,
+                          global: { ...config.global, defaultTheme: e.target.value as any },
+                        })
+                      }
                     >
-                      <MenuItem value="light">Light</MenuItem>
-                      <MenuItem value="dark">Dark</MenuItem>
-                      <MenuItem value="auto">Auto (System)</MenuItem>
+                      <MenuItem value='light'>Light</MenuItem>
+                      <MenuItem value='dark'>Dark</MenuItem>
+                      <MenuItem value='auto'>Auto (System)</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="Auto Refresh Interval (seconds)"
-                    type="number"
+                    label='Auto Refresh Interval (seconds)'
+                    type='number'
                     value={config.global.autoRefreshInterval}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      global: { ...config.global, autoRefreshInterval: parseInt(e.target.value) || 300 }
-                    })}
+                    onChange={e =>
+                      setConfig({
+                        ...config,
+                        global: {
+                          ...config.global,
+                          autoRefreshInterval: parseInt(e.target.value) || 300,
+                        },
+                      })
+                    }
                     inputProps={{ min: 30, max: 3600 }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="Max Widgets Per Dashboard"
-                    type="number"
+                    label='Max Widgets Per Dashboard'
+                    type='number'
                     value={config.global.maxWidgetsPerDashboard}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      global: { ...config.global, maxWidgetsPerDashboard: parseInt(e.target.value) || 20 }
-                    })}
+                    onChange={e =>
+                      setConfig({
+                        ...config,
+                        global: {
+                          ...config.global,
+                          maxWidgetsPerDashboard: parseInt(e.target.value) || 20,
+                        },
+                      })
+                    }
                     inputProps={{ min: 1, max: 50 }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="Cache TTL (seconds)"
-                    type="number"
+                    label='Cache TTL (seconds)'
+                    type='number'
                     value={config.global.cacheTTL}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      global: { ...config.global, cacheTTL: parseInt(e.target.value) || 300 }
-                    })}
+                    onChange={e =>
+                      setConfig({
+                        ...config,
+                        global: { ...config.global, cacheTTL: parseInt(e.target.value) || 300 },
+                      })
+                    }
                     inputProps={{ min: 30, max: 3600 }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Stack direction="row" spacing={2} flexWrap="wrap">
+                  <Stack direction='row' spacing={2} flexWrap='wrap'>
                     <FormControlLabel
                       control={
                         <Switch
                           checked={config.global.enablePublicDashboards}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            global: { ...config.global, enablePublicDashboards: e.target.checked }
-                          })}
+                          onChange={e =>
+                            setConfig({
+                              ...config,
+                              global: {
+                                ...config.global,
+                                enablePublicDashboards: e.target.checked,
+                              },
+                            })
+                          }
                         />
                       }
-                      label="Enable Public Dashboards"
+                      label='Enable Public Dashboards'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={config.global.enableTemplates}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            global: { ...config.global, enableTemplates: e.target.checked }
-                          })}
+                          onChange={e =>
+                            setConfig({
+                              ...config,
+                              global: { ...config.global, enableTemplates: e.target.checked },
+                            })
+                          }
                         />
                       }
-                      label="Enable Templates"
+                      label='Enable Templates'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={config.global.cacheEnabled}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            global: { ...config.global, cacheEnabled: e.target.checked }
-                          })}
+                          onChange={e =>
+                            setConfig({
+                              ...config,
+                              global: { ...config.global, cacheEnabled: e.target.checked },
+                            })
+                          }
                         />
                       }
-                      label="Enable Caching"
+                      label='Enable Caching'
                     />
                   </Stack>
                 </Grid>
@@ -306,24 +329,30 @@ const DashboardSettings: React.FC = () => {
         <Grid item xs={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Permissions</Typography>
+              <Typography variant='h6'>Permissions</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
                 {Object.entries(config.permissions).map(([permission, allowedRoles]) => (
                   <Grid item xs={12} key={permission}>
                     <Box>
-                      <Typography variant="subtitle2" gutterBottom sx={{ textTransform: 'capitalize' }}>
+                      <Typography
+                        variant='subtitle2'
+                        gutterBottom
+                        sx={{ textTransform: 'capitalize' }}
+                      >
                         {permission.replace(/([A-Z])/g, ' $1').trim()}
                       </Typography>
-                      <Stack direction="row" spacing={1} flexWrap="wrap">
-                        {roles.map((role) => (
+                      <Stack direction='row' spacing={1} flexWrap='wrap'>
+                        {roles.map(role => (
                           <Chip
                             key={role}
                             label={role}
                             clickable
                             color={allowedRoles.includes(role) ? 'primary' : 'default'}
-                            onClick={() => handleRoleToggle(permission as keyof typeof config.permissions, role)}
+                            onClick={() =>
+                              handleRoleToggle(permission as keyof typeof config.permissions, role)
+                            }
                             variant={allowedRoles.includes(role) ? 'filled' : 'outlined'}
                           />
                         ))}
@@ -340,7 +369,7 @@ const DashboardSettings: React.FC = () => {
         <Grid item xs={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Data Retention</Typography>
+              <Typography variant='h6'>Data Retention</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
@@ -349,13 +378,18 @@ const DashboardSettings: React.FC = () => {
                     control={
                       <Switch
                         checked={config.dataRetention.enableDataRetention}
-                        onChange={(e) => setConfig({
-                          ...config,
-                          dataRetention: { ...config.dataRetention, enableDataRetention: e.target.checked }
-                        })}
+                        onChange={e =>
+                          setConfig({
+                            ...config,
+                            dataRetention: {
+                              ...config.dataRetention,
+                              enableDataRetention: e.target.checked,
+                            },
+                          })
+                        }
                       />
                     }
-                    label="Enable Data Retention Policies"
+                    label='Enable Data Retention Policies'
                   />
                 </Grid>
                 {config.dataRetention.enableDataRetention && (
@@ -363,41 +397,56 @@ const DashboardSettings: React.FC = () => {
                     <Grid item xs={12} md={6}>
                       <TextField
                         fullWidth
-                        label="Retention Period (days)"
-                        type="number"
+                        label='Retention Period (days)'
+                        type='number'
                         value={config.dataRetention.retentionPeriodDays}
-                        onChange={(e) => setConfig({
-                          ...config,
-                          dataRetention: { ...config.dataRetention, retentionPeriodDays: parseInt(e.target.value) || 365 }
-                        })}
+                        onChange={e =>
+                          setConfig({
+                            ...config,
+                            dataRetention: {
+                              ...config.dataRetention,
+                              retentionPeriodDays: parseInt(e.target.value) || 365,
+                            },
+                          })
+                        }
                         inputProps={{ min: 30, max: 2555 }}
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Stack direction="row" spacing={2}>
+                      <Stack direction='row' spacing={2}>
                         <FormControlLabel
                           control={
                             <Switch
                               checked={config.dataRetention.autoCleanup}
-                              onChange={(e) => setConfig({
-                                ...config,
-                                dataRetention: { ...config.dataRetention, autoCleanup: e.target.checked }
-                              })}
+                              onChange={e =>
+                                setConfig({
+                                  ...config,
+                                  dataRetention: {
+                                    ...config.dataRetention,
+                                    autoCleanup: e.target.checked,
+                                  },
+                                })
+                              }
                             />
                           }
-                          label="Auto Cleanup"
+                          label='Auto Cleanup'
                         />
                         <FormControlLabel
                           control={
                             <Switch
                               checked={config.dataRetention.archiveOldDashboards}
-                              onChange={(e) => setConfig({
-                                ...config,
-                                dataRetention: { ...config.dataRetention, archiveOldDashboards: e.target.checked }
-                              })}
+                              onChange={e =>
+                                setConfig({
+                                  ...config,
+                                  dataRetention: {
+                                    ...config.dataRetention,
+                                    archiveOldDashboards: e.target.checked,
+                                  },
+                                })
+                              }
                             />
                           }
-                          label="Archive Old Dashboards"
+                          label='Archive Old Dashboards'
                         />
                       </Stack>
                     </Grid>
@@ -412,7 +461,7 @@ const DashboardSettings: React.FC = () => {
         <Grid item xs={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">Notifications</Typography>
+              <Typography variant='h6'>Notifications</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
@@ -421,13 +470,18 @@ const DashboardSettings: React.FC = () => {
                     control={
                       <Switch
                         checked={config.notifications.enableEmailNotifications}
-                        onChange={(e) => setConfig({
-                          ...config,
-                          notifications: { ...config.notifications, enableEmailNotifications: e.target.checked }
-                        })}
+                        onChange={e =>
+                          setConfig({
+                            ...config,
+                            notifications: {
+                              ...config.notifications,
+                              enableEmailNotifications: e.target.checked,
+                            },
+                          })
+                        }
                       />
                     }
-                    label="Enable Email Notifications"
+                    label='Enable Email Notifications'
                   />
                 </Grid>
                 {config.notifications.enableEmailNotifications && (
@@ -437,42 +491,57 @@ const DashboardSettings: React.FC = () => {
                         <InputLabel>Digest Frequency</InputLabel>
                         <Select
                           value={config.notifications.digestFrequency}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            notifications: { ...config.notifications, digestFrequency: e.target.value as any }
-                          })}
+                          onChange={e =>
+                            setConfig({
+                              ...config,
+                              notifications: {
+                                ...config.notifications,
+                                digestFrequency: e.target.value as any,
+                              },
+                            })
+                          }
                         >
-                          <MenuItem value="daily">Daily</MenuItem>
-                          <MenuItem value="weekly">Weekly</MenuItem>
-                          <MenuItem value="monthly">Monthly</MenuItem>
+                          <MenuItem value='daily'>Daily</MenuItem>
+                          <MenuItem value='weekly'>Weekly</MenuItem>
+                          <MenuItem value='monthly'>Monthly</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                      <Stack direction="row" spacing={2}>
+                      <Stack direction='row' spacing={2}>
                         <FormControlLabel
                           control={
                             <Switch
                               checked={config.notifications.notifyOnDashboardShare}
-                              onChange={(e) => setConfig({
-                                ...config,
-                                notifications: { ...config.notifications, notifyOnDashboardShare: e.target.checked }
-                              })}
+                              onChange={e =>
+                                setConfig({
+                                  ...config,
+                                  notifications: {
+                                    ...config.notifications,
+                                    notifyOnDashboardShare: e.target.checked,
+                                  },
+                                })
+                              }
                             />
                           }
-                          label="Notify on Dashboard Share"
+                          label='Notify on Dashboard Share'
                         />
                         <FormControlLabel
                           control={
                             <Switch
                               checked={config.notifications.notifyOnDashboardUpdate}
-                              onChange={(e) => setConfig({
-                                ...config,
-                                notifications: { ...config.notifications, notifyOnDashboardUpdate: e.target.checked }
-                              })}
+                              onChange={e =>
+                                setConfig({
+                                  ...config,
+                                  notifications: {
+                                    ...config.notifications,
+                                    notifyOnDashboardUpdate: e.target.checked,
+                                  },
+                                })
+                              }
                             />
                           }
-                          label="Notify on Dashboard Update"
+                          label='Notify on Dashboard Update'
                         />
                       </Stack>
                     </Grid>

@@ -103,31 +103,29 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        {section?.id ? 'Edit Section' : 'Add New Section'}
-      </DialogTitle>
-      
+    <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+      <DialogTitle>{section?.id ? 'Edit Section' : 'Add New Section'}</DialogTitle>
+
       <DialogContent>
-        <Box display="flex" flexDirection="column" gap={3} pt={2}>
+        <Box display='flex' flexDirection='column' gap={3} pt={2}>
           {/* Basic Properties */}
           <TextField
             fullWidth
-            label="Section Title"
+            label='Section Title'
             value={formData.title}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
+            onChange={e => handleFieldChange('title', e.target.value)}
             required
             autoFocus
           />
 
           <TextField
             fullWidth
-            label="Description"
+            label='Description'
             value={formData.description || ''}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
+            onChange={e => handleFieldChange('description', e.target.value)}
             multiline
             rows={3}
-            helperText="Optional description displayed at the top of the section"
+            helperText='Optional description displayed at the top of the section'
           />
 
           {/* Layout Options */}
@@ -137,8 +135,8 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
                 <InputLabel>Columns</InputLabel>
                 <Select
                   value={formData.layout?.columns || 1}
-                  onChange={(e) => handleLayoutChange('columns', e.target.value)}
-                  label="Columns"
+                  onChange={e => handleLayoutChange('columns', e.target.value)}
+                  label='Columns'
                 >
                   <MenuItem value={1}>1 Column</MenuItem>
                   <MenuItem value={2}>2 Columns</MenuItem>
@@ -150,11 +148,11 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="Display Order"
-                type="number"
+                label='Display Order'
+                type='number'
                 value={formData.layout?.order || 0}
-                onChange={(e) => handleLayoutChange('order', parseInt(e.target.value) || 0)}
-                helperText="Lower numbers appear first"
+                onChange={e => handleLayoutChange('order', parseInt(e.target.value) || 0)}
+                helperText='Lower numbers appear first'
               />
             </Grid>
           </Grid>
@@ -165,12 +163,12 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
               control={
                 <Switch
                   checked={formData.collapsible || false}
-                  onChange={(e) => handleFieldChange('collapsible', e.target.checked)}
+                  onChange={e => handleFieldChange('collapsible', e.target.checked)}
                 />
               }
-              label="Collapsible Section"
+              label='Collapsible Section'
             />
-            <Box component="p" sx={{ mt: 0, mb: 0, fontSize: '0.75rem', color: 'text.secondary' }}>
+            <Box component='p' sx={{ mt: 0, mb: 0, fontSize: '0.75rem', color: 'text.secondary' }}>
               Allow users to expand/collapse this section
             </Box>
           </Box>
@@ -181,12 +179,15 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
                 control={
                   <Switch
                     checked={formData.collapsed || false}
-                    onChange={(e) => handleFieldChange('collapsed', e.target.checked)}
+                    onChange={e => handleFieldChange('collapsed', e.target.checked)}
                   />
                 }
-                label="Initially Collapsed"
+                label='Initially Collapsed'
               />
-              <Box component="p" sx={{ mt: 0, mb: 0, fontSize: '0.75rem', color: 'text.secondary' }}>
+              <Box
+                component='p'
+                sx={{ mt: 0, mb: 0, fontSize: '0.75rem', color: 'text.secondary' }}
+              >
                 Start with this section collapsed when the form loads
               </Box>
             </Box>
@@ -195,10 +196,8 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleSave}>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button variant='contained' onClick={handleSave}>
           {section?.id ? 'Update Section' : 'Add Section'}
         </Button>
       </DialogActions>

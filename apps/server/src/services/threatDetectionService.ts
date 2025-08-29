@@ -4,7 +4,12 @@ import { AuditService } from './auditService.js';
 
 export interface ThreatAlert {
   id: string;
-  type: 'brute_force' | 'anomalous_access' | 'suspicious_activity' | 'data_exfiltration' | 'privilege_escalation';
+  type:
+    | 'brute_force'
+    | 'anomalous_access'
+    | 'suspicious_activity'
+    | 'data_exfiltration'
+    | 'privilege_escalation';
   severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   description: string;
@@ -43,12 +48,15 @@ export class ThreatDetectionService {
   }
 
   // Main threat detection analysis
-  public async analyzeThreats(organizationId: string, timeWindowHours: number = 24): Promise<ThreatAlert[]> {
+  public async analyzeThreats(
+    organizationId: string,
+    timeWindowHours: number = 24
+  ): Promise<ThreatAlert[]> {
     console.log(`🔍 Starting threat analysis for organization ${organizationId}`);
-    
+
     const threats: ThreatAlert[] = [];
     const now = new Date();
-    const startTime = new Date(now.getTime() - (timeWindowHours * 60 * 60 * 1000));
+    const startTime = new Date(now.getTime() - timeWindowHours * 60 * 60 * 1000);
 
     try {
       // Run all detection rules
@@ -57,14 +65,14 @@ export class ThreatDetectionService {
         this.detectAnomalousAccess(organizationId, startTime, now),
         this.detectSuspiciousActivity(organizationId, startTime, now),
         this.detectDataExfiltration(organizationId, startTime, now, timeWindowHours),
-        this.detectPrivilegeEscalation(organizationId, startTime, now)
+        this.detectPrivilegeEscalation(organizationId, startTime, now),
       ];
 
       const results = await Promise.all(detectionPromises);
       results.forEach(threatList => threats.push(...threatList));
 
       console.log(`🔍 Threat analysis completed: ${threats.length} threats detected`);
-      
+
       // Log detected threats for audit
       for (const threat of threats) {
         await this.logThreatDetection(organizationId, threat);
@@ -78,9 +86,13 @@ export class ThreatDetectionService {
   }
 
   // Detect brute force attacks (multiple failed logins)
-  private async detectBruteForceAttacks(organizationId: string, startTime: Date, endTime: Date): Promise<ThreatAlert[]> {
+  private async detectBruteForceAttacks(
+    organizationId: string,
+    startTime: Date,
+    endTime: Date
+  ): Promise<ThreatAlert[]> {
     const threats: ThreatAlert[] = [];
-    
+
     try {
       // Find IPs with multiple failed login attempts
       const bruteForceAttempts = await AuditLog.aggregate([
@@ -90,27 +102,27 @@ export class ThreatDetectionService {
             timestamp: { $gte: startTime, $lte: endTime },
             category: 'authentication',
             status: 'failure',
-            ipAddress: { $exists: true, $ne: null }
-          }
+            ipAddress: { $exists: true, $ne: null },
+          },
         },
         {
           $group: {
             _id: {
               ipAddress: '$ipAddress',
-              userEmail: '$userEmail'
+              userEmail: '$userEmail',
             },
             count: { $sum: 1 },
-            attempts: { $push: '$$ROOT' }
-          }
+            attempts: { $push: '$$ROOT' },
+          },
         },
         {
           $match: {
-            count: { $gte: 5 } // 5 or more failed attempts
-          }
+            count: { $gte: 5 }, // 5 or more failed attempts
+          },
         },
         {
-          $sort: { count: -1 }
-        }
+          $sort: { count: -1 },
+        },
       ]);
 
       for (const attempt of bruteForceAttempts) {
@@ -128,7 +140,7 @@ export class ThreatDetectionService {
           sourceIP: attempt._id.ipAddress,
           detectedAt: new Date(),
           confidence,
-          evidence: attempt.attempts.slice(0, 5) // Include first 5 attempts as evidence
+          evidence: attempt.attempts.slice(0, 5), // Include first 5 attempts as evidence
         });
       }
     } catch (error) {
@@ -139,9 +151,13 @@ export class ThreatDetectionService {
   }
 
   // Detect anomalous access patterns
-  private async detectAnomalousAccess(organizationId: string, startTime: Date, endTime: Date): Promise<ThreatAlert[]> {
+  private async detectAnomalousAccess(
+    organizationId: string,
+    startTime: Date,
+    endTime: Date
+  ): Promise<ThreatAlert[]> {
     const threats: ThreatAlert[] = [];
-    
+
     try {
       // Find users accessing data at unusual times
       const now = new Date();
@@ -155,7 +171,7 @@ export class ThreatDetectionService {
           timestamp: { $gte: startTime, $lte: endTime },
           category: 'data',
           eventType: { $in: ['read', 'export'] },
-          userEmail: { $exists: true }
+          userEmail: { $exists: true },
         }).lean();
 
         // Group by user
@@ -169,7 +185,8 @@ export class ThreatDetectionService {
 
         // Check for users with significant out-of-hours activity
         for (const [userEmail, activities] of Object.entries(userAccess)) {
-          if (activities.length >= 3) { // 3+ activities outside business hours
+          if (activities.length >= 3) {
+            // 3+ activities outside business hours
             threats.push({
               id: `anomalous_access_${userEmail}_${Date.now()}`,
               type: 'anomalous_access',
@@ -180,7 +197,7 @@ export class ThreatDetectionService {
               affectedUser: userEmail,
               detectedAt: new Date(),
               confidence: 75,
-              evidence: activities.slice(0, 3)
+              evidence: activities.slice(0, 3),
             });
           }
         }
@@ -193,9 +210,13 @@ export class ThreatDetectionService {
   }
 
   // Detect suspicious activity patterns
-  private async detectSuspiciousActivity(organizationId: string, startTime: Date, endTime: Date): Promise<ThreatAlert[]> {
+  private async detectSuspiciousActivity(
+    organizationId: string,
+    startTime: Date,
+    endTime: Date
+  ): Promise<ThreatAlert[]> {
     const threats: ThreatAlert[] = [];
-    
+
     try {
       // Find users with rapid sequential actions (possible automation)
       const rapidActions = await AuditLog.aggregate([
@@ -203,18 +224,18 @@ export class ThreatDetectionService {
           $match: {
             organizationId,
             timestamp: { $gte: startTime, $lte: endTime },
-            userEmail: { $exists: true }
-          }
+            userEmail: { $exists: true },
+          },
         },
         {
-          $sort: { timestamp: 1 }
+          $sort: { timestamp: 1 },
         },
         {
           $group: {
             _id: '$userEmail',
-            actions: { $push: '$$ROOT' }
-          }
-        }
+            actions: { $push: '$$ROOT' },
+          },
+        },
       ]);
 
       for (const userActions of rapidActions) {
@@ -223,13 +244,16 @@ export class ThreatDetectionService {
 
         // Check for rapid sequential actions (< 1 second apart)
         for (let i = 1; i < actions.length; i++) {
-          const timeDiff = new Date(actions[i].timestamp).getTime() - new Date(actions[i-1].timestamp).getTime();
-          if (timeDiff < 1000) { // Less than 1 second
+          const timeDiff =
+            new Date(actions[i].timestamp).getTime() - new Date(actions[i - 1].timestamp).getTime();
+          if (timeDiff < 1000) {
+            // Less than 1 second
             suspiciousSequences++;
           }
         }
 
-        if (suspiciousSequences >= 5) { // 5+ rapid actions
+        if (suspiciousSequences >= 5) {
+          // 5+ rapid actions
           threats.push({
             id: `suspicious_activity_${userActions._id}_${Date.now()}`,
             type: 'suspicious_activity',
@@ -240,7 +264,7 @@ export class ThreatDetectionService {
             affectedUser: userActions._id,
             detectedAt: new Date(),
             confidence: 70,
-            evidence: actions.slice(-5) // Last 5 actions as evidence
+            evidence: actions.slice(-5), // Last 5 actions as evidence
           });
         }
       }
@@ -252,9 +276,14 @@ export class ThreatDetectionService {
   }
 
   // Detect data exfiltration attempts
-  private async detectDataExfiltration(organizationId: string, startTime: Date, endTime: Date, timeWindowHours: number = 24): Promise<ThreatAlert[]> {
+  private async detectDataExfiltration(
+    organizationId: string,
+    startTime: Date,
+    endTime: Date,
+    timeWindowHours: number = 24
+  ): Promise<ThreatAlert[]> {
     const threats: ThreatAlert[] = [];
-    
+
     try {
       // Find users with excessive data exports
       const dataExports = await AuditLog.aggregate([
@@ -263,21 +292,21 @@ export class ThreatDetectionService {
             organizationId,
             timestamp: { $gte: startTime, $lte: endTime },
             eventType: 'export',
-            userEmail: { $exists: true }
-          }
+            userEmail: { $exists: true },
+          },
         },
         {
           $group: {
             _id: '$userEmail',
             exportCount: { $sum: 1 },
-            exports: { $push: '$$ROOT' }
-          }
+            exports: { $push: '$$ROOT' },
+          },
         },
         {
           $match: {
-            exportCount: { $gte: 10 } // 10+ exports in timeframe
-          }
-        }
+            exportCount: { $gte: 10 }, // 10+ exports in timeframe
+          },
+        },
       ]);
 
       for (const userExports of dataExports) {
@@ -294,7 +323,7 @@ export class ThreatDetectionService {
           affectedUser: userExports._id,
           detectedAt: new Date(),
           confidence,
-          evidence: userExports.exports.slice(0, 5)
+          evidence: userExports.exports.slice(0, 5),
         });
       }
     } catch (error) {
@@ -305,9 +334,13 @@ export class ThreatDetectionService {
   }
 
   // Detect privilege escalation attempts
-  private async detectPrivilegeEscalation(organizationId: string, startTime: Date, endTime: Date): Promise<ThreatAlert[]> {
+  private async detectPrivilegeEscalation(
+    organizationId: string,
+    startTime: Date,
+    endTime: Date
+  ): Promise<ThreatAlert[]> {
     const threats: ThreatAlert[] = [];
-    
+
     try {
       // Find failed authorization attempts by non-admin users
       const authorizationFailures = await AuditLog.aggregate([
@@ -318,21 +351,21 @@ export class ThreatDetectionService {
             category: 'authorization',
             status: 'failure',
             userRole: { $in: ['technician', 'manager'] }, // Non-admin users
-            userEmail: { $exists: true }
-          }
+            userEmail: { $exists: true },
+          },
         },
         {
           $group: {
             _id: '$userEmail',
             failureCount: { $sum: 1 },
-            failures: { $push: '$$ROOT' }
-          }
+            failures: { $push: '$$ROOT' },
+          },
         },
         {
           $match: {
-            failureCount: { $gte: 3 } // 3+ authorization failures
-          }
-        }
+            failureCount: { $gte: 3 }, // 3+ authorization failures
+          },
+        },
       ]);
 
       for (const userFailures of authorizationFailures) {
@@ -346,7 +379,7 @@ export class ThreatDetectionService {
           affectedUser: userFailures._id,
           detectedAt: new Date(),
           confidence: 85,
-          evidence: userFailures.failures.slice(0, 3)
+          evidence: userFailures.failures.slice(0, 3),
         });
       }
     } catch (error) {
@@ -357,7 +390,9 @@ export class ThreatDetectionService {
   }
 
   // Calculate severity for brute force attacks
-  private calculateBruteForceSeverity(attemptCount: number): 'low' | 'medium' | 'high' | 'critical' {
+  private calculateBruteForceSeverity(
+    attemptCount: number
+  ): 'low' | 'medium' | 'high' | 'critical' {
     if (attemptCount >= 50) return 'critical';
     if (attemptCount >= 20) return 'high';
     if (attemptCount >= 10) return 'medium';
@@ -376,7 +411,7 @@ export class ThreatDetectionService {
         ipAddress: '127.0.0.1',
         userAgent: 'ThreatDetectionService',
         sessionId: `threat-${Date.now()}`,
-        requestId: `threat-${threat.id}`
+        requestId: `threat-${threat.id}`,
       };
 
       await this.auditService.logEvent(context, {
@@ -394,13 +429,13 @@ export class ThreatDetectionService {
           indicators: threat.indicators,
           affectedUser: threat.affectedUser,
           sourceIP: threat.sourceIP,
-          evidenceCount: threat.evidence.length
+          evidenceCount: threat.evidence.length,
         },
         severity: threat.severity,
         riskLevel: threat.severity,
         dataClassification: 'confidential',
         status: 'success',
-        tags: ['threat_detection', 'security', threat.type]
+        tags: ['threat_detection', 'security', threat.type],
       });
     } catch (error) {
       console.error('Failed to log threat detection:', error);
@@ -410,7 +445,7 @@ export class ThreatDetectionService {
   // Get threat statistics
   public async getThreatStatistics(organizationId: string, days: number = 7): Promise<any> {
     const endTime = new Date();
-    const startTime = new Date(endTime.getTime() - (days * 24 * 60 * 60 * 1000));
+    const startTime = new Date(endTime.getTime() - days * 24 * 60 * 60 * 1000);
 
     try {
       const stats = await AuditLog.aggregate([
@@ -419,18 +454,18 @@ export class ThreatDetectionService {
             organizationId,
             timestamp: { $gte: startTime, $lte: endTime },
             category: 'security',
-            action: 'threat_detected'
-          }
+            action: 'threat_detected',
+          },
         },
         {
           $group: {
             _id: {
               threatType: '$details.threatType',
-              severity: '$severity'
+              severity: '$severity',
             },
             count: { $sum: 1 },
-            latestDetection: { $max: '$timestamp' }
-          }
+            latestDetection: { $max: '$timestamp' },
+          },
         },
         {
           $group: {
@@ -439,12 +474,12 @@ export class ThreatDetectionService {
             severityBreakdown: {
               $push: {
                 severity: '$_id.severity',
-                count: '$count'
-              }
+                count: '$count',
+              },
             },
-            latestDetection: { $max: '$latestDetection' }
-          }
-        }
+            latestDetection: { $max: '$latestDetection' },
+          },
+        },
       ]);
 
       return {
@@ -453,8 +488,8 @@ export class ThreatDetectionService {
         detectionPeriod: {
           start: startTime,
           end: endTime,
-          days
-        }
+          days,
+        },
       };
     } catch (error) {
       console.error('Failed to get threat statistics:', error);
@@ -463,20 +498,24 @@ export class ThreatDetectionService {
   }
 
   // Get active threats (recent detections)
-  public async getActiveThreats(organizationId: string, hours: number = 24): Promise<ThreatAlert[]> {
+  public async getActiveThreats(
+    organizationId: string,
+    hours: number = 24
+  ): Promise<ThreatAlert[]> {
     const threats = await this.analyzeThreats(organizationId, hours);
-    
+
     // Filter for recent high-priority threats
-    return threats.filter(threat => 
-      threat.severity === 'critical' || 
-      threat.severity === 'high' ||
-      threat.confidence >= 80
-    ).sort((a, b) => {
-      // Sort by severity and confidence
-      const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-      const severityDiff = severityOrder[b.severity] - severityOrder[a.severity];
-      if (severityDiff !== 0) return severityDiff;
-      return b.confidence - a.confidence;
-    });
+    return threats
+      .filter(
+        threat =>
+          threat.severity === 'critical' || threat.severity === 'high' || threat.confidence >= 80
+      )
+      .sort((a, b) => {
+        // Sort by severity and confidence
+        const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
+        const severityDiff = severityOrder[b.severity] - severityOrder[a.severity];
+        if (severityDiff !== 0) return severityDiff;
+        return b.confidence - a.confidence;
+      });
   }
 }

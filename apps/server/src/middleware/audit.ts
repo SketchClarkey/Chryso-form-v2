@@ -22,7 +22,7 @@ export const auditMiddleware = (options: AuditOptions = {}) => {
     let responseData: any = null;
     let statusCode = 200;
 
-    res.json = function(data: any) {
+    res.json = function (data: any) {
       responseData = data;
       statusCode = res.statusCode;
       return originalJson.call(this, data);
@@ -44,10 +44,11 @@ export const auditMiddleware = (options: AuditOptions = {}) => {
         }
 
         // Extract organization ID from user or request
-        const organizationId = (req as any).user?.organizationId || 
-                              req.body?.organizationId || 
-                              req.params?.organizationId ||
-                              req.query?.organizationId;
+        const organizationId =
+          (req as any).user?.organizationId ||
+          req.body?.organizationId ||
+          req.params?.organizationId ||
+          req.query?.organizationId;
 
         if (!organizationId) {
           return; // Skip audit if no organization context
@@ -57,7 +58,8 @@ export const auditMiddleware = (options: AuditOptions = {}) => {
         const context: AuditContext = auditService.createContextFromRequest(req, organizationId);
 
         // Determine action and category
-        const action = options.action || `${req.method.toLowerCase()}_${req.route?.path || req.path}`;
+        const action =
+          options.action || `${req.method.toLowerCase()}_${req.route?.path || req.path}`;
         const category = options.category || deriveCategory(req);
 
         // Create audit event data
@@ -76,7 +78,7 @@ export const auditMiddleware = (options: AuditOptions = {}) => {
           status: isSuccess ? 'success' : 'failure',
           errorMessage: isFailure ? responseData?.message : undefined,
           duration,
-          tags: generateTags(req)
+          tags: generateTags(req),
         };
 
         // Log the audit event
@@ -92,18 +94,23 @@ export const auditMiddleware = (options: AuditOptions = {}) => {
 // Helper functions
 function deriveEventType(method: string): AuditEventData['eventType'] {
   switch (method.toUpperCase()) {
-    case 'POST': return 'create';
-    case 'GET': return 'read';
+    case 'POST':
+      return 'create';
+    case 'GET':
+      return 'read';
     case 'PUT':
-    case 'PATCH': return 'update';
-    case 'DELETE': return 'delete';
-    default: return 'access';
+    case 'PATCH':
+      return 'update';
+    case 'DELETE':
+      return 'delete';
+    default:
+      return 'access';
   }
 }
 
 function deriveCategory(req: Request): AuditEventData['category'] {
   const path = req.path.toLowerCase();
-  
+
   if (path.includes('/auth') || path.includes('/login') || path.includes('/logout')) {
     return 'authentication';
   }
@@ -125,37 +132,37 @@ function deriveCategory(req: Request): AuditEventData['category'] {
   if (path.includes('/integration') || path.includes('/webhook')) {
     return 'integration';
   }
-  
+
   return 'data';
 }
 
 function deriveResourceType(req: Request): string {
   const path = req.path.toLowerCase();
   const pathSegments = path.split('/').filter(Boolean);
-  
+
   // Extract resource type from path (e.g., /api/forms/123 -> forms)
   if (pathSegments.length >= 2) {
     return pathSegments[1];
   }
-  
+
   return 'unknown';
 }
 
 function extractResourceId(req: Request): string | undefined {
   // Try to extract ID from params
   const possibleIdParams = ['id', 'formId', 'userId', 'worksiteId', 'templateId'];
-  
+
   for (const param of possibleIdParams) {
     if (req.params[param]) {
       return req.params[param];
     }
   }
-  
+
   // Try to extract from body
   if (req.body?.id) {
     return req.body.id;
   }
-  
+
   return undefined;
 }
 
@@ -166,36 +173,36 @@ function extractResourceName(req: Request, responseData: any): string | undefine
   if (responseData?.title) return responseData.title;
   if (req.body?.name) return req.body.name;
   if (req.body?.title) return req.body.title;
-  
+
   return undefined;
 }
 
 function sanitizeRequestDetails(req: Request, responseData: any): Record<string, any> {
   const details: Record<string, any> = {};
-  
+
   // Add request method and path
   details.method = req.method;
   details.path = req.path;
-  
+
   // Add query parameters (if any)
   if (Object.keys(req.query).length > 0) {
     details.query = req.query;
   }
-  
+
   // Add sanitized body (exclude sensitive fields)
   if (req.body && Object.keys(req.body).length > 0) {
     const sanitizedBody = { ...req.body };
     const sensitiveFields = ['password', 'token', 'apiKey', 'secret', 'ssn', 'creditCard'];
-    
+
     sensitiveFields.forEach(field => {
       if (sanitizedBody[field]) {
         sanitizedBody[field] = '***REDACTED***';
       }
     });
-    
+
     details.requestBody = sanitizedBody;
   }
-  
+
   // Add response status
   if (responseData) {
     details.responseStatus = responseData.success ? 'success' : 'error';
@@ -203,11 +210,15 @@ function sanitizeRequestDetails(req: Request, responseData: any): Record<string,
       details.responseMessage = responseData.message;
     }
   }
-  
+
   return details;
 }
 
-function deriveSeverity(req: Request, isSuccess: boolean, statusCode: number): AuditEventData['severity'] {
+function deriveSeverity(
+  req: Request,
+  isSuccess: boolean,
+  statusCode: number
+): AuditEventData['severity'] {
   if (statusCode >= 500) return 'critical';
   if (statusCode >= 400) return 'high';
   if (req.method === 'DELETE') return 'high';
@@ -215,7 +226,11 @@ function deriveSeverity(req: Request, isSuccess: boolean, statusCode: number): A
   return 'low';
 }
 
-function deriveRiskLevel(req: Request, isSuccess: boolean, statusCode: number): AuditEventData['riskLevel'] {
+function deriveRiskLevel(
+  req: Request,
+  isSuccess: boolean,
+  statusCode: number
+): AuditEventData['riskLevel'] {
   if (!isSuccess && req.path.includes('/auth')) return 'high';
   if (req.method === 'DELETE') return 'high';
   if (statusCode >= 500) return 'critical';
@@ -228,55 +243,55 @@ function generateDescription(req: Request, isSuccess: boolean): string {
   const method = req.method.toUpperCase();
   const path = req.path;
   const status = isSuccess ? 'successful' : 'failed';
-  
+
   return `${method} request to ${path} ${status}`;
 }
 
 function generateTags(req: Request): string[] {
   const tags: string[] = [];
-  
+
   // Add method tag
   tags.push(req.method.toLowerCase());
-  
+
   // Add path-based tags
   const path = req.path.toLowerCase();
   if (path.includes('/api')) tags.push('api');
   if (path.includes('/auth')) tags.push('authentication');
   if (path.includes('/admin')) tags.push('admin');
   if (path.includes('/mobile')) tags.push('mobile');
-  
+
   // Add user agent tags
   const userAgent = req.get('User-Agent')?.toLowerCase() || '';
   if (userAgent.includes('mobile')) tags.push('mobile');
   if (userAgent.includes('postman')) tags.push('testing');
-  
+
   return tags;
 }
 
 // Specific audit middlewares for common use cases
 export const auditAuth = auditMiddleware({
   category: 'authentication',
-  sensitivity: 'confidential'
+  sensitivity: 'confidential',
 });
 
 export const auditDataAccess = auditMiddleware({
   category: 'data',
-  sensitivity: 'internal'
+  sensitivity: 'internal',
 });
 
 export const auditUserManagement = auditMiddleware({
   category: 'user_management',
-  sensitivity: 'confidential'
+  sensitivity: 'confidential',
 });
 
 export const auditSystemChanges = auditMiddleware({
   category: 'system',
-  sensitivity: 'restricted'
+  sensitivity: 'restricted',
 });
 
 export const auditSecurityEvents = auditMiddleware({
   category: 'security',
-  sensitivity: 'restricted'
+  sensitivity: 'restricted',
 });
 
 export default auditMiddleware;

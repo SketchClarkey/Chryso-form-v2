@@ -5,13 +5,21 @@ export interface IEmailTemplate extends Document {
   name: string;
   description?: string;
   category: 'system' | 'notification' | 'workflow' | 'custom';
-  type: 'welcome' | 'form_notification' | 'password_reset' | 'form_reminder' | 
-        'approval_request' | 'approval_response' | 'system_alert' | 'digest' | 'custom';
-  
+  type:
+    | 'welcome'
+    | 'form_notification'
+    | 'password_reset'
+    | 'form_reminder'
+    | 'approval_request'
+    | 'approval_response'
+    | 'system_alert'
+    | 'digest'
+    | 'custom';
+
   subject: string;
   htmlContent: string;
   textContent?: string;
-  
+
   variables: Array<{
     name: string;
     description: string;
@@ -50,7 +58,7 @@ export interface IEmailTemplate extends Document {
   isActive: boolean;
   isSystem: boolean; // System templates can't be deleted
   version: number;
-  
+
   usage: {
     sentCount: number;
     lastSent?: Date;
@@ -64,86 +72,102 @@ export interface IEmailTemplate extends Document {
   updatedBy: Schema.Types.ObjectId;
 }
 
-const emailTemplateSchema = new Schema<IEmailTemplate>({
-  organizationId: { type: String, required: true },
-  name: { type: String, required: true },
-  description: { type: String },
-  category: { 
-    type: String, 
-    enum: ['system', 'notification', 'workflow', 'custom'], 
-    required: true
-  },
-  type: { 
-    type: String, 
-    enum: [
-      'welcome', 'form_notification', 'password_reset', 'form_reminder',
-      'approval_request', 'approval_response', 'system_alert', 'digest', 'custom'
-    ], 
-    required: true
-  },
-
-  subject: { type: String, required: true },
-  htmlContent: { type: String, required: true },
-  textContent: { type: String },
-
-  variables: [{
+const emailTemplateSchema = new Schema<IEmailTemplate>(
+  {
+    organizationId: { type: String, required: true },
     name: { type: String, required: true },
-    description: { type: String, required: true },
-    type: { 
-      type: String, 
-      enum: ['string', 'number', 'date', 'boolean', 'array', 'object'],
-      default: 'string'
+    description: { type: String },
+    category: {
+      type: String,
+      enum: ['system', 'notification', 'workflow', 'custom'],
+      required: true,
     },
-    required: { type: Boolean, default: false },
-    defaultValue: Schema.Types.Mixed,
-    example: Schema.Types.Mixed
-  }],
+    type: {
+      type: String,
+      enum: [
+        'welcome',
+        'form_notification',
+        'password_reset',
+        'form_reminder',
+        'approval_request',
+        'approval_response',
+        'system_alert',
+        'digest',
+        'custom',
+      ],
+      required: true,
+    },
 
-  settings: {
-    fromName: { type: String },
-    fromEmail: { type: String },
-    replyTo: { type: String },
-    priority: { type: String, enum: ['low', 'normal', 'high'], default: 'normal' },
-    trackOpens: { type: Boolean, default: true },
-    trackClicks: { type: Boolean, default: true }
+    subject: { type: String, required: true },
+    htmlContent: { type: String, required: true },
+    textContent: { type: String },
+
+    variables: [
+      {
+        name: { type: String, required: true },
+        description: { type: String, required: true },
+        type: {
+          type: String,
+          enum: ['string', 'number', 'date', 'boolean', 'array', 'object'],
+          default: 'string',
+        },
+        required: { type: Boolean, default: false },
+        defaultValue: Schema.Types.Mixed,
+        example: Schema.Types.Mixed,
+      },
+    ],
+
+    settings: {
+      fromName: { type: String },
+      fromEmail: { type: String },
+      replyTo: { type: String },
+      priority: { type: String, enum: ['low', 'normal', 'high'], default: 'normal' },
+      trackOpens: { type: Boolean, default: true },
+      trackClicks: { type: Boolean, default: true },
+    },
+
+    triggers: [
+      {
+        event: { type: String, required: true },
+        conditions: { type: Schema.Types.Mixed },
+        delay: { type: Number, default: 0 }, // minutes
+        enabled: { type: Boolean, default: true },
+      },
+    ],
+
+    localization: {
+      defaultLanguage: { type: String, default: 'en' },
+      translations: [
+        {
+          language: { type: String, required: true },
+          subject: { type: String, required: true },
+          htmlContent: { type: String, required: true },
+          textContent: { type: String },
+        },
+      ],
+    },
+
+    isActive: { type: Boolean, default: true },
+    isSystem: { type: Boolean, default: false },
+    version: { type: Number, default: 1 },
+
+    usage: {
+      sentCount: { type: Number, default: 0 },
+      lastSent: { type: Date },
+      openRate: { type: Number, default: 0, min: 0, max: 100 },
+      clickRate: { type: Number, default: 0, min: 0, max: 100 },
+    },
+
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
-
-  triggers: [{
-    event: { type: String, required: true },
-    conditions: { type: Schema.Types.Mixed },
-    delay: { type: Number, default: 0 }, // minutes
-    enabled: { type: Boolean, default: true }
-  }],
-
-  localization: {
-    defaultLanguage: { type: String, default: 'en' },
-    translations: [{
-      language: { type: String, required: true },
-      subject: { type: String, required: true },
-      htmlContent: { type: String, required: true },
-      textContent: { type: String }
-    }]
-  },
-
-  isActive: { type: Boolean, default: true },
-  isSystem: { type: Boolean, default: false },
-  version: { type: Number, default: 1 },
-
-  usage: {
-    sentCount: { type: Number, default: 0 },
-    lastSent: { type: Date },
-    openRate: { type: Number, default: 0, min: 0, max: 100 },
-    clickRate: { type: Number, default: 0, min: 0, max: 100 }
-  },
-
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
-}, {
-  timestamps: true,
-  collection: 'emailTemplates'
-});
+  {
+    timestamps: true,
+    collection: 'emailTemplates',
+  }
+);
 
 // Indexes
 emailTemplateSchema.index({ organizationId: 1, category: 1 });
@@ -158,7 +182,7 @@ emailTemplateSchema.index(
 );
 
 // Pre-save middleware
-emailTemplateSchema.pre('save', function(next) {
+emailTemplateSchema.pre('save', function (next) {
   if (this.isModified() && !this.isNew) {
     this.updatedAt = new Date();
   }
@@ -166,13 +190,13 @@ emailTemplateSchema.pre('save', function(next) {
 });
 
 // Methods
-emailTemplateSchema.methods.incrementUsage = function() {
+emailTemplateSchema.methods.incrementUsage = function () {
   this.usage.sentCount += 1;
   this.usage.lastSent = new Date();
   return this.save();
 };
 
-emailTemplateSchema.methods.updateEngagementStats = function(opens: number, clicks: number) {
+emailTemplateSchema.methods.updateEngagementStats = function (opens: number, clicks: number) {
   if (this.usage.sentCount > 0) {
     this.usage.openRate = (opens / this.usage.sentCount) * 100;
     this.usage.clickRate = (clicks / this.usage.sentCount) * 100;
@@ -181,11 +205,11 @@ emailTemplateSchema.methods.updateEngagementStats = function(opens: number, clic
 };
 
 // Statics
-emailTemplateSchema.statics.getSystemTemplates = function(organizationId: string) {
+emailTemplateSchema.statics.getSystemTemplates = function (organizationId: string) {
   return this.find({ organizationId, isSystem: true, isActive: true });
 };
 
-emailTemplateSchema.statics.getByType = function(organizationId: string, type: string) {
+emailTemplateSchema.statics.getByType = function (organizationId: string, type: string) {
   return this.findOne({ organizationId, type, isActive: true });
 };
 

@@ -122,38 +122,34 @@ const ReportCard: React.FC<{
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <CardContent sx={{ flexGrow: 1 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-          <Box display="flex" alignItems="center" gap={1}>
+        <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
+          <Box display='flex' alignItems='center' gap={1}>
             {getCategoryIcon(report.category)}
-            <Typography variant="h6" component="h2" noWrap>
+            <Typography variant='h6' component='h2' noWrap>
               {report.name}
             </Typography>
           </Box>
-          <IconButton size="small" onClick={handleMenuClick}>
+          <IconButton size='small' onClick={handleMenuClick}>
             <MoreVertIcon />
           </IconButton>
         </Box>
 
-        <Box display="flex" gap={1} mb={2}>
-          <Chip
-            label={report.category}
-            color={getCategoryColor(report.category)}
-            size="small"
-          />
+        <Box display='flex' gap={1} mb={2}>
+          <Chip label={report.category} color={getCategoryColor(report.category)} size='small' />
           <Chip
             label={report.status}
             color={report.status === 'published' ? 'success' : 'default'}
-            size="small"
-            variant="outlined"
+            size='small'
+            variant='outlined'
           />
           {report.schedule?.enabled && (
-            <Tooltip title="Scheduled Report">
+            <Tooltip title='Scheduled Report'>
               <Chip
                 icon={<ScheduleIcon />}
                 label={report.schedule.frequency}
-                size="small"
-                color="info"
-                variant="outlined"
+                size='small'
+                color='info'
+                variant='outlined'
               />
             </Tooltip>
           )}
@@ -161,8 +157,8 @@ const ReportCard: React.FC<{
 
         {report.description && (
           <Typography
-            variant="body2"
-            color="text.secondary"
+            variant='body2'
+            color='text.secondary'
             sx={{
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -176,55 +172,71 @@ const ReportCard: React.FC<{
         )}
 
         {report.tags.length > 0 && (
-          <Box display="flex" gap={0.5} flexWrap="wrap" mb={2}>
-            {report.tags.slice(0, 3).map((tag) => (
-              <Chip key={tag} label={tag} size="small" variant="outlined" />
+          <Box display='flex' gap={0.5} flexWrap='wrap' mb={2}>
+            {report.tags.slice(0, 3).map(tag => (
+              <Chip key={tag} label={tag} size='small' variant='outlined' />
             ))}
             {report.tags.length > 3 && (
-              <Chip label={`+${report.tags.length - 3}`} size="small" variant="outlined" />
+              <Chip label={`+${report.tags.length - 3}`} size='small' variant='outlined' />
             )}
           </Box>
         )}
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="caption" color="text.secondary">
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='caption' color='text.secondary'>
             Created by {report.createdBy.firstName} {report.createdBy.lastName}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant='caption' color='text.secondary'>
             v{report.version}
           </Typography>
         </Box>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="caption" color="text.secondary">
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='caption' color='text.secondary'>
             {report.usage.totalViews} views • {report.usage.totalExports} exports
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant='caption' color='text.secondary'>
             {formatDistanceToNow(new Date(report.updatedAt), { addSuffix: true })}
           </Typography>
         </Box>
       </CardContent>
 
       <CardActions>
-        <Button size="small" onClick={onView} startIcon={<ViewIcon />}>
+        <Button size='small' onClick={onView} startIcon={<ViewIcon />}>
           View
         </Button>
-        <Button size="small" onClick={onEdit} startIcon={<EditIcon />}>
+        <Button size='small' onClick={onEdit} startIcon={<EditIcon />}>
           Edit
         </Button>
       </CardActions>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        <MenuItem onClick={() => { onClone(); handleMenuClose(); }}>
-          <CloneIcon sx={{ mr: 1 }} fontSize="small" />
+        <MenuItem
+          onClick={() => {
+            onClone();
+            handleMenuClose();
+          }}
+        >
+          <CloneIcon sx={{ mr: 1 }} fontSize='small' />
           Clone
         </MenuItem>
-        <MenuItem onClick={() => { onExport(); handleMenuClose(); }}>
-          <ExportIcon sx={{ mr: 1 }} fontSize="small" />
+        <MenuItem
+          onClick={() => {
+            onExport();
+            handleMenuClose();
+          }}
+        >
+          <ExportIcon sx={{ mr: 1 }} fontSize='small' />
           Export
         </MenuItem>
-        <MenuItem onClick={() => { onDelete(); handleMenuClose(); }} sx={{ color: 'error.main' }}>
-          <DeleteIcon sx={{ mr: 1 }} fontSize="small" />
+        <MenuItem
+          onClick={() => {
+            onDelete();
+            handleMenuClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <DeleteIcon sx={{ mr: 1 }} fontSize='small' />
           Delete
         </MenuItem>
       </Menu>
@@ -239,7 +251,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -348,13 +360,9 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
   return (
     <Box>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Reports</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreateNew}
-        >
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>Reports</Typography>
+        <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateNew}>
           New Report
         </Button>
       </Box>
@@ -364,64 +372,52 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
         <Grid item xs={12} md={4}>
           <TextField
             fullWidth
-            label="Search reports"
+            label='Search reports'
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
           />
         </Grid>
         <Grid item xs={6} md={2}>
           <FormControl fullWidth>
             <InputLabel>Category</InputLabel>
-            <Select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="operational">Operational</MenuItem>
-              <MenuItem value="analytical">Analytical</MenuItem>
-              <MenuItem value="compliance">Compliance</MenuItem>
-              <MenuItem value="financial">Financial</MenuItem>
-              <MenuItem value="custom">Custom</MenuItem>
+            <Select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+              <MenuItem value=''>All</MenuItem>
+              <MenuItem value='operational'>Operational</MenuItem>
+              <MenuItem value='analytical'>Analytical</MenuItem>
+              <MenuItem value='compliance'>Compliance</MenuItem>
+              <MenuItem value='financial'>Financial</MenuItem>
+              <MenuItem value='custom'>Custom</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={6} md={2}>
           <FormControl fullWidth>
             <InputLabel>Status</InputLabel>
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="draft">Draft</MenuItem>
-              <MenuItem value="published">Published</MenuItem>
-              <MenuItem value="archived">Archived</MenuItem>
+            <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+              <MenuItem value=''>All</MenuItem>
+              <MenuItem value='draft'>Draft</MenuItem>
+              <MenuItem value='published'>Published</MenuItem>
+              <MenuItem value='archived'>Archived</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={6} md={2}>
           <FormControl fullWidth>
             <InputLabel>Sort By</InputLabel>
-            <Select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              <MenuItem value="updatedAt">Last Updated</MenuItem>
-              <MenuItem value="createdAt">Created Date</MenuItem>
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="usage.totalViews">Views</MenuItem>
+            <Select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+              <MenuItem value='updatedAt'>Last Updated</MenuItem>
+              <MenuItem value='createdAt'>Created Date</MenuItem>
+              <MenuItem value='name'>Name</MenuItem>
+              <MenuItem value='usage.totalViews'>Views</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={6} md={2}>
           <FormControl fullWidth>
             <InputLabel>Order</InputLabel>
-            <Select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <MenuItem value="desc">Descending</MenuItem>
-              <MenuItem value="asc">Ascending</MenuItem>
+            <Select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+              <MenuItem value='desc'>Descending</MenuItem>
+              <MenuItem value='asc'>Ascending</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -434,7 +430,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
               <Card sx={{ height: 280 }}>
                 <CardContent>
-                  <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                  <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
                     <Typography>Loading...</Typography>
                   </Box>
                 </CardContent>
@@ -444,26 +440,26 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
         </Grid>
       ) : reports.length === 0 ? (
         <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
           py={8}
         >
           <ReportIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography variant='h6' color='text.secondary' gutterBottom>
             No reports found
           </Typography>
-          <Typography variant="body2" color="text.secondary" mb={3}>
+          <Typography variant='body2' color='text.secondary' mb={3}>
             Get started by creating your first report
           </Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreateNew}>
+          <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateNew}>
             Create Report
           </Button>
         </Box>
       ) : (
         <Grid container spacing={3}>
-          {reports.map((report) => (
+          {reports.map(report => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={report._id}>
               <ReportCard
                 report={report}
@@ -480,12 +476,12 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <Box display="flex" justifyContent="center" mt={4}>
+        <Box display='flex' justifyContent='center' mt={4}>
           <Pagination
             count={totalPages}
             page={currentPage}
             onChange={(_, page) => setCurrentPage(page)}
-            color="primary"
+            color='primary'
           />
         </Box>
       )}
@@ -501,7 +497,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialog({ open: false })}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button onClick={handleDeleteConfirm} color='error' variant='contained'>
             Delete
           </Button>
         </DialogActions>
@@ -511,21 +507,19 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
       <Dialog open={cloneDialog.open} onClose={() => setCloneDialog({ open: false, name: '' })}>
         <DialogTitle>Clone Report</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ mb: 2 }}>
-            Enter a name for the cloned report:
-          </DialogContentText>
+          <DialogContentText sx={{ mb: 2 }}>Enter a name for the cloned report:</DialogContentText>
           <TextField
             fullWidth
-            label="Report Name"
+            label='Report Name'
             value={cloneDialog.name}
-            onChange={(e) => setCloneDialog({ ...cloneDialog, name: e.target.value })}
+            onChange={e => setCloneDialog({ ...cloneDialog, name: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCloneDialog({ open: false, name: '' })}>Cancel</Button>
           <Button
             onClick={handleCloneConfirm}
-            variant="contained"
+            variant='contained'
             disabled={!cloneDialog.name.trim()}
           >
             Clone

@@ -7,10 +7,10 @@ export const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       scriptSrc: ["'self'"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       mediaSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -26,7 +26,7 @@ export const securityHeaders = helmet({
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
-    preload: true
+    preload: true,
   },
 });
 
@@ -36,13 +36,13 @@ export const generalRateLimit = rateLimit({
   message: {
     success: false,
     message: 'Too many requests, please try again later',
-    code: 'RATE_LIMIT_EXCEEDED'
+    code: 'RATE_LIMIT_EXCEEDED',
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => {
+  skip: req => {
     return env.NODE_ENV === 'development' && req.ip === '127.0.0.1';
-  }
+  },
 });
 
 export const authRateLimit = rateLimit({
@@ -51,7 +51,7 @@ export const authRateLimit = rateLimit({
   message: {
     success: false,
     message: 'Too many authentication attempts, please try again in 15 minutes',
-    code: 'AUTH_RATE_LIMIT_EXCEEDED'
+    code: 'AUTH_RATE_LIMIT_EXCEEDED',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -64,7 +64,7 @@ export const strictAuthRateLimit = rateLimit({
   message: {
     success: false,
     message: 'Too many failed login attempts, please try again in 1 hour',
-    code: 'STRICT_AUTH_RATE_LIMIT_EXCEEDED'
+    code: 'STRICT_AUTH_RATE_LIMIT_EXCEEDED',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -73,11 +73,14 @@ export const strictAuthRateLimit = rateLimit({
 export const validateContentType = (req: Request, res: Response, next: NextFunction): void => {
   if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
     const contentType = req.headers['content-type'];
-    if (!contentType || (!contentType.includes('application/json') && !contentType.includes('multipart/form-data'))) {
+    if (
+      !contentType ||
+      (!contentType.includes('application/json') && !contentType.includes('multipart/form-data'))
+    ) {
       res.status(400).json({
         success: false,
         message: 'Content-Type must be application/json or multipart/form-data',
-        code: 'INVALID_CONTENT_TYPE'
+        code: 'INVALID_CONTENT_TYPE',
       });
       return;
     }

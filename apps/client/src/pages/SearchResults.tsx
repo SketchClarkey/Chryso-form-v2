@@ -82,14 +82,14 @@ const SearchResults: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
-  
+
   // Search parameters
   const query = searchParams.get('q') || '';
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '20');
   const sortBy = searchParams.get('sortBy') || 'relevance';
   const sortOrder = searchParams.get('sortOrder') || 'desc';
-  
+
   // Filters
   const selectedTypes = searchParams.get('types')?.split(',').filter(Boolean) || [];
   const selectedStatuses = searchParams.get('status')?.split(',').filter(Boolean) || [];
@@ -197,15 +197,15 @@ const SearchResults: React.FC = () => {
   const getResultIcon = (type: string) => {
     switch (type) {
       case 'form':
-        return <FormIcon color="primary" />;
+        return <FormIcon color='primary' />;
       case 'template':
-        return <TemplateIcon color="secondary" />;
+        return <TemplateIcon color='secondary' />;
       case 'user':
-        return <UserIcon color="info" />;
+        return <UserIcon color='info' />;
       case 'worksite':
-        return <WorksiteIcon color="success" />;
+        return <WorksiteIcon color='success' />;
       case 'dashboard':
-        return <DashboardIcon color="warning" />;
+        return <DashboardIcon color='warning' />;
       default:
         return <FormIcon />;
     }
@@ -247,20 +247,21 @@ const SearchResults: React.FC = () => {
     }
   };
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedStatuses.length > 0 || selectedCategories.length > 0;
+  const hasActiveFilters =
+    selectedTypes.length > 0 || selectedStatuses.length > 0 || selectedCategories.length > 0;
 
   return (
     <Box>
       {/* Search Header */}
       <Box mb={3}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Search
         </Typography>
         <GlobalSearch
-          variant="page"
+          variant='page'
           initialQuery={query}
           showFilters={true}
-          placeholder="Search across all forms, templates, users, and more..."
+          placeholder='Search across all forms, templates, users, and more...'
         />
       </Box>
 
@@ -269,14 +270,14 @@ const SearchResults: React.FC = () => {
           {/* Filters Sidebar */}
           <Grid item xs={12} md={3}>
             <Paper sx={{ p: 2, position: 'sticky', top: 16 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Filters</Typography>
+              <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+                <Typography variant='h6'>Filters</Typography>
                 {hasActiveFilters && (
                   <Button
-                    size="small"
+                    size='small'
                     onClick={clearFilters}
                     startIcon={<ClearIcon />}
-                    color="secondary"
+                    color='secondary'
                   >
                     Clear
                   </Button>
@@ -287,7 +288,7 @@ const SearchResults: React.FC = () => {
               {facets.types.length > 0 && (
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle2">Content Type</Typography>
+                    <Typography variant='subtitle2'>Content Type</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ pt: 0 }}>
                     <List dense>
@@ -298,15 +299,15 @@ const SearchResults: React.FC = () => {
                               <Checkbox
                                 checked={selectedTypes.includes(type)}
                                 onChange={() => handleTypeFilter(type)}
-                                size="small"
+                                size='small'
                               />
                             }
                             label={
-                              <Box display="flex" justifyContent="space-between" width="100%">
-                                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                              <Box display='flex' justifyContent='space-between' width='100%'>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
                                   {type}s
                                 </Typography>
-                                <Chip label={count} size="small" variant="outlined" />
+                                <Chip label={count} size='small' variant='outlined' />
                               </Box>
                             }
                             sx={{ width: '100%', mr: 0 }}
@@ -322,7 +323,7 @@ const SearchResults: React.FC = () => {
               {facets.statuses.length > 0 && (
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle2">Status</Typography>
+                    <Typography variant='subtitle2'>Status</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ pt: 0 }}>
                     <List dense>
@@ -333,15 +334,15 @@ const SearchResults: React.FC = () => {
                               <Checkbox
                                 checked={selectedStatuses.includes(status)}
                                 onChange={() => handleStatusFilter(status)}
-                                size="small"
+                                size='small'
                               />
                             }
                             label={
-                              <Box display="flex" justifyContent="space-between" width="100%">
-                                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                              <Box display='flex' justifyContent='space-between' width='100%'>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
                                   {status}
                                 </Typography>
-                                <Chip label={count} size="small" variant="outlined" />
+                                <Chip label={count} size='small' variant='outlined' />
                               </Box>
                             }
                             sx={{ width: '100%', mr: 0 }}
@@ -357,7 +358,7 @@ const SearchResults: React.FC = () => {
               {facets.categories.length > 0 && (
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle2">Category</Typography>
+                    <Typography variant='subtitle2'>Category</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ pt: 0 }}>
                     <List dense>
@@ -368,15 +369,15 @@ const SearchResults: React.FC = () => {
                               <Checkbox
                                 checked={selectedCategories.includes(category)}
                                 onChange={() => handleCategoryFilter(category)}
-                                size="small"
+                                size='small'
                               />
                             }
                             label={
-                              <Box display="flex" justifyContent="space-between" width="100%">
-                                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                              <Box display='flex' justifyContent='space-between' width='100%'>
+                                <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
                                   {category}
                                 </Typography>
-                                <Chip label={count} size="small" variant="outlined" />
+                                <Chip label={count} size='small' variant='outlined' />
                               </Box>
                             }
                             sx={{ width: '100%', mr: 0 }}
@@ -392,40 +393,40 @@ const SearchResults: React.FC = () => {
 
           {/* Results */}
           <Grid item xs={12} md={9}>
-            <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="h6">
+            <Box mb={2} display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography variant='h6'>
                 {loading ? 'Searching...' : `${total} results for "${query}"`}
               </Typography>
-              <FormControl size="small" sx={{ minWidth: 120 }}>
+              <FormControl size='small' sx={{ minWidth: 120 }}>
                 <InputLabel>Sort by</InputLabel>
                 <Select
                   value={sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
-                  label="Sort by"
+                  onChange={e => handleSortChange(e.target.value)}
+                  label='Sort by'
                 >
-                  <MenuItem value="relevance">Relevance</MenuItem>
-                  <MenuItem value="date">Date</MenuItem>
-                  <MenuItem value="name">Name</MenuItem>
+                  <MenuItem value='relevance'>Relevance</MenuItem>
+                  <MenuItem value='date'>Date</MenuItem>
+                  <MenuItem value='name'>Name</MenuItem>
                 </Select>
               </FormControl>
             </Box>
 
             {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert severity='error' sx={{ mb: 2 }}>
                 {error}
               </Alert>
             )}
 
             {loading ? (
-              <Box display="flex" justifyContent="center" p={4}>
+              <Box display='flex' justifyContent='center' p={4}>
                 <CircularProgress />
               </Box>
             ) : results.length === 0 ? (
               <Paper sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   No results found
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography color='text.secondary'>
                   Try adjusting your search terms or filters
                 </Typography>
               </Paper>
@@ -438,27 +439,25 @@ const SearchResults: React.FC = () => {
                         onClick={() => navigateToResult(result)}
                         sx={{ p: 2, borderRadius: 1 }}
                       >
-                        <ListItemIcon>
-                          {getResultIcon(result.type)}
-                        </ListItemIcon>
+                        <ListItemIcon>{getResultIcon(result.type)}</ListItemIcon>
                         <ListItemText
                           primary={
-                            <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                              <Typography variant="h6" color="primary">
+                            <Box display='flex' alignItems='center' gap={1} mb={0.5}>
+                              <Typography variant='h6' color='primary'>
                                 {result.title}
                               </Typography>
                               <Chip
                                 label={result.type}
-                                size="small"
-                                variant="outlined"
+                                size='small'
+                                variant='outlined'
                                 sx={{ textTransform: 'capitalize' }}
                               />
                               {result.metadata.status && (
                                 <Chip
                                   label={result.metadata.status}
-                                  size="small"
+                                  size='small'
                                   color={getStatusColor(result.metadata.status) as any}
-                                  variant="outlined"
+                                  variant='outlined'
                                 />
                               )}
                             </Box>
@@ -466,41 +465,48 @@ const SearchResults: React.FC = () => {
                           secondary={
                             <Box>
                               {result.description && (
-                                <Typography variant="body2" color="text.secondary" gutterBottom>
+                                <Typography variant='body2' color='text.secondary' gutterBottom>
                                   {result.description}
                                 </Typography>
                               )}
                               {result.excerpt && (
-                                <Typography variant="body2" color="text.primary" gutterBottom>
+                                <Typography variant='body2' color='text.primary' gutterBottom>
                                   {result.excerpt}
                                 </Typography>
                               )}
-                              <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+                              <Stack
+                                direction='row'
+                                spacing={2}
+                                alignItems='center'
+                                flexWrap='wrap'
+                              >
                                 {result.metadata.createdBy && (
-                                  <Typography variant="caption" color="text.secondary">
+                                  <Typography variant='caption' color='text.secondary'>
                                     by {result.metadata.createdBy}
                                   </Typography>
                                 )}
                                 {result.metadata.location && (
-                                  <Typography variant="caption" color="text.secondary">
+                                  <Typography variant='caption' color='text.secondary'>
                                     {result.metadata.location}
                                   </Typography>
                                 )}
                                 {result.metadata.updatedAt && (
-                                  <Typography variant="caption" color="text.secondary">
-                                    {formatDistanceToNow(new Date(result.metadata.updatedAt), { addSuffix: true })}
+                                  <Typography variant='caption' color='text.secondary'>
+                                    {formatDistanceToNow(new Date(result.metadata.updatedAt), {
+                                      addSuffix: true,
+                                    })}
                                   </Typography>
                                 )}
                                 {result.metadata.tags && result.metadata.tags.length > 0 && (
-                                  <Box display="flex" gap={0.5}>
+                                  <Box display='flex' gap={0.5}>
                                     {result.metadata.tags.slice(0, 3).map((tag, idx) => (
-                                      <Chip key={idx} label={tag} size="small" variant="outlined" />
+                                      <Chip key={idx} label={tag} size='small' variant='outlined' />
                                     ))}
                                     {result.metadata.tags.length > 3 && (
-                                      <Chip 
-                                        label={`+${result.metadata.tags.length - 3}`} 
-                                        size="small" 
-                                        variant="outlined" 
+                                      <Chip
+                                        label={`+${result.metadata.tags.length - 3}`}
+                                        size='small'
+                                        variant='outlined'
                                       />
                                     )}
                                   </Box>
@@ -517,13 +523,13 @@ const SearchResults: React.FC = () => {
 
                 {/* Pagination */}
                 {Math.ceil(total / limit) > 1 && (
-                  <Box display="flex" justifyContent="center" mt={3}>
+                  <Box display='flex' justifyContent='center' mt={3}>
                     <Pagination
                       count={Math.ceil(total / limit)}
                       page={page}
                       onChange={(_, newPage) => handlePageChange(newPage)}
-                      color="primary"
-                      size="large"
+                      color='primary'
+                      size='large'
                     />
                   </Box>
                 )}

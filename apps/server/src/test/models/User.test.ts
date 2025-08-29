@@ -13,10 +13,14 @@ describe('User Model', () => {
     await User.deleteMany({});
 
     // Mock password utilities
-    vi.mocked(passwordUtils.hashPassword).mockImplementation(async (password: string) => `hashed_${password}`);
-    vi.mocked(passwordUtils.comparePassword).mockImplementation(async (plaintext: string, hash: string) => {
-      return hash === `hashed_${plaintext}`;
-    });
+    vi.mocked(passwordUtils.hashPassword).mockImplementation(
+      async (password: string) => `hashed_${password}`
+    );
+    vi.mocked(passwordUtils.comparePassword).mockImplementation(
+      async (plaintext: string, hash: string) => {
+        return hash === `hashed_${plaintext}`;
+      }
+    );
   });
 
   describe('User Creation', () => {
@@ -85,7 +89,9 @@ describe('User Model', () => {
         role: 'invalid-role' as any,
       };
 
-      await expect(User.create(userData)).rejects.toThrow(/Role must be admin, manager, or technician/);
+      await expect(User.create(userData)).rejects.toThrow(
+        /Role must be admin, manager, or technician/
+      );
     });
 
     it('should fail when creating user with duplicate email', async () => {
@@ -201,7 +207,7 @@ describe('User Model', () => {
     describe('incrementLoginAttempts', () => {
       it('should increment login attempts', async () => {
         await testUser.incrementLoginAttempts();
-        
+
         const updatedUser = await User.findById(testUser._id);
         expect(updatedUser?.loginAttempts).toBe(1);
       });
@@ -212,7 +218,7 @@ describe('User Model', () => {
         await testUser.save();
 
         await testUser.incrementLoginAttempts();
-        
+
         const updatedUser = await User.findById(testUser._id);
         expect(updatedUser?.loginAttempts).toBe(5);
         expect(updatedUser?.lockUntil).toBeDefined();
@@ -226,7 +232,7 @@ describe('User Model', () => {
         await testUser.save();
 
         await testUser.incrementLoginAttempts();
-        
+
         const updatedUser = await User.findById(testUser._id);
         expect(updatedUser?.loginAttempts).toBe(1);
         expect(updatedUser?.lockUntil).toBeUndefined();
@@ -240,7 +246,7 @@ describe('User Model', () => {
         await testUser.save();
 
         await testUser.resetLoginAttempts();
-        
+
         const updatedUser = await User.findById(testUser._id);
         expect(updatedUser?.loginAttempts).toBe(0); // Default value after unset
         expect(updatedUser?.lockUntil).toBeUndefined();
@@ -265,7 +271,7 @@ describe('User Model', () => {
     describe('findByEmailWithPassword', () => {
       it('should find active user by email with password field', async () => {
         const user = await (User as any).findByEmailWithPassword('test@example.com');
-        
+
         expect(user).toBeTruthy();
         expect(user.email).toBe('test@example.com');
         expect(user.password).toBeDefined();
@@ -274,7 +280,7 @@ describe('User Model', () => {
 
       it('should not find inactive user', async () => {
         await User.findByIdAndUpdate(testUser._id, { isActive: false });
-        
+
         const user = await (User as any).findByEmailWithPassword('test@example.com');
         expect(user).toBeNull();
       });
@@ -298,7 +304,7 @@ describe('User Model', () => {
       });
 
       const json = user.toJSON();
-      
+
       expect(json.password).toBeUndefined();
       expect(json.refreshTokenVersion).toBeUndefined();
       expect(json.passwordResetToken).toBeUndefined();
@@ -372,7 +378,7 @@ describe('User Model', () => {
   describe('Metadata', () => {
     it('should store metadata fields', async () => {
       const creatorId = new mongoose.Types.ObjectId();
-      
+
       const user = await User.create({
         email: 'test@example.com',
         password: 'password123',

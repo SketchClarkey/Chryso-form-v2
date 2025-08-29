@@ -25,7 +25,10 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { FormStatusChart } from '../components/charts/FormStatusChart';
 import { FormTrendsChart } from '../components/charts/FormTrendsChart';
-import { DashboardFilters, type DashboardFilters as FilterType } from '../components/dashboard/DashboardFilters';
+import {
+  DashboardFilters,
+  type DashboardFilters as FilterType,
+} from '../components/dashboard/DashboardFilters';
 
 interface DashboardStats {
   totalForms: number;
@@ -35,7 +38,6 @@ interface DashboardStats {
   draftForms: number;
   inProgressForms: number;
 }
-
 
 export function Dashboard() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -58,7 +60,7 @@ export function Dashboard() {
   const buildQueryParams = (limit: number = 50) => {
     const params = new URLSearchParams();
     params.set('limit', limit.toString());
-    
+
     if (filters.status.length > 0) {
       params.set('status', filters.status.join(','));
     }
@@ -68,12 +70,16 @@ export function Dashboard() {
     if (filters.technician) {
       params.set('technician', filters.technician);
     }
-    
+
     return params.toString();
   };
 
   // Fetch forms data
-  const { data: formsData, isLoading: isLoadingForms, error: formsError } = useQuery({
+  const {
+    data: formsData,
+    isLoading: isLoadingForms,
+    error: formsError,
+  } = useQuery({
     queryKey: ['forms', 'dashboard', filters],
     queryFn: async () => {
       const queryParams = buildQueryParams(50);
@@ -110,12 +116,18 @@ export function Dashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'success';
-      case 'in-progress': return 'warning';
-      case 'rejected': return 'error';
-      case 'approved': return 'success';
-      case 'draft': return 'info';
-      default: return 'default';
+      case 'completed':
+        return 'success';
+      case 'in-progress':
+        return 'warning';
+      case 'rejected':
+        return 'error';
+      case 'approved':
+        return 'success';
+      case 'draft':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
@@ -134,15 +146,15 @@ export function Dashboard() {
     const days = 7;
     const data = [];
     const today = new Date();
-    
+
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      
+
       // Mock data generation
       const created = Math.floor(Math.random() * 10) + 1;
       const completed = Math.floor(Math.random() * 8) + 1;
-      
+
       data.push({
         date: date.toISOString().split('T')[0],
         created,
@@ -162,8 +174,10 @@ export function Dashboard() {
   if (formsError) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>Dashboard</Typography>
-        <Alert severity="error">
+        <Typography variant='h4' gutterBottom>
+          Dashboard
+        </Typography>
+        <Alert severity='error'>
           Failed to load dashboard data. Please try refreshing the page.
         </Alert>
       </Box>
@@ -172,10 +186,10 @@ export function Dashboard() {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant='h4' gutterBottom>
         Dashboard
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
         Welcome to Chryso Forms. Here's an overview of your recent activity.
       </Typography>
 
@@ -183,20 +197,22 @@ export function Dashboard() {
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Cards */}
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' },
-          gap: 3
-        }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' },
+            gap: 3,
+          }}
+        >
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <FormIcon color="primary" sx={{ mr: 2 }} />
+                <FormIcon color='primary' sx={{ mr: 2 }} />
                 <Box>
-                  <Typography color="textSecondary" gutterBottom variant="body2">
+                  <Typography color='textSecondary' gutterBottom variant='body2'>
                     Total Forms
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant='h4'>
                     {isLoadingForms ? <CircularProgress size={24} /> : stats.totalForms}
                   </Typography>
                 </Box>
@@ -207,12 +223,12 @@ export function Dashboard() {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CompletedIcon color="success" sx={{ mr: 2 }} />
+                <CompletedIcon color='success' sx={{ mr: 2 }} />
                 <Box>
-                  <Typography color="textSecondary" gutterBottom variant="body2">
+                  <Typography color='textSecondary' gutterBottom variant='body2'>
                     Completed
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant='h4'>
                     {isLoadingForms ? <CircularProgress size={24} /> : stats.completedForms}
                   </Typography>
                 </Box>
@@ -223,12 +239,12 @@ export function Dashboard() {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <PendingIcon color="warning" sx={{ mr: 2 }} />
+                <PendingIcon color='warning' sx={{ mr: 2 }} />
                 <Box>
-                  <Typography color="textSecondary" gutterBottom variant="body2">
+                  <Typography color='textSecondary' gutterBottom variant='body2'>
                     In Progress
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant='h4'>
                     {isLoadingForms ? <CircularProgress size={24} /> : stats.inProgressForms}
                   </Typography>
                 </Box>
@@ -239,13 +255,17 @@ export function Dashboard() {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TrendingUpIcon color="info" sx={{ mr: 2 }} />
+                <TrendingUpIcon color='info' sx={{ mr: 2 }} />
                 <Box>
-                  <Typography color="textSecondary" gutterBottom variant="body2">
+                  <Typography color='textSecondary' gutterBottom variant='body2'>
                     Completion Rate
                   </Typography>
-                  <Typography variant="h4">
-                    {isLoadingForms ? <CircularProgress size={24} /> : `${Math.round(completionRate)}%`}
+                  <Typography variant='h4'>
+                    {isLoadingForms ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      `${Math.round(completionRate)}%`
+                    )}
                   </Typography>
                 </Box>
               </Box>
@@ -256,18 +276,19 @@ export function Dashboard() {
         {/* Progress Bar */}
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Overall Progress
             </Typography>
             <Box sx={{ mb: 2 }}>
-              <LinearProgress 
-                variant="determinate" 
-                value={completionRate} 
+              <LinearProgress
+                variant='determinate'
+                value={completionRate}
                 sx={{ height: 8, borderRadius: 5 }}
               />
             </Box>
-            <Typography variant="body2" color="text.secondary">
-              {stats.completedForms} of {stats.totalForms} forms completed ({Math.round(completionRate)}%)
+            <Typography variant='body2' color='text.secondary'>
+              {stats.completedForms} of {stats.totalForms} forms completed (
+              {Math.round(completionRate)}%)
             </Typography>
           </CardContent>
         </Card>
@@ -275,17 +296,10 @@ export function Dashboard() {
         {/* Charts Section */}
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <FormStatusChart 
-              data={statusChartData} 
-              title="Form Status Distribution" 
-              type="pie"
-            />
+            <FormStatusChart data={statusChartData} title='Form Status Distribution' type='pie' />
           </Grid>
           <Grid item xs={12} md={6}>
-            <FormTrendsChart 
-              data={trendData} 
-              title="Form Activity (Last 7 Days)" 
-            />
+            <FormTrendsChart data={trendData} title='Form Activity (Last 7 Days)' />
           </Grid>
         </Grid>
 
@@ -293,7 +307,7 @@ export function Dashboard() {
           {/* Recent Forms */}
           <Grid item xs={12} lg={8}>
             <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Recent Forms
               </Typography>
               {isLoadingRecent ? (
@@ -303,42 +317,52 @@ export function Dashboard() {
               ) : (
                 <List>
                   {recentFormsData?.forms?.length > 0 ? (
-                    recentFormsData.forms.map((form: { id: string; formId?: string; status: string; customerInfo?: { customerName?: string }; createdAt?: string }) => (
-                      <ListItem key={form.id} divider>
-                        <ListItemIcon>
-                          <FormIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Typography variant="subtitle1">
-                                {form.formId || `Form #${form.id.slice(-6)}`}
+                    recentFormsData.forms.map(
+                      (form: {
+                        id: string;
+                        formId?: string;
+                        status: string;
+                        customerInfo?: { customerName?: string };
+                        createdAt?: string;
+                      }) => (
+                        <ListItem key={form.id} divider>
+                          <ListItemIcon>
+                            <FormIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography variant='subtitle1'>
+                                  {form.formId || `Form #${form.id.slice(-6)}`}
+                                </Typography>
+                                <Chip
+                                  label={form.status}
+                                  size='small'
+                                  color={getStatusColor(form.status) as any}
+                                  variant='outlined'
+                                />
+                              </Box>
+                            }
+                            secondary={
+                              <Typography variant='body2' color='text.secondary'>
+                                {form.customerInfo?.customerName || 'No customer'} •
+                                {form.createdAt
+                                  ? new Date(form.createdAt).toLocaleDateString()
+                                  : 'No date'}
                               </Typography>
-                              <Chip 
-                                label={form.status} 
-                                size="small" 
-                                color={getStatusColor(form.status) as any}
-                                variant="outlined"
-                              />
-                            </Box>
-                          }
-                          secondary={
-                            <Typography variant="body2" color="text.secondary">
-                              {form.customerInfo?.customerName || 'No customer'} • 
-                              {form.createdAt ? new Date(form.createdAt).toLocaleDateString() : 'No date'}
-                            </Typography>
-                          }
-                        />
-                      </ListItem>
-                    ))
+                            }
+                          />
+                        </ListItem>
+                      )
+                    )
                   ) : (
                     <ListItem>
                       <ListItemIcon>
                         <FormIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary="No forms yet"
-                        secondary="Start by creating your first form"
+                        primary='No forms yet'
+                        secondary='Start by creating your first form'
                       />
                     </ListItem>
                   )}
@@ -350,7 +374,7 @@ export function Dashboard() {
           {/* Status Breakdown */}
           <Grid item xs={12} lg={4}>
             <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Status Breakdown
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -359,14 +383,17 @@ export function Dashboard() {
                   { label: 'In Progress', count: stats.inProgressForms, color: 'warning' },
                   { label: 'Completed', count: stats.completedForms, color: 'success' },
                   { label: 'Rejected', count: stats.rejectedForms, color: 'error' },
-                ].map((item) => (
-                  <Box key={item.label} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2">{item.label}</Typography>
-                    <Chip 
-                      label={item.count} 
-                      size="small" 
+                ].map(item => (
+                  <Box
+                    key={item.label}
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    <Typography variant='body2'>{item.label}</Typography>
+                    <Chip
+                      label={item.count}
+                      size='small'
                       color={item.color as any}
-                      variant="outlined"
+                      variant='outlined'
                     />
                   </Box>
                 ))}

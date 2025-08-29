@@ -11,9 +11,7 @@ const DashboardView: React.FC = () => {
   if (!id) {
     return (
       <Box>
-        <Alert severity="error">
-          Dashboard ID not provided
-        </Alert>
+        <Alert severity='error'>Dashboard ID not provided</Alert>
       </Box>
     );
   }
@@ -22,13 +20,7 @@ const DashboardView: React.FC = () => {
     navigate(`/dashboard-builder/${id}`);
   };
 
-  return (
-    <DashboardViewer
-      dashboardId={id}
-      editable={true}
-      onEdit={handleEdit}
-    />
-  );
+  return <DashboardViewer dashboardId={id} editable={true} onEdit={handleEdit} />;
 };
 
 export default DashboardView;

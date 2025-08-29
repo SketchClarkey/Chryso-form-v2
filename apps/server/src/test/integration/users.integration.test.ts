@@ -17,14 +17,13 @@ describe('Users API Integration Tests', () => {
   let technicianUserId: string;
   let worksiteId: string;
 
-
   beforeEach(async () => {
     app = createTestApp();
-    
+
     // Clean up database
     await User.deleteMany({});
     await Worksite.deleteMany({});
-    
+
     const timestamp = Date.now();
 
     // Create test worksite
@@ -36,17 +35,19 @@ describe('Users API Integration Tests', () => {
         city: 'Test City',
         state: 'Test State',
         zipCode: '12345',
-        country: 'Australia'
+        country: 'Australia',
       },
-      contacts: [{
-        name: 'Test Contact',
-        email: `test-${timestamp}@example.com`,
-        phone: '61123456789',
-        isPrimary: true
-      }],
+      contacts: [
+        {
+          name: 'Test Contact',
+          email: `test-${timestamp}@example.com`,
+          phone: '61123456789',
+          isPrimary: true,
+        },
+      ],
       metadata: {
-        createdBy: new mongoose.Types.ObjectId()
-      }
+        createdBy: new mongoose.Types.ObjectId(),
+      },
     });
     await worksite.save();
     worksiteId = worksite._id.toString();
@@ -59,19 +60,19 @@ describe('Users API Integration Tests', () => {
       password: 'AdminPass123!',
       role: 'admin',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await adminUser.save();
     adminUserId = adminUser._id.toString();
 
     const managerUser = new User({
       firstName: 'Manager',
-      lastName: 'User', 
+      lastName: 'User',
       email: `manager-${timestamp}@test.com`,
       password: 'ManagerPass123!',
       role: 'manager',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await managerUser.save();
     managerUserId = managerUser._id.toString();
@@ -79,11 +80,11 @@ describe('Users API Integration Tests', () => {
     const technicianUser = new User({
       firstName: 'Technician',
       lastName: 'User',
-      email: `tech-${timestamp}@test.com`, 
+      email: `tech-${timestamp}@test.com`,
       password: 'TechPass123!',
       role: 'technician',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await technicianUser.save();
     technicianUserId = technicianUser._id.toString();
@@ -93,21 +94,21 @@ describe('Users API Integration Tests', () => {
       id: adminUserId,
       email: `admin-${timestamp}@test.com`,
       role: 'admin',
-      worksiteIds: [worksiteId]
+      worksiteIds: [worksiteId],
     });
 
     managerToken = generateAccessToken({
       id: managerUserId,
-      email: `manager-${timestamp}@test.com`, 
+      email: `manager-${timestamp}@test.com`,
       role: 'manager',
-      worksiteIds: [worksiteId]
+      worksiteIds: [worksiteId],
     });
 
     technicianToken = generateAccessToken({
       id: technicianUserId,
       email: `tech-${timestamp}@test.com`,
-      role: 'technician', 
-      worksiteIds: [worksiteId]
+      role: 'technician',
+      worksiteIds: [worksiteId],
     });
   });
 
@@ -246,7 +247,7 @@ describe('Users API Integration Tests', () => {
     it('should allow admin to update any user', async () => {
       const updateData = {
         firstName: 'Updated',
-        lastName: 'Name'
+        lastName: 'Name',
       };
 
       const response = await request(app)
@@ -265,8 +266,8 @@ describe('Users API Integration Tests', () => {
         firstName: 'Updated',
         preferences: {
           theme: 'dark',
-          language: 'en'
-        }
+          language: 'en',
+        },
       };
 
       const response = await request(app)
@@ -282,7 +283,7 @@ describe('Users API Integration Tests', () => {
     it('should prevent non-admin from updating role', async () => {
       const updateData = {
         firstName: 'Updated',
-        role: 'admin'
+        role: 'admin',
       };
 
       const response = await request(app)
@@ -298,7 +299,7 @@ describe('Users API Integration Tests', () => {
 
     it('should prevent user from updating another user', async () => {
       const updateData = {
-        firstName: 'Updated'
+        firstName: 'Updated',
       };
 
       const response = await request(app)
@@ -313,7 +314,7 @@ describe('Users API Integration Tests', () => {
 
     it('should prevent duplicate email', async () => {
       const updateData = {
-        email: `admin-${Date.now()}@test.com`
+        email: `admin-${Date.now()}@test.com`,
       };
 
       const response = await request(app)

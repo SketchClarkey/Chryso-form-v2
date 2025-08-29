@@ -112,11 +112,11 @@ const VisualizationRenderer: React.FC<{
     if (!data || data.length === 0) {
       return (
         <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
           height={200}
-          color="text.secondary"
+          color='text.secondary'
         >
           <Typography>No data available</Typography>
         </Box>
@@ -181,7 +181,7 @@ const VisualizationRenderer: React.FC<{
   const renderTable = () => {
     if (!data || data.length === 0) {
       return (
-        <Box p={2} textAlign="center" color="text.secondary">
+        <Box p={2} textAlign='center' color='text.secondary'>
           <Typography>No data available</Typography>
         </Box>
       );
@@ -192,7 +192,7 @@ const VisualizationRenderer: React.FC<{
 
     return (
       <TableContainer>
-        <Table size="small">
+        <Table size='small'>
           <TableHead>
             <TableRow>
               {keys.map((key: string) => {
@@ -210,7 +210,9 @@ const VisualizationRenderer: React.FC<{
               <TableRow key={index}>
                 {keys.map((key: string) => (
                   <TableCell key={key}>
-                    {typeof row[key] === 'object' ? JSON.stringify(row[key]) : String(row[key] || '')}
+                    {typeof row[key] === 'object'
+                      ? JSON.stringify(row[key])
+                      : String(row[key] || '')}
                   </TableCell>
                 ))}
               </TableRow>
@@ -218,8 +220,8 @@ const VisualizationRenderer: React.FC<{
           </TableBody>
         </Table>
         {data.length > 10 && (
-          <Box p={1} textAlign="center" bgcolor="grey.100">
-            <Typography variant="caption" color="text.secondary">
+          <Box p={1} textAlign='center' bgcolor='grey.100'>
+            <Typography variant='caption' color='text.secondary'>
               Showing 10 of {data.length} rows
             </Typography>
           </Box>
@@ -245,18 +247,20 @@ const VisualizationRenderer: React.FC<{
 
     return (
       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        height="100%"
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        justifyContent='center'
+        height='100%'
         p={2}
       >
-        <Typography variant="h3" color="primary" gutterBottom>
-          {prefix}{displayValue}{suffix}
+        <Typography variant='h3' color='primary' gutterBottom>
+          {prefix}
+          {displayValue}
+          {suffix}
         </Typography>
         {visualization.description && (
-          <Typography variant="body2" color="text.secondary" textAlign="center">
+          <Typography variant='body2' color='text.secondary' textAlign='center'>
             {visualization.description}
           </Typography>
         )}
@@ -268,7 +272,7 @@ const VisualizationRenderer: React.FC<{
     return (
       <Box p={2}>
         <Typography
-          variant="body1"
+          variant='body1'
           dangerouslySetInnerHTML={{ __html: visualization.config?.content || '' }}
         />
       </Box>
@@ -277,7 +281,7 @@ const VisualizationRenderer: React.FC<{
 
   const renderImage = () => {
     return (
-      <Box p={2} textAlign="center">
+      <Box p={2} textAlign='center'>
         <img
           src={visualization.config?.url}
           alt={visualization.config?.alt || 'Report Image'}
@@ -301,7 +305,7 @@ const VisualizationRenderer: React.FC<{
         return renderImage();
       default:
         return (
-          <Box p={2} textAlign="center" color="text.secondary">
+          <Box p={2} textAlign='center' color='text.secondary'>
             <Typography>Unknown visualization type: {visualization.type}</Typography>
           </Box>
         );
@@ -334,9 +338,9 @@ const VisualizationRenderer: React.FC<{
     >
       <CardContent sx={{ p: 1, height: '100%' }}>
         {visualization.title && (
-          <Box display="flex" alignItems="center" mb={1}>
+          <Box display='flex' alignItems='center' mb={1}>
             {getVisualizationIcon()}
-            <Typography variant="subtitle2" sx={{ ml: 1 }}>
+            <Typography variant='subtitle2' sx={{ ml: 1 }}>
               {visualization.title}
             </Typography>
           </Box>
@@ -437,96 +441,76 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
   }
 
   if (error || !report) {
-    return (
-      <Alert severity="error">
-        {error || 'Report not found'}
-      </Alert>
-    );
+    return <Alert severity='error'>{error || 'Report not found'}</Alert>;
   }
 
   return (
     <Box>
       {/* Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-start"
+        display='flex'
+        justifyContent='space-between'
+        alignItems='flex-start'
         mb={3}
         pb={2}
-        borderBottom="1px solid"
-        borderColor="divider"
+        borderBottom='1px solid'
+        borderColor='divider'
       >
         <Box>
-          <Box display="flex" alignItems="center" gap={1} mb={1}>
-            <Typography variant="h4">{report.name}</Typography>
-            <Chip
-              label={report.category}
-              color="primary"
-              size="small"
-            />
-            <Chip
-              label={`v${report.version}`}
-              variant="outlined"
-              size="small"
-            />
+          <Box display='flex' alignItems='center' gap={1} mb={1}>
+            <Typography variant='h4'>{report.name}</Typography>
+            <Chip label={report.category} color='primary' size='small' />
+            <Chip label={`v${report.version}`} variant='outlined' size='small' />
           </Box>
           {report.description && (
-            <Typography variant="body2" color="text.secondary" mb={2}>
+            <Typography variant='body2' color='text.secondary' mb={2}>
               {report.description}
             </Typography>
           )}
-          <Box display="flex" alignItems="center" gap={2}>
-            <Typography variant="caption" color="text.secondary">
+          <Box display='flex' alignItems='center' gap={2}>
+            <Typography variant='caption' color='text.secondary'>
               Created by {report.createdBy.firstName} {report.createdBy.lastName}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               {report.usage.totalViews} views
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               Last updated {formatDistanceToNow(new Date(report.updatedAt), { addSuffix: true })}
             </Typography>
           </Box>
         </Box>
 
-        <Box display="flex" gap={1}>
-          <Tooltip title="Refresh Data">
+        <Box display='flex' gap={1}>
+          <Tooltip title='Refresh Data'>
             <IconButton onClick={handleRefresh} disabled={generating}>
               <RefreshIcon />
             </IconButton>
           </Tooltip>
-          
+
           <Button
             startIcon={<ScheduleIcon />}
             onClick={() => setSchedulerDialogOpen(true)}
-            variant="outlined"
+            variant='outlined'
             color={report.schedule?.enabled ? 'success' : 'default'}
           >
             Schedule
           </Button>
 
           {report.settings.allowExport && (
-            <Button
-              startIcon={<ExportIcon />}
-              onClick={handleExport}
-              variant="outlined"
-            >
+            <Button startIcon={<ExportIcon />} onClick={handleExport} variant='outlined'>
               Export
             </Button>
           )}
 
           {onEdit && (
-            <Button
-              startIcon={<EditIcon />}
-              onClick={onEdit}
-              variant="outlined"
-            >
+            <Button startIcon={<EditIcon />} onClick={onEdit} variant='outlined'>
               Edit
             </Button>
           )}
@@ -535,10 +519,10 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
 
       {/* Report Canvas */}
       {generating ? (
-        <Box display="flex" justifyContent="center" alignItems="center" height="400px">
-          <Box textAlign="center">
+        <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
+          <Box textAlign='center'>
             <CircularProgress />
-            <Typography variant="body2" color="text.secondary" mt={2}>
+            <Typography variant='body2' color='text.secondary' mt={2}>
               Generating report data...
             </Typography>
           </Box>
@@ -556,7 +540,7 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
             borderColor: 'divider',
           }}
         >
-          {report.visualizations.map((visualization) => {
+          {report.visualizations.map(visualization => {
             const dataSourceData = reportData?.[visualization.dataSource] || [];
             return (
               <VisualizationRenderer
@@ -569,15 +553,13 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
 
           {report.visualizations.length === 0 && (
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              height="100%"
-              color="text.secondary"
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
+              height='100%'
+              color='text.secondary'
             >
-              <Typography variant="h6">
-                No visualizations configured for this report
-              </Typography>
+              <Typography variant='h6'>No visualizations configured for this report</Typography>
             </Box>
           )}
         </Paper>
@@ -585,12 +567,12 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
 
       {/* Auto-refresh indicator */}
       {report.settings.autoRefresh && (
-        <Box mt={2} textAlign="center">
+        <Box mt={2} textAlign='center'>
           <Chip
             icon={<ScheduleIcon />}
             label={`Auto-refresh every ${report.settings.refreshInterval || 15} minutes`}
-            variant="outlined"
-            size="small"
+            variant='outlined'
+            size='small'
           />
         </Box>
       )}

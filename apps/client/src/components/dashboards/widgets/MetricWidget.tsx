@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  CircularProgress,
-  Alert,
-  Chip,
-} from '@mui/material';
+import { Card, CardContent, Typography, Box, CircularProgress, Alert, Chip } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
@@ -45,7 +37,13 @@ interface MetricWidgetProps {
   lastUpdated?: Date;
 }
 
-const MetricWidget: React.FC<MetricWidgetProps> = ({ widget, data, error, loading, lastUpdated }) => {
+const MetricWidget: React.FC<MetricWidgetProps> = ({
+  widget,
+  data,
+  error,
+  loading,
+  lastUpdated,
+}) => {
   const formatValue = (value: number, format: string) => {
     switch (format) {
       case 'percentage':
@@ -65,11 +63,11 @@ const MetricWidget: React.FC<MetricWidgetProps> = ({ widget, data, error, loadin
   const getTrendIcon = (trend?: string) => {
     switch (trend) {
       case 'up':
-        return <TrendingUpIcon color="success" />;
+        return <TrendingUpIcon color='success' />;
       case 'down':
-        return <TrendingDownIcon color="error" />;
+        return <TrendingDownIcon color='error' />;
       case 'flat':
-        return <TrendingFlatIcon color="action" />;
+        return <TrendingFlatIcon color='action' />;
       default:
         return null;
     }
@@ -106,23 +104,23 @@ const MetricWidget: React.FC<MetricWidgetProps> = ({ widget, data, error, loadin
       }}
     >
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom noWrap>
+        <Typography variant='subtitle2' color='text.secondary' gutterBottom noWrap>
           {widget.title}
         </Typography>
 
         {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" flex={1}>
+          <Box display='flex' justifyContent='center' alignItems='center' flex={1}>
             <CircularProgress size={32} />
           </Box>
         ) : error ? (
-          <Alert severity="error" sx={{ mt: 1 }}>
+          <Alert severity='error' sx={{ mt: 1 }}>
             {error}
           </Alert>
         ) : data ? (
-          <Box flex={1} display="flex" flexDirection="column" justifyContent="center">
-            <Box display="flex" alignItems="center" mb={1}>
+          <Box flex={1} display='flex' flexDirection='column' justifyContent='center'>
+            <Box display='flex' alignItems='center' mb={1}>
               <Typography
-                variant="h3"
+                variant='h3'
                 sx={{
                   fontWeight: 'bold',
                   color: widget.styling?.textColor || 'text.primary',
@@ -135,9 +133,9 @@ const MetricWidget: React.FC<MetricWidgetProps> = ({ widget, data, error, loadin
             </Box>
 
             {data.previousValue !== undefined && (
-              <Box display="flex" alignItems="center" gap={1}>
+              <Box display='flex' alignItems='center' gap={1}>
                 <Typography
-                  variant="caption"
+                  variant='caption'
                   sx={{
                     color: getTrendColor(data.trend),
                     fontWeight: 500,
@@ -146,29 +144,29 @@ const MetricWidget: React.FC<MetricWidgetProps> = ({ widget, data, error, loadin
                   {data.trend === 'up' ? '+' : data.trend === 'down' ? '-' : ''}
                   {Math.abs(calculateTrendPercent(data.value, data.previousValue)).toFixed(1)}%
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   vs previous period
                 </Typography>
               </Box>
             )}
 
             {widget.description && (
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography variant='caption' color='text.secondary' sx={{ mt: 1 }}>
                 {widget.description}
               </Typography>
             )}
           </Box>
         ) : (
-          <Box display="flex" alignItems="center" justifyContent="center" flex={1}>
-            <Typography variant="body2" color="text.secondary">
+          <Box display='flex' alignItems='center' justifyContent='center' flex={1}>
+            <Typography variant='body2' color='text.secondary'>
               No data available
             </Typography>
           </Box>
         )}
 
         {lastUpdated && (
-          <Box mt="auto" pt={1}>
-            <Typography variant="caption" color="text.secondary">
+          <Box mt='auto' pt={1}>
+            <Typography variant='caption' color='text.secondary'>
               Updated {lastUpdated.toLocaleTimeString()}
             </Typography>
           </Box>

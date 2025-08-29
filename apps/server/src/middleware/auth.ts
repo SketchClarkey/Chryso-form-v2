@@ -23,10 +23,10 @@ export const authenticate = async (
     const token = extractTokenFromHeader(req.header('Authorization'));
 
     if (!token) {
-      res.status(401).json({ 
+      res.status(401).json({
         success: false,
         message: 'Access token required',
-        code: 'NO_TOKEN'
+        code: 'NO_TOKEN',
       });
       return;
     }
@@ -38,10 +38,10 @@ export const authenticate = async (
       .lean();
 
     if (!user || !user.isActive) {
-      res.status(401).json({ 
+      res.status(401).json({
         success: false,
         message: 'User not found or inactive',
-        code: 'USER_NOT_FOUND'
+        code: 'USER_NOT_FOUND',
       });
       return;
     }
@@ -57,10 +57,10 @@ export const authenticate = async (
 
     next();
   } catch (error) {
-    res.status(401).json({ 
+    res.status(401).json({
       success: false,
       message: 'Invalid or expired token',
-      code: 'INVALID_TOKEN'
+      code: 'INVALID_TOKEN',
     });
   }
 };
@@ -68,21 +68,21 @@ export const authenticate = async (
 export const authorize = (...roles: Array<'admin' | 'manager' | 'technician'>) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
-      res.status(401).json({ 
+      res.status(401).json({
         success: false,
         message: 'Authentication required',
-        code: 'NOT_AUTHENTICATED'
+        code: 'NOT_AUTHENTICATED',
       });
       return;
     }
 
     if (!roles.includes(req.user.role)) {
-      res.status(403).json({ 
+      res.status(403).json({
         success: false,
         message: 'Insufficient permissions',
         code: 'INSUFFICIENT_PERMISSIONS',
         required: roles,
-        current: req.user.role
+        current: req.user.role,
       });
       return;
     }
@@ -91,12 +91,16 @@ export const authorize = (...roles: Array<'admin' | 'manager' | 'technician'>) =
   };
 };
 
-export const requireWorksite = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const requireWorksite = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   if (!req.user) {
-    res.status(401).json({ 
+    res.status(401).json({
       success: false,
       message: 'Authentication required',
-      code: 'NOT_AUTHENTICATED'
+      code: 'NOT_AUTHENTICATED',
     });
     return;
   }
@@ -104,19 +108,19 @@ export const requireWorksite = (req: AuthenticatedRequest, res: Response, next: 
   const worksiteId = req.params.worksiteId || req.body.worksiteId || req.query.worksiteId;
 
   if (!worksiteId) {
-    res.status(400).json({ 
+    res.status(400).json({
       success: false,
       message: 'Worksite ID required',
-      code: 'WORKSITE_ID_REQUIRED'
+      code: 'WORKSITE_ID_REQUIRED',
     });
     return;
   }
 
   if (req.user.role !== 'admin' && !req.user.worksiteIds.includes(worksiteId)) {
-    res.status(403).json({ 
+    res.status(403).json({
       success: false,
       message: 'Access denied to this worksite',
-      code: 'WORKSITE_ACCESS_DENIED'
+      code: 'WORKSITE_ACCESS_DENIED',
     });
     return;
   }

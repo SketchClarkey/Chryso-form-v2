@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Production builds
+dist/
+build/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env*
+!.env.example
+
+# Playwright
+playwright-report/
+test-results/
+
+# Generated files
+**/*.min.js
+**/*.min.css
+**/*.bundle.js
+**/*.bundle.css
+
+# Documentation
+CHANGELOG.md
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Kubernetes
+*.yaml
+*.yml
+
+# Ignore specific directories
+uploads/
+.git/

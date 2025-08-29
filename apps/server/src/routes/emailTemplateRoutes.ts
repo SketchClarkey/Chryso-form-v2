@@ -21,19 +21,19 @@ router.get('/', authenticate, async (req, res) => {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
         { description: { $regex: search, $options: 'i' } },
-        { subject: { $regex: search, $options: 'i' } }
+        { subject: { $regex: search, $options: 'i' } },
       ];
     }
 
     const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
-    
+
     const [templates, total] = await Promise.all([
       EmailTemplate.find(filter)
         .populate('createdBy updatedBy', 'firstName lastName email')
         .sort({ category: 1, name: 1 })
         .skip(skip)
         .limit(parseInt(limit as string)),
-      EmailTemplate.countDocuments(filter)
+      EmailTemplate.countDocuments(filter),
     ]);
 
     res.json({
@@ -42,8 +42,8 @@ router.get('/', authenticate, async (req, res) => {
         page: parseInt(page as string),
         limit: parseInt(limit as string),
         total,
-        pages: Math.ceil(total / parseInt(limit as string))
-      }
+        pages: Math.ceil(total / parseInt(limit as string)),
+      },
     });
   } catch (error) {
     console.error('Failed to get email templates:', error);
@@ -57,7 +57,7 @@ router.get('/:id', authenticate, async (req, res) => {
     const { organizationId } = req.user!;
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     }).populate('createdBy updatedBy', 'firstName lastName email');
 
     if (!template) {
@@ -72,7 +72,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 // Create new template
-router.post('/', authorize("admin"), async (req, res) => {
+router.post('/', authorize('admin'), async (req, res) => {
   try {
     const { organizationId, userId } = req.user!;
     const templateData = req.body;
@@ -87,7 +87,7 @@ router.post('/', authorize("admin"), async (req, res) => {
     if (!validation.isValid) {
       return res.status(400).json({
         message: 'Template validation failed',
-        errors: validation.errors
+        errors: validation.errors,
       });
     }
 
@@ -96,12 +96,12 @@ router.post('/', authorize("admin"), async (req, res) => {
       const existingTemplate = await EmailTemplate.findOne({
         organizationId,
         type: templateData.type,
-        isSystem: true
+        isSystem: true,
       });
 
       if (existingTemplate) {
         return res.status(400).json({
-          message: 'System template of this type already exists'
+          message: 'System template of this type already exists',
         });
       }
     }
@@ -115,16 +115,16 @@ router.post('/', authorize("admin"), async (req, res) => {
         priority: 'normal',
         trackOpens: true,
         trackClicks: true,
-        ...templateData.settings
+        ...templateData.settings,
       },
       localization: {
         defaultLanguage: 'en',
         translations: [],
-        ...templateData.localization
+        ...templateData.localization,
       },
       usage: {
-        sentCount: 0
-      }
+        sentCount: 0,
+      },
     });
 
     const savedTemplate = await template.save();
@@ -132,7 +132,7 @@ router.post('/', authorize("admin"), async (req, res) => {
 
     res.status(201).json({
       template: savedTemplate,
-      message: 'Template created successfully'
+      message: 'Template created successfully',
     });
   } catch (error) {
     console.error('Failed to create email template:', error);
@@ -141,7 +141,7 @@ router.post('/', authorize("admin"), async (req, res) => {
 });
 
 // Update template
-router.put('/:id', authorize("admin"), async (req, res) => {
+router.put('/:id', authorize('admin'), async (req, res) => {
   try {
     const { organizationId, userId } = req.user!;
     const templateData = req.body;
@@ -156,13 +156,13 @@ router.put('/:id', authorize("admin"), async (req, res) => {
     if (!validation.isValid) {
       return res.status(400).json({
         message: 'Template validation failed',
-        errors: validation.errors
+        errors: validation.errors,
       });
     }
 
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!template) {
@@ -172,14 +172,14 @@ router.put('/:id', authorize("admin"), async (req, res) => {
     // Prevent modifying system template type
     if (template.isSystem && templateData.type && templateData.type !== template.type) {
       return res.status(400).json({
-        message: 'Cannot change type of system template'
+        message: 'Cannot change type of system template',
       });
     }
 
     Object.assign(template, {
       ...templateData,
       updatedBy: userId,
-      version: template.version + 1
+      version: template.version + 1,
     });
 
     const updatedTemplate = await template.save();
@@ -187,7 +187,7 @@ router.put('/:id', authorize("admin"), async (req, res) => {
 
     res.json({
       template: updatedTemplate,
-      message: 'Template updated successfully'
+      message: 'Template updated successfully',
     });
   } catch (error) {
     console.error('Failed to update email template:', error);
@@ -196,13 +196,13 @@ router.put('/:id', authorize("admin"), async (req, res) => {
 });
 
 // Delete template
-router.delete('/:id', authorize("admin"), async (req, res) => {
+router.delete('/:id', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
-    
+
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!template) {
@@ -211,7 +211,7 @@ router.delete('/:id', authorize("admin"), async (req, res) => {
 
     if (template.isSystem) {
       return res.status(400).json({
-        message: 'Cannot delete system template'
+        message: 'Cannot delete system template',
       });
     }
 
@@ -225,14 +225,14 @@ router.delete('/:id', authorize("admin"), async (req, res) => {
 });
 
 // Clone template
-router.post('/:id/clone', authorize("admin"), async (req, res) => {
+router.post('/:id/clone', authorize('admin'), async (req, res) => {
   try {
     const { organizationId, userId } = req.user!;
     const { name } = req.body;
 
     const originalTemplate = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!originalTemplate) {
@@ -252,14 +252,14 @@ router.post('/:id/clone', authorize("admin"), async (req, res) => {
       settings: { ...originalTemplate.settings },
       localization: {
         defaultLanguage: originalTemplate.localization.defaultLanguage,
-        translations: [...originalTemplate.localization.translations]
+        translations: [...originalTemplate.localization.translations],
       },
       triggers: [...originalTemplate.triggers],
       isActive: true,
       isSystem: false,
       usage: { sentCount: 0 },
       createdBy: userId,
-      updatedBy: userId
+      updatedBy: userId,
     });
 
     const savedTemplate = await clonedTemplate.save();
@@ -267,7 +267,7 @@ router.post('/:id/clone', authorize("admin"), async (req, res) => {
 
     res.status(201).json({
       template: savedTemplate,
-      message: 'Template cloned successfully'
+      message: 'Template cloned successfully',
     });
   } catch (error) {
     console.error('Failed to clone email template:', error);
@@ -283,7 +283,7 @@ router.post('/:id/preview', authenticate, async (req, res) => {
 
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!template) {
@@ -301,7 +301,7 @@ router.post('/:id/preview', authenticate, async (req, res) => {
     } catch (renderError: any) {
       res.status(400).json({
         message: 'Template rendering failed',
-        error: renderError.message
+        error: renderError.message,
       });
     }
   } catch (error) {
@@ -311,7 +311,7 @@ router.post('/:id/preview', authenticate, async (req, res) => {
 });
 
 // Send test email
-router.post('/:id/test', authorize("admin"), async (req, res) => {
+router.post('/:id/test', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
     const { testEmail, variables, language = 'en' } = req.body;
@@ -322,7 +322,7 @@ router.post('/:id/test', authorize("admin"), async (req, res) => {
 
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!template) {
@@ -338,16 +338,16 @@ router.post('/:id/test', authorize("admin"), async (req, res) => {
 
       // Here you would integrate with your email service
       // For now, just simulate success
-      
+
       res.json({
         success: true,
         message: `Test email sent successfully to ${testEmail}`,
-        preview: rendered
+        preview: rendered,
       });
     } catch (renderError: any) {
       res.status(400).json({
         message: 'Template rendering failed',
-        error: renderError.message
+        error: renderError.message,
       });
     }
   } catch (error) {
@@ -363,7 +363,7 @@ router.get('/meta/categories', authenticate, async (req, res) => {
       { value: 'system', label: 'System Templates', description: 'Built-in system templates' },
       { value: 'notification', label: 'Notifications', description: 'User and form notifications' },
       { value: 'workflow', label: 'Workflow', description: 'Workflow-related emails' },
-      { value: 'custom', label: 'Custom', description: 'Custom templates' }
+      { value: 'custom', label: 'Custom', description: 'Custom templates' },
     ];
 
     const types = [
@@ -375,7 +375,7 @@ router.get('/meta/categories', authenticate, async (req, res) => {
       { value: 'approval_response', label: 'Approval Response', category: 'workflow' },
       { value: 'system_alert', label: 'System Alert', category: 'system' },
       { value: 'digest', label: 'Digest Email', category: 'notification' },
-      { value: 'custom', label: 'Custom Template', category: 'custom' }
+      { value: 'custom', label: 'Custom Template', category: 'custom' },
     ];
 
     res.json({ categories, types });
@@ -386,13 +386,13 @@ router.get('/meta/categories', authenticate, async (req, res) => {
 });
 
 // Get template usage statistics
-router.get('/:id/stats', authorize("admin"), async (req, res) => {
+router.get('/:id/stats', authorize('admin'), async (req, res) => {
   try {
     const { organizationId } = req.user!;
-    
+
     const template = await EmailTemplate.findOne({
       _id: req.params.id,
-      organizationId
+      organizationId,
     });
 
     if (!template) {
@@ -404,14 +404,16 @@ router.get('/:id/stats', authorize("admin"), async (req, res) => {
       usage: template.usage,
       lastMonth: {
         sent: Math.floor(template.usage.sentCount * 0.3), // Mock data
-        opened: Math.floor(template.usage.sentCount * 0.3 * (template.usage.openRate || 0) / 100),
-        clicked: Math.floor(template.usage.sentCount * 0.3 * (template.usage.clickRate || 0) / 100)
+        opened: Math.floor((template.usage.sentCount * 0.3 * (template.usage.openRate || 0)) / 100),
+        clicked: Math.floor(
+          (template.usage.sentCount * 0.3 * (template.usage.clickRate || 0)) / 100
+        ),
       },
       trends: {
         sentTrend: 5.2, // Mock percentage change
         openTrend: -2.1,
-        clickTrend: 1.8
-      }
+        clickTrend: 1.8,
+      },
     };
 
     res.json({ stats });
@@ -422,7 +424,7 @@ router.get('/:id/stats', authorize("admin"), async (req, res) => {
 });
 
 // Initialize system templates
-router.post('/system/initialize', authorize("admin"), async (req, res) => {
+router.post('/system/initialize', authorize('admin'), async (req, res) => {
   try {
     const { organizationId, userId } = req.user!;
 
@@ -433,7 +435,7 @@ router.post('/system/initialize', authorize("admin"), async (req, res) => {
 
     res.json({
       message: `${createdTemplates.length} system templates initialized`,
-      templates: createdTemplates.map(t => ({ id: t._id, name: t.name, type: t.type }))
+      templates: createdTemplates.map(t => ({ id: t._id, name: t.name, type: t.type })),
     });
   } catch (error) {
     console.error('Failed to initialize system templates:', error);

@@ -65,7 +65,7 @@ interface Dashboard {
 const DashboardManager: React.FC = () => {
   const navigate = useNavigate();
   const { request } = useApi();
-  
+
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -132,7 +132,7 @@ const DashboardManager: React.FC = () => {
       await request(`/api/dashboards/${selectedDashboard.id}`, {
         method: 'DELETE',
       });
-      
+
       setDashboards(dashboards.filter(d => d.id !== selectedDashboard.id));
       setDeleteDialogOpen(false);
       setSelectedDashboard(null);
@@ -184,23 +184,29 @@ const DashboardManager: React.FC = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'personal': return 'primary';
-      case 'team': return 'secondary';
-      case 'organization': return 'warning';
-      case 'public': return 'success';
-      default: return 'default';
+      case 'personal':
+        return 'primary';
+      case 'team':
+        return 'secondary';
+      case 'organization':
+        return 'warning';
+      case 'public':
+        return 'success';
+      default:
+        return 'default';
     }
   };
 
-  const filteredDashboards = dashboards.filter(dashboard =>
-    dashboard.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dashboard.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dashboard.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredDashboards = dashboards.filter(
+    dashboard =>
+      dashboard.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dashboard.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dashboard.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
@@ -208,21 +214,16 @@ const DashboardManager: React.FC = () => {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="between" alignItems="center" mb={3}>
+      <Box display='flex' justifyContent='between' alignItems='center' mb={3}>
         <Box>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant='h4' gutterBottom>
             Dashboard Manager
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant='body1' color='text.secondary'>
             Create, edit, and manage your custom dashboards
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreateNew}
-          size="large"
-        >
+        <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateNew} size='large'>
           Create Dashboard
         </Button>
       </Box>
@@ -230,41 +231,33 @@ const DashboardManager: React.FC = () => {
       {/* Filters and Search */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems='center'>
             <Grid item xs={12} md={6}>
               <Tabs
                 value={selectedCategory}
                 onChange={(_, newValue) => setSelectedCategory(newValue)}
-                variant="scrollable"
-                scrollButtons="auto"
+                variant='scrollable'
+                scrollButtons='auto'
               >
-                {categories.map((category) => (
-                  <Tab
-                    key={category.value}
-                    label={category.label}
-                    value={category.value}
-                  />
+                {categories.map(category => (
+                  <Tab key={category.value} label={category.label} value={category.value} />
                 ))}
               </Tabs>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Box display="flex" gap={1}>
+              <Box display='flex' gap={1}>
                 <TextField
-                  placeholder="Search dashboards..."
+                  placeholder='Search dashboards...'
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  size="small"
+                  onChange={e => setSearchQuery(e.target.value)}
+                  size='small'
                   fullWidth
                   InputProps={{
                     startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />,
                   }}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={e => e.key === 'Enter' && handleSearch()}
                 />
-                <Button
-                  variant="outlined"
-                  onClick={handleSearch}
-                  startIcon={<FilterIcon />}
-                >
+                <Button variant='outlined' onClick={handleSearch} startIcon={<FilterIcon />}>
                   Search
                 </Button>
               </Box>
@@ -278,90 +271,94 @@ const DashboardManager: React.FC = () => {
         <Card>
           <CardContent sx={{ textAlign: 'center', py: 6 }}>
             <DashboardIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               No dashboards found
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
+            <Typography variant='body2' color='text.secondary' mb={3}>
               {searchQuery
                 ? 'Try adjusting your search criteria'
                 : 'Get started by creating your first dashboard'}
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={handleCreateNew}
-            >
+            <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateNew}>
               Create Dashboard
             </Button>
           </CardContent>
         </Card>
       ) : (
         <Grid container spacing={3}>
-          {filteredDashboards.map((dashboard) => (
+          {filteredDashboards.map(dashboard => (
             <Grid item xs={12} sm={6} md={4} key={dashboard.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                    <Typography variant="h6" component="h2" gutterBottom noWrap>
+                  <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
+                    <Typography variant='h6' component='h2' gutterBottom noWrap>
                       {dashboard.name}
                     </Typography>
-                    <IconButton
-                      size="small"
-                      onClick={(e) => handleMenuOpen(e, dashboard)}
-                    >
+                    <IconButton size='small' onClick={e => handleMenuOpen(e, dashboard)}>
                       <MoreIcon />
                     </IconButton>
                   </Box>
 
                   {dashboard.description && (
                     <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                      variant='body2'
+                      color='text.secondary'
+                      sx={{
+                        mb: 2,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
                     >
                       {dashboard.description}
                     </Typography>
                   )}
 
-                  <Stack direction="row" spacing={1} mb={2} flexWrap="wrap" useFlexGap>
+                  <Stack direction='row' spacing={1} mb={2} flexWrap='wrap' useFlexGap>
                     <Chip
                       label={dashboard.category}
-                      size="small"
+                      size='small'
                       color={getCategoryColor(dashboard.category) as any}
-                      variant="outlined"
+                      variant='outlined'
                     />
                     {dashboard.isTemplate && (
-                      <Chip label="Template" size="small" color="info" variant="outlined" />
+                      <Chip label='Template' size='small' color='info' variant='outlined' />
                     )}
                   </Stack>
 
                   {dashboard.tags.length > 0 && (
                     <Box mb={2}>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                      <Stack direction='row' spacing={0.5} flexWrap='wrap' useFlexGap>
                         {dashboard.tags.slice(0, 3).map((tag, index) => (
-                          <Chip key={index} label={tag} size="small" variant="outlined" />
+                          <Chip key={index} label={tag} size='small' variant='outlined' />
                         ))}
                         {dashboard.tags.length > 3 && (
-                          <Chip label={`+${dashboard.tags.length - 3}`} size="small" variant="outlined" />
+                          <Chip
+                            label={`+${dashboard.tags.length - 3}`}
+                            size='small'
+                            variant='outlined'
+                          />
                         )}
                       </Stack>
                     </Box>
                   )}
 
-                  <Box display="flex" alignItems="center" mb={1}>
+                  <Box display='flex' alignItems='center' mb={1}>
                     <Avatar sx={{ width: 24, height: 24, mr: 1, fontSize: 12 }}>
-                      {dashboard.createdBy.firstName[0]}{dashboard.createdBy.lastName[0]}
+                      {dashboard.createdBy.firstName[0]}
+                      {dashboard.createdBy.lastName[0]}
                     </Avatar>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       by {dashboard.createdBy.firstName} {dashboard.createdBy.lastName}
                     </Typography>
                   </Box>
 
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" color="text.secondary">
+                  <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    <Typography variant='caption' color='text.secondary'>
                       {dashboard.widgets.length} widgets • {dashboard.usage.totalViews} views
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       {formatDistanceToNow(new Date(dashboard.updatedAt), { addSuffix: true })}
                     </Typography>
                   </Box>
@@ -369,14 +366,14 @@ const DashboardManager: React.FC = () => {
 
                 <CardActions>
                   <Button
-                    size="small"
+                    size='small'
                     startIcon={<ViewIcon />}
                     onClick={() => handleViewDashboard(dashboard)}
                   >
                     View
                   </Button>
                   <Button
-                    size="small"
+                    size='small'
                     startIcon={<EditIcon />}
                     onClick={() => handleEditDashboard(dashboard)}
                   >
@@ -390,11 +387,7 @@ const DashboardManager: React.FC = () => {
       )}
 
       {/* Action Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={() => actionDashboard && handleViewDashboard(actionDashboard)}>
           <ViewIcon sx={{ mr: 1 }} />
           View Dashboard
@@ -414,19 +407,17 @@ const DashboardManager: React.FC = () => {
       </Menu>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Dashboard</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete "{selectedDashboard?.name}"? This action cannot be undone.
+            Are you sure you want to delete "{selectedDashboard?.name}"? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteDashboard} color="error" variant="contained">
+          <Button onClick={handleDeleteDashboard} color='error' variant='contained'>
             Delete
           </Button>
         </DialogActions>
@@ -436,7 +427,7 @@ const DashboardManager: React.FC = () => {
       <Dialog
         open={duplicateDialogOpen}
         onClose={() => setDuplicateDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogTitle>Duplicate Dashboard</DialogTitle>
@@ -446,18 +437,18 @@ const DashboardManager: React.FC = () => {
           </DialogContentText>
           <TextField
             autoFocus
-            label="Dashboard Name"
+            label='Dashboard Name'
             fullWidth
             value={duplicateName}
-            onChange={(e) => setDuplicateName(e.target.value)}
-            margin="dense"
+            onChange={e => setDuplicateName(e.target.value)}
+            margin='dense'
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDuplicateDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={handleDuplicateDashboard}
-            variant="contained"
+            variant='contained'
             disabled={!duplicateName.trim()}
           >
             Duplicate
@@ -467,8 +458,8 @@ const DashboardManager: React.FC = () => {
 
       {/* Floating Action Button */}
       <Fab
-        color="primary"
-        aria-label="create dashboard"
+        color='primary'
+        aria-label='create dashboard'
         onClick={handleCreateNew}
         sx={{
           position: 'fixed',

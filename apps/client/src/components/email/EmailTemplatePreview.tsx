@@ -42,17 +42,13 @@ interface TabPanelProps {
 
 function TabPanel({ children, value, index }: TabPanelProps) {
   return (
-    <div role="tabpanel" hidden={value !== index}>
+    <div role='tabpanel' hidden={value !== index}>
       {value === index && <Box>{children}</Box>}
     </div>
   );
 }
 
-const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
-  open,
-  onClose,
-  template,
-}) => {
+const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClose, template }) => {
   const { request } = useApi();
   const [currentTab, setCurrentTab] = useState(0);
   const [previewData, setPreviewData] = useState<any>(null);
@@ -97,7 +93,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
           }
         }
       });
-      
+
       setVariables(initialVariables);
       loadPreview(initialVariables);
     }
@@ -130,7 +126,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
   const handleVariableChange = (variableName: string, value: any) => {
     const newVariables = { ...variables, [variableName]: value };
     setVariables(newVariables);
-    
+
     // Debounced preview update
     clearTimeout((window as any).previewTimeout);
     (window as any).previewTimeout = setTimeout(() => {
@@ -145,70 +141,80 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
 
   const renderVariableInput = (variable: any) => {
     const value = variables[variable.name] || '';
-    
+
     switch (variable.type) {
       case 'boolean':
         return (
-          <FormControl size="small" fullWidth>
+          <FormControl size='small' fullWidth>
             <InputLabel>{variable.name}</InputLabel>
             <Select
               value={value ? 'true' : 'false'}
-              onChange={(e) => handleVariableChange(variable.name, e.target.value === 'true')}
+              onChange={e => handleVariableChange(variable.name, e.target.value === 'true')}
               label={variable.name}
             >
-              <MenuItem value="true">True</MenuItem>
-              <MenuItem value="false">False</MenuItem>
+              <MenuItem value='true'>True</MenuItem>
+              <MenuItem value='false'>False</MenuItem>
             </Select>
           </FormControl>
         );
-      
+
       case 'number':
         return (
           <TextField
             label={variable.name}
-            type="number"
+            type='number'
             value={value}
-            onChange={(e) => handleVariableChange(variable.name, parseFloat(e.target.value) || 0)}
-            size="small"
+            onChange={e => handleVariableChange(variable.name, parseFloat(e.target.value) || 0)}
+            size='small'
             fullWidth
             helperText={variable.description}
           />
         );
-      
+
       case 'date':
         return (
           <TextField
             label={variable.name}
-            type="datetime-local"
+            type='datetime-local'
             value={value ? new Date(value).toISOString().slice(0, 16) : ''}
-            onChange={(e) => handleVariableChange(variable.name, e.target.value ? new Date(e.target.value).toISOString() : '')}
-            size="small"
+            onChange={e =>
+              handleVariableChange(
+                variable.name,
+                e.target.value ? new Date(e.target.value).toISOString() : ''
+              )
+            }
+            size='small'
             fullWidth
             helperText={variable.description}
             InputLabelProps={{ shrink: true }}
           />
         );
-      
+
       case 'array':
         return (
           <TextField
             label={variable.name}
             value={Array.isArray(value) ? value.join(', ') : value}
-            onChange={(e) => handleVariableChange(variable.name, e.target.value.split(',').map(s => s.trim()))}
-            size="small"
+            onChange={e =>
+              handleVariableChange(
+                variable.name,
+                e.target.value.split(',').map(s => s.trim())
+              )
+            }
+            size='small'
             fullWidth
             helperText={`${variable.description} (comma-separated)`}
             multiline
             rows={2}
           />
         );
-      
+
       case 'object':
         return (
           <TextField
             label={variable.name}
             value={typeof value === 'object' ? JSON.stringify(value, null, 2) : value}
-            onChange={(e) => {
+            onChange={e => {
               try {
                 const parsed = JSON.parse(e.target.value);
                 handleVariableChange(variable.name, parsed);
@@ -216,7 +222,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
                 handleVariableChange(variable.name, e.target.value);
               }
             }}
-            size="small"
+            size='small'
             fullWidth
             helperText={`${variable.description} (JSON format)`}
             multiline
@@ -225,22 +231,30 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
               '& .MuiInputBase-input': {
                 fontFamily: 'monospace',
                 fontSize: '0.875rem',
-              }
+              },
             }}
           />
         );
-      
+
       default:
         return (
           <TextField
             label={variable.name}
             value={value}
-            onChange={(e) => handleVariableChange(variable.name, e.target.value)}
-            size="small"
+            onChange={e => handleVariableChange(variable.name, e.target.value)}
+            size='small'
             fullWidth
             helperText={variable.description}
-            multiline={variable.name.toLowerCase().includes('content') || variable.name.toLowerCase().includes('message')}
-            rows={variable.name.toLowerCase().includes('content') || variable.name.toLowerCase().includes('message') ? 2 : 1}
+            multiline={
+              variable.name.toLowerCase().includes('content') ||
+              variable.name.toLowerCase().includes('message')
+            }
+            rows={
+              variable.name.toLowerCase().includes('content') ||
+              variable.name.toLowerCase().includes('message')
+                ? 2
+                : 1
+            }
           />
         );
     }
@@ -254,16 +268,14 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
   ];
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth='xl' fullWidth>
       <DialogTitle>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">
-            Preview: {template?.name}
-          </Typography>
-          <Box display="flex" gap={1}>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Typography variant='h6'>Preview: {template?.name}</Typography>
+          <Box display='flex' gap={1}>
             <Button
               variant={viewMode === 'desktop' ? 'contained' : 'outlined'}
-              size="small"
+              size='small'
               startIcon={<ComputerIcon />}
               onClick={() => setViewMode('desktop')}
             >
@@ -271,7 +283,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
             </Button>
             <Button
               variant={viewMode === 'mobile' ? 'contained' : 'outlined'}
-              size="small"
+              size='small'
               startIcon={<MobileIcon />}
               onClick={() => setViewMode('mobile')}
             >
@@ -286,19 +298,19 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
           {/* Variables Panel */}
           <Grid item xs={12} md={4}>
             <Paper sx={{ p: 2, height: 'fit-content', maxHeight: '70vh', overflow: 'auto' }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Template Variables
               </Typography>
-              
+
               {template?.localization?.translations?.length > 0 && (
-                <FormControl size="small" fullWidth sx={{ mb: 2 }}>
+                <FormControl size='small' fullWidth sx={{ mb: 2 }}>
                   <InputLabel>Language</InputLabel>
                   <Select
                     value={language}
-                    onChange={(e) => handleLanguageChange(e.target.value)}
-                    label="Language"
+                    onChange={e => handleLanguageChange(e.target.value)}
+                    label='Language'
                   >
-                    {availableLanguages.map((lang) => (
+                    {availableLanguages.map(lang => (
                       <MenuItem key={lang.value} value={lang.value}>
                         {lang.label}
                       </MenuItem>
@@ -318,7 +330,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
                   ))}
                 </Grid>
               ) : (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   No variables defined for this template.
                 </Typography>
               )}
@@ -330,24 +342,22 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
             <Paper sx={{ height: '70vh', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
-                  <Tab icon={<PreviewIcon />} label="HTML Preview" />
-                  <Tab icon={<CodeIcon />} label="HTML Source" />
-                  {previewData?.textContent && (
-                    <Tab label="Text Version" />
-                  )}
+                  <Tab icon={<PreviewIcon />} label='HTML Preview' />
+                  <Tab icon={<CodeIcon />} label='HTML Source' />
+                  {previewData?.textContent && <Tab label='Text Version' />}
                 </Tabs>
               </Box>
 
               {error && (
-                <Alert severity="error" sx={{ m: 2 }}>
+                <Alert severity='error' sx={{ m: 2 }}>
                   {error}
                 </Alert>
               )}
 
               {loading ? (
                 <Box sx={{ p: 2 }}>
-                  <Skeleton variant="text" width="60%" height={32} />
-                  <Skeleton variant="rectangular" width="100%" height={400} sx={{ mt: 1 }} />
+                  <Skeleton variant='text' width='60%' height={32} />
+                  <Skeleton variant='rectangular' width='100%' height={400} sx={{ mt: 1 }} />
                 </Box>
               ) : (
                 <>
@@ -355,19 +365,21 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
                   <TabPanel value={currentTab} index={0}>
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                       {previewData?.subject && (
-                        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: 'grey.50' }}>
-                          <Typography variant="subtitle2" color="text.secondary">
+                        <Box
+                          sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: 'grey.50' }}
+                        >
+                          <Typography variant='subtitle2' color='text.secondary'>
                             Subject:
                           </Typography>
-                          <Typography variant="body1" fontWeight="medium">
+                          <Typography variant='body1' fontWeight='medium'>
                             {previewData.subject}
                           </Typography>
                         </Box>
                       )}
-                      
-                      <Box 
-                        sx={{ 
-                          flex: 1, 
+
+                      <Box
+                        sx={{
+                          flex: 1,
                           overflow: 'auto',
                           maxWidth: viewMode === 'mobile' ? '375px' : '100%',
                           mx: viewMode === 'mobile' ? 'auto' : 0,
@@ -383,7 +395,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({
                             border: 'none',
                             minHeight: '400px',
                           }}
-                          title="Email Preview"
+                          title='Email Preview'
                         />
                       </Box>
                     </Box>

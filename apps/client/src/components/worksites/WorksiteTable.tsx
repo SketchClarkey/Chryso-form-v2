@@ -185,27 +185,28 @@ export function WorksiteTable({
               <TableCell>Equipment</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Created</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align='center'>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={8} align='center'>
                   Loading...
                 </TableCell>
               </TableRow>
             ) : paginatedWorksites.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={8} align='center'>
                   No worksites found
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedWorksites.map((worksite) => {
-                const primaryContact = worksite.contacts.find(c => c.isPrimary) || worksite.contacts[0];
-                const needsRepairCount = worksite.equipment.filter(eq => 
-                  eq.condition === 'poor' || eq.condition === 'needs-repair'
+              paginatedWorksites.map(worksite => {
+                const primaryContact =
+                  worksite.contacts.find(c => c.isPrimary) || worksite.contacts[0];
+                const needsRepairCount = worksite.equipment.filter(
+                  eq => eq.condition === 'poor' || eq.condition === 'needs-repair'
                 ).length;
 
                 return (
@@ -214,39 +215,35 @@ export function WorksiteTable({
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <BuildingIcon sx={{ color: 'text.secondary' }} />
                         <Box>
-                          <Typography variant="body2" fontWeight="medium">
+                          <Typography variant='body2' fontWeight='medium'>
                             {worksite.name}
                           </Typography>
                         </Box>
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {worksite.customerName}
-                      </Typography>
+                      <Typography variant='body2'>{worksite.customerName}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
+                      <Typography variant='body2'>
                         {worksite.address.city}, {worksite.address.state}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         {worksite.address.zipCode}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       {primaryContact ? (
                         <Box>
-                          <Typography variant="body2">
-                            {primaryContact.name}
-                          </Typography>
+                          <Typography variant='body2'>{primaryContact.name}</Typography>
                           {primaryContact.position && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant='caption' color='text.secondary'>
                               {primaryContact.position}
                             </Typography>
                           )}
                         </Box>
                       ) : (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           No contact
                         </Typography>
                       )}
@@ -254,15 +251,13 @@ export function WorksiteTable({
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <EquipmentIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                        <Typography variant="body2">
-                          {worksite.equipment.length}
-                        </Typography>
+                        <Typography variant='body2'>{worksite.equipment.length}</Typography>
                         {needsRepairCount > 0 && (
                           <Chip
                             label={`${needsRepairCount} need repair`}
-                            size="small"
-                            color="error"
-                            variant="outlined"
+                            size='small'
+                            color='error'
+                            variant='outlined'
                           />
                         )}
                       </Box>
@@ -270,21 +265,18 @@ export function WorksiteTable({
                     <TableCell>
                       <Chip
                         label={worksite.isActive ? 'Active' : 'Inactive'}
-                        size="small"
+                        size='small'
                         color={worksite.isActive ? 'success' : 'default'}
                         variant={worksite.isActive ? 'filled' : 'outlined'}
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant='body2' color='text.secondary'>
                         {formatDate(worksite.createdAt)}
                       </Typography>
                     </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuOpen(e, worksite)}
-                      >
+                    <TableCell align='center'>
+                      <IconButton size='small' onClick={e => handleMenuOpen(e, worksite)}>
                         <MoreIcon />
                       </IconButton>
                     </TableCell>
@@ -298,7 +290,7 @@ export function WorksiteTable({
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
-        component="div"
+        component='div'
         count={worksites.length}
         rowsPerPage={rowsPerPage}
         page={page}
@@ -345,21 +337,19 @@ export function WorksiteTable({
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogTitle>Delete Worksite</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete <strong>{worksiteToDelete?.name}</strong>?
-            This action cannot be undone and will remove all associated data.
+            Are you sure you want to delete <strong>{worksiteToDelete?.name}</strong>? This action
+            cannot be undone and will remove all associated data.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color='error' variant='contained'>
             Delete Worksite
           </Button>
         </DialogActions>

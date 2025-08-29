@@ -20,7 +20,7 @@ describe('Auth Routes', () => {
   beforeEach(async () => {
     // Use the global database connection from setup.ts
     app = createTestApp();
-    
+
     // Clear the users collection before each test
     await User.deleteMany({});
   });
@@ -35,10 +35,7 @@ describe('Auth Routes', () => {
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/auth/register').send(userData).expect(201);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(userData.email);
@@ -52,33 +49,25 @@ describe('Auth Routes', () => {
 
     it('should not register user with existing email', async () => {
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: 'password123',
         role: 'technician',
       };
 
       // Create first user
-      await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      await request(app).post('/auth/register').send(userData).expect(201);
 
       // Try to create second user with same email
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('email already exists');
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/auth/register')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/register').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toBeDefined();
@@ -86,32 +75,28 @@ describe('Auth Routes', () => {
 
     it('should validate email format', async () => {
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'invalid-email',
         password: 'password123',
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
     });
 
     it('should validate password length', async () => {
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: '123',
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -122,7 +107,8 @@ describe('Auth Routes', () => {
       // Create a test user
       const hashedPassword = await bcrypt.hash('password123', 12);
       await User.create({
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: hashedPassword,
         role: 'technician',
@@ -136,10 +122,7 @@ describe('Auth Routes', () => {
         password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/auth/login').send(loginData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(loginData.email);
@@ -154,10 +137,7 @@ describe('Auth Routes', () => {
         password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid credentials');
@@ -169,10 +149,7 @@ describe('Auth Routes', () => {
         password: 'wrongpassword',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid credentials');
@@ -182,7 +159,8 @@ describe('Auth Routes', () => {
       // Create inactive user
       const hashedPassword = await bcrypt.hash('password123', 12);
       await User.create({
-        firstName: 'Inactive', lastName: 'User',
+        firstName: 'Inactive',
+        lastName: 'User',
         email: 'inactive@example.com',
         password: hashedPassword,
         role: 'technician',
@@ -194,20 +172,14 @@ describe('Auth Routes', () => {
         password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Account is deactivated');
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/auth/login')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/login').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -219,24 +191,20 @@ describe('Auth Routes', () => {
     beforeEach(async () => {
       // Create a test user and login to get refresh token
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: 'password123',
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       refreshToken = registerResponse.body.data.tokens.refreshToken;
     });
 
     it('should refresh tokens with valid refresh token', async () => {
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({ refreshToken })
-        .expect(200);
+      const response = await request(app).post('/auth/refresh').send({ refreshToken }).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.tokens.accessToken).toBeDefined();
@@ -255,10 +223,7 @@ describe('Auth Routes', () => {
     });
 
     it('should require refresh token', async () => {
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/refresh').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -271,15 +236,14 @@ describe('Auth Routes', () => {
     beforeEach(async () => {
       // Create a test user and login
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: 'password123',
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       accessToken = registerResponse.body.data.tokens.accessToken;
       refreshToken = registerResponse.body.data.tokens.refreshToken;
@@ -297,10 +261,7 @@ describe('Auth Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/auth/logout')
-        .send({ refreshToken })
-        .expect(401);
+      const response = await request(app).post('/auth/logout').send({ refreshToken }).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -313,15 +274,14 @@ describe('Auth Routes', () => {
     beforeEach(async () => {
       // Create a test user and login
       const userData = {
-        firstName: 'Test', lastName: 'User',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: 'password123',
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       accessToken = registerResponse.body.data.tokens.accessToken;
       userId = registerResponse.body.data.user.id;
@@ -340,9 +300,7 @@ describe('Auth Routes', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/auth/me')
-        .expect(401);
+      const response = await request(app).get('/auth/me').expect(401);
 
       expect(response.body.success).toBe(false);
     });

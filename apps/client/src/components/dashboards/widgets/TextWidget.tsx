@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-} from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 
 interface TextWidgetProps {
   widget: {
@@ -36,65 +31,63 @@ const TextWidget: React.FC<TextWidgetProps> = ({ widget, data, lastUpdated }) =>
 
   // Simple markdown-like formatting
   const formatText = (text: string) => {
-    return text
-      .split('\n')
-      .map((line, index) => {
-        let formattedLine = line;
-        
-        // Handle headers
-        if (line.startsWith('### ')) {
-          return (
-            <Typography key={index} variant="h6" gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
-              {line.substring(4)}
-            </Typography>
-          );
-        }
-        if (line.startsWith('## ')) {
-          return (
-            <Typography key={index} variant="h5" gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
-              {line.substring(3)}
-            </Typography>
-          );
-        }
-        if (line.startsWith('# ')) {
-          return (
-            <Typography key={index} variant="h4" gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
-              {line.substring(2)}
-            </Typography>
-          );
-        }
+    return text.split('\n').map((line, index) => {
+      let formattedLine = line;
 
-        // Handle bold text
-        formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
-        // Handle italic text
-        formattedLine = formattedLine.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-        // Handle empty lines
-        if (line.trim() === '') {
-          return <br key={index} />;
-        }
-
-        // Handle bullet points
-        if (line.startsWith('- ')) {
-          return (
-            <Typography key={index} component="li" sx={{ ml: 2, mb: 0.5 }}>
-              {line.substring(2)}
-            </Typography>
-          );
-        }
-
-        // Regular paragraph
+      // Handle headers
+      if (line.startsWith('### ')) {
         return (
-          <Typography
-            key={index}
-            variant="body2"
-            paragraph
-            dangerouslySetInnerHTML={{ __html: formattedLine }}
-            sx={{ mb: 1 }}
-          />
+          <Typography key={index} variant='h6' gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
+            {line.substring(4)}
+          </Typography>
         );
-      });
+      }
+      if (line.startsWith('## ')) {
+        return (
+          <Typography key={index} variant='h5' gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
+            {line.substring(3)}
+          </Typography>
+        );
+      }
+      if (line.startsWith('# ')) {
+        return (
+          <Typography key={index} variant='h4' gutterBottom sx={{ mt: index > 0 ? 2 : 0 }}>
+            {line.substring(2)}
+          </Typography>
+        );
+      }
+
+      // Handle bold text
+      formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      // Handle italic text
+      formattedLine = formattedLine.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+      // Handle empty lines
+      if (line.trim() === '') {
+        return <br key={index} />;
+      }
+
+      // Handle bullet points
+      if (line.startsWith('- ')) {
+        return (
+          <Typography key={index} component='li' sx={{ ml: 2, mb: 0.5 }}>
+            {line.substring(2)}
+          </Typography>
+        );
+      }
+
+      // Regular paragraph
+      return (
+        <Typography
+          key={index}
+          variant='body2'
+          paragraph
+          dangerouslySetInnerHTML={{ __html: formattedLine }}
+          sx={{ mb: 1 }}
+        />
+      );
+    });
   };
 
   return (
@@ -117,12 +110,12 @@ const TextWidget: React.FC<TextWidgetProps> = ({ widget, data, lastUpdated }) =>
           p: widget.styling?.padding ? widget.styling.padding / 8 : 2,
         }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="subtitle2" color="text.secondary" noWrap>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+          <Typography variant='subtitle2' color='text.secondary' noWrap>
             {widget.title}
           </Typography>
           {lastUpdated && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               {lastUpdated.toLocaleTimeString()}
             </Typography>
           )}
@@ -138,8 +131,8 @@ const TextWidget: React.FC<TextWidgetProps> = ({ widget, data, lastUpdated }) =>
           {content ? (
             formatText(content)
           ) : (
-            <Box display="flex" alignItems="center" justifyContent="center" height="100%">
-              <Typography variant="body2" color="text.secondary" textAlign="center">
+            <Box display='flex' alignItems='center' justifyContent='center' height='100%'>
+              <Typography variant='body2' color='text.secondary' textAlign='center'>
                 No content configured
               </Typography>
             </Box>
@@ -147,7 +140,7 @@ const TextWidget: React.FC<TextWidgetProps> = ({ widget, data, lastUpdated }) =>
         </Box>
 
         {widget.description && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant='caption' color='text.secondary' sx={{ mt: 1 }}>
             {widget.description}
           </Typography>
         )}

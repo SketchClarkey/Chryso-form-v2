@@ -116,7 +116,7 @@ export function TemplateApprovalWorkflow({
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
       queryClient.invalidateQueries({ queryKey: ['template', template._id] });
-      
+
       // Show appropriate toast
       switch (variables.status) {
         case 'approved':
@@ -195,56 +195,59 @@ export function TemplateApprovalWorkflow({
   const getActionIcon = (action: string) => {
     switch (action) {
       case 'approved':
-        return <ApprovedIcon color="success" />;
+        return <ApprovedIcon color='success' />;
       case 'rejected':
-        return <RejectedIcon color="error" />;
+        return <RejectedIcon color='error' />;
       case 'requested_changes':
-        return <RequestChangesIcon color="warning" />;
+        return <RequestChangesIcon color='warning' />;
       default:
-        return <PendingIcon color="info" />;
+        return <PendingIcon color='info' />;
     }
   };
 
-  const canUserApprove = canApprove && template.approvalWorkflow?.enabled &&
+  const canUserApprove =
+    canApprove &&
+    template.approvalWorkflow?.enabled &&
     template.status === 'pending_approval' &&
     template.approvalWorkflow.currentApprover?._id === user?.id;
 
-  const isAwaitingApproval = template.status === 'pending_approval' && template.approvalWorkflow?.enabled;
+  const isAwaitingApproval =
+    template.status === 'pending_approval' && template.approvalWorkflow?.enabled;
 
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6">Approval Workflow</Typography>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+          <Typography variant='h6'>Approval Workflow</Typography>
           <Chip
             label={template.status.replace('_', ' ').toUpperCase()}
             color={getStatusColor(template.status) as any}
-            variant="filled"
+            variant='filled'
           />
         </Box>
 
         <Box mb={3}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant='body2' color='text.secondary' gutterBottom>
             Template Version: {template.version}
           </Typography>
-          
+
           {template.approvalWorkflow?.enabled ? (
-            <Alert severity="info" sx={{ mt: 2 }}>
+            <Alert severity='info' sx={{ mt: 2 }}>
               This template requires approval before it can be activated.
             </Alert>
           ) : (
-            <Alert severity="warning" sx={{ mt: 2 }}>
+            <Alert severity='warning' sx={{ mt: 2 }}>
               Approval workflow is not enabled for this template.
             </Alert>
           )}
         </Box>
 
         {/* Action Buttons */}
-        <Box display="flex" gap={2} mb={3}>
+        <Box display='flex' gap={2} mb={3}>
           {template.status === 'draft' && canEdit && (
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={submitForApproval}
               disabled={updateStatusMutation.isPending || !template.approvalWorkflow?.enabled}
             >
@@ -255,24 +258,24 @@ export function TemplateApprovalWorkflow({
           {canUserApprove && (
             <>
               <Button
-                variant="contained"
-                color="success"
+                variant='contained'
+                color='success'
                 onClick={() => handleApprovalAction('approve')}
                 disabled={updateStatusMutation.isPending}
               >
                 Approve
               </Button>
               <Button
-                variant="outlined"
-                color="warning"
+                variant='outlined'
+                color='warning'
                 onClick={() => handleApprovalAction('request_changes')}
                 disabled={updateStatusMutation.isPending}
               >
                 Request Changes
               </Button>
               <Button
-                variant="outlined"
-                color="error"
+                variant='outlined'
+                color='error'
                 onClick={() => handleApprovalAction('reject')}
                 disabled={updateStatusMutation.isPending}
               >
@@ -285,18 +288,19 @@ export function TemplateApprovalWorkflow({
         {/* Current Approver */}
         {isAwaitingApproval && template.approvalWorkflow?.currentApprover && (
           <Box mb={3}>
-            <Typography variant="subtitle2" gutterBottom>
+            <Typography variant='subtitle2' gutterBottom>
               Current Approver
             </Typography>
-            <Box display="flex" alignItems="center" gap={2}>
+            <Box display='flex' alignItems='center' gap={2}>
               <Avatar sx={{ width: 32, height: 32 }}>
                 <PersonIcon />
               </Avatar>
               <Box>
-                <Typography variant="body2" fontWeight={500}>
-                  {template.approvalWorkflow.currentApprover.firstName} {template.approvalWorkflow.currentApprover.lastName}
+                <Typography variant='body2' fontWeight={500}>
+                  {template.approvalWorkflow.currentApprover.firstName}{' '}
+                  {template.approvalWorkflow.currentApprover.lastName}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   {template.approvalWorkflow.currentApprover.email}
                 </Typography>
               </Box>
@@ -305,57 +309,62 @@ export function TemplateApprovalWorkflow({
         )}
 
         {/* Approval History */}
-        {template.approvalWorkflow?.approvalHistory && template.approvalWorkflow.approvalHistory.length > 0 && (
-          <Box>
-            <Typography variant="subtitle2" gutterBottom>
-              Approval History
-            </Typography>
-            <Timeline>
-              {template.approvalWorkflow.approvalHistory.map((item, index) => (
-                <TimelineItem key={item._id}>
-                  <TimelineOppositeContent sx={{ m: 'auto 0' }} variant="body2" color="text.secondary">
-                    {new Date(item.timestamp).toLocaleDateString()}
-                    <br />
-                    {new Date(item.timestamp).toLocaleTimeString()}
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineDot>
-                      {getActionIcon(item.action)}
-                    </TimelineDot>
-                    {index < template.approvalWorkflow.approvalHistory.length - 1 && <TimelineConnector />}
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                      {item.action.replace('_', ' ').toUpperCase()}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      By {item.approver.firstName} {item.approver.lastName}
-                    </Typography>
-                    {item.comment && (
-                      <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
-                        "{item.comment}"
+        {template.approvalWorkflow?.approvalHistory &&
+          template.approvalWorkflow.approvalHistory.length > 0 && (
+            <Box>
+              <Typography variant='subtitle2' gutterBottom>
+                Approval History
+              </Typography>
+              <Timeline>
+                {template.approvalWorkflow.approvalHistory.map((item, index) => (
+                  <TimelineItem key={item._id}>
+                    <TimelineOppositeContent
+                      sx={{ m: 'auto 0' }}
+                      variant='body2'
+                      color='text.secondary'
+                    >
+                      {new Date(item.timestamp).toLocaleDateString()}
+                      <br />
+                      {new Date(item.timestamp).toLocaleTimeString()}
+                    </TimelineOppositeContent>
+                    <TimelineSeparator>
+                      <TimelineDot>{getActionIcon(item.action)}</TimelineDot>
+                      {index < template.approvalWorkflow.approvalHistory.length - 1 && (
+                        <TimelineConnector />
+                      )}
+                    </TimelineSeparator>
+                    <TimelineContent sx={{ py: '12px', px: 2 }}>
+                      <Typography variant='h6' component='span'>
+                        {item.action.replace('_', ' ').toUpperCase()}
                       </Typography>
-                    )}
-                  </TimelineContent>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </Box>
-        )}
+                      <Typography variant='body2' color='text.secondary'>
+                        By {item.approver.firstName} {item.approver.lastName}
+                      </Typography>
+                      {item.comment && (
+                        <Typography variant='body2' sx={{ mt: 1, fontStyle: 'italic' }}>
+                          "{item.comment}"
+                        </Typography>
+                      )}
+                    </TimelineContent>
+                  </TimelineItem>
+                ))}
+              </Timeline>
+            </Box>
+          )}
 
         {/* Approvers List */}
         {template.approvalWorkflow?.enabled && template.approvalWorkflow.approvers && (
           <Box mt={3}>
-            <Typography variant="subtitle2" gutterBottom>
+            <Typography variant='subtitle2' gutterBottom>
               Approvers
             </Typography>
-            <Box display="flex" flexWrap="wrap" gap={1}>
-              {template.approvalWorkflow.approvers.map((approver) => (
+            <Box display='flex' flexWrap='wrap' gap={1}>
+              {template.approvalWorkflow.approvers.map(approver => (
                 <Chip
                   key={approver._id}
                   label={`${approver.firstName} ${approver.lastName}`}
-                  size="small"
-                  variant="outlined"
+                  size='small'
+                  variant='outlined'
                 />
               ))}
             </Box>
@@ -364,7 +373,12 @@ export function TemplateApprovalWorkflow({
       </CardContent>
 
       {/* Approval Action Dialog */}
-      <Dialog open={approvalDialog.open} onClose={() => setApprovalDialog({ open: false })} maxWidth="sm" fullWidth>
+      <Dialog
+        open={approvalDialog.open}
+        onClose={() => setApprovalDialog({ open: false })}
+        maxWidth='sm'
+        fullWidth
+      >
         <DialogTitle>
           {approvalDialog.action === 'approve' && 'Approve Template'}
           {approvalDialog.action === 'reject' && 'Reject Template'}
@@ -373,32 +387,33 @@ export function TemplateApprovalWorkflow({
         <DialogContent>
           <TextField
             autoFocus
-            margin="dense"
-            label="Comment"
+            margin='dense'
+            label='Comment'
             fullWidth
             multiline
             rows={4}
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={e => setComment(e.target.value)}
             placeholder={
-              approvalDialog.action === 'approve' 
+              approvalDialog.action === 'approve'
                 ? 'Optional approval comment...'
                 : approvalDialog.action === 'reject'
-                ? 'Please provide a reason for rejection...'
-                : 'Please describe the changes needed...'
+                  ? 'Please provide a reason for rejection...'
+                  : 'Please describe the changes needed...'
             }
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setApprovalDialog({ open: false })}>
-            Cancel
-          </Button>
-          <Button 
+          <Button onClick={() => setApprovalDialog({ open: false })}>Cancel</Button>
+          <Button
             onClick={confirmApprovalAction}
-            variant="contained"
+            variant='contained'
             color={
-              approvalDialog.action === 'approve' ? 'success' : 
-              approvalDialog.action === 'reject' ? 'error' : 'warning'
+              approvalDialog.action === 'approve'
+                ? 'success'
+                : approvalDialog.action === 'reject'
+                  ? 'error'
+                  : 'warning'
             }
             disabled={updateStatusMutation.isPending}
           >

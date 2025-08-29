@@ -23,14 +23,14 @@ export function FullPageLoading({ open, message = 'Loading...' }: FullPageLoadin
     <Backdrop
       sx={{
         color: '#fff',
-        zIndex: (theme) => theme.zIndex.modal + 1,
+        zIndex: theme => theme.zIndex.modal + 1,
         flexDirection: 'column',
         gap: 2,
       }}
       open={open}
     >
       <CircularProgress size={60} />
-      <Typography variant="h6">{message}</Typography>
+      <Typography variant='h6'>{message}</Typography>
     </Backdrop>
   );
 }
@@ -42,23 +42,19 @@ interface LoadingSpinnerProps {
   minHeight?: string | number;
 }
 
-export function LoadingSpinner({ 
-  size = 40, 
-  message,
-  minHeight = '200px' 
-}: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 40, message, minHeight = '200px' }: LoadingSpinnerProps) {
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
+      display='flex'
+      flexDirection='column'
+      justifyContent='center'
+      alignItems='center'
       minHeight={minHeight}
       gap={2}
     >
       <CircularProgress size={size} />
       {message && (
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant='body2' color='text.secondary'>
           {message}
         </Typography>
       )}
@@ -73,25 +69,25 @@ interface ProgressLoadingProps {
   showPercentage?: boolean;
 }
 
-export function ProgressLoading({ 
-  progress, 
+export function ProgressLoading({
+  progress,
   message = 'Loading...',
-  showPercentage = false 
+  showPercentage = false,
 }: ProgressLoadingProps) {
   return (
     <Box sx={{ width: '100%', p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ flexGrow: 1 }}>
           {message}
         </Typography>
         {showPercentage && progress && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             {Math.round(progress)}%
           </Typography>
         )}
       </Box>
-      <LinearProgress 
-        variant={progress !== undefined ? 'determinate' : 'indeterminate'} 
+      <LinearProgress
+        variant={progress !== undefined ? 'determinate' : 'indeterminate'}
         value={progress}
         sx={{ height: 6, borderRadius: 3 }}
       />
@@ -106,34 +102,20 @@ interface TableSkeletonProps {
   showHeader?: boolean;
 }
 
-export function TableSkeleton({ 
-  rows = 5, 
-  columns = 4, 
-  showHeader = true 
-}: TableSkeletonProps) {
+export function TableSkeleton({ rows = 5, columns = 4, showHeader = true }: TableSkeletonProps) {
   return (
     <Box>
       {showHeader && (
         <Box sx={{ display: 'flex', gap: 2, mb: 2, p: 1 }}>
           {Array.from({ length: columns }).map((_, index) => (
-            <Skeleton 
-              key={index} 
-              variant="text" 
-              height={24} 
-              sx={{ flex: 1 }}
-            />
+            <Skeleton key={index} variant='text' height={24} sx={{ flex: 1 }} />
           ))}
         </Box>
       )}
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <Box key={rowIndex} sx={{ display: 'flex', gap: 2, mb: 1, p: 1 }}>
           {Array.from({ length: columns }).map((_, colIndex) => (
-            <Skeleton 
-              key={colIndex} 
-              variant="text" 
-              height={20} 
-              sx={{ flex: 1 }}
-            />
+            <Skeleton key={colIndex} variant='text' height={20} sx={{ flex: 1 }} />
           ))}
         </Box>
       ))}
@@ -148,10 +130,10 @@ interface CardSkeletonProps {
   showActions?: boolean;
 }
 
-export function CardSkeleton({ 
-  count = 3, 
+export function CardSkeleton({
+  count = 3,
   showAvatar = false,
-  showActions = false 
+  showActions = false,
 }: CardSkeletonProps) {
   return (
     <Stack spacing={2}>
@@ -159,21 +141,19 @@ export function CardSkeleton({
         <Card key={index}>
           <CardContent>
             <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              {showAvatar && (
-                <Skeleton variant="circular" width={40} height={40} />
-              )}
+              {showAvatar && <Skeleton variant='circular' width={40} height={40} />}
               <Box sx={{ flex: 1 }}>
-                <Skeleton variant="text" height={24} width="60%" />
-                <Skeleton variant="text" height={20} width="40%" />
+                <Skeleton variant='text' height={24} width='60%' />
+                <Skeleton variant='text' height={20} width='40%' />
               </Box>
             </Box>
-            <Skeleton variant="text" height={16} />
-            <Skeleton variant="text" height={16} />
-            <Skeleton variant="text" height={16} width="80%" />
+            <Skeleton variant='text' height={16} />
+            <Skeleton variant='text' height={16} />
+            <Skeleton variant='text' height={16} width='80%' />
             {showActions && (
               <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                <Skeleton variant="rectangular" width={80} height={32} />
-                <Skeleton variant="rectangular" width={80} height={32} />
+                <Skeleton variant='rectangular' width={80} height={32} />
+                <Skeleton variant='rectangular' width={80} height={32} />
               </Box>
             )}
           </CardContent>
@@ -193,20 +173,20 @@ export function FormSkeleton({ fields = 6, showButtons = true }: FormSkeletonPro
   return (
     <Card>
       <CardContent>
-        <Skeleton variant="text" height={32} width="40%" sx={{ mb: 3 }} />
-        
+        <Skeleton variant='text' height={32} width='40%' sx={{ mb: 3 }} />
+
         <Stack spacing={3}>
           {Array.from({ length: fields }).map((_, index) => (
             <Box key={index}>
-              <Skeleton variant="text" height={20} width="30%" sx={{ mb: 1 }} />
-              <Skeleton variant="rectangular" height={40} />
+              <Skeleton variant='text' height={20} width='30%' sx={{ mb: 1 }} />
+              <Skeleton variant='rectangular' height={40} />
             </Box>
           ))}
-          
+
           {showButtons && (
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 3 }}>
-              <Skeleton variant="rectangular" width={100} height={36} />
-              <Skeleton variant="rectangular" width={100} height={36} />
+              <Skeleton variant='rectangular' width={100} height={36} />
+              <Skeleton variant='rectangular' width={100} height={36} />
             </Box>
           )}
         </Stack>
@@ -238,9 +218,7 @@ export function AsyncWrapper({
   if (loading) {
     return (
       <Fade in timeout={300}>
-        <div>
-          {loadingComponent || <LoadingSpinner minHeight={minHeight} />}
-        </div>
+        <div>{loadingComponent || <LoadingSpinner minHeight={minHeight} />}</div>
       </Fade>
     );
   }
@@ -252,17 +230,17 @@ export function AsyncWrapper({
         <div>
           {errorComponent || (
             <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
+              display='flex'
+              flexDirection='column'
+              alignItems='center'
+              justifyContent='center'
               minHeight={minHeight}
               p={3}
             >
-              <Typography variant="h6" color="error" gutterBottom>
+              <Typography variant='h6' color='error' gutterBottom>
                 Something went wrong
               </Typography>
-              <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
+              <Typography variant='body2' color='text.secondary' align='center' sx={{ mb: 2 }}>
                 {errorMessage}
               </Typography>
               {retry && (
@@ -334,11 +312,7 @@ export function LoadingButton({
       }}
       {...props}
     >
-      {loading ? (
-        <CircularProgress size={16} color="inherit" />
-      ) : (
-        startIcon
-      )}
+      {loading ? <CircularProgress size={16} color='inherit' /> : startIcon}
       {children}
     </button>
   );

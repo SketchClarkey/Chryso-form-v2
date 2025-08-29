@@ -119,13 +119,42 @@ const operatorLabels = {
 const getOperatorsForType = (dataType: string): string[] => {
   switch (dataType) {
     case 'string':
-      return ['equals', 'notEquals', 'contains', 'notContains', 'startsWith', 'endsWith', 'isEmpty', 'isNotEmpty'];
+      return [
+        'equals',
+        'notEquals',
+        'contains',
+        'notContains',
+        'startsWith',
+        'endsWith',
+        'isEmpty',
+        'isNotEmpty',
+      ];
     case 'number':
-      return ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual', 'between', 'isEmpty', 'isNotEmpty'];
+      return [
+        'equals',
+        'notEquals',
+        'greaterThan',
+        'lessThan',
+        'greaterThanOrEqual',
+        'lessThanOrEqual',
+        'between',
+        'isEmpty',
+        'isNotEmpty',
+      ];
     case 'boolean':
       return ['isTrue', 'isFalse'];
     case 'date':
-      return ['dateEquals', 'dateBefore', 'dateAfter', 'dateBetween', 'dateToday', 'dateYesterday', 'dateThisWeek', 'dateThisMonth', 'dateThisYear'];
+      return [
+        'dateEquals',
+        'dateBefore',
+        'dateAfter',
+        'dateBetween',
+        'dateToday',
+        'dateYesterday',
+        'dateThisWeek',
+        'dateThisMonth',
+        'dateThisYear',
+      ];
     case 'array':
       return ['contains', 'notContains', 'in', 'notIn', 'isEmpty', 'isNotEmpty'];
     case 'object':
@@ -175,9 +204,7 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
   const updateGroup = (groupId: string, updates: Partial<FilterGroup>) => {
     setFilter(prev => ({
       ...prev,
-      groups: prev.groups.map(group =>
-        group.id === groupId ? { ...group, ...updates } : group
-      ),
+      groups: prev.groups.map(group => (group.id === groupId ? { ...group, ...updates } : group)),
     }));
   };
 
@@ -215,7 +242,7 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
       field: firstField,
       operator: fieldDef ? getOperatorsForType(fieldDef.type)[0] : 'equals',
       value: '',
-      dataType: fieldDef ? fieldDef.type as any : 'string',
+      dataType: fieldDef ? (fieldDef.type as any) : 'string',
     };
 
     updateGroup(groupId, {
@@ -223,7 +250,11 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
     });
   };
 
-  const updateCriteria = (groupId: string, criteriaId: string, updates: Partial<FilterCriteria>) => {
+  const updateCriteria = (
+    groupId: string,
+    criteriaId: string,
+    updates: Partial<FilterCriteria>
+  ) => {
     const group = filter.groups.find(g => g.id === groupId);
     if (group) {
       const updatedCriteria = group.criteria.map(c =>
@@ -259,8 +290,18 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
 
   const renderValueInput = (criteria: FilterCriteria, groupId: string) => {
     const fieldDef = availableFields[criteria.field];
-    const operatorsWithoutValue = ['isEmpty', 'isNotEmpty', 'isTrue', 'isFalse', 'dateToday', 'dateYesterday', 'dateThisWeek', 'dateThisMonth', 'dateThisYear'];
-    
+    const operatorsWithoutValue = [
+      'isEmpty',
+      'isNotEmpty',
+      'isTrue',
+      'isFalse',
+      'dateToday',
+      'dateYesterday',
+      'dateThisWeek',
+      'dateThisMonth',
+      'dateThisYear',
+    ];
+
     if (operatorsWithoutValue.includes(criteria.operator)) {
       return null;
     }
@@ -269,15 +310,17 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
       case 'string':
         if (fieldDef?.options) {
           return (
-            <FormControl fullWidth size="small">
+            <FormControl fullWidth size='small'>
               <InputLabel>Value</InputLabel>
               <Select
                 value={criteria.value}
-                onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
-                label="Value"
+                onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+                label='Value'
               >
                 {fieldDef.options.map(option => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -286,23 +329,23 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         return (
           <TextField
             fullWidth
-            size="small"
-            label="Value"
+            size='small'
+            label='Value'
             value={criteria.value}
-            onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+            onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
           />
         );
 
       case 'number':
         if (criteria.operator === 'between') {
           return (
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction='row' spacing={1} alignItems='center'>
               <TextField
-                size="small"
-                type="number"
-                label="From"
+                size='small'
+                type='number'
+                label='From'
                 value={Array.isArray(criteria.value) ? criteria.value[0] : ''}
-                onChange={(e) => {
+                onChange={e => {
                   const current = Array.isArray(criteria.value) ? criteria.value : ['', ''];
                   current[0] = e.target.value;
                   updateCriteria(groupId, criteria.id, { value: current });
@@ -310,11 +353,11 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
               />
               <Typography>to</Typography>
               <TextField
-                size="small"
-                type="number"
-                label="To"
+                size='small'
+                type='number'
+                label='To'
                 value={Array.isArray(criteria.value) ? criteria.value[1] : ''}
-                onChange={(e) => {
+                onChange={e => {
                   const current = Array.isArray(criteria.value) ? criteria.value : ['', ''];
                   current[1] = e.target.value;
                   updateCriteria(groupId, criteria.id, { value: current });
@@ -326,22 +369,22 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         return (
           <TextField
             fullWidth
-            size="small"
-            type="number"
-            label="Value"
+            size='small'
+            type='number'
+            label='Value'
             value={criteria.value}
-            onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+            onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
           />
         );
 
       case 'boolean':
         return (
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size='small'>
             <InputLabel>Value</InputLabel>
             <Select
               value={criteria.value}
-              onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
-              label="Value"
+              onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+              label='Value'
             >
               <MenuItem value={true}>True</MenuItem>
               <MenuItem value={false}>False</MenuItem>
@@ -353,11 +396,11 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         if (criteria.operator === 'dateBetween') {
           return (
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction='row' spacing={1} alignItems='center'>
                 <DatePicker
-                  label="From Date"
+                  label='From Date'
                   value={Array.isArray(criteria.value) ? criteria.value[0] : null}
-                  onChange={(date) => {
+                  onChange={date => {
                     const current = Array.isArray(criteria.value) ? criteria.value : [null, null];
                     current[0] = date;
                     updateCriteria(groupId, criteria.id, { value: current });
@@ -366,9 +409,9 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
                 />
                 <Typography>to</Typography>
                 <DatePicker
-                  label="To Date"
+                  label='To Date'
                   value={Array.isArray(criteria.value) ? criteria.value[1] : null}
-                  onChange={(date) => {
+                  onChange={date => {
                     const current = Array.isArray(criteria.value) ? criteria.value : [null, null];
                     current[1] = date;
                     updateCriteria(groupId, criteria.id, { value: current });
@@ -382,9 +425,9 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         return (
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              label="Date"
+              label='Date'
               value={criteria.value}
-              onChange={(date) => updateCriteria(groupId, criteria.id, { value: date })}
+              onChange={date => updateCriteria(groupId, criteria.id, { value: date })}
               slotProps={{ textField: { size: 'small', fullWidth: true } }}
             />
           </LocalizationProvider>
@@ -396,16 +439,16 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
             <Autocomplete
               multiple
               freeSolo
-              size="small"
+              size='small'
               options={fieldDef?.options || []}
               value={Array.isArray(criteria.value) ? criteria.value : []}
               onChange={(_, newValue) => updateCriteria(groupId, criteria.id, { value: newValue })}
-              renderInput={(params) => (
-                <TextField {...params} label="Values" placeholder="Add values..." />
+              renderInput={params => (
+                <TextField {...params} label='Values' placeholder='Add values...' />
               )}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip variant="outlined" label={option} {...getTagProps({ index })} key={index} />
+                  <Chip variant='outlined' label={option} {...getTagProps({ index })} key={index} />
                 ))
               }
             />
@@ -414,10 +457,10 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         return (
           <TextField
             fullWidth
-            size="small"
-            label="Value"
+            size='small'
+            label='Value'
             value={criteria.value}
-            onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+            onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
           />
         );
 
@@ -425,10 +468,10 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         return (
           <TextField
             fullWidth
-            size="small"
-            label="Value"
+            size='small'
+            label='Value'
             value={criteria.value}
-            onChange={(e) => updateCriteria(groupId, criteria.id, { value: e.target.value })}
+            onChange={e => updateCriteria(groupId, criteria.id, { value: e.target.value })}
           />
         );
     }
@@ -456,11 +499,15 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
 
       group.criteria.forEach((criteria, criteriaIndex) => {
         if (!criteria.field) {
-          newErrors.push(`Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Field is required`);
+          newErrors.push(
+            `Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Field is required`
+          );
         }
 
         if (!criteria.operator) {
-          newErrors.push(`Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Operator is required`);
+          newErrors.push(
+            `Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Operator is required`
+          );
         }
       });
     });
@@ -496,36 +543,41 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
     <Box>
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             Advanced Filter Builder
           </Typography>
-          
+
           <Stack spacing={2}>
             <TextField
-              label="Filter Name"
+              label='Filter Name'
               value={filter.name}
-              onChange={(e) => setFilter(prev => ({ ...prev, name: e.target.value }))}
+              onChange={e => setFilter(prev => ({ ...prev, name: e.target.value }))}
               required
             />
-            
+
             <TextField
-              label="Description"
+              label='Description'
               value={filter.description}
-              onChange={(e) => setFilter(prev => ({ ...prev, description: e.target.value }))}
+              onChange={e => setFilter(prev => ({ ...prev, description: e.target.value }))}
               multiline
               rows={2}
             />
 
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction='row' spacing={2} alignItems='center'>
               <FormControl>
                 <InputLabel>Global Logic</InputLabel>
                 <Select
                   value={filter.globalLogicalOperator}
-                  onChange={(e) => setFilter(prev => ({ ...prev, globalLogicalOperator: e.target.value as 'AND' | 'OR' }))}
-                  label="Global Logic"
+                  onChange={e =>
+                    setFilter(prev => ({
+                      ...prev,
+                      globalLogicalOperator: e.target.value as 'AND' | 'OR',
+                    }))
+                  }
+                  label='Global Logic'
                 >
-                  <MenuItem value="AND">AND (All groups must match)</MenuItem>
-                  <MenuItem value="OR">OR (Any group can match)</MenuItem>
+                  <MenuItem value='AND'>AND (All groups must match)</MenuItem>
+                  <MenuItem value='OR'>OR (Any group can match)</MenuItem>
                 </Select>
               </FormControl>
 
@@ -533,10 +585,10 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
                 control={
                   <Switch
                     checked={filter.isShared}
-                    onChange={(e) => setFilter(prev => ({ ...prev, isShared: e.target.checked }))}
+                    onChange={e => setFilter(prev => ({ ...prev, isShared: e.target.checked }))}
                   />
                 }
-                label="Share with team"
+                label='Share with team'
               />
             </Stack>
 
@@ -546,12 +598,12 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
               options={[]}
               value={filter.tags}
               onChange={(_, newValue) => setFilter(prev => ({ ...prev, tags: newValue }))}
-              renderInput={(params) => (
-                <TextField {...params} label="Tags" placeholder="Add tags..." />
+              renderInput={params => (
+                <TextField {...params} label='Tags' placeholder='Add tags...' />
               )}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip variant="outlined" label={option} {...getTagProps({ index })} key={index} />
+                  <Chip variant='outlined' label={option} {...getTagProps({ index })} key={index} />
                 ))
               }
             />
@@ -560,8 +612,8 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
       </Card>
 
       {errors.length > 0 && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          <Typography variant="subtitle2">Please fix the following errors:</Typography>
+        <Alert severity='error' sx={{ mb: 2 }}>
+          <Typography variant='subtitle2'>Please fix the following errors:</Typography>
           <ul>
             {errors.map((error, index) => (
               <li key={index}>{error}</li>
@@ -575,81 +627,85 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
         {filter.groups.map((group, groupIndex) => (
           <Accordion key={group.id} defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Typography variant="h6">{group.name}</Typography>
+              <Box display='flex' alignItems='center' gap={2}>
+                <Typography variant='h6'>{group.name}</Typography>
                 <Chip
-                  size="small"
+                  size='small'
                   label={group.logicalOperator}
                   color={group.logicalOperator === 'AND' ? 'primary' : 'secondary'}
                 />
-                <Chip
-                  size="small"
-                  label={`${group.criteria.length} criteria`}
-                  variant="outlined"
-                />
+                <Chip size='small' label={`${group.criteria.length} criteria`} variant='outlined' />
                 <Switch
                   checked={group.isActive}
-                  onChange={(e) => updateGroup(group.id, { isActive: e.target.checked })}
-                  size="small"
+                  onChange={e => updateGroup(group.id, { isActive: e.target.checked })}
+                  size='small'
                 />
               </Box>
             </AccordionSummary>
-            
+
             <AccordionDetails>
               <Stack spacing={2}>
-                <Stack direction="row" spacing={2} alignItems="center">
+                <Stack direction='row' spacing={2} alignItems='center'>
                   <TextField
-                    label="Group Name"
+                    label='Group Name'
                     value={group.name}
-                    onChange={(e) => updateGroup(group.id, { name: e.target.value })}
-                    size="small"
+                    onChange={e => updateGroup(group.id, { name: e.target.value })}
+                    size='small'
                   />
-                  <FormControl size="small">
+                  <FormControl size='small'>
                     <InputLabel>Logic</InputLabel>
                     <Select
                       value={group.logicalOperator}
-                      onChange={(e) => updateGroup(group.id, { logicalOperator: e.target.value as 'AND' | 'OR' })}
-                      label="Logic"
+                      onChange={e =>
+                        updateGroup(group.id, { logicalOperator: e.target.value as 'AND' | 'OR' })
+                      }
+                      label='Logic'
                     >
-                      <MenuItem value="AND">AND</MenuItem>
-                      <MenuItem value="OR">OR</MenuItem>
+                      <MenuItem value='AND'>AND</MenuItem>
+                      <MenuItem value='OR'>OR</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
 
                 {/* Criteria */}
                 {group.criteria.map((criteria, criteriaIndex) => (
-                  <Card key={criteria.id} variant="outlined">
+                  <Card key={criteria.id} variant='outlined'>
                     <CardContent>
-                      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+                      <Stack direction='row' spacing={2} alignItems='center' flexWrap='wrap'>
                         {criteriaIndex > 0 && (
-                          <Typography variant="body2" color="primary" fontWeight="bold">
+                          <Typography variant='body2' color='primary' fontWeight='bold'>
                             {group.logicalOperator}
                           </Typography>
                         )}
-                        
-                        <FormControl size="small" sx={{ minWidth: 200 }}>
+
+                        <FormControl size='small' sx={{ minWidth: 200 }}>
                           <InputLabel>Field</InputLabel>
                           <Select
                             value={criteria.field}
-                            onChange={(e) => handleFieldChange(group.id, criteria.id, e.target.value)}
-                            label="Field"
+                            onChange={e => handleFieldChange(group.id, criteria.id, e.target.value)}
+                            label='Field'
                           >
                             {Object.entries(availableFields).map(([key, field]) => (
-                              <MenuItem key={key} value={key}>{field.label}</MenuItem>
+                              <MenuItem key={key} value={key}>
+                                {field.label}
+                              </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
 
-                        <FormControl size="small" sx={{ minWidth: 150 }}>
+                        <FormControl size='small' sx={{ minWidth: 150 }}>
                           <InputLabel>Operator</InputLabel>
                           <Select
                             value={criteria.operator}
-                            onChange={(e) => updateCriteria(group.id, criteria.id, { operator: e.target.value })}
-                            label="Operator"
+                            onChange={e =>
+                              updateCriteria(group.id, criteria.id, { operator: e.target.value })
+                            }
+                            label='Operator'
                           >
                             {getOperatorsForType(criteria.dataType).map(op => (
-                              <MenuItem key={op} value={op}>{operatorLabels[op] || op}</MenuItem>
+                              <MenuItem key={op} value={op}>
+                                {operatorLabels[op] || op}
+                              </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
@@ -659,7 +715,7 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
                         </Box>
 
                         <IconButton
-                          color="error"
+                          color='error'
                           onClick={() => deleteCriteria(group.id, criteria.id)}
                         >
                           <DeleteIcon />
@@ -672,7 +728,7 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
                 <Button
                   startIcon={<AddIcon />}
                   onClick={() => addCriteria(group.id)}
-                  variant="outlined"
+                  variant='outlined'
                 >
                   Add Criteria
                 </Button>
@@ -683,15 +739,15 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
               <Button
                 startIcon={<CopyIcon />}
                 onClick={() => duplicateGroup(group.id)}
-                size="small"
+                size='small'
               >
                 Duplicate
               </Button>
               <Button
                 startIcon={<DeleteIcon />}
                 onClick={() => deleteGroup(group.id)}
-                color="error"
-                size="small"
+                color='error'
+                size='small'
               >
                 Delete Group
               </Button>
@@ -699,25 +755,18 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
           </Accordion>
         ))}
 
-        <Button
-          startIcon={<AddIcon />}
-          onClick={addGroup}
-          variant="contained"
-          size="large"
-        >
+        <Button startIcon={<AddIcon />} onClick={addGroup} variant='contained' size='large'>
           Add Filter Group
         </Button>
       </Stack>
 
       {/* Actions */}
-      <Stack direction="row" spacing={2} sx={{ mt: 3 }} justifyContent="flex-end">
+      <Stack direction='row' spacing={2} sx={{ mt: 3 }} justifyContent='flex-end'>
         <Button onClick={clearFilter} startIcon={<ClearIcon />}>
           Clear All
         </Button>
-        <Button onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button onClick={handleSave} variant="contained" startIcon={<SaveIcon />}>
+        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={handleSave} variant='contained' startIcon={<SaveIcon />}>
           Save Filter
         </Button>
       </Stack>
@@ -726,18 +775,18 @@ const AdvancedFilterBuilder: React.FC<AdvancedFilterBuilderProps> = ({
       <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)}>
         <DialogTitle>Save Filter</DialogTitle>
         <DialogContent>
-          <Typography>
-            Are you sure you want to save this filter as "{filter.name}"?
-          </Typography>
+          <Typography>Are you sure you want to save this filter as "{filter.name}"?</Typography>
           {filter.isShared && (
-            <Alert severity="info" sx={{ mt: 2 }}>
+            <Alert severity='info' sx={{ mt: 2 }}>
               This filter will be shared with your team members.
             </Alert>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSaveDialogOpen(false)}>Cancel</Button>
-          <Button onClick={confirmSave} variant="contained">Save</Button>
+          <Button onClick={confirmSave} variant='contained'>
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

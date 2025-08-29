@@ -19,15 +19,14 @@ describe('Worksites API Integration Tests', () => {
   let worksiteId: string;
   let templateId: string;
 
-
   beforeEach(async () => {
     app = createTestApp();
-    
+
     // Clean up database
     await User.deleteMany({});
     await Worksite.deleteMany({});
     await Template.deleteMany({});
-    
+
     const timestamp = Date.now();
 
     // Create test template
@@ -35,17 +34,19 @@ describe('Worksites API Integration Tests', () => {
       name: 'Test Template',
       category: 'inspection',
       description: 'Test template for worksites',
-      elements: [{
-        id: 'test-field',
-        type: 'text',
-        label: 'Test Field',
-        required: true
-      }],
+      elements: [
+        {
+          id: 'test-field',
+          type: 'text',
+          label: 'Test Field',
+          required: true,
+        },
+      ],
       status: 'active',
       metadata: {
         createdBy: new mongoose.Types.ObjectId(),
-        version: 1
-      }
+        version: 1,
+      },
     });
     await template.save();
     templateId = template._id.toString();
@@ -59,22 +60,24 @@ describe('Worksites API Integration Tests', () => {
         city: 'Test City',
         state: 'Test State',
         zipCode: '12345',
-        country: 'Australia'
+        country: 'Australia',
       },
-      contacts: [{
-        name: 'Test Contact',
-        position: 'Manager',
-        email: `test-${timestamp}@example.com`,
-        phone: '1234567890',
-        isPrimary: true
-      }],
+      contacts: [
+        {
+          name: 'Test Contact',
+          position: 'Manager',
+          email: `test-${timestamp}@example.com`,
+          phone: '1234567890',
+          isPrimary: true,
+        },
+      ],
       equipment: [],
       isActive: true,
       metadata: {
         createdBy: new mongoose.Types.ObjectId(),
         defaultFormTemplate: template._id,
-        serviceHistory: { totalForms: 0 }
-      }
+        serviceHistory: { totalForms: 0 },
+      },
     });
     await worksite.save();
     worksiteId = worksite._id.toString();
@@ -87,7 +90,7 @@ describe('Worksites API Integration Tests', () => {
       password: 'AdminPass123!',
       role: 'admin',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await adminUser.save();
     adminUserId = adminUser._id.toString();
@@ -99,7 +102,7 @@ describe('Worksites API Integration Tests', () => {
       password: 'ManagerPass123!',
       role: 'manager',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await managerUser.save();
     managerUserId = managerUser._id.toString();
@@ -111,7 +114,7 @@ describe('Worksites API Integration Tests', () => {
       password: 'TechPass123!',
       role: 'technician',
       emailVerified: true,
-      worksites: [worksiteId]
+      worksites: [worksiteId],
     });
     await technicianUser.save();
     technicianUserId = technicianUser._id.toString();
@@ -121,21 +124,21 @@ describe('Worksites API Integration Tests', () => {
       id: adminUserId,
       email: `admin-${timestamp}@test.com`,
       role: 'admin',
-      worksiteIds: [worksiteId]
+      worksiteIds: [worksiteId],
     });
 
     managerToken = generateAccessToken({
       id: managerUserId,
       email: `manager-${timestamp}@test.com`,
       role: 'manager',
-      worksiteIds: [worksiteId]
+      worksiteIds: [worksiteId],
     });
 
     technicianToken = generateAccessToken({
       id: technicianUserId,
       email: `tech-${timestamp}@test.com`,
       role: 'technician',
-      worksiteIds: [worksiteId]
+      worksiteIds: [worksiteId],
     });
   });
 
@@ -219,7 +222,7 @@ describe('Worksites API Integration Tests', () => {
         password: 'UnassignedPass123!',
         role: 'technician',
         emailVerified: true,
-        worksites: []
+        worksites: [],
       });
       await unassignedUser.save();
 
@@ -227,7 +230,7 @@ describe('Worksites API Integration Tests', () => {
         id: unassignedUser._id.toString(),
         email: unassignedUser.email,
         role: 'technician',
-        worksiteIds: []
+        worksiteIds: [],
       });
 
       const response = await request(app)
@@ -260,17 +263,19 @@ describe('Worksites API Integration Tests', () => {
         city: 'New City',
         state: 'New State',
         zipCode: '54321',
-        country: 'Australia'
+        country: 'Australia',
       },
-      contacts: [{
-        name: 'New Contact',
-        position: 'Supervisor',
-        email: `newcontact-${Date.now()}@example.com`,
-        phone: '987-654-3210',
-        isPrimary: true
-      }],
+      contacts: [
+        {
+          name: 'New Contact',
+          position: 'Supervisor',
+          email: `newcontact-${Date.now()}@example.com`,
+          phone: '987-654-3210',
+          isPrimary: true,
+        },
+      ],
       equipment: [],
-      defaultTemplate: templateId
+      defaultTemplate: templateId,
     };
 
     it('should allow admin to create new worksite', async () => {
@@ -311,7 +316,7 @@ describe('Worksites API Integration Tests', () => {
 
     it('should validate required fields', async () => {
       const incompleteData = {
-        name: 'Incomplete Worksite'
+        name: 'Incomplete Worksite',
         // Missing customerName and address
       };
 
@@ -329,7 +334,7 @@ describe('Worksites API Integration Tests', () => {
     it('should validate template ID if provided', async () => {
       const invalidTemplateData = {
         ...validWorksiteData,
-        defaultTemplate: 'invalid-template-id'
+        defaultTemplate: 'invalid-template-id',
       };
 
       const response = await request(app)
@@ -364,17 +369,19 @@ describe('Worksites API Integration Tests', () => {
         name: 'New Template',
         category: 'maintenance',
         description: 'New template for assignment',
-        elements: [{
-          id: 'new-field',
-          type: 'text',
-          label: 'New Field',
-          required: false
-        }],
+        elements: [
+          {
+            id: 'new-field',
+            type: 'text',
+            label: 'New Field',
+            required: false,
+          },
+        ],
         status: 'active',
         metadata: {
           createdBy: new mongoose.Types.ObjectId(),
-          version: 1
-        }
+          version: 1,
+        },
       });
       await newTemplate.save();
 
@@ -444,8 +451,8 @@ describe('Worksites API Integration Tests', () => {
         status: 'draft',
         metadata: {
           createdBy: new mongoose.Types.ObjectId(),
-          version: 1
-        }
+          version: 1,
+        },
       });
       await inactiveTemplate.save();
 

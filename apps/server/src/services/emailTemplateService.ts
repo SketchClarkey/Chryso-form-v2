@@ -19,7 +19,7 @@ export class EmailTemplateService {
     // Register Handlebars helpers for common template operations
     Handlebars.registerHelper('formatDate', (date: Date, format: string = 'YYYY-MM-DD') => {
       if (!date) return '';
-      
+
       const d = new Date(date);
       const year = d.getFullYear();
       const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -35,10 +35,10 @@ export class EmailTemplateService {
         case 'YYYY-MM-DD HH:MM':
           return `${year}-${month}-${day} ${hours}:${minutes}`;
         case 'long':
-          return d.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+          return d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
           });
         default:
           return d.toLocaleDateString();
@@ -47,7 +47,7 @@ export class EmailTemplateService {
 
     Handlebars.registerHelper('currency', (amount: number, currency: string = 'USD') => {
       if (typeof amount !== 'number') return amount;
-      
+
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency,
@@ -58,33 +58,36 @@ export class EmailTemplateService {
     Handlebars.registerHelper('ne', (a: any, b: any) => a !== b);
     Handlebars.registerHelper('gt', (a: any, b: any) => a > b);
     Handlebars.registerHelper('lt', (a: any, b: any) => a < b);
-    
-    Handlebars.registerHelper('ifCond', function(this: any, v1: any, operator: string, v2: any, options: any) {
-      switch (operator) {
-        case '==':
-          return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-          return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-          return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '!==':
-          return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-          return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-          return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-          return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-          return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-          return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-          return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        default:
-          return options.inverse(this);
+
+    Handlebars.registerHelper(
+      'ifCond',
+      function (this: any, v1: any, operator: string, v2: any, options: any) {
+        switch (operator) {
+          case '==':
+            return v1 == v2 ? options.fn(this) : options.inverse(this);
+          case '===':
+            return v1 === v2 ? options.fn(this) : options.inverse(this);
+          case '!=':
+            return v1 != v2 ? options.fn(this) : options.inverse(this);
+          case '!==':
+            return v1 !== v2 ? options.fn(this) : options.inverse(this);
+          case '<':
+            return v1 < v2 ? options.fn(this) : options.inverse(this);
+          case '<=':
+            return v1 <= v2 ? options.fn(this) : options.inverse(this);
+          case '>':
+            return v1 > v2 ? options.fn(this) : options.inverse(this);
+          case '>=':
+            return v1 >= v2 ? options.fn(this) : options.inverse(this);
+          case '&&':
+            return v1 && v2 ? options.fn(this) : options.inverse(this);
+          case '||':
+            return v1 || v2 ? options.fn(this) : options.inverse(this);
+          default:
+            return options.inverse(this);
+        }
       }
-    });
+    );
   }
 
   async createSystemTemplates(organizationId: string, userId: string): Promise<IEmailTemplate[]> {
@@ -97,11 +100,35 @@ export class EmailTemplateService {
         subject: 'Welcome to {{organizationName}}!',
         htmlContent: this.getDefaultWelcomeTemplate(),
         variables: [
-          { name: 'userName', description: 'User\'s full name', type: 'string', required: true, example: 'John Doe' },
-          { name: 'userEmail', description: 'User\'s email address', type: 'string', required: true, example: 'john@example.com' },
-          { name: 'organizationName', description: 'Organization name', type: 'string', required: true, example: 'Acme Corp' },
-          { name: 'loginUrl', description: 'Login URL', type: 'string', required: true, example: 'https://app.chrysoform.com/login' }
-        ]
+          {
+            name: 'userName',
+            description: "User's full name",
+            type: 'string',
+            required: true,
+            example: 'John Doe',
+          },
+          {
+            name: 'userEmail',
+            description: "User's email address",
+            type: 'string',
+            required: true,
+            example: 'john@example.com',
+          },
+          {
+            name: 'organizationName',
+            description: 'Organization name',
+            type: 'string',
+            required: true,
+            example: 'Acme Corp',
+          },
+          {
+            name: 'loginUrl',
+            description: 'Login URL',
+            type: 'string',
+            required: true,
+            example: 'https://app.chrysoform.com/login',
+          },
+        ],
       },
       {
         name: 'Form Notification',
@@ -111,12 +138,42 @@ export class EmailTemplateService {
         subject: 'New form submission: {{formName}}',
         htmlContent: this.getDefaultFormNotificationTemplate(),
         variables: [
-          { name: 'formName', description: 'Name of the form', type: 'string', required: true, example: 'Safety Inspection' },
-          { name: 'submitterName', description: 'Person who submitted the form', type: 'string', required: true, example: 'Jane Smith' },
-          { name: 'submissionDate', description: 'Date of submission', type: 'date', required: true, example: '2024-01-15T10:30:00Z' },
-          { name: 'formUrl', description: 'URL to view the form', type: 'string', required: true, example: 'https://app.chrysoform.com/forms/123' },
-          { name: 'formData', description: 'Form submission data', type: 'object', required: false, example: { priority: 'High', notes: 'Urgent issue found' } }
-        ]
+          {
+            name: 'formName',
+            description: 'Name of the form',
+            type: 'string',
+            required: true,
+            example: 'Safety Inspection',
+          },
+          {
+            name: 'submitterName',
+            description: 'Person who submitted the form',
+            type: 'string',
+            required: true,
+            example: 'Jane Smith',
+          },
+          {
+            name: 'submissionDate',
+            description: 'Date of submission',
+            type: 'date',
+            required: true,
+            example: '2024-01-15T10:30:00Z',
+          },
+          {
+            name: 'formUrl',
+            description: 'URL to view the form',
+            type: 'string',
+            required: true,
+            example: 'https://app.chrysoform.com/forms/123',
+          },
+          {
+            name: 'formData',
+            description: 'Form submission data',
+            type: 'object',
+            required: false,
+            example: { priority: 'High', notes: 'Urgent issue found' },
+          },
+        ],
       },
       {
         name: 'Password Reset',
@@ -126,10 +183,28 @@ export class EmailTemplateService {
         subject: 'Reset your password',
         htmlContent: this.getDefaultPasswordResetTemplate(),
         variables: [
-          { name: 'userName', description: 'User\'s full name', type: 'string', required: true, example: 'John Doe' },
-          { name: 'resetUrl', description: 'Password reset URL', type: 'string', required: true, example: 'https://app.chrysoform.com/reset?token=abc123' },
-          { name: 'expiryTime', description: 'Reset link expiry time', type: 'date', required: true, example: '2024-01-15T12:00:00Z' }
-        ]
+          {
+            name: 'userName',
+            description: "User's full name",
+            type: 'string',
+            required: true,
+            example: 'John Doe',
+          },
+          {
+            name: 'resetUrl',
+            description: 'Password reset URL',
+            type: 'string',
+            required: true,
+            example: 'https://app.chrysoform.com/reset?token=abc123',
+          },
+          {
+            name: 'expiryTime',
+            description: 'Reset link expiry time',
+            type: 'date',
+            required: true,
+            example: '2024-01-15T12:00:00Z',
+          },
+        ],
       },
       {
         name: 'Form Reminder',
@@ -139,12 +214,42 @@ export class EmailTemplateService {
         subject: 'Reminder: {{formName}} requires your attention',
         htmlContent: this.getDefaultFormReminderTemplate(),
         variables: [
-          { name: 'userName', description: 'User\'s name', type: 'string', required: true, example: 'John Doe' },
-          { name: 'formName', description: 'Name of the form', type: 'string', required: true, example: 'Monthly Report' },
-          { name: 'dueDate', description: 'Form due date', type: 'date', required: false, example: '2024-01-20T23:59:59Z' },
-          { name: 'formUrl', description: 'URL to access the form', type: 'string', required: true, example: 'https://app.chrysoform.com/forms/456' },
-          { name: 'daysPending', description: 'Days since assignment', type: 'number', required: false, example: 3 }
-        ]
+          {
+            name: 'userName',
+            description: "User's name",
+            type: 'string',
+            required: true,
+            example: 'John Doe',
+          },
+          {
+            name: 'formName',
+            description: 'Name of the form',
+            type: 'string',
+            required: true,
+            example: 'Monthly Report',
+          },
+          {
+            name: 'dueDate',
+            description: 'Form due date',
+            type: 'date',
+            required: false,
+            example: '2024-01-20T23:59:59Z',
+          },
+          {
+            name: 'formUrl',
+            description: 'URL to access the form',
+            type: 'string',
+            required: true,
+            example: 'https://app.chrysoform.com/forms/456',
+          },
+          {
+            name: 'daysPending',
+            description: 'Days since assignment',
+            type: 'number',
+            required: false,
+            example: 3,
+          },
+        ],
       },
       {
         name: 'System Alert',
@@ -154,13 +259,43 @@ export class EmailTemplateService {
         subject: 'System Alert: {{alertType}}',
         htmlContent: this.getDefaultSystemAlertTemplate(),
         variables: [
-          { name: 'alertType', description: 'Type of alert', type: 'string', required: true, example: 'Maintenance' },
-          { name: 'alertMessage', description: 'Alert message', type: 'string', required: true, example: 'Scheduled maintenance tonight' },
-          { name: 'startTime', description: 'Start time', type: 'date', required: false, example: '2024-01-15T02:00:00Z' },
-          { name: 'endTime', description: 'End time', type: 'date', required: false, example: '2024-01-15T06:00:00Z' },
-          { name: 'impact', description: 'Expected impact', type: 'string', required: false, example: 'System will be unavailable' }
-        ]
-      }
+          {
+            name: 'alertType',
+            description: 'Type of alert',
+            type: 'string',
+            required: true,
+            example: 'Maintenance',
+          },
+          {
+            name: 'alertMessage',
+            description: 'Alert message',
+            type: 'string',
+            required: true,
+            example: 'Scheduled maintenance tonight',
+          },
+          {
+            name: 'startTime',
+            description: 'Start time',
+            type: 'date',
+            required: false,
+            example: '2024-01-15T02:00:00Z',
+          },
+          {
+            name: 'endTime',
+            description: 'End time',
+            type: 'date',
+            required: false,
+            example: '2024-01-15T06:00:00Z',
+          },
+          {
+            name: 'impact',
+            description: 'Expected impact',
+            type: 'string',
+            required: false,
+            example: 'System will be unavailable',
+          },
+        ],
+      },
     ];
 
     const createdTemplates: IEmailTemplate[] = [];
@@ -170,7 +305,7 @@ export class EmailTemplateService {
         const existingTemplate = await EmailTemplate.findOne({
           organizationId,
           type: template.type,
-          isSystem: true
+          isSystem: true,
         });
 
         if (!existingTemplate) {
@@ -182,18 +317,18 @@ export class EmailTemplateService {
             settings: {
               priority: 'normal',
               trackOpens: true,
-              trackClicks: true
+              trackClicks: true,
             },
             localization: {
               defaultLanguage: 'en',
-              translations: []
+              translations: [],
             },
             triggers: [],
             usage: {
-              sentCount: 0
+              sentCount: 0,
             },
             createdBy: userId,
-            updatedBy: userId
+            updatedBy: userId,
           });
 
           const savedTemplate = await newTemplate.save();
@@ -208,12 +343,12 @@ export class EmailTemplateService {
   }
 
   async renderTemplate(
-    templateId: string, 
-    variables: Record<string, any>, 
+    templateId: string,
+    variables: Record<string, any>,
     language: string = 'en'
   ): Promise<{ subject: string; htmlContent: string; textContent?: string }> {
     const template = await EmailTemplate.findById(templateId);
-    
+
     if (!template || !template.isActive) {
       throw new Error('Template not found or inactive');
     }
@@ -257,11 +392,15 @@ export class EmailTemplateService {
     return {
       subject: subjectTemplate(contextVariables),
       htmlContent: htmlTemplate(contextVariables),
-      textContent: textTemplate ? textTemplate(contextVariables) : undefined
+      textContent: textTemplate ? textTemplate(contextVariables) : undefined,
     };
   }
 
-  validateTemplate(subject: string, htmlContent: string, variables: any[]): { isValid: boolean; errors: string[] } {
+  validateTemplate(
+    subject: string,
+    htmlContent: string,
+    variables: any[]
+  ): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     // Validate subject
@@ -299,7 +438,7 @@ export class EmailTemplateService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 

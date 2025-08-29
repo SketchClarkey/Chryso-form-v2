@@ -4,15 +4,15 @@ test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     // Mock authentication for dashboard tests
     await page.goto('/login');
-    
+
     // Perform login (this would need to be adjusted based on actual auth implementation)
     await page.getByLabel('Email').fill('admin@example.com');
     await page.getByLabel('Password').fill('admin123');
     await page.getByRole('button', { name: 'Sign In' }).click();
-    
+
     // Wait for potential redirect to dashboard
     await page.waitForTimeout(2000);
-    
+
     // If not redirected, navigate directly (for testing when auth isn't fully set up)
     if (!page.url().includes('/dashboard')) {
       await page.goto('/dashboard');
@@ -37,11 +37,11 @@ test.describe('Dashboard', () => {
     // Navigate to Forms page
     await page.getByRole('link', { name: 'Forms' }).click();
     await expect(page).toHaveURL(/.*\/forms/);
-    
+
     // Navigate to Templates page
     await page.getByRole('link', { name: 'Templates' }).click();
     await expect(page).toHaveURL(/.*\/templates/);
-    
+
     // Navigate back to Dashboard
     await page.getByRole('link', { name: 'Dashboard' }).click();
     await expect(page).toHaveURL(/.*\/dashboard/);
@@ -52,7 +52,7 @@ test.describe('Dashboard', () => {
     const userMenu = page.locator('[data-testid="user-menu"]');
     if (await userMenu.isVisible()) {
       await userMenu.click();
-      
+
       // Check for user menu items
       await expect(page.getByText('Profile')).toBeVisible();
       await expect(page.getByText('Settings')).toBeVisible();
@@ -63,12 +63,12 @@ test.describe('Dashboard', () => {
   test('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    
+
     // Check if mobile navigation works
     const mobileMenuButton = page.locator('[data-testid="mobile-menu-button"]');
     if (await mobileMenuButton.isVisible()) {
       await mobileMenuButton.click();
-      
+
       // Navigation should be visible in mobile menu
       await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     }

@@ -5,21 +5,26 @@ This project includes comprehensive testing at multiple levels:
 ## Test Types
 
 ### 1. Unit Tests
-- **Location**: `apps/server/src/test/` and `apps/client/src/components/**/*.test.tsx`
+
+- **Location**: `apps/server/src/test/` and
+  `apps/client/src/components/**/*.test.tsx`
 - **Framework**: Vitest
 - **Purpose**: Test individual functions, components, and modules in isolation
 
 #### Server Unit Tests
+
 ```bash
 npm run test -w apps/server
 ```
 
-#### Client Unit Tests  
+#### Client Unit Tests
+
 ```bash
 npm run test -w apps/client
 ```
 
 ### 2. Integration Tests
+
 - **Location**: `apps/server/src/test/integration/`
 - **Framework**: Vitest + Supertest
 - **Purpose**: Test API endpoints with authentication and database interactions
@@ -29,6 +34,7 @@ npm run test -w apps/server -- src/test/integration/
 ```
 
 ### 3. End-to-End Tests
+
 - **Location**: `tests/e2e/`
 - **Framework**: Playwright
 - **Purpose**: Test complete user workflows across the entire application
@@ -92,11 +98,13 @@ npm run test:e2e:debug
 ## Test Environment Setup
 
 ### Prerequisites
+
 1. MongoDB running locally (for integration/E2E tests)
-2. Node.js 18+ 
+2. Node.js 18+
 3. Playwright browsers installed
 
 ### Environment Variables
+
 ```bash
 NODE_ENV=test
 MONGODB_URI=mongodb://localhost:27017/chryso-forms-test
@@ -105,7 +113,9 @@ JWT_REFRESH_SECRET=test-jwt-refresh-secret-key
 ```
 
 ### Database Setup
+
 E2E tests automatically:
+
 - Clean the test database before running
 - Seed necessary test data (users, worksites)
 - Use isolated test database (`chryso-forms-e2e`)
@@ -113,16 +123,18 @@ E2E tests automatically:
 ## Running Tests
 
 ### All Tests
+
 ```bash
 npm run test:all
 ```
 
 ### Individual Test Suites
+
 ```bash
 # Server tests only
 npm run test -w apps/server
 
-# Client tests only  
+# Client tests only
 npm run test -w apps/client
 
 # E2E tests only
@@ -130,6 +142,7 @@ npm run test:e2e
 ```
 
 ### Specific Test Files
+
 ```bash
 # Single E2E spec
 npx playwright test auth.spec.ts
@@ -141,10 +154,12 @@ npm run test -w apps/server -- users.integration.test.ts
 ## CI/CD Integration
 
 Tests run automatically on:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main`
 
 The CI pipeline includes:
+
 1. Unit tests (Node 18.x and 20.x)
 2. Integration tests
 3. E2E tests
@@ -154,11 +169,13 @@ The CI pipeline includes:
 ## Test Data Management
 
 ### E2E Test Users
+
 - **Admin**: `admin@example.com` / `admin123`
-- **Manager**: `manager@example.com` / `manager123`  
+- **Manager**: `manager@example.com` / `manager123`
 - **Technician**: `tech@example.com` / `tech123`
 
 ### Test Database
+
 - Automatically cleaned before each test run
 - Seeded with consistent test data
 - Isolated from development/production data
@@ -174,25 +191,30 @@ The CI pipeline includes:
 ## Debugging Tests
 
 ### Playwright Debug Mode
+
 ```bash
 npm run test:e2e:debug
 ```
 
 ### View Test Reports
+
 ```bash
 npx playwright show-report
 ```
 
 ### Screenshots and Videos
+
 Failed tests automatically capture:
+
 - Screenshots
-- Videos  
+- Videos
 - Network traces
 - Console logs
 
 ## Writing New Tests
 
 ### E2E Test Template
+
 ```typescript
 import { test, expect } from '@playwright/test';
 import { AuthHelper } from './helpers/auth';
@@ -211,6 +233,7 @@ test.describe('Feature Name', () => {
 ```
 
 ### Component Test Template
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';

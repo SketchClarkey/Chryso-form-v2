@@ -16,21 +16,19 @@ interface MobileState {
 export function useMobile(): MobileState {
   const theme = useTheme();
   const pwaService = PWAService.getInstance();
-  
+
   // Media queries
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
-  
+
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(() =>
     pwaService.getOrientation()
   );
-  
+
   const [isPWA] = useState(() => pwaService.isPWAInstalled());
   const [hasTouch] = useState(() => 'ontouchstart' in window || navigator.maxTouchPoints > 0);
-  const [isStandalone] = useState(() => 
-    window.matchMedia('(display-mode: standalone)').matches
-  );
+  const [isStandalone] = useState(() => window.matchMedia('(display-mode: standalone)').matches);
 
   useEffect(() => {
     // Listen for orientation changes
@@ -51,7 +49,7 @@ export function useMobile(): MobileState {
 // Hook specifically for detecting if mobile components should be used
 export function useMobileComponents(): boolean {
   const { isMobile, hasTouch, isPWA } = useMobile();
-  
+
   // Use mobile components if:
   // - Device is mobile sized
   // - Device has touch capability and is PWA

@@ -92,14 +92,14 @@ const FilterWidget: React.FC<FilterWidgetProps> = ({
     switch (widget.config.filterType) {
       case 'dropdown':
         return (
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size='small'>
             <InputLabel>{widget.title}</InputLabel>
             <Select
               value={selectedValue || ''}
-              onChange={(e) => handleSingleChange(e.target.value)}
+              onChange={e => handleSingleChange(e.target.value)}
               label={widget.title}
             >
-              <MenuItem value="">
+              <MenuItem value=''>
                 <em>All</em>
               </MenuItem>
               {options.map((option, index) => (
@@ -115,20 +115,18 @@ const FilterWidget: React.FC<FilterWidgetProps> = ({
         return (
           <Autocomplete
             multiple
-            size="small"
+            size='small'
             options={options}
-            getOptionLabel={(option) => option.label || option}
+            getOptionLabel={option => option.label || option}
             value={selectedValues}
             onChange={(_, newValues) => handleMultiChange(newValues)}
-            renderInput={(params) => (
-              <TextField {...params} label={widget.title} />
-            )}
+            renderInput={params => <TextField {...params} label={widget.title} />}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
                 <Chip
-                  variant="outlined"
+                  variant='outlined'
                   label={option.label || option}
-                  size="small"
+                  size='small'
                   {...getTagProps({ index })}
                   key={index}
                 />
@@ -140,17 +138,17 @@ const FilterWidget: React.FC<FilterWidgetProps> = ({
       case 'daterange':
         return (
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Box display="flex" gap={1} flexDirection={{ xs: 'column', sm: 'row' }}>
+            <Box display='flex' gap={1} flexDirection={{ xs: 'column', sm: 'row' }}>
               <DatePicker
-                label="From"
+                label='From'
                 value={dateRange[0]}
-                onChange={(date) => handleDateRangeChange(0, date)}
+                onChange={date => handleDateRangeChange(0, date)}
                 slotProps={{ textField: { size: 'small', fullWidth: true } }}
               />
               <DatePicker
-                label="To"
+                label='To'
                 value={dateRange[1]}
-                onChange={(date) => handleDateRangeChange(1, date)}
+                onChange={date => handleDateRangeChange(1, date)}
                 slotProps={{ textField: { size: 'small', fullWidth: true } }}
               />
             </Box>
@@ -161,17 +159,17 @@ const FilterWidget: React.FC<FilterWidgetProps> = ({
         return (
           <TextField
             fullWidth
-            size="small"
+            size='small'
             label={widget.title}
             value={searchValue}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Enter search term..."
+            onChange={e => handleSearchChange(e.target.value)}
+            placeholder='Enter search term...'
           />
         );
 
       default:
         return (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             Unknown filter type: {widget.config.filterType}
           </Typography>
         );
@@ -206,34 +204,29 @@ const FilterWidget: React.FC<FilterWidgetProps> = ({
       }}
     >
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="subtitle2" color="text.secondary" noWrap>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+          <Typography variant='subtitle2' color='text.secondary' noWrap>
             {widget.title}
           </Typography>
           {lastUpdated && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant='caption' color='text.secondary'>
               {lastUpdated.toLocaleTimeString()}
             </Typography>
           )}
         </Box>
 
-        <Box flex={1} display="flex" flexDirection="column" gap={2}>
+        <Box flex={1} display='flex' flexDirection='column' gap={2}>
           {renderFilter()}
 
           {hasValue() && (
-            <Button
-              size="small"
-              onClick={handleClear}
-              variant="outlined"
-              color="secondary"
-            >
+            <Button size='small' onClick={handleClear} variant='outlined' color='secondary'>
               Clear Filter
             </Button>
           )}
         </Box>
 
         {widget.description && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 2 }}>
+          <Typography variant='caption' color='text.secondary' sx={{ mt: 2 }}>
             {widget.description}
           </Typography>
         )}

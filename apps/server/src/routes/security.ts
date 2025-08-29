@@ -11,24 +11,25 @@ const router = Router();
 router.use(authenticate);
 
 // Security metrics endpoint
-router.get('/metrics',
+router.get(
+  '/metrics',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '24h' } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
       // Calculate time range
       const now = new Date();
       let startTime = new Date();
-      
+
       switch (timeRange) {
         case '1h':
           startTime.setHours(now.getHours() - 1);
@@ -53,52 +54,52 @@ router.get('/metrics',
         failedLogins,
         suspiciousActivity,
         uniqueIPs,
-        complianceViolations
+        complianceViolations,
       ] = await Promise.all([
         // Total security events
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
-          category: { $in: ['security', 'authentication', 'authorization'] }
+          category: { $in: ['security', 'authentication', 'authorization'] },
         }),
-        
+
         // Critical alerts
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
           severity: 'critical',
-          category: { $in: ['security', 'authentication', 'authorization'] }
+          category: { $in: ['security', 'authentication', 'authorization'] },
         }),
-        
+
         // Failed logins
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
           category: 'authentication',
-          status: 'failure'
+          status: 'failure',
         }),
-        
+
         // Suspicious activity (multiple failed attempts, unusual access patterns)
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
-          riskLevel: { $in: ['high', 'critical'] }
+          riskLevel: { $in: ['high', 'critical'] },
         }),
-        
+
         // Unique IP addresses
         AuditLog.distinct('ipAddress', {
           organizationId,
           timestamp: { $gte: startTime },
-          ipAddress: { $exists: true, $ne: null }
+          ipAddress: { $exists: true, $ne: null },
         }),
-        
+
         // Compliance violations
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
           category: 'compliance',
-          severity: { $in: ['high', 'critical'] }
-        })
+          severity: { $in: ['high', 'critical'] },
+        }),
       ]);
 
       // Calculate previous period for trends
@@ -110,37 +111,40 @@ router.get('/metrics',
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: previousPeriodStart, $lt: startTime },
-          category: { $in: ['security', 'authentication', 'authorization'] }
+          category: { $in: ['security', 'authentication', 'authorization'] },
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: previousPeriodStart, $lt: startTime },
           severity: 'critical',
-          category: { $in: ['security', 'authentication', 'authorization'] }
+          category: { $in: ['security', 'authentication', 'authorization'] },
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: previousPeriodStart, $lt: startTime },
           category: 'compliance',
-          severity: { $in: ['high', 'critical'] }
-        })
+          severity: { $in: ['high', 'critical'] },
+        }),
       ]);
 
       // Calculate trends
-      const securityEventsChange = prevTotalEvents > 0 
-        ? Math.round(((totalEvents - prevTotalEvents) / prevTotalEvents) * 100) 
-        : 0;
-      const alertsChange = prevCriticalEvents > 0 
-        ? Math.round(((criticalEvents - prevCriticalEvents) / prevCriticalEvents) * 100) 
-        : 0;
-      const complianceChange = prevCompliance > 0 
-        ? Math.round(((complianceViolations - prevCompliance) / prevCompliance) * 100) 
-        : 0;
+      const securityEventsChange =
+        prevTotalEvents > 0
+          ? Math.round(((totalEvents - prevTotalEvents) / prevTotalEvents) * 100)
+          : 0;
+      const alertsChange =
+        prevCriticalEvents > 0
+          ? Math.round(((criticalEvents - prevCriticalEvents) / prevCriticalEvents) * 100)
+          : 0;
+      const complianceChange =
+        prevCompliance > 0
+          ? Math.round(((complianceViolations - prevCompliance) / prevCompliance) * 100)
+          : 0;
 
       // Calculate compliance score (simplified)
-      const complianceScore = Math.max(0, 100 - (complianceViolations * 2));
+      const complianceScore = Math.max(0, 100 - complianceViolations * 2);
 
       const metrics = {
         totalSecurityEvents: totalEvents,
@@ -152,43 +156,44 @@ router.get('/metrics',
         trends: {
           securityEventsChange,
           alertsChange,
-          complianceChange
-        }
+          complianceChange,
+        },
       };
 
       res.json({
         success: true,
-        data: metrics
+        data: metrics,
       });
     } catch (error) {
       console.error('Failed to get security metrics:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve security metrics'
+        message: 'Failed to retrieve security metrics',
       });
     }
   }
 );
 
 // Security alerts endpoint
-router.get('/alerts',
+router.get(
+  '/alerts',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '24h', severity, category, limit = 50, page = 1 } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
       // Calculate time range
       const now = new Date();
       let startTime = new Date();
-      
+
       switch (timeRange) {
         case '1h':
           startTime.setHours(now.getHours() - 1);
@@ -213,8 +218,8 @@ router.get('/alerts',
         $or: [
           { severity: { $in: ['high', 'critical'] } },
           { category: { $in: ['security', 'authentication', 'authorization'] } },
-          { riskLevel: { $in: ['high', 'critical'] } }
-        ]
+          { riskLevel: { $in: ['high', 'critical'] } },
+        ],
       };
 
       if (severity && severity !== 'all') {
@@ -228,12 +233,8 @@ router.get('/alerts',
       const skip = (Number(page) - 1) * Number(limit);
 
       const [alerts, total] = await Promise.all([
-        AuditLog.find(query)
-          .sort({ timestamp: -1 })
-          .skip(skip)
-          .limit(Number(limit))
-          .lean(),
-        AuditLog.countDocuments(query)
+        AuditLog.find(query).sort({ timestamp: -1 }).skip(skip).limit(Number(limit)).lean(),
+        AuditLog.countDocuments(query),
       ]);
 
       // Transform audit logs into security alerts format
@@ -249,7 +250,7 @@ router.get('/alerts',
         userEmail: log.userEmail,
         userId: log.userId,
         status: log.status === 'failure' ? 'open' : 'resolved',
-        tags: log.tags || []
+        tags: log.tags || [],
       }));
 
       res.json({
@@ -260,22 +261,23 @@ router.get('/alerts',
             page: Number(page),
             limit: Number(limit),
             total,
-            pages: Math.ceil(total / Number(limit))
-          }
-        }
+            pages: Math.ceil(total / Number(limit)),
+          },
+        },
       });
     } catch (error) {
       console.error('Failed to get security alerts:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve security alerts'
+        message: 'Failed to retrieve security alerts',
       });
     }
   }
 );
 
 // Update alert status
-router.patch('/alerts/:id',
+router.patch(
+  '/alerts/:id',
   authorize('admin', 'manager'),
   auditSecurityEvents,
   async (req: AuthenticatedRequest, res: Response) => {
@@ -296,7 +298,7 @@ router.patch('/alerts/:id',
         details: { action, resolution },
         severity: 'low',
         riskLevel: 'low',
-        status: 'success'
+        status: 'success',
       };
 
       // This would normally update a SecurityAlert document
@@ -305,30 +307,31 @@ router.patch('/alerts/:id',
       res.json({
         success: true,
         message: `Alert ${action} successfully`,
-        data: { alertId: id, action, resolution }
+        data: { alertId: id, action, resolution },
       });
     } catch (error) {
       console.error('Failed to update security alert:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to update security alert'
+        message: 'Failed to update security alert',
       });
     }
   }
 );
 
 // Security events timeline
-router.get('/events',
+router.get(
+  '/events',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '24h' } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -337,7 +340,7 @@ router.get('/events',
       let startTime = new Date();
       let groupBy = '$hour';
       let dateFormat = '%Y-%m-%d %H:00';
-      
+
       switch (timeRange) {
         case '1h':
           startTime.setHours(now.getHours() - 1);
@@ -368,8 +371,8 @@ router.get('/events',
           $match: {
             organizationId: organizationId,
             timestamp: { $gte: startTime },
-            category: { $in: ['security', 'authentication', 'authorization'] }
-          }
+            category: { $in: ['security', 'authentication', 'authorization'] },
+          },
         },
         {
           $group: {
@@ -377,13 +380,13 @@ router.get('/events',
               time: {
                 $dateToString: {
                   format: dateFormat,
-                  date: '$timestamp'
-                }
+                  date: '$timestamp',
+                },
               },
-              severity: '$severity'
+              severity: '$severity',
             },
-            count: { $sum: 1 }
-          }
+            count: { $sum: 1 },
+          },
         },
         {
           $group: {
@@ -391,18 +394,18 @@ router.get('/events',
             total: { $sum: '$count' },
             critical: {
               $sum: {
-                $cond: [{ $eq: ['$_id.severity', 'critical'] }, '$count', 0]
-              }
+                $cond: [{ $eq: ['$_id.severity', 'critical'] }, '$count', 0],
+              },
             },
             high: {
               $sum: {
-                $cond: [{ $eq: ['$_id.severity', 'high'] }, '$count', 0]
-              }
-            }
-          }
+                $cond: [{ $eq: ['$_id.severity', 'high'] }, '$count', 0],
+              },
+            },
+          },
         },
         {
-          $sort: { _id: 1 }
+          $sort: { _id: 1 },
         },
         {
           $project: {
@@ -410,27 +413,28 @@ router.get('/events',
             count: '$total',
             critical: 1,
             high: 1,
-            _id: 0
-          }
-        }
+            _id: 0,
+          },
+        },
       ]);
 
       res.json({
         success: true,
-        data: { events }
+        data: { events },
       });
     } catch (error) {
       console.error('Failed to get security events:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve security events'
+        message: 'Failed to retrieve security events',
       });
     }
   }
 );
 
 // Threat intelligence (mock data for demo)
-router.get('/threats',
+router.get(
+  '/threats',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -445,7 +449,7 @@ router.get('/threats',
           indicators: ['192.168.1.100', '10.0.0.50'],
           lastSeen: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
           count: 15,
-          blocked: true
+          blocked: true,
         },
         {
           _id: '2',
@@ -455,7 +459,7 @@ router.get('/threats',
           indicators: ['.exe', '.bat', '.cmd'],
           lastSeen: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
           count: 3,
-          blocked: true
+          blocked: true,
         },
         {
           _id: '3',
@@ -465,36 +469,37 @@ router.get('/threats',
           indicators: ['user123@example.com'],
           lastSeen: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
           count: 8,
-          blocked: false
-        }
+          blocked: false,
+        },
       ];
 
       res.json({
         success: true,
-        data: { threats }
+        data: { threats },
       });
     } catch (error) {
       console.error('Failed to get threat intelligence:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve threat intelligence'
+        message: 'Failed to retrieve threat intelligence',
       });
     }
   }
 );
 
 // Compliance status
-router.get('/compliance',
+router.get(
+  '/compliance',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { timeRange = '30d' } = req.query;
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
@@ -503,42 +508,37 @@ router.get('/compliance',
       const startTime = new Date();
       startTime.setDate(now.getDate() - 30); // Last 30 days for compliance
 
-      const [
-        totalEvents,
-        complianceViolations,
-        dataAccessEvents,
-        auditEvents
-      ] = await Promise.all([
+      const [totalEvents, complianceViolations, dataAccessEvents, auditEvents] = await Promise.all([
         AuditLog.countDocuments({
           organizationId,
-          timestamp: { $gte: startTime }
+          timestamp: { $gte: startTime },
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
           category: 'compliance',
-          severity: { $in: ['high', 'critical'] }
+          severity: { $in: ['high', 'critical'] },
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
-          category: 'data'
+          category: 'data',
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: startTime },
-          category: { $in: ['security', 'authentication', 'data'] }
-        })
+          category: { $in: ['security', 'authentication', 'data'] },
+        }),
       ]);
 
       // Calculate compliance scores (simplified algorithm)
-      const gdprScore = Math.max(0, 100 - (complianceViolations * 5));
-      const hipaaScore = Math.max(0, 100 - (complianceViolations * 3));
-      const soxScore = Math.max(0, 100 - (complianceViolations * 4));
-      const pciScore = Math.max(0, 100 - (complianceViolations * 6));
+      const gdprScore = Math.max(0, 100 - complianceViolations * 5);
+      const hipaaScore = Math.max(0, 100 - complianceViolations * 3);
+      const soxScore = Math.max(0, 100 - complianceViolations * 4);
+      const pciScore = Math.max(0, 100 - complianceViolations * 6);
 
       // Generate compliance issues
       const issues = [];
@@ -546,15 +546,15 @@ router.get('/compliance',
         issues.push({
           severity: 'high',
           title: 'Data Access Violations',
-          description: `${complianceViolations} compliance violations detected in the last 30 days`
+          description: `${complianceViolations} compliance violations detected in the last 30 days`,
         });
       }
-      
+
       if (dataAccessEvents > 1000) {
         issues.push({
           severity: 'medium',
           title: 'High Data Access Volume',
-          description: 'Unusually high volume of data access events may require review'
+          description: 'Unusually high volume of data access events may require review',
         });
       }
 
@@ -563,74 +563,70 @@ router.get('/compliance',
           gdpr: gdprScore,
           hipaa: hipaaScore,
           sox: soxScore,
-          pci: pciScore
+          pci: pciScore,
         },
         issues,
         summary: {
           totalEvents,
           complianceViolations,
-          auditCoverage: totalEvents > 0 ? Math.round((auditEvents / totalEvents) * 100) : 0
-        }
+          auditCoverage: totalEvents > 0 ? Math.round((auditEvents / totalEvents) * 100) : 0,
+        },
       };
 
       res.json({
         success: true,
-        data: complianceData
+        data: complianceData,
       });
     } catch (error) {
       console.error('Failed to get compliance status:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve compliance status'
+        message: 'Failed to retrieve compliance status',
       });
     }
   }
 );
 
 // Security dashboard summary
-router.get('/summary',
+router.get(
+  '/summary',
   authorize('admin', 'manager'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const organizationId = req.user?.organizationId || req.query.organizationId as string;
+      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
       if (!organizationId) {
         return res.status(400).json({
           success: false,
-          message: 'Organization ID required'
+          message: 'Organization ID required',
         });
       }
 
       const last24Hours = new Date();
       last24Hours.setHours(last24Hours.getHours() - 24);
 
-      const [
-        totalEvents,
-        criticalAlerts,
-        activeThreats,
-        complianceScore
-      ] = await Promise.all([
+      const [totalEvents, criticalAlerts, activeThreats, complianceScore] = await Promise.all([
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: last24Hours },
-          category: { $in: ['security', 'authentication', 'authorization'] }
+          category: { $in: ['security', 'authentication', 'authorization'] },
         }),
-        
+
         AuditLog.countDocuments({
           organizationId,
           timestamp: { $gte: last24Hours },
-          severity: 'critical'
+          severity: 'critical',
         }),
-        
+
         // Mock active threats count
         Promise.resolve(3),
-        
+
         // Calculate overall compliance score
         AuditLog.countDocuments({
           organizationId,
           category: 'compliance',
-          severity: { $in: ['high', 'critical'] }
-        }).then(violations => Math.max(0, 100 - (violations * 2)))
+          severity: { $in: ['high', 'critical'] },
+        }).then(violations => Math.max(0, 100 - violations * 2)),
       ]);
 
       const summary = {
@@ -638,18 +634,18 @@ router.get('/summary',
         criticalAlerts,
         activeThreats,
         complianceScore,
-        status: criticalAlerts > 5 ? 'critical' : criticalAlerts > 0 ? 'warning' : 'healthy'
+        status: criticalAlerts > 5 ? 'critical' : criticalAlerts > 0 ? 'warning' : 'healthy',
       };
 
       res.json({
         success: true,
-        data: summary
+        data: summary,
       });
     } catch (error) {
       console.error('Failed to get security summary:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to retrieve security summary'
+        message: 'Failed to retrieve security summary',
       });
     }
   }

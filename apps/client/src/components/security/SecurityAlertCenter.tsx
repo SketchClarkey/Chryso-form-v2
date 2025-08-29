@@ -21,7 +21,7 @@ import {
   Alert,
   Collapse,
   Divider,
-  Avatar
+  Avatar,
 } from '@mui/material';
 import {
   Security as SecurityIcon,
@@ -38,7 +38,7 @@ import {
   NotInterested as FalsePositiveIcon,
   Schedule as TimeIcon,
   Person as PersonIcon,
-  Computer as ComputerIcon
+  Computer as ComputerIcon,
 } from '@mui/icons-material';
 import { useApi } from '../../hooks/useApi';
 
@@ -72,7 +72,7 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
   embedded = false,
   height = 400,
   autoRefresh = true,
-  onAlertClick
+  onAlertClick,
 }) => {
   const { request } = useApi();
   const [alerts, setAlerts] = useState<SecurityAlert[]>([]);
@@ -81,14 +81,14 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
   const [expandedAlert, setExpandedAlert] = useState<string | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<SecurityAlert | null>(null);
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
-  
+
   // Filter states
   const [showOnlyOpen, setShowOnlyOpen] = useState(true);
   const [severityFilter, setSeverityFilter] = useState<string[]>(['critical', 'high']);
 
   useEffect(() => {
     loadAlerts();
-    
+
     if (autoRefresh) {
       const interval = setInterval(loadAlerts, 30000); // 30 seconds
       return () => clearInterval(interval);
@@ -103,7 +103,7 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
       const params = new URLSearchParams({
         timeRange: '24h',
         limit: '20',
-        ...(severityFilter.length > 0 && { severity: severityFilter.join(',') })
+        ...(severityFilter.length > 0 && { severity: severityFilter.join(',') }),
       });
 
       const response = await request(`/api/security/alerts?${params}`);
@@ -111,8 +111,8 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
 
       // Filter by status if needed
       if (showOnlyOpen) {
-        alertsData = alertsData.filter((alert: SecurityAlert) => 
-          alert.status === 'open' || alert.status === 'investigating'
+        alertsData = alertsData.filter(
+          (alert: SecurityAlert) => alert.status === 'open' || alert.status === 'investigating'
         );
       }
 
@@ -129,9 +129,9 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
     try {
       await request(`/api/security/alerts/${alertId}`, {
         method: 'PATCH',
-        data: { action, resolution }
+        data: { action, resolution },
       });
-      
+
       loadAlerts();
       setActionDialogOpen(false);
     } catch (error: any) {
@@ -142,31 +142,39 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color='error' />;
       case 'high':
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color='warning' />;
       case 'medium':
-        return <SecurityIcon color="info" />;
+        return <SecurityIcon color='info' />;
       default:
-        return <SuccessIcon color="success" />;
+        return <SuccessIcon color='success' />;
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'error';
-      case 'high': return 'warning';
-      case 'medium': return 'info';
-      default: return 'success';
+      case 'critical':
+        return 'error';
+      case 'high':
+        return 'warning';
+      case 'medium':
+        return 'info';
+      default:
+        return 'success';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'resolved': return 'success';
-      case 'investigating': return 'warning';
-      case 'false_positive': return 'info';
-      default: return 'error';
+      case 'resolved':
+        return 'success';
+      case 'investigating':
+        return 'warning';
+      case 'false_positive':
+        return 'info';
+      default:
+        return 'error';
     }
   };
 
@@ -191,52 +199,45 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
   return (
     <Card sx={{ height: embedded ? height : 'auto' }}>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <Badge badgeContent={openCount} color="error">
+        <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
+          <Box display='flex' alignItems='center' gap={1}>
+            <Badge badgeContent={openCount} color='error'>
               <AlertIcon />
             </Badge>
-            <Typography variant="h6">
-              Security Alerts
-            </Typography>
+            <Typography variant='h6'>Security Alerts</Typography>
           </Box>
-          <Box display="flex" gap={1}>
+          <Box display='flex' gap={1}>
             {criticalCount > 0 && (
-              <Chip 
-                label={`${criticalCount} Critical`} 
-                color="error" 
-                size="small" 
-                variant="outlined"
+              <Chip
+                label={`${criticalCount} Critical`}
+                color='error'
+                size='small'
+                variant='outlined'
               />
             )}
             {highCount > 0 && (
-              <Chip 
-                label={`${highCount} High`} 
-                color="warning" 
-                size="small" 
-                variant="outlined"
-              />
+              <Chip label={`${highCount} High`} color='warning' size='small' variant='outlined' />
             )}
           </Box>
         </Box>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity='error' sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
 
         {alerts.length === 0 && !loading && (
-          <Box textAlign="center" py={4}>
-            <SuccessIcon color="success" fontSize="large" />
-            <Typography variant="body2" color="text.secondary" mt={1}>
+          <Box textAlign='center' py={4}>
+            <SuccessIcon color='success' fontSize='large' />
+            <Typography variant='body2' color='text.secondary' mt={1}>
               No security alerts at this time
             </Typography>
           </Box>
         )}
 
         <List sx={{ maxHeight: embedded ? height - 100 : 'none', overflow: 'auto' }}>
-          {alerts.map((alert) => (
+          {alerts.map(alert => (
             <React.Fragment key={alert._id}>
               <ListItem
                 button
@@ -252,56 +253,42 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
                   borderColor: `${getSeverityColor(alert.severity)}.main`,
                   borderRadius: 1,
                   mb: 1,
-                  bgcolor: alert.severity === 'critical' ? 'error.light' : 'transparent'
+                  bgcolor: alert.severity === 'critical' ? 'error.light' : 'transparent',
                 }}
               >
-                <ListItemIcon>
-                  {getSeverityIcon(alert.severity)}
-                </ListItemIcon>
+                <ListItemIcon>{getSeverityIcon(alert.severity)}</ListItemIcon>
                 <ListItemText
                   primary={
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Typography variant="subtitle2">
-                        {alert.title}
-                      </Typography>
-                      <Chip
-                        label={alert.category}
-                        size="small"
-                        variant="outlined"
-                      />
+                    <Box display='flex' alignItems='center' gap={1}>
+                      <Typography variant='subtitle2'>{alert.title}</Typography>
+                      <Chip label={alert.category} size='small' variant='outlined' />
                       <Chip
                         label={alert.status}
-                        size="small"
+                        size='small'
                         color={getStatusColor(alert.status) as any}
                       />
                     </Box>
                   }
                   secondary={
                     <Box>
-                      <Typography variant="body2" color="text.secondary" gutterBottom>
+                      <Typography variant='body2' color='text.secondary' gutterBottom>
                         {alert.description}
                       </Typography>
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Box display="flex" alignItems="center" gap={0.5}>
-                          <TimeIcon fontSize="small" />
-                          <Typography variant="caption">
-                            {getTimeAgo(alert.timestamp)}
-                          </Typography>
+                      <Box display='flex' alignItems='center' gap={2}>
+                        <Box display='flex' alignItems='center' gap={0.5}>
+                          <TimeIcon fontSize='small' />
+                          <Typography variant='caption'>{getTimeAgo(alert.timestamp)}</Typography>
                         </Box>
                         {alert.userEmail && (
-                          <Box display="flex" alignItems="center" gap={0.5}>
-                            <PersonIcon fontSize="small" />
-                            <Typography variant="caption">
-                              {alert.userEmail}
-                            </Typography>
+                          <Box display='flex' alignItems='center' gap={0.5}>
+                            <PersonIcon fontSize='small' />
+                            <Typography variant='caption'>{alert.userEmail}</Typography>
                           </Box>
                         )}
                         {alert.ipAddress && (
-                          <Box display="flex" alignItems="center" gap={0.5}>
-                            <ComputerIcon fontSize="small" />
-                            <Typography variant="caption">
-                              {alert.ipAddress}
-                            </Typography>
+                          <Box display='flex' alignItems='center' gap={0.5}>
+                            <ComputerIcon fontSize='small' />
+                            <Typography variant='caption'>{alert.ipAddress}</Typography>
                           </Box>
                         )}
                       </Box>
@@ -310,8 +297,8 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
                 />
                 <ListItemSecondaryAction>
                   <IconButton
-                    size="small"
-                    onClick={(e) => {
+                    size='small'
+                    onClick={e => {
                       e.stopPropagation();
                       setExpandedAlert(expandedAlert === alert._id ? null : alert._id);
                     }}
@@ -321,35 +308,35 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
                 </ListItemSecondaryAction>
               </ListItem>
 
-              <Collapse in={expandedAlert === alert._id} timeout="auto" unmountOnExit>
+              <Collapse in={expandedAlert === alert._id} timeout='auto' unmountOnExit>
                 <Box sx={{ pl: 4, pr: 2, pb: 2 }}>
                   <Divider sx={{ mb: 2 }} />
-                  
-                  <Typography variant="body2" gutterBottom>
+
+                  <Typography variant='body2' gutterBottom>
                     <strong>Source:</strong> {alert.source}
                   </Typography>
-                  
-                  <Typography variant="body2" gutterBottom>
+
+                  <Typography variant='body2' gutterBottom>
                     <strong>Timestamp:</strong> {new Date(alert.timestamp).toLocaleString()}
                   </Typography>
-                  
+
                   {alert.tags && alert.tags.length > 0 && (
                     <Box mt={1} mb={2}>
-                      <Typography variant="body2" gutterBottom>
+                      <Typography variant='body2' gutterBottom>
                         <strong>Tags:</strong>
                       </Typography>
-                      <Box display="flex" gap={0.5} flexWrap="wrap">
+                      <Box display='flex' gap={0.5} flexWrap='wrap'>
                         {alert.tags.map(tag => (
-                          <Chip key={tag} label={tag} size="small" variant="outlined" />
+                          <Chip key={tag} label={tag} size='small' variant='outlined' />
                         ))}
                       </Box>
                     </Box>
                   )}
 
                   {alert.status === 'open' && (
-                    <Box display="flex" gap={1} mt={2}>
+                    <Box display='flex' gap={1} mt={2}>
                       <Button
-                        size="small"
+                        size='small'
                         startIcon={<InvestigateIcon />}
                         onClick={() => {
                           setSelectedAlert(alert);
@@ -359,16 +346,18 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
                         Investigate
                       </Button>
                       <Button
-                        size="small"
-                        color="success"
+                        size='small'
+                        color='success'
                         startIcon={<ResolveIcon />}
-                        onClick={() => handleAlertAction(alert._id, 'resolve', 'Resolved from alert center')}
+                        onClick={() =>
+                          handleAlertAction(alert._id, 'resolve', 'Resolved from alert center')
+                        }
                       >
                         Resolve
                       </Button>
                       <Button
-                        size="small"
-                        color="info"
+                        size='small'
+                        color='info'
                         startIcon={<FalsePositiveIcon />}
                         onClick={() => handleAlertAction(alert._id, 'false_positive')}
                       >
@@ -379,12 +368,13 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
 
                   {alert.status === 'resolved' && alert.resolution && (
                     <Box mt={2}>
-                      <Typography variant="body2">
+                      <Typography variant='body2'>
                         <strong>Resolution:</strong> {alert.resolution}
                       </Typography>
                       {alert.resolvedBy && (
-                        <Typography variant="caption" color="text.secondary">
-                          Resolved by {alert.resolvedBy} on {new Date(alert.resolvedAt!).toLocaleString()}
+                        <Typography variant='caption' color='text.secondary'>
+                          Resolved by {alert.resolvedBy} on{' '}
+                          {new Date(alert.resolvedAt!).toLocaleString()}
                         </Typography>
                       )}
                     </Box>
@@ -400,43 +390,45 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
       <Dialog
         open={actionDialogOpen}
         onClose={() => setActionDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogTitle>Alert Actions</DialogTitle>
         <DialogContent>
           {selectedAlert && (
             <Box>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 {selectedAlert.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
+              <Typography variant='body2' color='text.secondary' gutterBottom>
                 {selectedAlert.description}
               </Typography>
-              
+
               <Box mt={3}>
-                <Typography variant="subtitle2" gutterBottom>
+                <Typography variant='subtitle2' gutterBottom>
                   Available Actions:
                 </Typography>
-                <Box display="flex" flexDirection="column" gap={1}>
+                <Box display='flex' flexDirection='column' gap={1}>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     startIcon={<InvestigateIcon />}
                     onClick={() => handleAlertAction(selectedAlert._id, 'investigate')}
                   >
                     Mark as Investigating
                   </Button>
                   <Button
-                    variant="outlined"
-                    color="success"
+                    variant='outlined'
+                    color='success'
                     startIcon={<ResolveIcon />}
-                    onClick={() => handleAlertAction(selectedAlert._id, 'resolve', 'Manually resolved')}
+                    onClick={() =>
+                      handleAlertAction(selectedAlert._id, 'resolve', 'Manually resolved')
+                    }
                   >
                     Resolve Alert
                   </Button>
                   <Button
-                    variant="outlined"
-                    color="info"
+                    variant='outlined'
+                    color='info'
                     startIcon={<FalsePositiveIcon />}
                     onClick={() => handleAlertAction(selectedAlert._id, 'false_positive')}
                   >
@@ -448,9 +440,7 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setActionDialogOpen(false)}>
-            Close
-          </Button>
+          <Button onClick={() => setActionDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </Card>

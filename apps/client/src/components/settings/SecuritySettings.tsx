@@ -64,7 +64,10 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
 
   const handleRemoveIpAddress = (index: number) => {
     const currentIps = settings?.ipWhitelist || [];
-    handleFieldChange('ipWhitelist', currentIps.filter((_: any, i: number) => i !== index));
+    handleFieldChange(
+      'ipWhitelist',
+      currentIps.filter((_: any, i: number) => i !== index)
+    );
   };
 
   return (
@@ -73,8 +76,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<PasswordIcon />}
-          title="Password Policy"
-          subheader="Configure password requirements for all users"
+          title='Password Policy'
+          subheader='Configure password requirements for all users'
         />
         <CardContent>
           <Grid container spacing={3}>
@@ -83,12 +86,14 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               <Box sx={{ px: 2 }}>
                 <Slider
                   value={settings?.passwordPolicy?.minLength || 8}
-                  onChange={(_, value) => handleNestedFieldChange('passwordPolicy', 'minLength', value)}
+                  onChange={(_, value) =>
+                    handleNestedFieldChange('passwordPolicy', 'minLength', value)
+                  }
                   min={6}
                   max={20}
                   step={1}
                   marks
-                  valueLabelDisplay="on"
+                  valueLabelDisplay='on'
                 />
               </Box>
             </Grid>
@@ -98,69 +103,97 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               <Box sx={{ px: 2 }}>
                 <Slider
                   value={settings?.passwordPolicy?.preventReuse || 3}
-                  onChange={(_, value) => handleNestedFieldChange('passwordPolicy', 'preventReuse', value)}
+                  onChange={(_, value) =>
+                    handleNestedFieldChange('passwordPolicy', 'preventReuse', value)
+                  }
                   min={0}
                   max={10}
                   step={1}
                   marks
-                  valueLabelDisplay="on"
-                  valueLabelFormat={(value) => `${value} passwords`}
+                  valueLabelDisplay='on'
+                  valueLabelFormat={value => `${value} passwords`}
                 />
               </Box>
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Password Requirements
               </Typography>
-              <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+              <Stack direction='row' spacing={2} flexWrap='wrap' useFlexGap>
                 <FormControlLabel
                   control={
                     <Switch
                       checked={settings?.passwordPolicy?.requireUppercase || false}
-                      onChange={(e) => handleNestedFieldChange('passwordPolicy', 'requireUppercase', e.target.checked)}
+                      onChange={e =>
+                        handleNestedFieldChange(
+                          'passwordPolicy',
+                          'requireUppercase',
+                          e.target.checked
+                        )
+                      }
                     />
                   }
-                  label="Uppercase Letters"
+                  label='Uppercase Letters'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={settings?.passwordPolicy?.requireLowercase || false}
-                      onChange={(e) => handleNestedFieldChange('passwordPolicy', 'requireLowercase', e.target.checked)}
+                      onChange={e =>
+                        handleNestedFieldChange(
+                          'passwordPolicy',
+                          'requireLowercase',
+                          e.target.checked
+                        )
+                      }
                     />
                   }
-                  label="Lowercase Letters"
+                  label='Lowercase Letters'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={settings?.passwordPolicy?.requireNumbers || false}
-                      onChange={(e) => handleNestedFieldChange('passwordPolicy', 'requireNumbers', e.target.checked)}
+                      onChange={e =>
+                        handleNestedFieldChange(
+                          'passwordPolicy',
+                          'requireNumbers',
+                          e.target.checked
+                        )
+                      }
                     />
                   }
-                  label="Numbers"
+                  label='Numbers'
                 />
                 <FormControlLabel
                   control={
                     <Switch
                       checked={settings?.passwordPolicy?.requireSymbols || false}
-                      onChange={(e) => handleNestedFieldChange('passwordPolicy', 'requireSymbols', e.target.checked)}
+                      onChange={e =>
+                        handleNestedFieldChange(
+                          'passwordPolicy',
+                          'requireSymbols',
+                          e.target.checked
+                        )
+                      }
                     />
                   }
-                  label="Special Characters"
+                  label='Special Characters'
                 />
               </Stack>
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Password Expiry (days)"
-                type="number"
+                label='Password Expiry (days)'
+                type='number'
                 value={settings?.passwordPolicy?.maxAge || 0}
-                onChange={(e) => handleNestedFieldChange('passwordPolicy', 'maxAge', parseInt(e.target.value) || 0)}
+                onChange={e =>
+                  handleNestedFieldChange('passwordPolicy', 'maxAge', parseInt(e.target.value) || 0)
+                }
                 fullWidth
-                helperText="Set to 0 for no expiry"
+                helperText='Set to 0 for no expiry'
               />
             </Grid>
           </Grid>
@@ -171,19 +204,19 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<ShieldIcon />}
-          title="Session & Access Control"
-          subheader="Configure session timeouts and access restrictions"
+          title='Session & Access Control'
+          subheader='Configure session timeouts and access restrictions'
         />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <TextField
-                label="Session Timeout (minutes)"
-                type="number"
+                label='Session Timeout (minutes)'
+                type='number'
                 value={settings?.sessionTimeout || 60}
-                onChange={(e) => handleFieldChange('sessionTimeout', parseInt(e.target.value) || 60)}
+                onChange={e => handleFieldChange('sessionTimeout', parseInt(e.target.value) || 60)}
                 fullWidth
-                helperText="Automatic logout after inactivity"
+                helperText='Automatic logout after inactivity'
               />
             </Grid>
 
@@ -192,32 +225,32 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 control={
                   <Switch
                     checked={settings?.mfaRequired || false}
-                    onChange={(e) => handleFieldChange('mfaRequired', e.target.checked)}
+                    onChange={e => handleFieldChange('mfaRequired', e.target.checked)}
                   />
                 }
-                label="Require Multi-Factor Authentication (MFA)"
+                label='Require Multi-Factor Authentication (MFA)'
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Max Login Attempts"
-                type="number"
+                label='Max Login Attempts'
+                type='number'
                 value={settings?.maxLoginAttempts || 5}
-                onChange={(e) => handleFieldChange('maxLoginAttempts', parseInt(e.target.value) || 5)}
+                onChange={e => handleFieldChange('maxLoginAttempts', parseInt(e.target.value) || 5)}
                 fullWidth
-                helperText="Account lockout threshold"
+                helperText='Account lockout threshold'
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Lockout Duration (minutes)"
-                type="number"
+                label='Lockout Duration (minutes)'
+                type='number'
                 value={settings?.lockoutDuration || 30}
-                onChange={(e) => handleFieldChange('lockoutDuration', parseInt(e.target.value) || 30)}
+                onChange={e => handleFieldChange('lockoutDuration', parseInt(e.target.value) || 30)}
                 fullWidth
-                helperText="How long accounts stay locked"
+                helperText='How long accounts stay locked'
               />
             </Grid>
           </Grid>
@@ -228,16 +261,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<VpnIcon />}
-          title="IP Address Whitelist"
-          subheader="Restrict access to specific IP addresses or ranges"
+          title='IP Address Whitelist'
+          subheader='Restrict access to specific IP addresses or ranges'
         />
         <CardContent>
           <Box mb={2}>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              onClick={handleAddIpAddress}
-            >
+            <Button variant='outlined' startIcon={<AddIcon />} onClick={handleAddIpAddress}>
               Add IP Address
             </Button>
           </Box>
@@ -246,15 +275,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
             <List>
               {settings.ipWhitelist.map((ip: string, index: number) => (
                 <ListItem key={index}>
-                  <ListItemText
-                    primary={ip}
-                    secondary="Allowed IP address or range"
-                  />
+                  <ListItemText primary={ip} secondary='Allowed IP address or range' />
                   <ListItemSecondaryAction>
                     <IconButton
-                      edge="end"
+                      edge='end'
                       onClick={() => handleRemoveIpAddress(index)}
-                      color="error"
+                      color='error'
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -263,7 +289,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               ))}
             </List>
           ) : (
-            <Alert severity="info" icon={<WarningIcon />}>
+            <Alert severity='info' icon={<WarningIcon />}>
               No IP restrictions configured. All IP addresses are allowed.
             </Alert>
           )}
@@ -274,8 +300,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
       <Card>
         <CardHeader
           avatar={<AuditIcon />}
-          title="Audit Logging"
-          subheader="Configure system activity logging and retention"
+          title='Audit Logging'
+          subheader='Configure system activity logging and retention'
         />
         <CardContent>
           <Grid container spacing={3}>
@@ -284,10 +310,12 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 control={
                   <Switch
                     checked={settings?.auditLogging?.enabled || true}
-                    onChange={(e) => handleNestedFieldChange('auditLogging', 'enabled', e.target.checked)}
+                    onChange={e =>
+                      handleNestedFieldChange('auditLogging', 'enabled', e.target.checked)
+                    }
                   />
                 }
-                label="Enable Audit Logging"
+                label='Enable Audit Logging'
               />
             </Grid>
 
@@ -296,40 +324,48 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 <InputLabel>Log Detail Level</InputLabel>
                 <Select
                   value={settings?.auditLogging?.logLevel || 'basic'}
-                  onChange={(e) => handleNestedFieldChange('auditLogging', 'logLevel', e.target.value)}
-                  label="Log Detail Level"
+                  onChange={e =>
+                    handleNestedFieldChange('auditLogging', 'logLevel', e.target.value)
+                  }
+                  label='Log Detail Level'
                   disabled={!settings?.auditLogging?.enabled}
                 >
-                  <MenuItem value="basic">Basic - Login/logout, critical actions</MenuItem>
-                  <MenuItem value="detailed">Detailed - All user actions</MenuItem>
-                  <MenuItem value="comprehensive">Comprehensive - All system events</MenuItem>
+                  <MenuItem value='basic'>Basic - Login/logout, critical actions</MenuItem>
+                  <MenuItem value='detailed'>Detailed - All user actions</MenuItem>
+                  <MenuItem value='comprehensive'>Comprehensive - All system events</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Log Retention (days)"
-                type="number"
+                label='Log Retention (days)'
+                type='number'
                 value={settings?.auditLogging?.retentionDays || 90}
-                onChange={(e) => handleNestedFieldChange('auditLogging', 'retentionDays', parseInt(e.target.value) || 90)}
+                onChange={e =>
+                  handleNestedFieldChange(
+                    'auditLogging',
+                    'retentionDays',
+                    parseInt(e.target.value) || 90
+                  )
+                }
                 fullWidth
                 disabled={!settings?.auditLogging?.enabled}
-                helperText="How long to keep audit logs"
+                helperText='How long to keep audit logs'
               />
             </Grid>
 
             <Grid item xs={12}>
-              <Alert severity="info">
-                <Typography variant="body2">
+              <Alert severity='info'>
+                <Typography variant='body2'>
                   <strong>Log Levels Explained:</strong>
                 </Typography>
-                <Typography variant="body2" component="div">
+                <Typography variant='body2' component='div'>
                   • <strong>Basic:</strong> User authentication, data export, configuration changes
-                  <br />
-                  • <strong>Detailed:</strong> All user actions including form submissions, searches, reports
-                  <br />
-                  • <strong>Comprehensive:</strong> All system events including API calls, background tasks, errors
+                  <br />• <strong>Detailed:</strong> All user actions including form submissions,
+                  searches, reports
+                  <br />• <strong>Comprehensive:</strong> All system events including API calls,
+                  background tasks, errors
                 </Typography>
               </Alert>
             </Grid>

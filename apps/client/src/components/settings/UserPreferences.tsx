@@ -55,7 +55,7 @@ interface TabPanelProps {
 function TabPanel({ children, value, index }: TabPanelProps) {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`preferences-tabpanel-${index}`}
       aria-labelledby={`preferences-tab-${index}`}
@@ -125,7 +125,12 @@ const UserPreferences: React.FC = () => {
     }));
   };
 
-  const handleNestedPreferenceChange = (section: string, subsection: string, field: string, value: any) => {
+  const handleNestedPreferenceChange = (
+    section: string,
+    subsection: string,
+    field: string,
+    value: any
+  ) => {
     setPreferences((prev: any) => ({
       ...prev,
       [section]: {
@@ -140,8 +145,8 @@ const UserPreferences: React.FC = () => {
 
   if (loading || !preferences) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h4" gutterBottom>
+      <Container maxWidth='lg' sx={{ py: 4 }}>
+        <Typography variant='h4' gutterBottom>
           User Preferences
         </Typography>
         <Typography>Loading preferences...</Typography>
@@ -150,21 +155,16 @@ const UserPreferences: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">User Preferences</Typography>
-        <Button
-          variant="contained"
-          onClick={handleSave}
-          startIcon={<SaveIcon />}
-          disabled={saving}
-        >
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>User Preferences</Typography>
+        <Button variant='contained' onClick={handleSave} startIcon={<SaveIcon />} disabled={saving}>
           {saving ? 'Saving...' : 'Save Preferences'}
         </Button>
       </Box>
 
       {success && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+        <Alert severity='success' sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
           {success}
         </Alert>
       )}
@@ -174,15 +174,15 @@ const UserPreferences: React.FC = () => {
           <Tabs
             value={currentTab}
             onChange={(_, newValue) => setCurrentTab(newValue)}
-            aria-label="preferences tabs"
-            variant="scrollable"
-            scrollButtons="auto"
+            aria-label='preferences tabs'
+            variant='scrollable'
+            scrollButtons='auto'
           >
             {tabs.map((tab, index) => (
               <Tab
                 key={tab.id}
                 icon={tab.icon}
-                iconPosition="start"
+                iconPosition='start'
                 label={tab.label}
                 id={`preferences-tab-${index}`}
                 aria-controls={`preferences-tabpanel-${index}`}
@@ -195,7 +195,7 @@ const UserPreferences: React.FC = () => {
           {/* Appearance */}
           <TabPanel value={currentTab} index={0}>
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Appearance Settings
               </Typography>
               <Grid container spacing={3}>
@@ -204,12 +204,12 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Theme</InputLabel>
                     <Select
                       value={preferences?.appearance?.theme || 'system'}
-                      onChange={(e) => handlePreferenceChange('appearance', 'theme', e.target.value)}
-                      label="Theme"
+                      onChange={e => handlePreferenceChange('appearance', 'theme', e.target.value)}
+                      label='Theme'
                     >
-                      <MenuItem value="light">Light</MenuItem>
-                      <MenuItem value="dark">Dark</MenuItem>
-                      <MenuItem value="system">System Default</MenuItem>
+                      <MenuItem value='light'>Light</MenuItem>
+                      <MenuItem value='dark'>Dark</MenuItem>
+                      <MenuItem value='system'>System Default</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -219,14 +219,16 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Color Scheme</InputLabel>
                     <Select
                       value={preferences?.appearance?.colorScheme || 'default'}
-                      onChange={(e) => handlePreferenceChange('appearance', 'colorScheme', e.target.value)}
-                      label="Color Scheme"
+                      onChange={e =>
+                        handlePreferenceChange('appearance', 'colorScheme', e.target.value)
+                      }
+                      label='Color Scheme'
                     >
-                      <MenuItem value="default">Default</MenuItem>
-                      <MenuItem value="blue">Blue</MenuItem>
-                      <MenuItem value="green">Green</MenuItem>
-                      <MenuItem value="purple">Purple</MenuItem>
-                      <MenuItem value="orange">Orange</MenuItem>
+                      <MenuItem value='default'>Default</MenuItem>
+                      <MenuItem value='blue'>Blue</MenuItem>
+                      <MenuItem value='green'>Green</MenuItem>
+                      <MenuItem value='purple'>Purple</MenuItem>
+                      <MenuItem value='orange'>Orange</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -236,12 +238,14 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Density</InputLabel>
                     <Select
                       value={preferences?.appearance?.density || 'standard'}
-                      onChange={(e) => handlePreferenceChange('appearance', 'density', e.target.value)}
-                      label="Density"
+                      onChange={e =>
+                        handlePreferenceChange('appearance', 'density', e.target.value)
+                      }
+                      label='Density'
                     >
-                      <MenuItem value="comfortable">Comfortable</MenuItem>
-                      <MenuItem value="standard">Standard</MenuItem>
-                      <MenuItem value="compact">Compact</MenuItem>
+                      <MenuItem value='comfortable'>Comfortable</MenuItem>
+                      <MenuItem value='standard'>Standard</MenuItem>
+                      <MenuItem value='compact'>Compact</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -251,13 +255,15 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Language</InputLabel>
                     <Select
                       value={preferences?.appearance?.language || 'en'}
-                      onChange={(e) => handlePreferenceChange('appearance', 'language', e.target.value)}
-                      label="Language"
+                      onChange={e =>
+                        handlePreferenceChange('appearance', 'language', e.target.value)
+                      }
+                      label='Language'
                     >
-                      <MenuItem value="en">English</MenuItem>
-                      <MenuItem value="es">Spanish</MenuItem>
-                      <MenuItem value="fr">French</MenuItem>
-                      <MenuItem value="de">German</MenuItem>
+                      <MenuItem value='en'>English</MenuItem>
+                      <MenuItem value='es'>Spanish</MenuItem>
+                      <MenuItem value='fr'>French</MenuItem>
+                      <MenuItem value='de'>German</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -267,10 +273,12 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.appearance?.sidebarCollapsed || false}
-                        onChange={(e) => handlePreferenceChange('appearance', 'sidebarCollapsed', e.target.checked)}
+                        onChange={e =>
+                          handlePreferenceChange('appearance', 'sidebarCollapsed', e.target.checked)
+                        }
                       />
                     }
-                    label="Keep sidebar collapsed by default"
+                    label='Keep sidebar collapsed by default'
                   />
                 </Grid>
               </Grid>
@@ -280,11 +288,11 @@ const UserPreferences: React.FC = () => {
           {/* Notifications */}
           <TabPanel value={currentTab} index={1}>
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Notification Settings
               </Typography>
-              
-              <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
+
+              <Typography variant='subtitle1' gutterBottom sx={{ mt: 3 }}>
                 Email Notifications
               </Typography>
               <Grid container spacing={2}>
@@ -293,10 +301,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.notifications?.email?.formSubmissions || false}
-                        onChange={(e) => handleNestedPreferenceChange('notifications', 'email', 'formSubmissions', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'notifications',
+                            'email',
+                            'formSubmissions',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Form Submissions"
+                    label='Form Submissions'
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -304,10 +319,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.notifications?.email?.formAssignments || false}
-                        onChange={(e) => handleNestedPreferenceChange('notifications', 'email', 'formAssignments', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'notifications',
+                            'email',
+                            'formAssignments',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Form Assignments"
+                    label='Form Assignments'
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -315,10 +337,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.notifications?.email?.systemAlerts || false}
-                        onChange={(e) => handleNestedPreferenceChange('notifications', 'email', 'systemAlerts', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'notifications',
+                            'email',
+                            'systemAlerts',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="System Alerts"
+                    label='System Alerts'
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -326,15 +355,22 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.notifications?.email?.weeklyDigest || false}
-                        onChange={(e) => handleNestedPreferenceChange('notifications', 'email', 'weeklyDigest', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'notifications',
+                            'email',
+                            'weeklyDigest',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Weekly Digest"
+                    label='Weekly Digest'
                   />
                 </Grid>
               </Grid>
 
-              <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
+              <Typography variant='subtitle1' gutterBottom sx={{ mt: 3 }}>
                 Browser Notifications
               </Typography>
               <Grid container spacing={2}>
@@ -343,10 +379,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.notifications?.browser?.enabled || false}
-                        onChange={(e) => handleNestedPreferenceChange('notifications', 'browser', 'enabled', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'notifications',
+                            'browser',
+                            'enabled',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Enable browser notifications"
+                    label='Enable browser notifications'
                   />
                 </Grid>
                 {preferences?.notifications?.browser?.enabled && (
@@ -356,10 +399,17 @@ const UserPreferences: React.FC = () => {
                         control={
                           <Switch
                             checked={preferences?.notifications?.browser?.formSubmissions || false}
-                            onChange={(e) => handleNestedPreferenceChange('notifications', 'browser', 'formSubmissions', e.target.checked)}
+                            onChange={e =>
+                              handleNestedPreferenceChange(
+                                'notifications',
+                                'browser',
+                                'formSubmissions',
+                                e.target.checked
+                              )
+                            }
                           />
                         }
-                        label="Form Submissions"
+                        label='Form Submissions'
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -367,10 +417,17 @@ const UserPreferences: React.FC = () => {
                         control={
                           <Switch
                             checked={preferences?.notifications?.browser?.mentions || false}
-                            onChange={(e) => handleNestedPreferenceChange('notifications', 'browser', 'mentions', e.target.checked)}
+                            onChange={e =>
+                              handleNestedPreferenceChange(
+                                'notifications',
+                                'browser',
+                                'mentions',
+                                e.target.checked
+                              )
+                            }
                           />
                         }
-                        label="Mentions"
+                        label='Mentions'
                       />
                     </Grid>
                   </>
@@ -382,7 +439,7 @@ const UserPreferences: React.FC = () => {
           {/* Work Preferences */}
           <TabPanel value={currentTab} index={2}>
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Work Preferences
               </Typography>
               <Grid container spacing={3}>
@@ -391,14 +448,21 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Timezone</InputLabel>
                     <Select
                       value={preferences?.workPreferences?.timezone || 'UTC'}
-                      onChange={(e) => handleNestedPreferenceChange('workPreferences', 'timezone', '', e.target.value)}
-                      label="Timezone"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'workPreferences',
+                          'timezone',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Timezone'
                     >
-                      <MenuItem value="UTC">UTC</MenuItem>
-                      <MenuItem value="America/New_York">Eastern Time</MenuItem>
-                      <MenuItem value="America/Chicago">Central Time</MenuItem>
-                      <MenuItem value="America/Denver">Mountain Time</MenuItem>
-                      <MenuItem value="America/Los_Angeles">Pacific Time</MenuItem>
+                      <MenuItem value='UTC'>UTC</MenuItem>
+                      <MenuItem value='America/New_York'>Eastern Time</MenuItem>
+                      <MenuItem value='America/Chicago'>Central Time</MenuItem>
+                      <MenuItem value='America/Denver'>Mountain Time</MenuItem>
+                      <MenuItem value='America/Los_Angeles'>Pacific Time</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -408,12 +472,19 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Default Form View</InputLabel>
                     <Select
                       value={preferences?.workPreferences?.defaultFormView || 'list'}
-                      onChange={(e) => handleNestedPreferenceChange('workPreferences', 'defaultFormView', '', e.target.value)}
-                      label="Default Form View"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'workPreferences',
+                          'defaultFormView',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Default Form View'
                     >
-                      <MenuItem value="grid">Grid</MenuItem>
-                      <MenuItem value="list">List</MenuItem>
-                      <MenuItem value="kanban">Kanban</MenuItem>
+                      <MenuItem value='grid'>Grid</MenuItem>
+                      <MenuItem value='list'>List</MenuItem>
+                      <MenuItem value='kanban'>Kanban</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -423,10 +494,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.workPreferences?.autoAssignForms || false}
-                        onChange={(e) => handleNestedPreferenceChange('workPreferences', 'autoAssignForms', '', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'workPreferences',
+                            'autoAssignForms',
+                            '',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Auto-assign new forms to me"
+                    label='Auto-assign new forms to me'
                   />
                 </Grid>
               </Grid>
@@ -436,7 +514,7 @@ const UserPreferences: React.FC = () => {
           {/* Data Display */}
           <TabPanel value={currentTab} index={3}>
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Data Display Settings
               </Typography>
               <Grid container spacing={3}>
@@ -445,12 +523,19 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Date Format</InputLabel>
                     <Select
                       value={preferences?.dataDisplay?.dateFormat || 'MM/dd/yyyy'}
-                      onChange={(e) => handleNestedPreferenceChange('dataDisplay', 'dateFormat', '', e.target.value)}
-                      label="Date Format"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'dataDisplay',
+                          'dateFormat',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Date Format'
                     >
-                      <MenuItem value="MM/dd/yyyy">MM/dd/yyyy (US)</MenuItem>
-                      <MenuItem value="dd/MM/yyyy">dd/MM/yyyy (UK)</MenuItem>
-                      <MenuItem value="yyyy-MM-dd">yyyy-MM-dd (ISO)</MenuItem>
+                      <MenuItem value='MM/dd/yyyy'>MM/dd/yyyy (US)</MenuItem>
+                      <MenuItem value='dd/MM/yyyy'>dd/MM/yyyy (UK)</MenuItem>
+                      <MenuItem value='yyyy-MM-dd'>yyyy-MM-dd (ISO)</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -460,11 +545,18 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Time Format</InputLabel>
                     <Select
                       value={preferences?.dataDisplay?.timeFormat || '12h'}
-                      onChange={(e) => handleNestedPreferenceChange('dataDisplay', 'timeFormat', '', e.target.value)}
-                      label="Time Format"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'dataDisplay',
+                          'timeFormat',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Time Format'
                     >
-                      <MenuItem value="12h">12-hour (AM/PM)</MenuItem>
-                      <MenuItem value="24h">24-hour</MenuItem>
+                      <MenuItem value='12h'>12-hour (AM/PM)</MenuItem>
+                      <MenuItem value='24h'>24-hour</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -473,12 +565,14 @@ const UserPreferences: React.FC = () => {
                   <Typography gutterBottom>Items per page</Typography>
                   <Slider
                     value={preferences?.dataDisplay?.itemsPerPage || 25}
-                    onChange={(_, value) => handleNestedPreferenceChange('dataDisplay', 'itemsPerPage', '', value)}
+                    onChange={(_, value) =>
+                      handleNestedPreferenceChange('dataDisplay', 'itemsPerPage', '', value)
+                    }
                     min={10}
                     max={100}
                     step={5}
                     marks
-                    valueLabelDisplay="on"
+                    valueLabelDisplay='on'
                   />
                 </Grid>
 
@@ -487,11 +581,18 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Default Sort Order</InputLabel>
                     <Select
                       value={preferences?.dataDisplay?.defaultSortOrder || 'desc'}
-                      onChange={(e) => handleNestedPreferenceChange('dataDisplay', 'defaultSortOrder', '', e.target.value)}
-                      label="Default Sort Order"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'dataDisplay',
+                          'defaultSortOrder',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Default Sort Order'
                     >
-                      <MenuItem value="asc">Ascending</MenuItem>
-                      <MenuItem value="desc">Descending</MenuItem>
+                      <MenuItem value='asc'>Ascending</MenuItem>
+                      <MenuItem value='desc'>Descending</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -501,10 +602,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.dataDisplay?.showTutorials !== false}
-                        onChange={(e) => handleNestedPreferenceChange('dataDisplay', 'showTutorials', '', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'dataDisplay',
+                            'showTutorials',
+                            '',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Show tutorial tooltips and help messages"
+                    label='Show tutorial tooltips and help messages'
                   />
                 </Grid>
               </Grid>
@@ -514,7 +622,7 @@ const UserPreferences: React.FC = () => {
           {/* Privacy */}
           <TabPanel value={currentTab} index={4}>
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Privacy Settings
               </Typography>
               <Grid container spacing={3}>
@@ -523,12 +631,19 @@ const UserPreferences: React.FC = () => {
                     <InputLabel>Profile Visibility</InputLabel>
                     <Select
                       value={preferences?.privacy?.profileVisibility || 'organization'}
-                      onChange={(e) => handleNestedPreferenceChange('privacy', 'profileVisibility', '', e.target.value)}
-                      label="Profile Visibility"
+                      onChange={e =>
+                        handleNestedPreferenceChange(
+                          'privacy',
+                          'profileVisibility',
+                          '',
+                          e.target.value
+                        )
+                      }
+                      label='Profile Visibility'
                     >
-                      <MenuItem value="public">Public</MenuItem>
-                      <MenuItem value="organization">Organization Only</MenuItem>
-                      <MenuItem value="private">Private</MenuItem>
+                      <MenuItem value='public'>Public</MenuItem>
+                      <MenuItem value='organization'>Organization Only</MenuItem>
+                      <MenuItem value='private'>Private</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -538,10 +653,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.privacy?.showOnlineStatus !== false}
-                        onChange={(e) => handleNestedPreferenceChange('privacy', 'showOnlineStatus', '', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'privacy',
+                            'showOnlineStatus',
+                            '',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Show online status to other users"
+                    label='Show online status to other users'
                   />
                 </Grid>
 
@@ -550,10 +672,17 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.privacy?.allowDirectMessages !== false}
-                        onChange={(e) => handleNestedPreferenceChange('privacy', 'allowDirectMessages', '', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'privacy',
+                            'allowDirectMessages',
+                            '',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Allow direct messages from other users"
+                    label='Allow direct messages from other users'
                   />
                 </Grid>
 
@@ -562,23 +691,30 @@ const UserPreferences: React.FC = () => {
                     control={
                       <Switch
                         checked={preferences?.privacy?.shareActivityStatus !== false}
-                        onChange={(e) => handleNestedPreferenceChange('privacy', 'shareActivityStatus', '', e.target.checked)}
+                        onChange={e =>
+                          handleNestedPreferenceChange(
+                            'privacy',
+                            'shareActivityStatus',
+                            '',
+                            e.target.checked
+                          )
+                        }
                       />
                     }
-                    label="Share activity status (currently working on)"
+                    label='Share activity status (currently working on)'
                   />
                 </Grid>
               </Grid>
 
               {/* Pinned Items */}
-              <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+              <Typography variant='h6' gutterBottom sx={{ mt: 4 }}>
                 Pinned Items
               </Typography>
-              
+
               <Grid container spacing={2}>
                 {/* Pinned Forms */}
                 <Grid item xs={12} md={6}>
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography variant='subtitle2' gutterBottom>
                     <FormIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Forms
                   </Typography>
@@ -587,14 +723,14 @@ const UserPreferences: React.FC = () => {
                       {preferences.pinnedItems.forms.slice(0, 3).map((formId: string) => (
                         <ListItem key={formId}>
                           <ListItemIcon>
-                            <StarIcon color="primary" />
+                            <StarIcon color='primary' />
                           </ListItemIcon>
                           <ListItemText primary={`Form ${formId}`} />
                         </ListItem>
                       ))}
                     </List>
                   ) : (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='body2' color='text.secondary'>
                       No pinned forms
                     </Typography>
                   )}
@@ -602,7 +738,7 @@ const UserPreferences: React.FC = () => {
 
                 {/* Pinned Reports */}
                 <Grid item xs={12} md={6}>
-                  <Typography variant="subtitle2" gutterBottom>
+                  <Typography variant='subtitle2' gutterBottom>
                     <ReportIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Reports
                   </Typography>
@@ -611,14 +747,14 @@ const UserPreferences: React.FC = () => {
                       {preferences.pinnedItems.reports.slice(0, 3).map((reportId: string) => (
                         <ListItem key={reportId}>
                           <ListItemIcon>
-                            <StarIcon color="primary" />
+                            <StarIcon color='primary' />
                           </ListItemIcon>
                           <ListItemText primary={`Report ${reportId}`} />
                         </ListItem>
                       ))}
                     </List>
                   ) : (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='body2' color='text.secondary'>
                       No pinned reports
                     </Typography>
                   )}

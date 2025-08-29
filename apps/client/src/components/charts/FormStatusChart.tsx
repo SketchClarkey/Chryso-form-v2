@@ -1,4 +1,16 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from 'recharts';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 
 interface FormStatusChartProps {
@@ -29,23 +41,23 @@ export function FormStatusChart({ data, title, type = 'pie' }: FormStatusChartPr
     return (
       <Card>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             {title}
           </Typography>
           <Box sx={{ height: 300, width: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width='100%' height='100%'>
               <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="name" 
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis
+                  dataKey='name'
                   tick={{ fontSize: 12 }}
                   angle={-45}
-                  textAnchor="end"
+                  textAnchor='end'
                   height={80}
                 />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="value" fill="#8884d8">
+                <Bar dataKey='value' fill='#8884d8'>
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -61,21 +73,21 @@ export function FormStatusChart({ data, title, type = 'pie' }: FormStatusChartPr
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant='h6' gutterBottom>
           {title}
         </Typography>
         <Box sx={{ height: 300, width: '100%' }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
               <Pie
                 data={data.filter(item => item.value > 0)}
-                cx="50%"
-                cy="50%"
+                cx='50%'
+                cy='50%'
                 labelLine={false}
                 label={renderLabel}
                 outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
+                fill='#8884d8'
+                dataKey='value'
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />

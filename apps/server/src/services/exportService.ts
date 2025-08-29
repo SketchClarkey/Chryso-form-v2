@@ -104,10 +104,11 @@ export class ExportService {
     }
 
     // Report metadata
-    doc.fontSize(10)
-       .text(`Generated: ${new Date().toLocaleString()}`, { align: 'right' })
-       .text(`Version: ${report.version}`, { align: 'right' })
-       .text(`Category: ${report.category}`, { align: 'right' });
+    doc
+      .fontSize(10)
+      .text(`Generated: ${new Date().toLocaleString()}`, { align: 'right' })
+      .text(`Version: ${report.version}`, { align: 'right' })
+      .text(`Category: ${report.category}`, { align: 'right' });
     doc.moveDown();
 
     // Process visualizations
@@ -148,7 +149,9 @@ export class ExportService {
       doc.moveDown();
 
       for (const [dataSourceId, sourceData] of Object.entries(data)) {
-        doc.fontSize(14).text(`${dataSourceId}: ${Array.isArray(sourceData) ? sourceData.length : 0} records`);
+        doc
+          .fontSize(14)
+          .text(`${dataSourceId}: ${Array.isArray(sourceData) ? sourceData.length : 0} records`);
         doc.moveDown(0.5);
       }
     }
@@ -180,7 +183,7 @@ export class ExportService {
     headers.forEach((header: string, index: number) => {
       doc.text(header, startX + index * columnWidth, doc.y, {
         width: columnWidth,
-        align: 'left'
+        align: 'left',
       });
     });
     doc.moveDown();
@@ -190,10 +193,11 @@ export class ExportService {
     limitedData.forEach((row: any) => {
       const rowY = doc.y;
       keys.forEach((key: string, index: number) => {
-        const value = typeof row[key] === 'object' ? JSON.stringify(row[key]) : String(row[key] || '');
+        const value =
+          typeof row[key] === 'object' ? JSON.stringify(row[key]) : String(row[key] || '');
         doc.text(value.substring(0, 50), startX + index * columnWidth, rowY, {
           width: columnWidth,
-          align: 'left'
+          align: 'left',
         });
       });
       doc.moveDown(0.5);
@@ -261,7 +265,10 @@ export class ExportService {
     ];
 
     for (const [dataSourceId, sourceData] of Object.entries(data)) {
-      summaryData.push([dataSourceId, Array.isArray(sourceData) ? sourceData.length.toString() : '0']);
+      summaryData.push([
+        dataSourceId,
+        Array.isArray(sourceData) ? sourceData.length.toString() : '0',
+      ]);
     }
 
     const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
@@ -278,7 +285,7 @@ export class ExportService {
     // Visualization sheets
     for (const visualization of report.visualizations) {
       const vizData = data[visualization.dataSource] || [];
-      
+
       if (visualization.type === 'table' && Array.isArray(vizData) && vizData.length > 0) {
         const worksheet = XLSX.utils.json_to_sheet(vizData);
         const sheetName = (visualization.title || visualization.type).substring(0, 31);
@@ -306,7 +313,7 @@ export class ExportService {
     for (const [dataSourceId, sourceData] of Object.entries(data)) {
       if (Array.isArray(sourceData) && sourceData.length > 0) {
         csvContent += `"Data Source: ${dataSourceId}"\n`;
-        
+
         // Headers
         const headers = Object.keys(sourceData[0]);
         csvContent += headers.map(header => `"${header}"`).join(',') + '\n';
@@ -355,7 +362,7 @@ export class ExportService {
     // Generate charts for each visualization
     for (const visualization of report.visualizations) {
       const vizData = data[visualization.dataSource] || [];
-      
+
       if (visualization.type === 'chart' && vizData.length > 0) {
         try {
           const chartBuffer = await this.generateChartImage(vizData, visualization);
@@ -381,16 +388,24 @@ export class ExportService {
 
     const chartData = {
       labels: data.map((item: any) => item.label || item.name || 'Unknown'),
-      datasets: [{
-        label: visualization.title || 'Dataset',
-        data: data.map((item: any) => item.value || item.count || 0),
-        backgroundColor: [
-          '#3f51b5', '#f50057', '#ff9800', '#4caf50', 
-          '#2196f3', '#9c27b0', '#607d8b', '#795548'
-        ],
-        borderColor: '#ffffff',
-        borderWidth: 2,
-      }],
+      datasets: [
+        {
+          label: visualization.title || 'Dataset',
+          data: data.map((item: any) => item.value || item.count || 0),
+          backgroundColor: [
+            '#3f51b5',
+            '#f50057',
+            '#ff9800',
+            '#4caf50',
+            '#2196f3',
+            '#9c27b0',
+            '#607d8b',
+            '#795548',
+          ],
+          borderColor: '#ffffff',
+          borderWidth: 2,
+        },
+      ],
     };
 
     const config: ChartConfiguration = {

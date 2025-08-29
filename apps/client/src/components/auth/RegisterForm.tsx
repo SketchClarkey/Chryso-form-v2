@@ -13,14 +13,7 @@ import {
   IconButton,
   MenuItem,
 } from '@mui/material';
-import { 
-  Visibility, 
-  VisibilityOff, 
-  Email, 
-  Lock, 
-  Person,
-  Badge
-} from '@mui/icons-material';
+import { Visibility, VisibilityOff, Email, Lock, Person, Badge } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 
 const roles = [
@@ -86,10 +79,7 @@ export function RegisterForm() {
       });
       navigate('/dashboard');
     } catch (err: any) {
-      setError(
-        err.response?.data?.message || 
-        'Registration failed. Please try again.'
-      );
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -109,76 +99,76 @@ export function RegisterForm() {
       <Card sx={{ maxWidth: 500, width: '100%' }}>
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography variant='h4' component='h1' gutterBottom>
               Create Account
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               Join Chryso Forms to get started
             </Typography>
           </Box>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity='error' sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box component='form' onSubmit={handleSubmit} noValidate>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 fullWidth
-                id="firstName"
-                name="firstName"
-                label="First Name"
+                id='firstName'
+                name='firstName'
+                label='First Name'
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
-                margin="normal"
-                autoComplete="given-name"
+                margin='normal'
+                autoComplete='given-name'
                 autoFocus
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
-                      <Person color="action" />
+                    <InputAdornment position='start'>
+                      <Person color='action' />
                     </InputAdornment>
                   ),
                 }}
               />
               <TextField
                 fullWidth
-                id="lastName"
-                name="lastName"
-                label="Last Name"
+                id='lastName'
+                name='lastName'
+                label='Last Name'
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
-                margin="normal"
-                autoComplete="family-name"
+                margin='normal'
+                autoComplete='family-name'
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
-                      <Person color="action" />
+                    <InputAdornment position='start'>
+                      <Person color='action' />
                     </InputAdornment>
                   ),
                 }}
               />
             </Box>
-            
+
             <TextField
               fullWidth
-              id="email"
-              name="email"
-              label="Email"
-              type="email"
+              id='email'
+              name='email'
+              label='Email'
+              type='email'
               value={formData.email}
               onChange={handleInputChange}
               required
-              margin="normal"
-              autoComplete="email"
+              margin='normal'
+              autoComplete='email'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <Email color="action" />
+                  <InputAdornment position='start'>
+                    <Email color='action' />
                   </InputAdornment>
                 ),
               }}
@@ -186,23 +176,23 @@ export function RegisterForm() {
 
             <TextField
               fullWidth
-              id="role"
-              name="role"
-              label="Role"
+              id='role'
+              name='role'
+              label='Role'
               select
               value={formData.role}
               onChange={handleInputChange}
               required
-              margin="normal"
+              margin='normal'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <Badge color="action" />
+                  <InputAdornment position='start'>
+                    <Badge color='action' />
                   </InputAdornment>
                 ),
               }}
             >
-              {roles.map((option) => (
+              {roles.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -211,27 +201,27 @@ export function RegisterForm() {
 
             <TextField
               fullWidth
-              id="password"
-              name="password"
-              label="Password"
+              id='password'
+              name='password'
+              label='Password'
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChange={handleInputChange}
               required
-              margin="normal"
-              autoComplete="new-password"
+              margin='normal'
+              autoComplete='new-password'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock color="action" />
+                  <InputAdornment position='start'>
+                    <Lock color='action' />
                   </InputAdornment>
                 ),
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
-                      aria-label="toggle password visibility"
+                      aria-label='toggle password visibility'
                       onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
+                      edge='end'
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -242,27 +232,27 @@ export function RegisterForm() {
 
             <TextField
               fullWidth
-              id="confirmPassword"
-              name="confirmPassword"
-              label="Confirm Password"
+              id='confirmPassword'
+              name='confirmPassword'
+              label='Confirm Password'
               type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChange={handleInputChange}
               required
-              margin="normal"
-              autoComplete="new-password"
+              margin='normal'
+              autoComplete='new-password'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock color="action" />
+                  <InputAdornment position='start'>
+                    <Lock color='action' />
                   </InputAdornment>
                 ),
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
-                      aria-label="toggle confirm password visibility"
+                      aria-label='toggle confirm password visibility'
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      edge="end"
+                      edge='end'
                     >
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -272,19 +262,19 @@ export function RegisterForm() {
             />
 
             <Button
-              type="submit"
+              type='submit'
               fullWidth
-              variant="contained"
+              variant='contained'
               disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
             >
               {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
-            
+
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2">
+              <Typography variant='body2'>
                 Already have an account?{' '}
-                <Link component={RouterLink} to="/login">
+                <Link component={RouterLink} to='/login'>
                   Sign in
                 </Link>
               </Typography>

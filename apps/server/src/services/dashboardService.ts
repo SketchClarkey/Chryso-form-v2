@@ -130,7 +130,10 @@ export class DashboardService {
     ]);
 
     return {
-      dashboards: dashboards.map(d => ({ ...d, widgets: this.sanitizeWidgets(d.widgets, userRole) })),
+      dashboards: dashboards.map(d => ({
+        ...d,
+        widgets: this.sanitizeWidgets(d.widgets, userRole),
+      })),
       total,
       page,
       pages: Math.ceil(total / limit),
@@ -191,7 +194,7 @@ export class DashboardService {
   ): Promise<WidgetData> {
     const cacheKey = `widget:${widget.id}:${JSON.stringify(widget.config)}`;
     const cached = this.dataCache.get(cacheKey);
-    
+
     if (!forceRefresh && cached && cached.expiry > new Date()) {
       return {
         widgetId: widget.id,
@@ -247,7 +250,7 @@ export class DashboardService {
 
   private async generateMetricData(widget: IDashboardWidget, userRole: string): Promise<any> {
     const { metric, aggregation = 'count', dateRange } = widget.config;
-    
+
     if (!metric) {
       throw new Error('Metric not specified');
     }
@@ -291,7 +294,7 @@ export class DashboardService {
 
   private async generateChartData(widget: IDashboardWidget, userRole: string): Promise<any> {
     const { chartType, dataSource, xAxis, yAxis, dateRange } = widget.config;
-    
+
     if (!dataSource || !xAxis || !yAxis?.length) {
       throw new Error('Chart configuration incomplete');
     }
@@ -312,7 +315,9 @@ export class DashboardService {
       case 'templates':
         aggregation = [
           { $match: query },
-          { $lookup: { from: 'forms', localField: '_id', foreignField: 'templateId', as: 'forms' } },
+          {
+            $lookup: { from: 'forms', localField: '_id', foreignField: 'templateId', as: 'forms' },
+          },
           { $group: { _id: `$${xAxis}`, count: { $size: '$forms' } } },
           { $sort: { count: -1 } },
           { $limit: 20 },
@@ -328,16 +333,18 @@ export class DashboardService {
     return {
       chartType,
       labels: results.map(r => r._id || 'Unknown'),
-      datasets: [{
-        label: yAxis[0],
-        data: results.map(r => r.count),
-      }],
+      datasets: [
+        {
+          label: yAxis[0],
+          data: results.map(r => r.count),
+        },
+      ],
     };
   }
 
   private async generateTableData(widget: IDashboardWidget, userRole: string): Promise<any> {
     const { columns, dateRange } = widget.config;
-    
+
     if (!columns?.length) {
       throw new Error('Table columns not configured');
     }

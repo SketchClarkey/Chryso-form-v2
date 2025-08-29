@@ -85,9 +85,9 @@ export function FileUploader({
   };
 
   const getFileIcon = (type: string) => {
-    if (type.startsWith('image/')) return <ImageIcon color="primary" />;
-    if (type === 'application/pdf') return <PdfIcon color="error" />;
-    if (type.includes('word') || type.includes('document')) return <DocumentIcon color="info" />;
+    if (type.startsWith('image/')) return <ImageIcon color='primary' />;
+    if (type === 'application/pdf') return <PdfIcon color='error' />;
+    if (type.includes('word') || type.includes('document')) return <DocumentIcon color='info' />;
     return <FileIcon />;
   };
 
@@ -123,19 +123,17 @@ export function FileUploader({
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      
+
       // Track upload progress
-      xhr.upload.addEventListener('progress', (e) => {
+      xhr.upload.addEventListener('progress', e => {
         if (e.lengthComputable) {
           const progress = Math.round((e.loaded / e.total) * 100);
           const updatedFile: FileAttachment = {
             ...fileAttachment,
             uploadProgress: progress,
           };
-          
-          onFilesChange(files.map(f => 
-            f.id === fileAttachment.id ? updatedFile : f
-          ));
+
+          onFilesChange(files.map(f => (f.id === fileAttachment.id ? updatedFile : f)));
         }
       });
 
@@ -149,10 +147,8 @@ export function FileUploader({
               status: 'completed',
               url: result.data.file.url,
             };
-            
-            onFilesChange(files.map(f => 
-              f.id === fileAttachment.id ? updatedFile : f
-            ));
+
+            onFilesChange(files.map(f => (f.id === fileAttachment.id ? updatedFile : f)));
             resolve();
           } catch (parseError) {
             const updatedFile: FileAttachment = {
@@ -161,10 +157,8 @@ export function FileUploader({
               status: 'error',
               error: 'Failed to parse server response',
             };
-            
-            onFilesChange(files.map(f => 
-              f.id === fileAttachment.id ? updatedFile : f
-            ));
+
+            onFilesChange(files.map(f => (f.id === fileAttachment.id ? updatedFile : f)));
             reject(new Error('Failed to parse server response'));
           }
         } else {
@@ -182,10 +176,8 @@ export function FileUploader({
             status: 'error',
             error: errorMessage,
           };
-          
-          onFilesChange(files.map(f => 
-            f.id === fileAttachment.id ? updatedFile : f
-          ));
+
+          onFilesChange(files.map(f => (f.id === fileAttachment.id ? updatedFile : f)));
           reject(new Error(errorMessage));
         }
       });
@@ -197,10 +189,8 @@ export function FileUploader({
           status: 'error',
           error: 'Network error during upload',
         };
-        
-        onFilesChange(files.map(f => 
-          f.id === fileAttachment.id ? updatedFile : f
-        ));
+
+        onFilesChange(files.map(f => (f.id === fileAttachment.id ? updatedFile : f)));
         reject(new Error('Network error during upload'));
       });
 
@@ -212,51 +202,54 @@ export function FileUploader({
     });
   };
 
-  const handleFiles = useCallback(async (fileList: FileList) => {
-    const newFiles: FileAttachment[] = [];
-    const errors: string[] = [];
+  const handleFiles = useCallback(
+    async (fileList: FileList) => {
+      const newFiles: FileAttachment[] = [];
+      const errors: string[] = [];
 
-    // Check max files limit
-    if (files.length + fileList.length > maxFiles) {
-      errors.push(`Cannot upload more than ${maxFiles} files`);
-      return;
-    }
-
-    Array.from(fileList).forEach((file) => {
-      const error = validateFile(file);
-      if (error) {
-        errors.push(`${file.name}: ${error}`);
+      // Check max files limit
+      if (files.length + fileList.length > maxFiles) {
+        errors.push(`Cannot upload more than ${maxFiles} files`);
         return;
       }
 
-      const fileAttachment: FileAttachment = {
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        file,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        uploadProgress: 0,
-        status: 'uploading',
-      };
+      Array.from(fileList).forEach(file => {
+        const error = validateFile(file);
+        if (error) {
+          errors.push(`${file.name}: ${error}`);
+          return;
+        }
 
-      newFiles.push(fileAttachment);
-    });
+        const fileAttachment: FileAttachment = {
+          id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          file,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          uploadProgress: 0,
+          status: 'uploading',
+        };
 
-    if (errors.length > 0) {
-      console.error('File validation errors:', errors);
-      // You could show these errors in a snackbar or alert
-      return;
-    }
+        newFiles.push(fileAttachment);
+      });
 
-    // Add new files to the list
-    const updatedFiles = [...files, ...newFiles];
-    onFilesChange(updatedFiles);
+      if (errors.length > 0) {
+        console.error('File validation errors:', errors);
+        // You could show these errors in a snackbar or alert
+        return;
+      }
 
-    // Start uploading new files
-    newFiles.forEach((fileAttachment) => {
-      uploadFile(fileAttachment).catch(console.error);
-    });
-  }, [files, maxFiles, maxSizeBytes, acceptedTypes, onFilesChange]);
+      // Add new files to the list
+      const updatedFiles = [...files, ...newFiles];
+      onFilesChange(updatedFiles);
+
+      // Start uploading new files
+      newFiles.forEach(fileAttachment => {
+        uploadFile(fileAttachment).catch(console.error);
+      });
+    },
+    [files, maxFiles, maxSizeBytes, acceptedTypes, onFilesChange]
+  );
 
   const handleFileSelect = () => {
     fileInputRef.current?.click();
@@ -284,7 +277,7 @@ export function FileUploader({
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
     setIsDragOver(false);
-    
+
     const fileList = event.dataTransfer.files;
     if (fileList && fileList.length > 0) {
       handleFiles(fileList);
@@ -305,11 +298,9 @@ export function FileUploader({
         uploadProgress: 0,
         error: undefined,
       };
-      
-      onFilesChange(files.map(f => 
-        f.id === fileId ? updatedFile : f
-      ));
-      
+
+      onFilesChange(files.map(f => (f.id === fileId ? updatedFile : f)));
+
       uploadFile(updatedFile).catch(console.error);
     }
   };
@@ -341,13 +332,13 @@ export function FileUploader({
           onClick={handleFileSelect}
         >
           <UploadIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-          <Typography variant="h6" gutterBottom>
+          <Typography variant='h6' gutterBottom>
             Drop files here or click to upload
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
             Maximum {maxFiles} files, up to {formatFileSize(maxSizeBytes)} each
           </Typography>
-          <Button variant="outlined" startIcon={<UploadIcon />}>
+          <Button variant='outlined' startIcon={<UploadIcon />}>
             Choose Files
           </Button>
         </Paper>
@@ -356,7 +347,7 @@ export function FileUploader({
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
-        type="file"
+        type='file'
         multiple
         accept={acceptedTypes.join(',')}
         style={{ display: 'none' }}
@@ -367,75 +358,77 @@ export function FileUploader({
       {files.length > 0 && (
         <Card>
           <CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="subtitle1">
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+            >
+              <Typography variant='subtitle1'>
                 Attached Files ({files.length}/{maxFiles})
               </Typography>
               {canUploadMore && (
-                <Button size="small" startIcon={<UploadIcon />} onClick={handleFileSelect}>
+                <Button size='small' startIcon={<UploadIcon />} onClick={handleFileSelect}>
                   Add More
                 </Button>
               )}
             </Box>
-            
+
             <List>
-              {files.map((file) => (
+              {files.map(file => (
                 <ListItem key={file.id} divider>
                   <ListItemIcon>
-                    {file.status === 'completed' && <SuccessIcon color="success" />}
-                    {file.status === 'error' && <WarningIcon color="error" />}
+                    {file.status === 'completed' && <SuccessIcon color='success' />}
+                    {file.status === 'error' && <WarningIcon color='error' />}
                     {file.status === 'uploading' && getFileIcon(file.type)}
                     {file.status === 'completed' && getFileIcon(file.type)}
                   </ListItemIcon>
-                  
+
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="body1">{file.name}</Typography>
+                        <Typography variant='body1'>{file.name}</Typography>
                         <Chip
                           label={file.status}
-                          size="small"
+                          size='small'
                           color={
-                            file.status === 'completed' ? 'success' :
-                            file.status === 'error' ? 'error' : 'primary'
+                            file.status === 'completed'
+                              ? 'success'
+                              : file.status === 'error'
+                                ? 'error'
+                                : 'primary'
                           }
-                          variant="outlined"
+                          variant='outlined'
                         />
                       </Box>
                     }
                     secondary={
                       <Box>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           {formatFileSize(file.size)}
                         </Typography>
                         {file.status === 'uploading' && (
-                          <LinearProgress 
-                            variant="determinate" 
-                            value={file.uploadProgress} 
+                          <LinearProgress
+                            variant='determinate'
+                            value={file.uploadProgress}
                             sx={{ mt: 1, maxWidth: 200 }}
                           />
                         )}
                         {file.status === 'error' && file.error && (
-                          <Alert severity="error" sx={{ mt: 1 }}>
+                          <Alert severity='error' sx={{ mt: 1 }}>
                             {file.error}
-                            <Button size="small" onClick={() => retryUpload(file.id)} sx={{ ml: 1 }}>
+                            <Button
+                              size='small'
+                              onClick={() => retryUpload(file.id)}
+                              sx={{ ml: 1 }}
+                            >
                               Retry
                             </Button>
                           </Alert>
                         )}
                         {file.status === 'completed' && file.url && (
                           <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
-                            <Button 
-                              size="small" 
-                              onClick={() => setPreviewFile(file)}
-                            >
+                            <Button size='small' onClick={() => setPreviewFile(file)}>
                               Preview
                             </Button>
-                            <Button 
-                              size="small" 
-                              href={file.url} 
-                              download={file.name}
-                            >
+                            <Button size='small' href={file.url} download={file.name}>
                               Download
                             </Button>
                           </Box>
@@ -443,10 +436,10 @@ export function FileUploader({
                       </Box>
                     }
                   />
-                  
+
                   <ListItemSecondaryAction>
                     <IconButton
-                      edge="end"
+                      edge='end'
                       onClick={() => removeFile(file.id)}
                       disabled={file.status === 'uploading'}
                     >
@@ -461,7 +454,7 @@ export function FileUploader({
       )}
 
       {/* Information */}
-      <Typography variant="caption" display="block" sx={{ mt: 1, color: 'text.secondary' }}>
+      <Typography variant='caption' display='block' sx={{ mt: 1, color: 'text.secondary' }}>
         Supported file types: Images, PDF, Word documents, Excel sheets, Text files
       </Typography>
 

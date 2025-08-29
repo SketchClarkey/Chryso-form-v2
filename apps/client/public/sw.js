@@ -29,57 +29,54 @@ const MOBILE_ASSETS = [
 
 // Image optimization patterns
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'];
-const isImageRequest = (url) => {
+const isImageRequest = url => {
   return IMAGE_EXTENSIONS.some(ext => url.pathname.toLowerCase().includes(ext));
 };
 
 // Check if device is mobile
 const isMobileUserAgent = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(self.navigator.userAgent);
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    self.navigator.userAgent
+  );
 };
 
 // API endpoints to cache
-const API_ENDPOINTS = [
-  '/api/auth/me',
-  '/api/forms',
-  '/api/worksites',
-  '/api/templates'
-];
+const API_ENDPOINTS = ['/api/auth/me', '/api/forms', '/api/worksites', '/api/templates'];
 
 // Install event - cache static assets
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   console.log('Service Worker: Installing...');
-  
+
   event.waitUntil(
     Promise.all([
-      caches.open(STATIC_CACHE_NAME).then((cache) => {
+      caches.open(STATIC_CACHE_NAME).then(cache => {
         console.log('Service Worker: Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       }),
       // Skip waiting to activate immediately
-      self.skipWaiting()
+      self.skipWaiting(),
     ])
   );
 });
 
 // Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   console.log('Service Worker: Activating...');
-  
+
   event.waitUntil(
     Promise.all([
       // Clean up old caches
-      caches.keys().then((cacheNames) => {
+      caches.keys().then(cacheNames => {
         const currentCaches = [
           CACHE_NAME,
           API_CACHE_NAME,
           STATIC_CACHE_NAME,
           IMAGES_CACHE_NAME,
-          MOBILE_CACHE_NAME
+          MOBILE_CACHE_NAME,
         ];
-        
+
         return Promise.all(
-          cacheNames.map((cacheName) => {
+          cacheNames.map(cacheName => {
             if (!currentCaches.includes(cacheName)) {
               console.log('Service Worker: Deleting old cache:', cacheName);
               return caches.delete(cacheName);
@@ -88,13 +85,13 @@ self.addEventListener('activate', (event) => {
         );
       }),
       // Take control of all clients
-      self.clients.claim()
+      self.clients.claim(),
     ])
   );
 });
 
 // Fetch event - handle network requests
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
   const isMobile = isMobileUserAgent();
@@ -117,9 +114,7 @@ self.addEventListener('fetch', (event) => {
   }
   // Default: network first with offline fallback
   else {
-    event.respondWith(
-      fetch(request).catch(() => caches.match(request))
-    );
+    event.respondWith(fetch(request).catch(() => caches.match(request)));
   }
 });
 
@@ -133,7 +128,7 @@ async function handleApiRequest(request) {
     // Check if it's a read-only endpoint that can be cached
     const cachableEndpoints = ['/api/forms', '/api/templates', '/api/worksites', '/api/auth/me'];
     const isCachable = cachableEndpoints.some(endpoint => url.pathname.startsWith(endpoint));
-    
+
     if (isCachable) {
       try {
         // Try network first for fresh data
@@ -146,7 +141,7 @@ async function handleApiRequest(request) {
       } catch (error) {
         console.log('Service Worker: Network failed, trying cache');
       }
-      
+
       // Fallback to cache
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
@@ -154,7 +149,7 @@ async function handleApiRequest(request) {
       }
     }
   }
-  
+
   // POST/PUT/DELETE requests - network only with offline handling
   try {
     const response = await fetch(request);
@@ -164,18 +159,18 @@ async function handleApiRequest(request) {
     if (request.method !== 'GET') {
       await storeFailedRequest(request);
     }
-    
+
     // Return offline response
     return new Response(
       JSON.stringify({
         success: false,
         message: 'Request failed - saved for offline sync',
-        offline: true
+        offline: true,
       }),
       {
         status: 503,
         statusText: 'Service Unavailable',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       }
     );
   }
@@ -184,13 +179,13 @@ async function handleApiRequest(request) {
 // Handle static asset requests
 async function handleStaticRequest(request) {
   const cache = await caches.open(STATIC_CACHE_NAME);
-  
+
   // Try cache first
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   // Try network and cache
   try {
     const networkResponse = await fetch(request);
@@ -213,13 +208,13 @@ async function handleNavigationRequest(request, isMobile = false) {
   } catch (error) {
     // Fallback to appropriate cached page
     const cache = await caches.open(STATIC_CACHE_NAME);
-    
+
     // Try mobile-specific fallback first if mobile
     if (isMobile) {
       const mobileFallback = await cache.match('/mobile-fallback.html');
       if (mobileFallback) return mobileFallback;
     }
-    
+
     // Fallback to main index
     const cachedIndex = await cache.match('/');
     return cachedIndex || new Response('Offline page not available', { status: 404 });
@@ -229,37 +224,38 @@ async function handleNavigationRequest(request, isMobile = false) {
 // Handle image requests with mobile optimization
 async function handleImageRequest(request, isMobile = false) {
   const cache = await caches.open(IMAGES_CACHE_NAME);
-  
+
   // Try cache first for images
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok) {
       // For mobile devices, only cache smaller images to save space
       if (isMobile) {
         const contentLength = networkResponse.headers.get('content-length');
-        if (contentLength && parseInt(contentLength) > 500000) { // > 500KB
+        if (contentLength && parseInt(contentLength) > 500000) {
+          // > 500KB
           console.log('Skipping cache for large image on mobile:', request.url);
           return networkResponse;
         }
       }
-      
+
       // Cache the response
       cache.put(request, networkResponse.clone());
       return networkResponse;
     }
-    
+
     return networkResponse;
   } catch (error) {
     // Return placeholder for failed image loads
-    return new Response('Image not available offline', { 
+    return new Response('Image not available offline', {
       status: 404,
-      headers: { 'Content-Type': 'text/plain' }
+      headers: { 'Content-Type': 'text/plain' },
     });
   }
 }
@@ -272,15 +268,15 @@ async function storeFailedRequest(request) {
       method: request.method,
       headers: [...request.headers.entries()],
       body: request.method !== 'GET' ? await request.text() : null,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    
+
     // Store in IndexedDB for later sync
     const db = await openDB();
     const transaction = db.transaction(['pendingRequests'], 'readwrite');
     const store = transaction.objectStore('pendingRequests');
     await store.add(requestData);
-    
+
     console.log('Service Worker: Stored failed request for sync:', request.url);
   } catch (error) {
     console.error('Service Worker: Failed to store request:', error);
@@ -291,25 +287,25 @@ async function storeFailedRequest(request) {
 function openDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('ChrysoPWADB', 1);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-    
-    request.onupgradeneeded = (event) => {
+
+    request.onupgradeneeded = event => {
       const db = event.target.result;
-      
+
       // Create object stores
       if (!db.objectStoreNames.contains('pendingRequests')) {
-        const store = db.createObjectStore('pendingRequests', { 
-          keyPath: 'id', 
-          autoIncrement: true 
+        const store = db.createObjectStore('pendingRequests', {
+          keyPath: 'id',
+          autoIncrement: true,
         });
         store.createIndex('timestamp', 'timestamp');
       }
-      
+
       if (!db.objectStoreNames.contains('offlineData')) {
-        const store = db.createObjectStore('offlineData', { 
-          keyPath: 'key' 
+        const store = db.createObjectStore('offlineData', {
+          keyPath: 'key',
         });
         store.createIndex('type', 'type');
         store.createIndex('lastUpdated', 'lastUpdated');
@@ -319,9 +315,9 @@ function openDB() {
 }
 
 // Background sync event
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', event => {
   console.log('Service Worker: Background sync triggered:', event.tag);
-  
+
   if (event.tag === 'chryso-forms-sync') {
     event.waitUntil(syncPendingRequests());
   }
@@ -338,21 +334,21 @@ async function syncPendingRequests() {
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
     });
-    
+
     console.log(`Service Worker: Syncing ${requests.length} pending requests`);
-    
+
     for (const requestData of requests) {
       try {
         // Reconstruct the request
         const request = new Request(requestData.url, {
           method: requestData.method,
           headers: new Headers(requestData.headers),
-          body: requestData.body
+          body: requestData.body,
         });
-        
+
         // Try to send the request
         const response = await fetch(request);
-        
+
         if (response.ok) {
           // Remove from pending requests
           const deleteTransaction = db.transaction(['pendingRequests'], 'readwrite');
@@ -362,16 +358,16 @@ async function syncPendingRequests() {
             deleteRequest.onsuccess = () => resolve();
             deleteRequest.onerror = () => reject(deleteRequest.error);
           });
-          
+
           console.log('Service Worker: Synced request:', requestData.url);
-          
+
           // Notify the main thread
           self.clients.matchAll().then(clients => {
             clients.forEach(client => {
               client.postMessage({
                 type: 'SYNC_SUCCESS',
                 url: requestData.url,
-                method: requestData.method
+                method: requestData.method,
               });
             });
           });
@@ -386,9 +382,9 @@ async function syncPendingRequests() {
 }
 
 // Push notification event
-self.addEventListener('push', (event) => {
+self.addEventListener('push', event => {
   console.log('Service Worker: Push notification received');
-  
+
   const options = {
     body: event.data ? event.data.text() : 'New notification',
     icon: '/icon-192x192.png',
@@ -396,49 +392,45 @@ self.addEventListener('push', (event) => {
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
-      primaryKey: '2'
+      primaryKey: '2',
     },
     actions: [
       {
         action: 'explore',
         title: 'View',
-        icon: '/icon-192x192.png'
+        icon: '/icon-192x192.png',
       },
       {
         action: 'close',
         title: 'Close',
-        icon: '/icon-192x192.png'
-      }
-    ]
+        icon: '/icon-192x192.png',
+      },
+    ],
   };
-  
-  event.waitUntil(
-    self.registration.showNotification('Chryso Forms', options)
-  );
+
+  event.waitUntil(self.registration.showNotification('Chryso Forms', options));
 });
 
 // Notification click event
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   console.log('Service Worker: Notification clicked:', event.action);
-  
+
   event.notification.close();
-  
+
   if (event.action === 'explore') {
     // Open the app
-    event.waitUntil(
-      clients.openWindow('/')
-    );
+    event.waitUntil(clients.openWindow('/'));
   }
 });
 
 // Message event - handle messages from main thread
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
   console.log('Service Worker: Message received:', event.data);
-  
+
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-  
+
   if (event.data && event.data.type === 'GET_CACHE_SIZE') {
     getCacheSize().then(size => {
       event.ports[0].postMessage({ cacheSize: size });
@@ -450,7 +442,7 @@ self.addEventListener('message', (event) => {
 async function getCacheSize() {
   const cacheNames = await caches.keys();
   let totalSize = 0;
-  
+
   for (const name of cacheNames) {
     const cache = await caches.open(name);
     const requests = await cache.keys();
@@ -462,6 +454,6 @@ async function getCacheSize() {
       }
     }
   }
-  
+
   return totalSize;
 }

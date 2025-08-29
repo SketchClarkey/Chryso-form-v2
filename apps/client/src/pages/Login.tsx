@@ -1,31 +1,23 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import {
-  Container,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Alert,
-} from '@mui/material'
-import { useAuth } from '../contexts/AuthContext'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
+import { useAuth } from '../contexts/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
-})
+});
 
-type LoginForm = z.infer<typeof loginSchema>
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -33,23 +25,23 @@ export default function Login() {
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      setError('')
-      setLoading(true)
-      await login({ email: data.email, password: data.password })
-      navigate('/')
+      setError('');
+      setLoading(true);
+      await login({ email: data.email, password: data.password });
+      navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed')
+      setError(err.response?.data?.message || 'Login failed');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component='main' maxWidth='sm'>
       <Box
         sx={{
           marginTop: 8,
@@ -59,48 +51,54 @@ export default function Login() {
         }}
       >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
+          <Typography component='h1' variant='h4' align='center' gutterBottom>
             Chryso Forms
           </Typography>
-          <Typography component="h2" variant="h6" align="center" color="text.secondary" gutterBottom>
+          <Typography
+            component='h2'
+            variant='h6'
+            align='center'
+            color='text.secondary'
+            gutterBottom
+          >
             Sign in to your account
           </Typography>
-          
+
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity='error' sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
-          
-          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+
+          <Box component='form' onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
             <TextField
-              margin="normal"
+              margin='normal'
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              autoComplete="email"
+              id='email'
+              label='Email Address'
+              autoComplete='email'
               autoFocus
               error={!!errors.email}
               helperText={errors.email?.message}
               {...register('email')}
             />
             <TextField
-              margin="normal"
+              margin='normal'
               required
               fullWidth
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              label='Password'
+              type='password'
+              id='password'
+              autoComplete='current-password'
               error={!!errors.password}
               helperText={errors.password?.message}
               {...register('password')}
             />
             <Button
-              type="submit"
+              type='submit'
               fullWidth
-              variant="contained"
+              variant='contained'
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
@@ -110,5 +108,5 @@ export default function Login() {
         </Paper>
       </Box>
     </Container>
-  )
+  );
 }

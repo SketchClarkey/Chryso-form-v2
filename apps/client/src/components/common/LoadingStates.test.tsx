@@ -5,9 +5,7 @@ import theme from '../../theme';
 import { LoadingSpinner, LoadingOverlay, ErrorState, EmptyState } from './LoadingStates';
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider theme={theme}>
-    {children}
-  </ThemeProvider>
+  <ThemeProvider theme={theme}>{children}</ThemeProvider>
 );
 
 describe('LoadingStates Components', () => {
@@ -36,7 +34,7 @@ describe('LoadingStates Components', () => {
     it('renders with custom color', () => {
       render(
         <TestWrapper>
-          <LoadingSpinner color="secondary" />
+          <LoadingSpinner color='secondary' />
         </TestWrapper>
       );
 
@@ -68,7 +66,7 @@ describe('LoadingStates Components', () => {
     it('renders with custom message', () => {
       render(
         <TestWrapper>
-          <LoadingOverlay open={true} message="Loading data..." />
+          <LoadingOverlay open={true} message='Loading data...' />
         </TestWrapper>
       );
 
@@ -81,7 +79,7 @@ describe('LoadingStates Components', () => {
     it('renders error message', () => {
       render(
         <TestWrapper>
-          <ErrorState message="Something went wrong" />
+          <ErrorState message='Something went wrong' />
         </TestWrapper>
       );
 
@@ -91,7 +89,7 @@ describe('LoadingStates Components', () => {
     it('renders with custom title', () => {
       render(
         <TestWrapper>
-          <ErrorState title="Custom Error" message="Error details" />
+          <ErrorState title='Custom Error' message='Error details' />
         </TestWrapper>
       );
 
@@ -103,7 +101,7 @@ describe('LoadingStates Components', () => {
       const onRetry = vi.fn();
       render(
         <TestWrapper>
-          <ErrorState message="Error occurred" onRetry={onRetry} />
+          <ErrorState message='Error occurred' onRetry={onRetry} />
         </TestWrapper>
       );
 
@@ -116,7 +114,7 @@ describe('LoadingStates Components', () => {
     it('renders empty message', () => {
       render(
         <TestWrapper>
-          <EmptyState message="No data available" />
+          <EmptyState message='No data available' />
         </TestWrapper>
       );
 
@@ -126,7 +124,7 @@ describe('LoadingStates Components', () => {
     it('renders with custom title', () => {
       render(
         <TestWrapper>
-          <EmptyState title="No Results" message="Try different filters" />
+          <EmptyState title='No Results' message='Try different filters' />
         </TestWrapper>
       );
 
@@ -137,12 +135,12 @@ describe('LoadingStates Components', () => {
     it('renders action button when provided', () => {
       render(
         <TestWrapper>
-          <EmptyState 
-            message="No items found" 
-            action={{ 
-              label: 'Add New', 
-              onClick: vi.fn() 
-            }} 
+          <EmptyState
+            message='No items found'
+            action={{
+              label: 'Add New',
+              onClick: vi.fn(),
+            }}
           />
         </TestWrapper>
       );

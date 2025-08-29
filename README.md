@@ -1,6 +1,12 @@
-# Chryso Forms v2
+# Chryso Form v2 🏗️
 
-Modern full-stack form management system for Chryso equipment services, built with React, TypeScript, Express, and MongoDB.
+[![Build Status](https://github.com/SketchClarkey/Chryso-form-v2/workflows/CI/badge.svg)](https://github.com/SketchClarkey/Chryso-form-v2/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8+-blue.svg)](https://www.typescriptlang.org/)
+
+Modern form digitization application built with cutting-edge technologies for
+enterprise-grade form management, digital workflows, and compliance tracking.
 
 ## 🚀 Quick Start
 
@@ -13,17 +19,20 @@ Modern full-stack form management system for Chryso equipment services, built wi
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/SketchClarkey/Chryso-form.git
    cd Chryso-form-v2
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm run install:all
    ```
 
 3. **Set up environment variables**
+
    ```bash
    # Server environment
    cd apps/server
@@ -37,7 +46,8 @@ Modern full-stack form management system for Chryso equipment services, built wi
    npm run dev
    ```
 
-The client will be available at http://localhost:3000 and the server at http://localhost:5000.
+The client will be available at http://localhost:3000 and the server at
+http://localhost:5000.
 
 ## 📁 Project Structure
 
@@ -65,6 +75,7 @@ chryso-form-v2/
 ## 🛠 Development Scripts
 
 ### Root Scripts
+
 ```bash
 npm run dev           # Start both client and server in development mode
 npm run build         # Build both applications for production
@@ -75,6 +86,7 @@ npm run clean         # Clean build artifacts
 ```
 
 ### Server Scripts
+
 ```bash
 npm run dev:server    # Start server in development mode
 npm run build:server  # Build server for production
@@ -82,6 +94,7 @@ npm run start         # Start production server
 ```
 
 ### Client Scripts
+
 ```bash
 npm run dev:client    # Start client in development mode
 npm run build:client  # Build client for production
@@ -113,6 +126,7 @@ CORS_ORIGIN=http://localhost:3000
 ## 🏗 Architecture
 
 ### Frontend (Client)
+
 - **React 19** with TypeScript
 - **Material-UI (MUI)** for UI components
 - **React Query** for server state management
@@ -120,6 +134,7 @@ CORS_ORIGIN=http://localhost:3000
 - **Vite** for fast development and building
 
 ### Backend (Server)
+
 - **Express.js** with TypeScript
 - **MongoDB** with Mongoose ODM
 - **JWT** authentication with refresh tokens
@@ -128,6 +143,7 @@ CORS_ORIGIN=http://localhost:3000
 - **Rate limiting** and security middleware
 
 ### Key Features
+
 - 🔐 **Role-based authentication** (Admin, Manager, Technician)
 - 📱 **Responsive design** with Material-UI
 - 🔄 **Automatic token refresh**
@@ -145,13 +161,14 @@ npm run test
 # Run server tests only
 npm run test:server
 
-# Run client tests only  
+# Run client tests only
 npm run test:client
 ```
 
 ## 🚀 Production Deployment
 
 1. **Build the applications**
+
    ```bash
    npm run build
    ```

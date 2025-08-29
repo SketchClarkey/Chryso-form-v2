@@ -31,10 +31,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/auth/register').send(userData).expect(201);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user).toBeDefined();
@@ -62,16 +59,10 @@ describe('Auth Routes Integration', () => {
       };
 
       // Create first user
-      await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      await request(app).post('/auth/register').send(userData).expect(201);
 
       // Try to create second user with same email
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/auth/register').send(userData).expect(409);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('email already exists');
@@ -79,10 +70,7 @@ describe('Auth Routes Integration', () => {
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/auth/register')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/register').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toBeDefined();
@@ -97,10 +85,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -114,10 +99,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.code).toBe('WEAK_PASSWORD');
@@ -132,10 +114,7 @@ describe('Auth Routes Integration', () => {
         role: 'invalid-role',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/auth/register').send(userData).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -149,10 +128,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const response = await request(app)
-        .post('/auth/register')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/auth/register').send(userData).expect(201);
 
       expect(response.body.data.user.email).toBe('john.doe@example.com');
     });
@@ -178,10 +154,7 @@ describe('Auth Routes Integration', () => {
         password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/auth/login').send(loginData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user).toBeDefined();
@@ -201,10 +174,7 @@ describe('Auth Routes Integration', () => {
         password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid credentials');
@@ -217,10 +187,7 @@ describe('Auth Routes Integration', () => {
         password: 'wrongpassword',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid credentials');
@@ -242,10 +209,7 @@ describe('Auth Routes Integration', () => {
         password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/auth/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Account is deactivated');
@@ -260,17 +224,11 @@ describe('Auth Routes Integration', () => {
 
       // Make multiple failed login attempts
       for (let i = 0; i < 5; i++) {
-        await request(app)
-          .post('/auth/login')
-          .send(loginData)
-          .expect(401);
+        await request(app).post('/auth/login').send(loginData).expect(401);
       }
 
       // Next attempt should be blocked due to lockout
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(423);
+      const response = await request(app).post('/auth/login').send(loginData).expect(423);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Account temporarily locked');
@@ -278,10 +236,7 @@ describe('Auth Routes Integration', () => {
     });
 
     it('should validate required fields', async () => {
-      const response = await request(app)
-        .post('/auth/login')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/login').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
     });
@@ -292,10 +247,7 @@ describe('Auth Routes Integration', () => {
         password: 'SecurePass123!',
       };
 
-      const response = await request(app)
-        .post('/auth/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/auth/login').send(loginData).expect(200);
 
       expect(response.body.success).toBe(true);
     });
@@ -314,18 +266,13 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       refreshToken = registerResponse.body.data.tokens.refreshToken;
     });
 
     it('should refresh tokens with valid refresh token', async () => {
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({ refreshToken })
-        .expect(200);
+      const response = await request(app).post('/auth/refresh').send({ refreshToken }).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.tokens).toBeDefined();
@@ -360,26 +307,17 @@ describe('Auth Routes Integration', () => {
     });
 
     it('should require refresh token', async () => {
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({})
-        .expect(400);
+      const response = await request(app).post('/auth/refresh').send({}).expect(400);
 
       expect(response.body.success).toBe(false);
     });
 
     it('should invalidate old refresh token after use', async () => {
       // Use the refresh token
-      await request(app)
-        .post('/auth/refresh')
-        .send({ refreshToken })
-        .expect(200);
+      await request(app).post('/auth/refresh').send({ refreshToken }).expect(200);
 
       // Try to use the same token again
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({ refreshToken })
-        .expect(401);
+      const response = await request(app).post('/auth/refresh').send({ refreshToken }).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -399,9 +337,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       accessToken = registerResponse.body.data.tokens.accessToken;
       refreshToken = registerResponse.body.data.tokens.refreshToken;
@@ -419,10 +355,7 @@ describe('Auth Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/auth/logout')
-        .send({ refreshToken })
-        .expect(401);
+      const response = await request(app).post('/auth/logout').send({ refreshToken }).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -446,10 +379,7 @@ describe('Auth Routes Integration', () => {
         .expect(200);
 
       // Try to use refresh token after logout
-      const response = await request(app)
-        .post('/auth/refresh')
-        .send({ refreshToken })
-        .expect(401);
+      const response = await request(app).post('/auth/refresh').send({ refreshToken }).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -469,9 +399,7 @@ describe('Auth Routes Integration', () => {
         role: 'technician',
       };
 
-      const registerResponse = await request(app)
-        .post('/auth/register')
-        .send(userData);
+      const registerResponse = await request(app).post('/auth/register').send(userData);
 
       accessToken = registerResponse.body.data.tokens.accessToken;
       userId = registerResponse.body.data.user.id;
@@ -493,9 +421,7 @@ describe('Auth Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/auth/me')
-        .expect(401);
+      const response = await request(app).get('/auth/me').expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -561,12 +487,10 @@ describe('Auth Routes Integration', () => {
 
   describe('Security Features', () => {
     it('should include security headers', async () => {
-      const response = await request(app)
-        .post('/auth/login')
-        .send({
-          email: 'test@example.com',
-          password: 'password',
-        });
+      const response = await request(app).post('/auth/login').send({
+        email: 'test@example.com',
+        password: 'password',
+      });
 
       // Check for common security headers (if your security middleware adds them)
       expect(response.headers['x-content-type-options']).toBeDefined();

@@ -29,10 +29,9 @@ const createTestApp = () => {
 };
 
 describe('Forms Routes Integration', () => {
-
   beforeEach(async () => {
     app = createTestApp();
-    
+
     // Clean up collections
     await User.deleteMany({});
     await Worksite.deleteMany({});
@@ -77,13 +76,15 @@ describe('Forms Routes Integration', () => {
         zipCode: '12345',
         country: 'Test Country',
       },
-      contacts: [{
-        name: 'John Doe',
-        position: 'Manager',
-        phone: '+1234567890',
-        email: 'john@test.com',
-        isPrimary: true,
-      }],
+      contacts: [
+        {
+          name: 'John Doe',
+          position: 'Manager',
+          phone: '+1234567890',
+          email: 'john@test.com',
+          isPrimary: true,
+        },
+      ],
       equipment: [],
       isActive: true,
       metadata: {
@@ -102,9 +103,9 @@ describe('Forms Routes Integration', () => {
 
     // Generate tokens
     adminToken = jwt.sign(
-      { 
+      {
         userId: adminUser._id.toString(),
-        id: adminUser._id.toString(), 
+        id: adminUser._id.toString(),
         role: adminUser.role,
         worksiteIds: [],
         firstName: adminUser.firstName,
@@ -115,7 +116,7 @@ describe('Forms Routes Integration', () => {
     );
 
     managerToken = jwt.sign(
-      { 
+      {
         userId: managerUser._id.toString(),
         id: managerUser._id.toString(),
         role: managerUser.role,
@@ -128,7 +129,7 @@ describe('Forms Routes Integration', () => {
     );
 
     technicianToken = jwt.sign(
-      { 
+      {
         userId: technicianUser._id.toString(),
         id: technicianUser._id.toString(),
         role: technicianUser.role,
@@ -140,7 +141,6 @@ describe('Forms Routes Integration', () => {
       { expiresIn: '1h' }
     );
   });
-
 
   describe('GET /forms', () => {
     beforeEach(async () => {
@@ -214,9 +214,11 @@ describe('Forms Routes Integration', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.forms).toHaveLength(2); // Only their forms
-      expect(response.body.data.forms.every((form: any) => 
-        form.technician._id.toString() === technicianUser._id.toString()
-      )).toBe(true);
+      expect(
+        response.body.data.forms.every(
+          (form: any) => form.technician._id.toString() === technicianUser._id.toString()
+        )
+      ).toBe(true);
     });
 
     it('should support pagination', async () => {
@@ -262,7 +264,7 @@ describe('Forms Routes Integration', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.forms).toHaveLength(3);
-      
+
       // Check that forms are sorted by creation date (newest first)
       const forms = response.body.data.forms;
       for (let i = 1; i < forms.length; i++) {
@@ -271,9 +273,7 @@ describe('Forms Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/forms')
-        .expect(401);
+      const response = await request(app).get('/forms').expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -311,15 +311,17 @@ describe('Forms Routes Integration', () => {
         installation: false,
         jobComplete: false,
       },
-      dispenserSystems: [{
-        tankNumber: 'TANK-001',
-        chemicalProduct: 'Test Chemical',
-        tankSize: 100,
-        equipmentCondition: 'good',
-        pumpCondition: 'good',
-        pulseMeterCondition: 'good',
-        dispenserCondition: 'good',
-      }],
+      dispenserSystems: [
+        {
+          tankNumber: 'TANK-001',
+          chemicalProduct: 'Test Chemical',
+          tankSize: 100,
+          equipmentCondition: 'good',
+          pumpCondition: 'good',
+          pulseMeterCondition: 'good',
+          dispenserCondition: 'good',
+        },
+      ],
       maintenanceDetails: {
         gcpTechnicianHours: 8,
         contractHours: 6,
@@ -410,10 +412,7 @@ describe('Forms Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .post('/forms')
-        .send(validFormData)
-        .expect(401);
+      const response = await request(app).post('/forms').send(validFormData).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -508,9 +507,7 @@ describe('Forms Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get(`/forms/${testForm._id}`)
-        .expect(401);
+      const response = await request(app).get(`/forms/${testForm._id}`).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -634,10 +631,7 @@ describe('Forms Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .put(`/forms/${testForm._id}`)
-        .send({})
-        .expect(401);
+      const response = await request(app).put(`/forms/${testForm._id}`).send({}).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -717,9 +711,7 @@ describe('Forms Routes Integration', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .delete(`/forms/${testForm._id}`)
-        .expect(401);
+      const response = await request(app).delete(`/forms/${testForm._id}`).expect(401);
 
       expect(response.body.success).toBe(false);
     });
@@ -807,7 +799,7 @@ describe('Forms Routes Integration', () => {
 
     it('should perform search efficiently', async () => {
       const startTime = Date.now();
-      
+
       const response = await request(app)
         .get('/forms?q=Customer 1')
         .set('Authorization', `Bearer ${adminToken}`)

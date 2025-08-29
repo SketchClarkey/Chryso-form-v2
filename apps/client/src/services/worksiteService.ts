@@ -104,18 +104,28 @@ class WorksiteService {
     return response.data;
   }
 
-  async updateEquipment(worksiteId: string, equipmentId: string, equipment: any): Promise<Worksite> {
-    const response = await this.request<{ data: Worksite }>(`/${worksiteId}/equipment/${equipmentId}`, {
-      method: 'PUT',
-      body: JSON.stringify(equipment),
-    });
+  async updateEquipment(
+    worksiteId: string,
+    equipmentId: string,
+    equipment: any
+  ): Promise<Worksite> {
+    const response = await this.request<{ data: Worksite }>(
+      `/${worksiteId}/equipment/${equipmentId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(equipment),
+      }
+    );
     return response.data;
   }
 
   async removeEquipment(worksiteId: string, equipmentId: string): Promise<Worksite> {
-    const response = await this.request<{ data: Worksite }>(`/${worksiteId}/equipment/${equipmentId}`, {
-      method: 'DELETE',
-    });
+    const response = await this.request<{ data: Worksite }>(
+      `/${worksiteId}/equipment/${equipmentId}`,
+      {
+        method: 'DELETE',
+      }
+    );
     return response.data;
   }
 }

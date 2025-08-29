@@ -59,10 +59,10 @@ export function MobileDashboard() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [syncProgress, setSyncProgress] = useState<number>(0);
-  const [offlineStorageInfo, setOfflineStorageInfo] = useState({ 
-    size: 0, 
-    formCount: 0, 
-    attachmentCount: 0 
+  const [offlineStorageInfo, setOfflineStorageInfo] = useState({
+    size: 0,
+    formCount: 0,
+    attachmentCount: 0,
   });
 
   const offlineService = OfflineService.getInstance();
@@ -72,10 +72,10 @@ export function MobileDashboard() {
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
+
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -103,7 +103,11 @@ export function MobileDashboard() {
   }, [offlineService]);
 
   // Fetch dashboard data (skip if offline)
-  const { data: stats, isLoading, error } = useQuery<DashboardStats>({
+  const {
+    data: stats,
+    isLoading,
+    error,
+  } = useQuery<DashboardStats>({
     queryKey: ['dashboard-stats'],
     queryFn: async () => {
       const response = await api.get('/dashboard/stats');
@@ -146,12 +150,12 @@ export function MobileDashboard() {
     }
   };
 
-  const StatCard = ({ 
-    title, 
-    value, 
-    icon: Icon, 
+  const StatCard = ({
+    title,
+    value,
+    icon: Icon,
     color = 'primary',
-    subtitle 
+    subtitle,
   }: {
     title: string;
     value: number | string;
@@ -159,23 +163,23 @@ export function MobileDashboard() {
     color?: 'primary' | 'success' | 'warning' | 'error';
     subtitle?: string;
   }) => (
-    <Card 
-      sx={{ 
+    <Card
+      sx={{
         background: `linear-gradient(135deg, ${alpha(theme.palette[color].main, 0.1)}, ${alpha(theme.palette[color].main, 0.05)})`,
-        border: `1px solid ${alpha(theme.palette[color].main, 0.2)}`
+        border: `1px solid ${alpha(theme.palette[color].main, 0.2)}`,
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
-            <Typography variant="h4" color={`${color}.main`} fontWeight="bold">
+            <Typography variant='h4' color={`${color}.main`} fontWeight='bold'>
               {value}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               {title}
             </Typography>
             {subtitle && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant='caption' color='text.secondary'>
                 {subtitle}
               </Typography>
             )}
@@ -190,16 +194,18 @@ export function MobileDashboard() {
     <Box sx={{ p: 2, pb: 9 }}>
       {/* Offline Status */}
       {isOffline && (
-        <Alert 
-          severity="warning" 
+        <Alert
+          severity='warning'
           sx={{ mb: 2 }}
           action={
-            <IconButton color="inherit" onClick={handleSync}>
+            <IconButton color='inherit' onClick={handleSync}>
               <SyncIcon />
             </IconButton>
           }
         >
-          You're offline. {offlineStorageInfo.formCount > 0 && `${offlineStorageInfo.formCount} forms cached locally.`}
+          You're offline.{' '}
+          {offlineStorageInfo.formCount > 0 &&
+            `${offlineStorageInfo.formCount} forms cached locally.`}
         </Alert>
       )}
 
@@ -207,22 +213,30 @@ export function MobileDashboard() {
       {syncStatus && (
         <Paper sx={{ p: 2, mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <SyncIcon color="primary" />
-            <Typography variant="body2">{syncStatus}</Typography>
+            <SyncIcon color='primary' />
+            <Typography variant='body2'>{syncStatus}</Typography>
           </Box>
-          {syncProgress > 0 && (
-            <LinearProgress variant="determinate" value={syncProgress} />
-          )}
+          {syncProgress > 0 && <LinearProgress variant='determinate' value={syncProgress} />}
         </Paper>
       )}
 
       {/* Welcome Section */}
-      <Paper sx={{ p: 2, mb: 3, background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})` }}>
-        <Typography variant="h6" color="white" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Paper
+        sx={{
+          p: 2,
+          mb: 3,
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+        }}
+      >
+        <Typography
+          variant='h6'
+          color='white'
+          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+        >
           <Person />
           Welcome back, {user?.name}!
         </Typography>
-        <Typography variant="body2" sx={{ color: alpha('#fff', 0.8), mt: 0.5 }}>
+        <Typography variant='body2' sx={{ color: alpha('#fff', 0.8), mt: 0.5 }}>
           {user?.role} • {user?.worksites?.[0]?.name || 'No worksite assigned'}
         </Typography>
       </Paper>
@@ -231,50 +245,50 @@ export function MobileDashboard() {
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={6}>
           {isLoading ? (
-            <Skeleton variant="rectangular" height={100} />
+            <Skeleton variant='rectangular' height={100} />
           ) : (
             <StatCard
-              title="Total Forms"
+              title='Total Forms'
               value={stats?.totalForms || 0}
               icon={FormIcon}
-              color="primary"
+              color='primary'
             />
           )}
         </Grid>
         <Grid item xs={6}>
           {isLoading ? (
-            <Skeleton variant="rectangular" height={100} />
+            <Skeleton variant='rectangular' height={100} />
           ) : (
             <StatCard
-              title="Pending"
+              title='Pending'
               value={stats?.pendingForms || 0}
               icon={Schedule}
-              color="warning"
+              color='warning'
             />
           )}
         </Grid>
         <Grid item xs={6}>
           {isLoading ? (
-            <Skeleton variant="rectangular" height={100} />
+            <Skeleton variant='rectangular' height={100} />
           ) : (
             <StatCard
-              title="Completed"
+              title='Completed'
               value={stats?.completedForms || 0}
               icon={CheckCircle}
-              color="success"
+              color='success'
             />
           )}
         </Grid>
         <Grid item xs={6}>
           {isLoading ? (
-            <Skeleton variant="rectangular" height={100} />
+            <Skeleton variant='rectangular' height={100} />
           ) : (
             <StatCard
-              title="This Month"
+              title='This Month'
               value={stats?.thisMonthForms || 0}
               icon={TrendingUp}
-              color="primary"
-              subtitle="New forms"
+              color='primary'
+              subtitle='New forms'
             />
           )}
         </Grid>
@@ -284,32 +298,36 @@ export function MobileDashboard() {
       {(isOffline || offlineStorageInfo.formCount > 0) && (
         <Card sx={{ mb: 3 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CloudOff color="action" />
+            <Typography
+              variant='h6'
+              gutterBottom
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              <CloudOff color='action' />
               Offline Storage
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <Typography variant="h6" color="primary.main">
+                <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.formCount}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Forms
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="h6" color="primary.main">
+                <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.attachmentCount}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Files
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography variant="h6" color="primary.main">
+                <Typography variant='h6' color='primary.main'>
                   {formatFileSize(offlineStorageInfo.size)}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Cache Size
                 </Typography>
               </Grid>
@@ -322,22 +340,22 @@ export function MobileDashboard() {
       <Card>
         <CardContent sx={{ p: 0 }}>
           <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Typography variant="h6">Recent Forms</Typography>
+            <Typography variant='h6'>Recent Forms</Typography>
           </Box>
-          
+
           {isLoading ? (
             <Box sx={{ p: 2 }}>
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <Box key={i} sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="60%" />
-                  <Skeleton variant="text" width="40%" />
+                  <Skeleton variant='text' width='60%' />
+                  <Skeleton variant='text' width='40%' />
                 </Box>
               ))}
             </Box>
           ) : stats?.recentForms && stats.recentForms.length > 0 ? (
             <List sx={{ p: 0 }}>
               {stats.recentForms.map((form, index) => (
-                <ListItem 
+                <ListItem
                   key={form.id}
                   divider={index < stats.recentForms.length - 1}
                   button
@@ -348,18 +366,18 @@ export function MobileDashboard() {
                     secondary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
                         <LocationOn sx={{ fontSize: 14 }} />
-                        <Typography variant="caption">{form.worksite}</Typography>
-                        <Typography variant="caption">•</Typography>
-                        <Typography variant="caption">{form.serviceDate}</Typography>
+                        <Typography variant='caption'>{form.worksite}</Typography>
+                        <Typography variant='caption'>•</Typography>
+                        <Typography variant='caption'>{form.serviceDate}</Typography>
                       </Box>
                     }
                   />
                   <ListItemSecondaryAction>
                     <Chip
                       label={form.status}
-                      size="small"
+                      size='small'
                       color={getStatusColor(form.status) as any}
-                      variant="outlined"
+                      variant='outlined'
                     />
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -368,8 +386,8 @@ export function MobileDashboard() {
           ) : (
             <Box sx={{ p: 3, textAlign: 'center' }}>
               <FormIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                {isOffline ? 'Recent forms will appear when you\'re online' : 'No forms found'}
+              <Typography variant='body2' color='text.secondary'>
+                {isOffline ? "Recent forms will appear when you're online" : 'No forms found'}
               </Typography>
             </Box>
           )}
@@ -378,12 +396,12 @@ export function MobileDashboard() {
 
       {/* Floating Action Button */}
       <Fab
-        color="primary"
-        sx={{ 
-          position: 'fixed', 
-          bottom: 80, 
+        color='primary'
+        sx={{
+          position: 'fixed',
+          bottom: 80,
           right: 16,
-          zIndex: 1000
+          zIndex: 1000,
         }}
         onClick={() => navigate('/forms/new')}
       >

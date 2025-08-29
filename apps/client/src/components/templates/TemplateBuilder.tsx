@@ -81,7 +81,22 @@ interface IFieldValidation {
 
 interface IFormField {
   id: string;
-  type: 'text' | 'textarea' | 'number' | 'email' | 'phone' | 'date' | 'datetime' | 'select' | 'multiselect' | 'radio' | 'checkbox' | 'file' | 'signature' | 'separator' | 'heading';
+  type:
+    | 'text'
+    | 'textarea'
+    | 'number'
+    | 'email'
+    | 'phone'
+    | 'date'
+    | 'datetime'
+    | 'select'
+    | 'multiselect'
+    | 'radio'
+    | 'checkbox'
+    | 'file'
+    | 'signature'
+    | 'separator'
+    | 'heading';
   label: string;
   description?: string;
   placeholder?: string;
@@ -116,7 +131,14 @@ interface ITemplate {
   _id?: string;
   name: string;
   description?: string;
-  category: 'maintenance' | 'inspection' | 'service' | 'installation' | 'calibration' | 'breakdown' | 'custom';
+  category:
+    | 'maintenance'
+    | 'inspection'
+    | 'service'
+    | 'installation'
+    | 'calibration'
+    | 'breakdown'
+    | 'custom';
   sections: IFormSection[];
   version?: number;
   status?: 'draft' | 'active' | 'archived' | 'pending_approval';
@@ -149,29 +171,29 @@ const FIELD_TYPES = [
 
 const CATEGORIES = [
   'maintenance',
-  'inspection', 
+  'inspection',
   'service',
   'installation',
   'calibration',
   'breakdown',
-  'custom'
+  'custom',
 ];
 
 // Draggable field component
-function DraggableField({ field, sectionId, onEdit, onDelete }: {
+function DraggableField({
+  field,
+  sectionId,
+  onEdit,
+  onDelete,
+}: {
   field: IFormField;
   sectionId: string;
   onEdit: (sectionId: string, fieldId: string) => void;
   onDelete: (sectionId: string, fieldId: string) => void;
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: field.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: field.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -199,23 +221,21 @@ function DraggableField({ field, sectionId, onEdit, onDelete }: {
       {...attributes}
       {...listeners}
     >
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Box display="flex" alignItems="center" gap={1}>
-          <DragIcon color="action" />
-          <Typography variant="body2" color="text.secondary">
+      <Box display='flex' alignItems='center' justifyContent='space-between'>
+        <Box display='flex' alignItems='center' gap={1}>
+          <DragIcon color='action' />
+          <Typography variant='body2' color='text.secondary'>
             {fieldType?.icon} {fieldType?.label}
           </Typography>
-          <Typography variant="body1" fontWeight={500}>
+          <Typography variant='body1' fontWeight={500}>
             {field.label}
           </Typography>
-          {field.validation?.required && (
-            <Chip label="Required" size="small" color="error" />
-          )}
+          {field.validation?.required && <Chip label='Required' size='small' color='error' />}
         </Box>
         <Box>
           <IconButton
-            size="small"
-            onClick={(e) => {
+            size='small'
+            onClick={e => {
               e.stopPropagation();
               onEdit(sectionId, field.id);
             }}
@@ -223,9 +243,9 @@ function DraggableField({ field, sectionId, onEdit, onDelete }: {
             <EditIcon />
           </IconButton>
           <IconButton
-            size="small"
-            color="error"
-            onClick={(e) => {
+            size='small'
+            color='error'
+            onClick={e => {
               e.stopPropagation();
               onDelete(sectionId, field.id);
             }}
@@ -235,7 +255,7 @@ function DraggableField({ field, sectionId, onEdit, onDelete }: {
         </Box>
       </Box>
       {field.description && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
           {field.description}
         </Typography>
       )}
@@ -244,13 +264,13 @@ function DraggableField({ field, sectionId, onEdit, onDelete }: {
 }
 
 // Draggable section component
-function DraggableSection({ 
-  section, 
-  onEditSection, 
-  onDeleteSection, 
-  onEditField, 
-  onDeleteField, 
-  onAddField 
+function DraggableSection({
+  section,
+  onEditSection,
+  onDeleteSection,
+  onEditField,
+  onDeleteField,
+  onAddField,
 }: {
   section: IFormSection;
   onEditSection: (sectionId: string) => void;
@@ -259,14 +279,9 @@ function DraggableSection({
   onDeleteField: (sectionId: string, fieldId: string) => void;
   onAddField: (sectionId: string) => void;
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: section.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: section.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -275,56 +290,41 @@ function DraggableSection({
   };
 
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      sx={{ mb: 3 }}
-    >
+    <Card ref={setNodeRef} style={style} sx={{ mb: 3 }}>
       <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
+        <Box display='flex' alignItems='center' justifyContent='space-between' mb={2}>
+          <Box display='flex' alignItems='center' gap={1}>
             <Box {...attributes} {...listeners} sx={{ cursor: 'grab' }}>
-              <DragIcon color="action" />
+              <DragIcon color='action' />
             </Box>
-            <Typography variant="h6">{section.title}</Typography>
-            <Chip 
+            <Typography variant='h6'>{section.title}</Typography>
+            <Chip
               label={`${section.fields.length} field${section.fields.length !== 1 ? 's' : ''}`}
-              size="small"
-              color="primary"
+              size='small'
+              color='primary'
             />
           </Box>
           <Box>
-            <IconButton
-              size="small"
-              onClick={() => onAddField(section.id)}
-              color="primary"
-            >
+            <IconButton size='small' onClick={() => onAddField(section.id)} color='primary'>
               <AddIcon />
             </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => onEditSection(section.id)}
-            >
+            <IconButton size='small' onClick={() => onEditSection(section.id)}>
               <EditIcon />
             </IconButton>
-            <IconButton
-              size="small"
-              color="error"
-              onClick={() => onDeleteSection(section.id)}
-            >
+            <IconButton size='small' color='error' onClick={() => onDeleteSection(section.id)}>
               <DeleteIcon />
             </IconButton>
           </Box>
         </Box>
-        
+
         {section.description && (
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
             {section.description}
           </Typography>
         )}
 
         <SortableContext items={section.fields} strategy={verticalListSortingStrategy}>
-          {section.fields.map((field) => (
+          {section.fields.map(field => (
             <DraggableField
               key={field.id}
               field={field}
@@ -337,7 +337,7 @@ function DraggableSection({
 
         {section.fields.length === 0 && (
           <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'action.hover' }}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               No fields in this section. Click the + button to add fields.
             </Typography>
           </Paper>
@@ -363,7 +363,9 @@ export function TemplateBuilder() {
   });
 
   const [draggedItem, setDraggedItem] = useState<any>(null);
-  const [editingField, setEditingField] = useState<{ sectionId: string; field: IFormField } | null>(null);
+  const [editingField, setEditingField] = useState<{ sectionId: string; field: IFormField } | null>(
+    null
+  );
   const [editingSection, setEditingSection] = useState<IFormSection | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -407,7 +409,9 @@ export function TemplateBuilder() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
-      toast.showSuccess(isEditing ? 'Template updated successfully' : 'Template created successfully');
+      toast.showSuccess(
+        isEditing ? 'Template updated successfully' : 'Template created successfully'
+      );
       navigate('/templates');
     },
     onError: (err: any) => {
@@ -461,7 +465,7 @@ export function TemplateBuilder() {
       if (activeFieldIndex !== -1 && overFieldIndex !== -1) {
         setTemplate(prev => ({
           ...prev,
-          sections: prev.sections.map(s => 
+          sections: prev.sections.map(s =>
             s.id === section.id
               ? { ...s, fields: arrayMove(s.fields, activeFieldIndex, overFieldIndex) }
               : s
@@ -522,9 +526,7 @@ export function TemplateBuilder() {
     setTemplate(prev => ({
       ...prev,
       sections: prev.sections.map(section =>
-        section.id === sectionId
-          ? { ...section, fields: [...section.fields, newField] }
-          : section
+        section.id === sectionId ? { ...section, fields: [...section.fields, newField] } : section
       ),
     }));
   };
@@ -591,7 +593,7 @@ export function TemplateBuilder() {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -600,20 +602,18 @@ export function TemplateBuilder() {
   return (
     <Box>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">
-          {isEditing ? 'Edit Template' : 'Create Template'}
-        </Typography>
-        <Box display="flex" gap={2}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4'>{isEditing ? 'Edit Template' : 'Create Template'}</Typography>
+        <Box display='flex' gap={2}>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<ViewIcon />}
             onClick={() => setPreviewMode(!previewMode)}
           >
             {previewMode ? 'Edit' : 'Preview'}
           </Button>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<SaveIcon />}
             onClick={handleSave}
             disabled={saveTemplateMutation.isPending}
@@ -628,29 +628,31 @@ export function TemplateBuilder() {
         <Grid item xs={12} md={4}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Template Settings
               </Typography>
-              <Box display="flex" flexDirection="column" gap={2}>
+              <Box display='flex' flexDirection='column' gap={2}>
                 <TextField
-                  label="Template Name"
+                  label='Template Name'
                   value={template.name}
-                  onChange={(e) => setTemplate(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={e => setTemplate(prev => ({ ...prev, name: e.target.value }))}
                   required
                 />
                 <TextField
-                  label="Description"
+                  label='Description'
                   multiline
                   rows={3}
                   value={template.description || ''}
-                  onChange={(e) => setTemplate(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={e => setTemplate(prev => ({ ...prev, description: e.target.value }))}
                 />
                 <FormControl>
                   <InputLabel>Category</InputLabel>
                   <Select
                     value={template.category}
-                    onChange={(e) => setTemplate(prev => ({ ...prev, category: e.target.value as any }))}
-                    label="Category"
+                    onChange={e =>
+                      setTemplate(prev => ({ ...prev, category: e.target.value as any }))
+                    }
+                    label='Category'
                   >
                     {CATEGORIES.map(cat => (
                       <MenuItem key={cat} value={cat}>
@@ -660,13 +662,18 @@ export function TemplateBuilder() {
                   </Select>
                 </FormControl>
                 <TextField
-                  label="Tags (comma separated)"
+                  label='Tags (comma separated)'
                   value={template.tags.join(', ')}
-                  onChange={(e) => setTemplate(prev => ({ 
-                    ...prev, 
-                    tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
-                  }))}
-                  helperText="Add tags to help categorize this template"
+                  onChange={e =>
+                    setTemplate(prev => ({
+                      ...prev,
+                      tags: e.target.value
+                        .split(',')
+                        .map(tag => tag.trim())
+                        .filter(Boolean),
+                    }))
+                  }
+                  helperText='Add tags to help categorize this template'
                 />
               </Box>
             </CardContent>
@@ -675,7 +682,7 @@ export function TemplateBuilder() {
           {/* Field Types Palette */}
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Field Types
               </Typography>
               <Grid container spacing={1}>
@@ -701,8 +708,8 @@ export function TemplateBuilder() {
                         });
                       }}
                     >
-                      <Typography variant="h6">{fieldType.icon}</Typography>
-                      <Typography variant="caption">{fieldType.label}</Typography>
+                      <Typography variant='h6'>{fieldType.icon}</Typography>
+                      <Typography variant='caption'>{fieldType.label}</Typography>
                     </Paper>
                   </Grid>
                 ))}
@@ -713,16 +720,18 @@ export function TemplateBuilder() {
 
         {/* Template Builder */}
         <Grid item xs={12} md={8}>
-          <Box display="flex" justifyContent="between" alignItems="center" mb={2}>
-            <Typography variant="h6">Template Structure</Typography>
+          <Box display='flex' justifyContent='between' alignItems='center' mb={2}>
+            <Typography variant='h6'>Template Structure</Typography>
             <Button
-              variant="contained"
+              variant='contained'
               startIcon={<AddIcon />}
-              onClick={() => setEditingSection({
-                id: '',
-                title: 'New Section',
-                fields: [],
-              })}
+              onClick={() =>
+                setEditingSection({
+                  id: '',
+                  title: 'New Section',
+                  fields: [],
+                })
+              }
             >
               Add Section
             </Button>
@@ -735,11 +744,11 @@ export function TemplateBuilder() {
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={template.sections} strategy={verticalListSortingStrategy}>
-              {template.sections.map((section) => (
+              {template.sections.map(section => (
                 <DraggableSection
                   key={section.id}
                   section={section}
-                  onEditSection={(sectionId) => {
+                  onEditSection={sectionId => {
                     const section = template.sections.find(s => s.id === sectionId);
                     if (section) setEditingSection(section);
                   }}
@@ -750,7 +759,7 @@ export function TemplateBuilder() {
                     if (field) setEditingField({ sectionId, field });
                   }}
                   onDeleteField={deleteField}
-                  onAddField={(sectionId) => {
+                  onAddField={sectionId => {
                     setEditingField({
                       sectionId,
                       field: {
@@ -777,20 +786,22 @@ export function TemplateBuilder() {
 
           {template.sections.length === 0 && (
             <Paper sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
+              <Typography variant='h6' color='text.secondary' gutterBottom>
                 No sections yet
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
                 Start building your template by adding a section
               </Typography>
               <Button
-                variant="contained"
+                variant='contained'
                 startIcon={<AddIcon />}
-                onClick={() => setEditingSection({
-                  id: '',
-                  title: 'Section 1',
-                  fields: [],
-                })}
+                onClick={() =>
+                  setEditingSection({
+                    id: '',
+                    title: 'Section 1',
+                    fields: [],
+                  })
+                }
               >
                 Add First Section
               </Button>

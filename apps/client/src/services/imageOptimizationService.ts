@@ -92,7 +92,7 @@ class ImageOptimizationService {
 
           // Convert to blob
           canvas.toBlob(
-            (blob) => {
+            blob => {
               if (!blob) {
                 reject(new Error('Failed to create optimized image blob'));
                 return;
@@ -136,7 +136,11 @@ class ImageOptimizationService {
    */
   public async createResponsiveImages(
     file: File | Blob,
-    presets: Array<keyof typeof ImageOptimizationService.PRESETS> = ['thumbnail', 'mobile', 'desktop']
+    presets: Array<keyof typeof ImageOptimizationService.PRESETS> = [
+      'thumbnail',
+      'mobile',
+      'desktop',
+    ]
   ): Promise<Record<string, ProcessedImage>> {
     const results: Record<string, ProcessedImage> = {};
 
@@ -324,7 +328,7 @@ class ImageOptimizationService {
   ): void {
     // Apply any additional filters or enhancements
     // This could include sharpening, noise reduction, etc.
-    
+
     // For now, this is a placeholder for potential image enhancements
     if (options.format === 'jpeg') {
       // Apply slight sharpening for JPEG compression
@@ -335,16 +339,13 @@ class ImageOptimizationService {
   /**
    * Estimate file size after compression
    */
-  public estimateCompressedSize(
-    originalSize: number,
-    options: CompressionOptions
-  ): number {
+  public estimateCompressedSize(originalSize: number, options: CompressionOptions): number {
     const { quality = 0.85, maxWidth = 1920, maxHeight = 1920 } = options;
-    
+
     // Simple estimation based on quality and resolution reduction
     const qualityFactor = quality;
     const resolutionFactor = Math.min(1, (maxWidth * maxHeight) / (1920 * 1920));
-    
+
     return Math.round(originalSize * qualityFactor * resolutionFactor);
   }
 

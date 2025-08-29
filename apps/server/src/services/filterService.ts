@@ -3,11 +3,33 @@ import { FilterQuery } from 'mongoose';
 export interface FilterCriteria {
   id: string;
   field: string;
-  operator: 'equals' | 'notEquals' | 'contains' | 'notContains' | 'startsWith' | 'endsWith' | 
-           'greaterThan' | 'lessThan' | 'greaterThanOrEqual' | 'lessThanOrEqual' | 
-           'between' | 'in' | 'notIn' | 'isEmpty' | 'isNotEmpty' | 'isTrue' | 'isFalse' |
-           'dateEquals' | 'dateBefore' | 'dateAfter' | 'dateBetween' | 'dateToday' | 
-           'dateYesterday' | 'dateThisWeek' | 'dateThisMonth' | 'dateThisYear';
+  operator:
+    | 'equals'
+    | 'notEquals'
+    | 'contains'
+    | 'notContains'
+    | 'startsWith'
+    | 'endsWith'
+    | 'greaterThan'
+    | 'lessThan'
+    | 'greaterThanOrEqual'
+    | 'lessThanOrEqual'
+    | 'between'
+    | 'in'
+    | 'notIn'
+    | 'isEmpty'
+    | 'isNotEmpty'
+    | 'isTrue'
+    | 'isFalse'
+    | 'dateEquals'
+    | 'dateBefore'
+    | 'dateAfter'
+    | 'dateBetween'
+    | 'dateToday'
+    | 'dateYesterday'
+    | 'dateThisWeek'
+    | 'dateThisMonth'
+    | 'dateThisYear';
   value: any;
   dataType: 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object';
   logicalOperator?: 'AND' | 'OR';
@@ -55,7 +77,7 @@ export class FilterService {
 
   buildMongoQuery(filter: AdvancedFilter): FilterQuery<any> {
     const query: FilterQuery<any> = {};
-    
+
     if (filter.groups.length === 0) {
       return {};
     }
@@ -71,7 +93,7 @@ export class FilterService {
 
     // Multiple groups - combine with global logical operator
     const groupQueries = activeGroups.map(group => this.buildGroupQuery(group));
-    
+
     if (filter.globalLogicalOperator === 'OR') {
       query.$or = groupQueries;
     } else {
@@ -92,7 +114,7 @@ export class FilterService {
 
     // Multiple criteria - combine with group logical operator
     const criteriaQueries = group.criteria.map(criteria => this.buildCriteriaQuery(criteria));
-    
+
     if (group.logicalOperator === 'OR') {
       return { $or: criteriaQueries };
     } else {
@@ -108,11 +130,11 @@ export class FilterService {
       case 'equals':
         query[field] = value;
         break;
-      
+
       case 'notEquals':
         query[field] = { $ne: value };
         break;
-      
+
       case 'contains':
         if (dataType === 'string') {
           query[field] = { $regex: value, $options: 'i' };
@@ -120,7 +142,7 @@ export class FilterService {
           query[field] = { $in: Array.isArray(value) ? value : [value] };
         }
         break;
-      
+
       case 'notContains':
         if (dataType === 'string') {
           query[field] = { $not: { $regex: value, $options: 'i' } };
@@ -128,48 +150,48 @@ export class FilterService {
           query[field] = { $nin: Array.isArray(value) ? value : [value] };
         }
         break;
-      
+
       case 'startsWith':
         query[field] = { $regex: `^${this.escapeRegex(value)}`, $options: 'i' };
         break;
-      
+
       case 'endsWith':
         query[field] = { $regex: `${this.escapeRegex(value)}$`, $options: 'i' };
         break;
-      
+
       case 'greaterThan':
         query[field] = { $gt: this.convertValue(value, dataType) };
         break;
-      
+
       case 'lessThan':
         query[field] = { $lt: this.convertValue(value, dataType) };
         break;
-      
+
       case 'greaterThanOrEqual':
         query[field] = { $gte: this.convertValue(value, dataType) };
         break;
-      
+
       case 'lessThanOrEqual':
         query[field] = { $lte: this.convertValue(value, dataType) };
         break;
-      
+
       case 'between':
         if (Array.isArray(value) && value.length === 2) {
-          query[field] = { 
+          query[field] = {
             $gte: this.convertValue(value[0], dataType),
-            $lte: this.convertValue(value[1], dataType)
+            $lte: this.convertValue(value[1], dataType),
           };
         }
         break;
-      
+
       case 'in':
         query[field] = { $in: Array.isArray(value) ? value : [value] };
         break;
-      
+
       case 'notIn':
         query[field] = { $nin: Array.isArray(value) ? value : [value] };
         break;
-      
+
       case 'isEmpty':
         if (dataType === 'string') {
           query[field] = { $in: ['', null, undefined] };
@@ -179,7 +201,7 @@ export class FilterService {
           query[field] = { $in: [null, undefined] };
         }
         break;
-      
+
       case 'isNotEmpty':
         if (dataType === 'string') {
           query[field] = { $nin: ['', null, undefined] };
@@ -189,92 +211,92 @@ export class FilterService {
           query[field] = { $nin: [null, undefined] };
         }
         break;
-      
+
       case 'isTrue':
         query[field] = true;
         break;
-      
+
       case 'isFalse':
         query[field] = false;
         break;
-      
+
       // Date operators
       case 'dateEquals':
         query[field] = {
           $gte: new Date(new Date(value).setHours(0, 0, 0, 0)),
-          $lt: new Date(new Date(value).setHours(23, 59, 59, 999))
+          $lt: new Date(new Date(value).setHours(23, 59, 59, 999)),
         };
         break;
-      
+
       case 'dateBefore':
         query[field] = { $lt: new Date(value) };
         break;
-      
+
       case 'dateAfter':
         query[field] = { $gt: new Date(value) };
         break;
-      
+
       case 'dateBetween':
         if (Array.isArray(value) && value.length === 2) {
           query[field] = {
             $gte: new Date(value[0]),
-            $lte: new Date(value[1])
+            $lte: new Date(value[1]),
           };
         }
         break;
-      
+
       case 'dateToday':
         const today = new Date();
         query[field] = {
           $gte: new Date(today.setHours(0, 0, 0, 0)),
-          $lt: new Date(today.setHours(23, 59, 59, 999))
+          $lt: new Date(today.setHours(23, 59, 59, 999)),
         };
         break;
-      
+
       case 'dateYesterday':
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         query[field] = {
           $gte: new Date(yesterday.setHours(0, 0, 0, 0)),
-          $lt: new Date(yesterday.setHours(23, 59, 59, 999))
+          $lt: new Date(yesterday.setHours(23, 59, 59, 999)),
         };
         break;
-      
+
       case 'dateThisWeek':
         const weekStart = new Date();
         weekStart.setDate(weekStart.getDate() - weekStart.getDay());
         weekStart.setHours(0, 0, 0, 0);
-        
+
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 6);
         weekEnd.setHours(23, 59, 59, 999);
-        
+
         query[field] = { $gte: weekStart, $lte: weekEnd };
         break;
-      
+
       case 'dateThisMonth':
         const monthStart = new Date();
         monthStart.setDate(1);
         monthStart.setHours(0, 0, 0, 0);
-        
+
         const monthEnd = new Date(monthStart);
         monthEnd.setMonth(monthEnd.getMonth() + 1);
         monthEnd.setDate(0);
         monthEnd.setHours(23, 59, 59, 999);
-        
+
         query[field] = { $gte: monthStart, $lte: monthEnd };
         break;
-      
+
       case 'dateThisYear':
         const yearStart = new Date();
         yearStart.setMonth(0, 1);
         yearStart.setHours(0, 0, 0, 0);
-        
+
         const yearEnd = new Date(yearStart);
         yearEnd.setFullYear(yearEnd.getFullYear() + 1);
         yearEnd.setDate(0);
         yearEnd.setHours(23, 59, 59, 999);
-        
+
         query[field] = { $gte: yearStart, $lte: yearEnd };
         break;
     }
@@ -311,21 +333,29 @@ export class FilterService {
         return {
           ...commonFields,
           formId: { label: 'Form ID', type: 'string', searchable: true },
-          status: { 
-            label: 'Status', 
-            type: 'string', 
+          status: {
+            label: 'Status',
+            type: 'string',
             searchable: true,
-            options: ['draft', 'in-progress', 'completed', 'approved', 'rejected']
+            options: ['draft', 'in-progress', 'completed', 'approved', 'rejected'],
           },
           'customerInfo.customerName': { label: 'Customer Name', type: 'string', searchable: true },
-          'customerInfo.contactEmail': { label: 'Customer Email', type: 'string', searchable: true },
-          'customerInfo.contactPhone': { label: 'Customer Phone', type: 'string', searchable: true },
+          'customerInfo.contactEmail': {
+            label: 'Customer Email',
+            type: 'string',
+            searchable: true,
+          },
+          'customerInfo.contactPhone': {
+            label: 'Customer Phone',
+            type: 'string',
+            searchable: true,
+          },
           'formData.notes': { label: 'Notes', type: 'string', searchable: true },
           priority: {
             label: 'Priority',
             type: 'string',
             searchable: true,
-            options: ['low', 'medium', 'high', 'urgent']
+            options: ['low', 'medium', 'high', 'urgent'],
           },
           technicianId: { label: 'Technician', type: 'object', searchable: true },
           worksiteId: { label: 'Worksite', type: 'object', searchable: true },
@@ -340,7 +370,7 @@ export class FilterService {
             label: 'Category',
             type: 'string',
             searchable: true,
-            options: ['inspection', 'maintenance', 'safety', 'compliance', 'other']
+            options: ['inspection', 'maintenance', 'safety', 'compliance', 'other'],
           },
           tags: { label: 'Tags', type: 'array', searchable: true },
           isActive: { label: 'Active', type: 'boolean', searchable: true },
@@ -357,7 +387,7 @@ export class FilterService {
             label: 'Role',
             type: 'string',
             searchable: true,
-            options: ['admin', 'manager', 'technician']
+            options: ['admin', 'manager', 'technician'],
           },
           isActive: { label: 'Active', type: 'boolean', searchable: true },
           lastLogin: { label: 'Last Login', type: 'date', searchable: true },
@@ -382,7 +412,7 @@ export class FilterService {
             label: 'Category',
             type: 'string',
             searchable: true,
-            options: ['personal', 'team', 'organization', 'public']
+            options: ['personal', 'team', 'organization', 'public'],
           },
           tags: { label: 'Tags', type: 'array', searchable: true },
         };
@@ -395,23 +425,52 @@ export class FilterService {
   getOperatorsForType(dataType: string): string[] {
     switch (dataType) {
       case 'string':
-        return ['equals', 'notEquals', 'contains', 'notContains', 'startsWith', 'endsWith', 'isEmpty', 'isNotEmpty'];
-      
+        return [
+          'equals',
+          'notEquals',
+          'contains',
+          'notContains',
+          'startsWith',
+          'endsWith',
+          'isEmpty',
+          'isNotEmpty',
+        ];
+
       case 'number':
-        return ['equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual', 'between', 'isEmpty', 'isNotEmpty'];
-      
+        return [
+          'equals',
+          'notEquals',
+          'greaterThan',
+          'lessThan',
+          'greaterThanOrEqual',
+          'lessThanOrEqual',
+          'between',
+          'isEmpty',
+          'isNotEmpty',
+        ];
+
       case 'boolean':
         return ['isTrue', 'isFalse'];
-      
+
       case 'date':
-        return ['dateEquals', 'dateBefore', 'dateAfter', 'dateBetween', 'dateToday', 'dateYesterday', 'dateThisWeek', 'dateThisMonth', 'dateThisYear'];
-      
+        return [
+          'dateEquals',
+          'dateBefore',
+          'dateAfter',
+          'dateBetween',
+          'dateToday',
+          'dateYesterday',
+          'dateThisWeek',
+          'dateThisMonth',
+          'dateThisYear',
+        ];
+
       case 'array':
         return ['contains', 'notContains', 'in', 'notIn', 'isEmpty', 'isNotEmpty'];
-      
+
       case 'object':
         return ['equals', 'notEquals', 'isEmpty', 'isNotEmpty'];
-      
+
       default:
         return ['equals', 'notEquals'];
     }
@@ -447,13 +506,27 @@ export class FilterService {
         }
 
         if (!criteria.operator) {
-          errors.push(`Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Operator is required`);
+          errors.push(
+            `Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Operator is required`
+          );
         }
 
         if (criteria.value === undefined || criteria.value === null) {
-          const operatorsWithoutValue = ['isEmpty', 'isNotEmpty', 'isTrue', 'isFalse', 'dateToday', 'dateYesterday', 'dateThisWeek', 'dateThisMonth', 'dateThisYear'];
+          const operatorsWithoutValue = [
+            'isEmpty',
+            'isNotEmpty',
+            'isTrue',
+            'isFalse',
+            'dateToday',
+            'dateYesterday',
+            'dateThisWeek',
+            'dateThisMonth',
+            'dateThisYear',
+          ];
           if (!operatorsWithoutValue.includes(criteria.operator)) {
-            errors.push(`Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Value is required for operator ${criteria.operator}`);
+            errors.push(
+              `Group ${groupIndex + 1}, Criteria ${criteriaIndex + 1}: Value is required for operator ${criteria.operator}`
+            );
           }
         }
       });

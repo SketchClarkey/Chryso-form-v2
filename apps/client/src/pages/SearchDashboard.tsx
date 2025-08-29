@@ -28,7 +28,18 @@ import {
   Assessment as AnalyticsIcon,
   Speed as PerformanceIcon,
 } from '@mui/icons-material';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 import { useApi } from '../hooks/useApi';
 import GlobalSearch from '../components/search/GlobalSearch';
 
@@ -110,7 +121,7 @@ const SearchDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' height='400px'>
         <CircularProgress />
       </Box>
     );
@@ -118,7 +129,7 @@ const SearchDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ mb: 2 }}>
+      <Alert severity='error' sx={{ mb: 2 }}>
         {error}
       </Alert>
     );
@@ -126,7 +137,7 @@ const SearchDashboard: React.FC = () => {
 
   if (!analytics) {
     return (
-      <Alert severity="warning" sx={{ mb: 2 }}>
+      <Alert severity='warning' sx={{ mb: 2 }}>
         No search analytics data available
       </Alert>
     );
@@ -135,18 +146,18 @@ const SearchDashboard: React.FC = () => {
   return (
     <Box>
       <Box mb={3}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Search Analytics
         </Typography>
-        <Typography variant="body1" color="text.secondary" gutterBottom>
+        <Typography variant='body1' color='text.secondary' gutterBottom>
           Monitor search performance and user behavior patterns
         </Typography>
-        
+
         {/* Quick Search */}
         <Box mt={2}>
           <GlobalSearch
-            variant="page"
-            placeholder="Test search functionality..."
+            variant='page'
+            placeholder='Test search functionality...'
             showFilters={false}
           />
         </Box>
@@ -157,11 +168,11 @@ const SearchDashboard: React.FC = () => {
         <Grid item xs={12} md={3}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center">
-                <SearchIcon color="primary" sx={{ mr: 2, fontSize: 32 }} />
+              <Box display='flex' alignItems='center'>
+                <SearchIcon color='primary' sx={{ mr: 2, fontSize: 32 }} />
                 <Box>
-                  <Typography variant="h4">{analytics.totalSearches.toLocaleString()}</Typography>
-                  <Typography color="text.secondary">Total Searches</Typography>
+                  <Typography variant='h4'>{analytics.totalSearches.toLocaleString()}</Typography>
+                  <Typography color='text.secondary'>Total Searches</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -171,11 +182,11 @@ const SearchDashboard: React.FC = () => {
         <Grid item xs={12} md={3}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center">
-                <PerformanceIcon color="success" sx={{ mr: 2, fontSize: 32 }} />
+              <Box display='flex' alignItems='center'>
+                <PerformanceIcon color='success' sx={{ mr: 2, fontSize: 32 }} />
                 <Box>
-                  <Typography variant="h4">{analytics.avgSearchTime}ms</Typography>
-                  <Typography color="text.secondary">Avg Search Time</Typography>
+                  <Typography variant='h4'>{analytics.avgSearchTime}ms</Typography>
+                  <Typography color='text.secondary'>Avg Search Time</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -185,13 +196,15 @@ const SearchDashboard: React.FC = () => {
         <Grid item xs={12} md={3}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center">
-                <TrendingUpIcon color="info" sx={{ mr: 2, fontSize: 32 }} />
+              <Box display='flex' alignItems='center'>
+                <TrendingUpIcon color='info' sx={{ mr: 2, fontSize: 32 }} />
                 <Box>
-                  <Typography variant="h4">
-                    {(analytics.searchesByDay.reduce((sum, day) => sum + day.searches, 0) / 7).toFixed(0)}
+                  <Typography variant='h4'>
+                    {(
+                      analytics.searchesByDay.reduce((sum, day) => sum + day.searches, 0) / 7
+                    ).toFixed(0)}
                   </Typography>
-                  <Typography color="text.secondary">Daily Average</Typography>
+                  <Typography color='text.secondary'>Daily Average</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -201,13 +214,13 @@ const SearchDashboard: React.FC = () => {
         <Grid item xs={12} md={3}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center">
-                <AnalyticsIcon color="warning" sx={{ mr: 2, fontSize: 32 }} />
+              <Box display='flex' alignItems='center'>
+                <AnalyticsIcon color='warning' sx={{ mr: 2, fontSize: 32 }} />
                 <Box>
-                  <Typography variant="h4">
+                  <Typography variant='h4'>
                     {analytics.noResultsQueries.reduce((sum, q) => sum + q.count, 0)}
                   </Typography>
-                  <Typography color="text.secondary">No Results</Typography>
+                  <Typography color='text.secondary'>No Results</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -217,16 +230,16 @@ const SearchDashboard: React.FC = () => {
         {/* Search Activity Chart */}
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Search Activity by Day
             </Typography>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width='100%' height={300}>
               <BarChart data={analytics.searchesByDay}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='day' />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="searches" fill="#8884d8" name="Searches" />
+                <Bar dataKey='searches' fill='#8884d8' name='Searches' />
               </BarChart>
             </ResponsiveContainer>
           </Paper>
@@ -235,21 +248,21 @@ const SearchDashboard: React.FC = () => {
         {/* Searches by Content Type */}
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Searches by Content Type
             </Typography>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width='100%' height={300}>
               <PieChart>
                 <Pie
                   data={analytics.searchesByType}
-                  cx="50%"
-                  cy="50%"
+                  cx='50%'
+                  cy='50%'
                   labelLine={false}
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="count"
-                  nameKey="type"
+                  fill='#8884d8'
+                  dataKey='count'
+                  nameKey='type'
                 >
                   {analytics.searchesByType.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -264,28 +277,28 @@ const SearchDashboard: React.FC = () => {
         {/* Top Search Queries */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Top Search Queries
             </Typography>
             <TableContainer>
-              <Table size="small">
+              <Table size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell>Query</TableCell>
-                    <TableCell align="right">Searches</TableCell>
-                    <TableCell align="right">Avg Results</TableCell>
+                    <TableCell align='right'>Searches</TableCell>
+                    <TableCell align='right'>Avg Results</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {analytics.topQueries.slice(0, 10).map((query, index) => (
                     <TableRow key={index}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component='th' scope='row'>
                         {query.query}
                       </TableCell>
-                      <TableCell align="right">
-                        <Chip label={query.count} size="small" color="primary" variant="outlined" />
+                      <TableCell align='right'>
+                        <Chip label={query.count} size='small' color='primary' variant='outlined' />
                       </TableCell>
-                      <TableCell align="right">{query.avgResults}</TableCell>
+                      <TableCell align='right'>{query.avgResults}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -297,7 +310,7 @@ const SearchDashboard: React.FC = () => {
         {/* No Results Queries */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Queries with No Results
             </Typography>
             <List>
@@ -305,13 +318,10 @@ const SearchDashboard: React.FC = () => {
                 <React.Fragment key={index}>
                   <ListItem>
                     <ListItemIcon>
-                      <SearchIcon color="error" />
+                      <SearchIcon color='error' />
                     </ListItemIcon>
-                    <ListItemText
-                      primary={query.query}
-                      secondary={`${query.count} searches`}
-                    />
-                    <Chip label={query.count} size="small" color="error" variant="outlined" />
+                    <ListItemText primary={query.query} secondary={`${query.count} searches`} />
+                    <Chip label={query.count} size='small' color='error' variant='outlined' />
                   </ListItem>
                   {index < analytics.noResultsQueries.length - 1 && <Divider />}
                 </React.Fragment>
@@ -323,38 +333,40 @@ const SearchDashboard: React.FC = () => {
         {/* Search Performance Insights */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Search Performance Insights
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
-                <Box p={2} bgcolor="success.light" borderRadius={1}>
-                  <Typography variant="subtitle2" color="success.dark">
+                <Box p={2} bgcolor='success.light' borderRadius={1}>
+                  <Typography variant='subtitle2' color='success.dark'>
                     Most Effective Queries
                   </Typography>
-                  <Typography variant="body2">
-                    Single-word queries like "inspection" and "maintenance" return the most relevant results
+                  <Typography variant='body2'>
+                    Single-word queries like "inspection" and "maintenance" return the most relevant
+                    results
                   </Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} md={4}>
-                <Box p={2} bgcolor="warning.light" borderRadius={1}>
-                  <Typography variant="subtitle2" color="warning.dark">
+                <Box p={2} bgcolor='warning.light' borderRadius={1}>
+                  <Typography variant='subtitle2' color='warning.dark'>
                     Improvement Opportunity
                   </Typography>
-                  <Typography variant="body2">
-                    {analytics.noResultsQueries.reduce((sum, q) => sum + q.count, 0)} searches returned no results. 
-                    Consider improving content coverage.
+                  <Typography variant='body2'>
+                    {analytics.noResultsQueries.reduce((sum, q) => sum + q.count, 0)} searches
+                    returned no results. Consider improving content coverage.
                   </Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} md={4}>
-                <Box p={2} bgcolor="info.light" borderRadius={1}>
-                  <Typography variant="subtitle2" color="info.dark">
+                <Box p={2} bgcolor='info.light' borderRadius={1}>
+                  <Typography variant='subtitle2' color='info.dark'>
                     Usage Pattern
                   </Typography>
-                  <Typography variant="body2">
-                    Peak search activity occurs on Wednesday and Thursday, suggesting mid-week workflow patterns
+                  <Typography variant='body2'>
+                    Peak search activity occurs on Wednesday and Thursday, suggesting mid-week
+                    workflow patterns
                   </Typography>
                 </Box>
               </Grid>

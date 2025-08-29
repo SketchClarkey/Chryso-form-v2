@@ -12,9 +12,15 @@ const envSchema = z.object({
   JWT_EXPIRE: z.string().default('15m'),
   JWT_REFRESH_EXPIRE: z.string().default('7d'),
   CLIENT_URL: z.string().default('http://localhost:3000'),
-  CORS_ORIGIN: z.string().default('http://localhost:3000').transform(val => val.split(',')),
+  CORS_ORIGIN: z
+    .string()
+    .default('http://localhost:3000')
+    .transform(val => val.split(',')),
   EMAIL_HOST: z.string().optional(),
-  EMAIL_PORT: z.string().optional().transform(val => val ? Number(val) : undefined),
+  EMAIL_PORT: z
+    .string()
+    .optional()
+    .transform(val => (val ? Number(val) : undefined)),
   EMAIL_USER: z.string().optional(),
   EMAIL_PASS: z.string().optional(),
   MANAGER_EMAILS: z.string().optional(),

@@ -39,7 +39,13 @@ import {
   Undo as UndoIcon,
 } from '@mui/icons-material';
 
-export type FormStatus = 'draft' | 'in-progress' | 'completed' | 'approved' | 'rejected' | 'archived';
+export type FormStatus =
+  | 'draft'
+  | 'in-progress'
+  | 'completed'
+  | 'approved'
+  | 'rejected'
+  | 'archived';
 
 export interface StatusHistoryItem {
   status: FormStatus;
@@ -117,7 +123,7 @@ const getAvailableActions = (
   canApprove: boolean
 ): FormStatus[] => {
   const actions: FormStatus[] = [];
-  
+
   if (!canEdit && !canApprove) return actions;
 
   switch (currentStatus) {
@@ -215,12 +221,12 @@ export function FormStatusWorkflow({
     <Box>
       <Card>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6">
-              Form Status Workflow
-            </Typography>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          >
+            <Typography variant='h6'>Form Status Workflow</Typography>
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-              <Tooltip title="View Status History">
+              <Tooltip title='View Status History'>
                 <IconButton onClick={() => setHistoryDialogOpen(true)}>
                   <HistoryIcon />
                 </IconButton>
@@ -229,32 +235,39 @@ export function FormStatusWorkflow({
                 icon={getStatusIcon(currentStatus)}
                 label={currentConfig.label}
                 color={currentConfig.color}
-                variant="filled"
+                variant='filled'
               />
             </Box>
           </Box>
 
           {/* Current Status Description */}
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2">
-              {currentConfig.description}
-            </Typography>
+          <Alert severity='info' sx={{ mb: 3 }}>
+            <Typography variant='body2'>{currentConfig.description}</Typography>
             {completionPercentage > 0 && currentStatus !== 'completed' && (
-              <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+              <Typography variant='caption' display='block' sx={{ mt: 1 }}>
                 Form completion: {completionPercentage}%
               </Typography>
             )}
           </Alert>
 
           {/* Status Stepper */}
-          <Stepper activeStep={getStatusStepIndex(currentStatus)} orientation="horizontal" sx={{ mb: 3 }}>
-            {['draft', 'in-progress', 'completed', 'approved'].map((status) => {
+          <Stepper
+            activeStep={getStatusStepIndex(currentStatus)}
+            orientation='horizontal'
+            sx={{ mb: 3 }}
+          >
+            {['draft', 'in-progress', 'completed', 'approved'].map(status => {
               const config = statusConfig[status as FormStatus];
               const isCurrentStatus = status === currentStatus;
               const isRejected = currentStatus === 'rejected';
-              
+
               return (
-                <Step key={status} completed={getStatusStepIndex(status as FormStatus) < getStatusStepIndex(currentStatus)}>
+                <Step
+                  key={status}
+                  completed={
+                    getStatusStepIndex(status as FormStatus) < getStatusStepIndex(currentStatus)
+                  }
+                >
                   <StepLabel
                     StepIconComponent={() => (
                       <Box
@@ -265,12 +278,15 @@ export function FormStatusWorkflow({
                           width: 24,
                           height: 24,
                           borderRadius: '50%',
-                          backgroundColor: isCurrentStatus 
-                            ? `${config.color}.main` 
+                          backgroundColor: isCurrentStatus
+                            ? `${config.color}.main`
                             : isRejected && status === 'completed'
-                            ? 'error.light'
-                            : 'grey.300',
-                          color: isCurrentStatus || (isRejected && status === 'completed') ? 'white' : 'grey.600',
+                              ? 'error.light'
+                              : 'grey.300',
+                          color:
+                            isCurrentStatus || (isRejected && status === 'completed')
+                              ? 'white'
+                              : 'grey.600',
                         }}
                       >
                         {getStatusIcon(status as FormStatus)}
@@ -286,12 +302,12 @@ export function FormStatusWorkflow({
 
           {/* Rejected Status Indicator */}
           {currentStatus === 'rejected' && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              <Typography variant="body2" fontWeight="medium">
+            <Alert severity='error' sx={{ mb: 3 }}>
+              <Typography variant='body2' fontWeight='medium'>
                 Form has been rejected
               </Typography>
               {statusHistory.find(h => h.status === 'rejected')?.rejectionReason && (
-                <Typography variant="body2" sx={{ mt: 1 }}>
+                <Typography variant='body2' sx={{ mt: 1 }}>
                   Reason: {statusHistory.find(h => h.status === 'rejected')?.rejectionReason}
                 </Typography>
               )}
@@ -301,16 +317,16 @@ export function FormStatusWorkflow({
           {/* Available Actions */}
           {availableActions.length > 0 && (
             <Box>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Available Actions
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {availableActions.map((action) => {
+                {availableActions.map(action => {
                   const actionConfig = statusConfig[action];
                   return (
                     <Button
                       key={action}
-                      variant="outlined"
+                      variant='outlined'
                       startIcon={getStatusIcon(action)}
                       onClick={() => handleActionClick(action)}
                       color={actionConfig.color}
@@ -331,16 +347,19 @@ export function FormStatusWorkflow({
       </Card>
 
       {/* Action Confirmation Dialog */}
-      <Dialog open={actionDialogOpen} onClose={() => setActionDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          Confirm Status Change
-        </DialogTitle>
+      <Dialog
+        open={actionDialogOpen}
+        onClose={() => setActionDialogOpen(false)}
+        maxWidth='sm'
+        fullWidth
+      >
+        <DialogTitle>Confirm Status Change</DialogTitle>
         <DialogContent>
-          <Typography variant="body1" sx={{ mb: 2 }}>
+          <Typography variant='body1' sx={{ mb: 2 }}>
             Are you sure you want to change the status to{' '}
             <strong>{selectedAction && statusConfig[selectedAction].label}</strong>?
           </Typography>
-          
+
           {(selectedAction === 'rejected' || selectedAction === 'approved') && (
             <TextField
               label={selectedAction === 'rejected' ? 'Rejection Reason' : 'Approval Comment'}
@@ -348,35 +367,33 @@ export function FormStatusWorkflow({
               rows={3}
               fullWidth
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={e => setComment(e.target.value)}
               required={selectedAction === 'rejected'}
               helperText={
-                selectedAction === 'rejected' 
+                selectedAction === 'rejected'
                   ? 'Please provide a reason for rejection'
                   : 'Optional comment about the approval'
               }
             />
           )}
-          
+
           {selectedAction && !['rejected', 'approved'].includes(selectedAction) && (
             <TextField
-              label="Optional Comment"
+              label='Optional Comment'
               multiline
               rows={2}
               fullWidth
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              helperText="Add any additional notes about this status change"
+              onChange={e => setComment(e.target.value)}
+              helperText='Add any additional notes about this status change'
             />
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setActionDialogOpen(false)}>
-            Cancel
-          </Button>
+          <Button onClick={() => setActionDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={handleConfirmAction}
-            variant="contained"
+            variant='contained'
             disabled={loading || (selectedAction === 'rejected' && !comment.trim())}
             startIcon={loading ? undefined : <SendIcon />}
           >
@@ -386,13 +403,16 @@ export function FormStatusWorkflow({
       </Dialog>
 
       {/* Status History Dialog */}
-      <Dialog open={historyDialogOpen} onClose={() => setHistoryDialogOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          Status History
-        </DialogTitle>
+      <Dialog
+        open={historyDialogOpen}
+        onClose={() => setHistoryDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
+        <DialogTitle>Status History</DialogTitle>
         <DialogContent>
           {statusHistory.length === 0 ? (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               No status history available
             </Typography>
           ) : (
@@ -402,27 +422,25 @@ export function FormStatusWorkflow({
                 return (
                   <TimelineItem key={index}>
                     <TimelineOppositeContent sx={{ minWidth: 120 }}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         {formatTimestamp(item.timestamp)}
                       </Typography>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                      <TimelineDot color={config.color}>
-                        {getStatusIcon(item.status)}
-                      </TimelineDot>
+                      <TimelineDot color={config.color}>{getStatusIcon(item.status)}</TimelineDot>
                       {index < statusHistory.length - 1 && <TimelineConnector />}
                     </TimelineSeparator>
                     <TimelineContent>
-                      <Typography variant="body2" fontWeight="medium">
+                      <Typography variant='body2' fontWeight='medium'>
                         {config.label}
                       </Typography>
                       {item.userName && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant='caption' color='text.secondary'>
                           by {item.userName}
                         </Typography>
                       )}
                       {(item.comment || item.rejectionReason) && (
-                        <Typography variant="body2" sx={{ mt: 0.5, fontStyle: 'italic' }}>
+                        <Typography variant='body2' sx={{ mt: 0.5, fontStyle: 'italic' }}>
                           {item.rejectionReason || item.comment}
                         </Typography>
                       )}
@@ -434,9 +452,7 @@ export function FormStatusWorkflow({
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setHistoryDialogOpen(false)}>
-            Close
-          </Button>
+          <Button onClick={() => setHistoryDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </Box>

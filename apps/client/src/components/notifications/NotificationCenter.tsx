@@ -44,9 +44,9 @@ import {
   Computer as SystemIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { 
-  notificationService, 
-  Notification, 
+import {
+  notificationService,
+  Notification,
   NotificationSettings,
   NotificationType,
   NotificationPriority,
@@ -54,31 +54,46 @@ import {
 
 const getNotificationIcon = (type: NotificationType) => {
   switch (type) {
-    case 'success': return <SuccessIcon color="success" />;
-    case 'warning': return <WarningIcon color="warning" />;
-    case 'error': return <ErrorIcon color="error" />;
-    default: return <InfoIcon color="info" />;
+    case 'success':
+      return <SuccessIcon color='success' />;
+    case 'warning':
+      return <WarningIcon color='warning' />;
+    case 'error':
+      return <ErrorIcon color='error' />;
+    default:
+      return <InfoIcon color='info' />;
   }
 };
 
 const getCategoryIcon = (category: string) => {
   switch (category) {
-    case 'form': return <FormIcon />;
-    case 'worksite': return <WorksiteIcon />;
-    case 'user': return <UserIcon />;
-    case 'equipment': return <EquipmentIcon />;
-    case 'system': return <SystemIcon />;
-    default: return <InfoIcon />;
+    case 'form':
+      return <FormIcon />;
+    case 'worksite':
+      return <WorksiteIcon />;
+    case 'user':
+      return <UserIcon />;
+    case 'equipment':
+      return <EquipmentIcon />;
+    case 'system':
+      return <SystemIcon />;
+    default:
+      return <InfoIcon />;
   }
 };
 
 const getPriorityColor = (priority: NotificationPriority) => {
   switch (priority) {
-    case 'urgent': return 'error';
-    case 'high': return 'warning';
-    case 'medium': return 'info';
-    case 'low': return 'default';
-    default: return 'default';
+    case 'urgent':
+      return 'error';
+    case 'high':
+      return 'warning';
+    case 'medium':
+      return 'info';
+    case 'low':
+      return 'default';
+    default:
+      return 'default';
   }
 };
 
@@ -104,11 +119,7 @@ interface TabPanelProps {
 }
 
 function TabPanel({ children, value, index }: TabPanelProps) {
-  return (
-    <div hidden={value !== index}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  );
+  return <div hidden={value !== index}>{value === index && <Box>{children}</Box>}</div>;
 }
 
 export function NotificationCenter() {
@@ -153,7 +164,7 @@ export function NotificationCenter() {
   });
 
   const updateSettingsMutation = useMutation({
-    mutationFn: (newSettings: Partial<NotificationSettings>) => 
+    mutationFn: (newSettings: Partial<NotificationSettings>) =>
       notificationService.updateSettings(newSettings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notification-settings'] });
@@ -162,7 +173,7 @@ export function NotificationCenter() {
 
   // Real-time notification listening
   useEffect(() => {
-    const unsubscribe = notificationService.subscribe((notification) => {
+    const unsubscribe = notificationService.subscribe(notification => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     });
 
@@ -201,18 +212,19 @@ export function NotificationCenter() {
     if (!notification.isRead) {
       handleMarkAsRead(notification.id);
     }
-    
+
     if (notification.actionUrl) {
       window.open(notification.actionUrl, '_blank');
     }
-    
+
     handleMenuClose();
   };
 
   const filteredNotifications = notifications.filter(notification => {
     if (selectedTab === 0) return !notification.isRead; // Unread
     if (selectedTab === 1) return true; // All
-    if (selectedTab === 2) return notification.priority === 'urgent' || notification.priority === 'high'; // Important
+    if (selectedTab === 2)
+      return notification.priority === 'urgent' || notification.priority === 'high'; // Important
     return true;
   });
 
@@ -233,12 +245,8 @@ export function NotificationCenter() {
 
   return (
     <>
-      <IconButton
-        size="large"
-        color="inherit"
-        onClick={handleMenuOpen}
-      >
-        <Badge badgeContent={unreadCount} color="error">
+      <IconButton size='large' color='inherit' onClick={handleMenuOpen}>
+        <Badge badgeContent={unreadCount} color='error'>
           {unreadCount > 0 ? <NotificationsIcon /> : <NotificationsNoneIcon />}
         </Badge>
       </IconButton>
@@ -248,32 +256,34 @@ export function NotificationCenter() {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
         PaperProps={{
-          sx: { width: 400, maxHeight: 600 }
+          sx: { width: 400, maxHeight: 600 },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">
-              Notifications
-            </Typography>
+            <Typography variant='h6'>Notifications</Typography>
             <Box>
-              <IconButton size="small" onClick={() => setSettingsDialogOpen(true)}>
+              <IconButton size='small' onClick={() => setSettingsDialogOpen(true)}>
                 <SettingsIcon />
               </IconButton>
               {unreadCount > 0 && (
-                <IconButton size="small" onClick={handleMarkAllAsRead}>
+                <IconButton size='small' onClick={handleMarkAllAsRead}>
                   <MarkReadIcon />
                 </IconButton>
               )}
             </Box>
           </Box>
 
-          <Tabs value={selectedTab} onChange={(_, newValue) => setSelectedTab(newValue)} sx={{ mt: 1 }}>
+          <Tabs
+            value={selectedTab}
+            onChange={(_, newValue) => setSelectedTab(newValue)}
+            sx={{ mt: 1 }}
+          >
             <Tab label={`Unread (${unreadCount})`} />
-            <Tab label="All" />
-            <Tab label="Important" />
+            <Tab label='All' />
+            <Tab label='Important' />
           </Tabs>
         </Box>
 
@@ -284,7 +294,7 @@ export function NotificationCenter() {
             </Box>
           ) : filteredNotifications.length === 0 ? (
             <Box sx={{ p: 3, textAlign: 'center' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 No notifications
               </Typography>
             </Box>
@@ -297,7 +307,7 @@ export function NotificationCenter() {
                     onClick={() => handleNotificationClick(notification)}
                     sx={{
                       backgroundColor: notification.isRead ? 'transparent' : 'action.hover',
-                      '&:hover': { backgroundColor: 'action.selected' }
+                      '&:hover': { backgroundColor: 'action.selected' },
                     }}
                   >
                     <ListItemIcon>
@@ -309,23 +319,23 @@ export function NotificationCenter() {
                     <ListItemText
                       primary={
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="subtitle2" noWrap>
+                          <Typography variant='subtitle2' noWrap>
                             {notification.title}
                           </Typography>
                           <Chip
                             label={notification.priority}
-                            size="small"
+                            size='small'
                             color={getPriorityColor(notification.priority)}
-                            variant="outlined"
+                            variant='outlined'
                           />
                         </Box>
                       }
                       secondary={
                         <Box>
-                          <Typography variant="body2" color="text.secondary" noWrap>
+                          <Typography variant='body2' color='text.secondary' noWrap>
                             {notification.message}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant='caption' color='text.secondary'>
                             {formatTimestamp(notification.createdAt)}
                           </Typography>
                         </Box>
@@ -333,13 +343,13 @@ export function NotificationCenter() {
                     />
                     <ListItemSecondaryAction>
                       <IconButton
-                        size="small"
-                        onClick={(e) => {
+                        size='small'
+                        onClick={e => {
                           e.stopPropagation();
                           handleDeleteNotification(notification.id);
                         }}
                       >
-                        <DeleteIcon fontSize="small" />
+                        <DeleteIcon fontSize='small' />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -354,7 +364,7 @@ export function NotificationCenter() {
           <Box sx={{ p: 1, borderTop: 1, borderColor: 'divider' }}>
             <Button
               fullWidth
-              size="small"
+              size='small'
               onClick={() => {
                 // Navigate to full notifications page
                 handleMenuClose();
@@ -367,16 +377,19 @@ export function NotificationCenter() {
       </Menu>
 
       {/* Settings Dialog */}
-      <Dialog open={settingsDialogOpen} onClose={() => setSettingsDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          Notification Settings
-        </DialogTitle>
+      <Dialog
+        open={settingsDialogOpen}
+        onClose={() => setSettingsDialogOpen(false)}
+        maxWidth='sm'
+        fullWidth
+      >
+        <DialogTitle>Notification Settings</DialogTitle>
         <DialogContent>
           {settings && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant='h6' gutterBottom>
                     Email Notifications
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -384,40 +397,46 @@ export function NotificationCenter() {
                       control={
                         <Switch
                           checked={settings.email.enabled}
-                          onChange={(e) => handleSettingsChange('email.enabled', e.target.checked)}
+                          onChange={e => handleSettingsChange('email.enabled', e.target.checked)}
                         />
                       }
-                      label="Enable Email Notifications"
+                      label='Enable Email Notifications'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.email.formStatusChanges}
-                          onChange={(e) => handleSettingsChange('email.formStatusChanges', e.target.checked)}
+                          onChange={e =>
+                            handleSettingsChange('email.formStatusChanges', e.target.checked)
+                          }
                           disabled={!settings.email.enabled}
                         />
                       }
-                      label="Form Status Changes"
+                      label='Form Status Changes'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.email.formAssignments}
-                          onChange={(e) => handleSettingsChange('email.formAssignments', e.target.checked)}
+                          onChange={e =>
+                            handleSettingsChange('email.formAssignments', e.target.checked)
+                          }
                           disabled={!settings.email.enabled}
                         />
                       }
-                      label="Form Assignments"
+                      label='Form Assignments'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.email.equipmentAlerts}
-                          onChange={(e) => handleSettingsChange('email.equipmentAlerts', e.target.checked)}
+                          onChange={e =>
+                            handleSettingsChange('email.equipmentAlerts', e.target.checked)
+                          }
                           disabled={!settings.email.enabled}
                         />
                       }
-                      label="Equipment Alerts"
+                      label='Equipment Alerts'
                     />
                   </Box>
                 </CardContent>
@@ -425,7 +444,7 @@ export function NotificationCenter() {
 
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant='h6' gutterBottom>
                     Push Notifications
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -433,30 +452,32 @@ export function NotificationCenter() {
                       control={
                         <Switch
                           checked={settings.push.enabled}
-                          onChange={(e) => handleSettingsChange('push.enabled', e.target.checked)}
+                          onChange={e => handleSettingsChange('push.enabled', e.target.checked)}
                         />
                       }
-                      label="Enable Push Notifications"
+                      label='Enable Push Notifications'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.push.formStatusChanges}
-                          onChange={(e) => handleSettingsChange('push.formStatusChanges', e.target.checked)}
+                          onChange={e =>
+                            handleSettingsChange('push.formStatusChanges', e.target.checked)
+                          }
                           disabled={!settings.push.enabled}
                         />
                       }
-                      label="Form Status Changes"
+                      label='Form Status Changes'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.push.urgentOnly}
-                          onChange={(e) => handleSettingsChange('push.urgentOnly', e.target.checked)}
+                          onChange={e => handleSettingsChange('push.urgentOnly', e.target.checked)}
                           disabled={!settings.push.enabled}
                         />
                       }
-                      label="Urgent Only"
+                      label='Urgent Only'
                     />
                   </Box>
                 </CardContent>
@@ -464,7 +485,7 @@ export function NotificationCenter() {
 
               <Card>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant='h6' gutterBottom>
                     In-App Notifications
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -472,30 +493,32 @@ export function NotificationCenter() {
                       control={
                         <Switch
                           checked={settings.inApp.enabled}
-                          onChange={(e) => handleSettingsChange('inApp.enabled', e.target.checked)}
+                          onChange={e => handleSettingsChange('inApp.enabled', e.target.checked)}
                         />
                       }
-                      label="Enable In-App Notifications"
+                      label='Enable In-App Notifications'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.inApp.showDesktopNotifications}
-                          onChange={(e) => handleSettingsChange('inApp.showDesktopNotifications', e.target.checked)}
+                          onChange={e =>
+                            handleSettingsChange('inApp.showDesktopNotifications', e.target.checked)
+                          }
                           disabled={!settings.inApp.enabled}
                         />
                       }
-                      label="Desktop Notifications"
+                      label='Desktop Notifications'
                     />
                     <FormControlLabel
                       control={
                         <Switch
                           checked={settings.inApp.playSound}
-                          onChange={(e) => handleSettingsChange('inApp.playSound', e.target.checked)}
+                          onChange={e => handleSettingsChange('inApp.playSound', e.target.checked)}
                           disabled={!settings.inApp.enabled}
                         />
                       }
-                      label="Play Sound"
+                      label='Play Sound'
                     />
                   </Box>
                 </CardContent>
@@ -504,9 +527,7 @@ export function NotificationCenter() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setSettingsDialogOpen(false)}>
-            Close
-          </Button>
+          <Button onClick={() => setSettingsDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </>

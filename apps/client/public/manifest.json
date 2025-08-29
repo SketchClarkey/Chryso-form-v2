@@ -10,7 +10,7 @@
   "background_color": "#ffffff",
   "categories": ["business", "productivity", "utilities"],
   "lang": "en-US",
-  
+
   "icons": [
     {
       "src": "/icon-72x72.png",
@@ -61,7 +61,7 @@
       "purpose": "any maskable"
     }
   ],
-  
+
   "screenshots": [
     {
       "src": "/screenshot-desktop-1.png",
@@ -78,7 +78,7 @@
       "label": "Mobile form creation interface"
     }
   ],
-  
+
   "shortcuts": [
     {
       "name": "Create New Form",
@@ -120,14 +120,14 @@
       ]
     }
   ],
-  
+
   "protocol_handlers": [
     {
       "protocol": "web+chrysoforms",
       "url": "/handle?url=%s"
     }
   ],
-  
+
   "file_handlers": [
     {
       "action": "/import",
@@ -138,7 +138,7 @@
       }
     }
   ],
-  
+
   "related_applications": [
     {
       "platform": "play",
@@ -150,26 +150,21 @@
       "url": "https://apps.apple.com/app/chryso-forms/id123456789"
     }
   ],
-  
+
   "prefer_related_applications": false,
-  
+
   "scope": "/",
   "id": "/",
-  
+
   "capture_links": "existing-client-navigate",
-  
+
   "launch_handler": {
     "client_mode": "focus-existing"
   },
-  
+
   "edge_side_panel": {
     "preferred_width": 400
   },
-  
-  "display_override": [
-    "window-controls-overlay",
-    "standalone",
-    "minimal-ui",
-    "browser"
-  ]
+
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"]
 }

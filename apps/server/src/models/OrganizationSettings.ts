@@ -16,7 +16,7 @@ export interface IOrganizationSettings extends Document {
       workDays: number[]; // Array of work day numbers
       workHours: {
         start: string; // HH:MM format
-        end: string;   // HH:MM format
+        end: string; // HH:MM format
       };
     };
     address: {
@@ -32,7 +32,7 @@ export interface IOrganizationSettings extends Document {
       website?: string;
     };
   };
-  
+
   security: {
     passwordPolicy: {
       minLength: number;
@@ -213,138 +213,151 @@ export interface IOrganizationSettings extends Document {
   updatedBy: Schema.Types.ObjectId;
 }
 
-const organizationSettingsSchema = new Schema<IOrganizationSettings>({
-  organizationId: { type: String, required: true, unique: true },
-  
-  general: {
-    companyName: { type: String, required: true },
-    companyLogo: { type: String },
-    timezone: { type: String, required: true, default: 'UTC' },
-    dateFormat: { type: String, required: true, default: 'MM/dd/yyyy' },
-    timeFormat: { type: String, enum: ['12h', '24h'], default: '12h' },
-    defaultLanguage: { type: String, required: true, default: 'en' },
-    currency: { type: String, required: true, default: 'USD' },
-    fiscalYearStart: { type: Number, min: 1, max: 12, default: 1 },
-    workWeek: {
-      startDay: { type: Number, min: 0, max: 6, default: 1 }, // Monday
-      workDays: { type: [Number], default: [1, 2, 3, 4, 5] }, // Mon-Fri
-      workHours: {
-        start: { type: String, default: '09:00' },
-        end: { type: String, default: '17:00' }
-      }
-    },
-    address: {
-      street: { type: String },
-      city: { type: String },
-      state: { type: String },
-      zipCode: { type: String },
-      country: { type: String, required: true, default: 'US' }
-    },
-    contact: {
-      phone: { type: String },
-      email: { type: String, required: true },
-      website: { type: String }
-    }
-  },
+const organizationSettingsSchema = new Schema<IOrganizationSettings>(
+  {
+    organizationId: { type: String, required: true, unique: true },
 
-  security: {
-    passwordPolicy: {
-      minLength: { type: Number, default: 8, min: 6 },
-      requireUppercase: { type: Boolean, default: true },
-      requireLowercase: { type: Boolean, default: true },
-      requireNumbers: { type: Boolean, default: true },
-      requireSymbols: { type: Boolean, default: false },
-      preventReuse: { type: Number, default: 3, min: 0 },
-      maxAge: { type: Number, default: 0, min: 0 } // 0 = never expires
+    general: {
+      companyName: { type: String, required: true },
+      companyLogo: { type: String },
+      timezone: { type: String, required: true, default: 'UTC' },
+      dateFormat: { type: String, required: true, default: 'MM/dd/yyyy' },
+      timeFormat: { type: String, enum: ['12h', '24h'], default: '12h' },
+      defaultLanguage: { type: String, required: true, default: 'en' },
+      currency: { type: String, required: true, default: 'USD' },
+      fiscalYearStart: { type: Number, min: 1, max: 12, default: 1 },
+      workWeek: {
+        startDay: { type: Number, min: 0, max: 6, default: 1 }, // Monday
+        workDays: { type: [Number], default: [1, 2, 3, 4, 5] }, // Mon-Fri
+        workHours: {
+          start: { type: String, default: '09:00' },
+          end: { type: String, default: '17:00' },
+        },
+      },
+      address: {
+        street: { type: String },
+        city: { type: String },
+        state: { type: String },
+        zipCode: { type: String },
+        country: { type: String, required: true, default: 'US' },
+      },
+      contact: {
+        phone: { type: String },
+        email: { type: String, required: true },
+        website: { type: String },
+      },
     },
-    sessionTimeout: { type: Number, default: 60, min: 5 }, // 60 minutes
-    mfaRequired: { type: Boolean, default: false },
-    ipWhitelist: { type: [String], default: [] },
-    maxLoginAttempts: { type: Number, default: 5, min: 3 },
-    lockoutDuration: { type: Number, default: 30, min: 5 }, // 30 minutes
-    auditLogging: {
-      enabled: { type: Boolean, default: true },
-      logLevel: { type: String, enum: ['basic', 'detailed', 'comprehensive'], default: 'basic' },
-      retentionDays: { type: Number, default: 90, min: 30 }
-    }
-  },
 
-  integrations: {
-    email: {
-      provider: { type: String, enum: ['smtp', 'sendgrid', 'mailgun', 'ses', null], default: null },
-      settings: { type: Schema.Types.Mixed, default: {} },
-      templates: {
-        welcomeEmail: { type: Boolean, default: true },
-        formNotification: { type: Boolean, default: true },
-        passwordReset: { type: Boolean, default: true },
-        systemAlerts: { type: Boolean, default: true }
-      }
+    security: {
+      passwordPolicy: {
+        minLength: { type: Number, default: 8, min: 6 },
+        requireUppercase: { type: Boolean, default: true },
+        requireLowercase: { type: Boolean, default: true },
+        requireNumbers: { type: Boolean, default: true },
+        requireSymbols: { type: Boolean, default: false },
+        preventReuse: { type: Number, default: 3, min: 0 },
+        maxAge: { type: Number, default: 0, min: 0 }, // 0 = never expires
+      },
+      sessionTimeout: { type: Number, default: 60, min: 5 }, // 60 minutes
+      mfaRequired: { type: Boolean, default: false },
+      ipWhitelist: { type: [String], default: [] },
+      maxLoginAttempts: { type: Number, default: 5, min: 3 },
+      lockoutDuration: { type: Number, default: 30, min: 5 }, // 30 minutes
+      auditLogging: {
+        enabled: { type: Boolean, default: true },
+        logLevel: { type: String, enum: ['basic', 'detailed', 'comprehensive'], default: 'basic' },
+        retentionDays: { type: Number, default: 90, min: 30 },
+      },
     },
-    storage: {
-      provider: { type: String, enum: ['local', 's3', 'azure', 'gcp'], default: 'local' },
-      settings: { type: Schema.Types.Mixed, default: {} }
-    },
-    notifications: {
-      slack: { type: Schema.Types.Mixed },
-      teams: { type: Schema.Types.Mixed },
-      webhook: { type: Schema.Types.Mixed }
-    },
-    sso: {
-      enabled: { type: Boolean, default: false },
-      provider: { type: String, enum: ['azure', 'google', 'okta', 'saml'] },
-      settings: { type: Schema.Types.Mixed }
-    }
-  },
 
-  features: {
-    modules: {
-      formBuilder: { type: Boolean, default: true },
-      reporting: { type: Boolean, default: true },
-      analytics: { type: Boolean, default: false },
-      mobileApp: { type: Boolean, default: true },
-      apiAccess: { type: Boolean, default: false },
-      customFields: { type: Boolean, default: true },
-      workflows: { type: Boolean, default: false },
-      integrations: { type: Boolean, default: false }
+    integrations: {
+      email: {
+        provider: {
+          type: String,
+          enum: ['smtp', 'sendgrid', 'mailgun', 'ses', null],
+          default: null,
+        },
+        settings: { type: Schema.Types.Mixed, default: {} },
+        templates: {
+          welcomeEmail: { type: Boolean, default: true },
+          formNotification: { type: Boolean, default: true },
+          passwordReset: { type: Boolean, default: true },
+          systemAlerts: { type: Boolean, default: true },
+        },
+      },
+      storage: {
+        provider: { type: String, enum: ['local', 's3', 'azure', 'gcp'], default: 'local' },
+        settings: { type: Schema.Types.Mixed, default: {} },
+      },
+      notifications: {
+        slack: { type: Schema.Types.Mixed },
+        teams: { type: Schema.Types.Mixed },
+        webhook: { type: Schema.Types.Mixed },
+      },
+      sso: {
+        enabled: { type: Boolean, default: false },
+        provider: { type: String, enum: ['azure', 'google', 'okta', 'saml'] },
+        settings: { type: Schema.Types.Mixed },
+      },
     },
-    limits: {
-      maxUsers: { type: Number, default: 50 },
-      maxForms: { type: Number, default: 100 },
-      storageQuota: { type: Number, default: 10 }, // 10 GB
-      apiCallsPerMonth: { type: Number, default: 10000 }
-    }
-  },
 
-  customization: {
-    theme: {
-      primaryColor: { type: String, default: '#1976d2' },
-      secondaryColor: { type: String, default: '#dc004e' },
-      logoUrl: { type: String },
-      faviconUrl: { type: String }
+    features: {
+      modules: {
+        formBuilder: { type: Boolean, default: true },
+        reporting: { type: Boolean, default: true },
+        analytics: { type: Boolean, default: false },
+        mobileApp: { type: Boolean, default: true },
+        apiAccess: { type: Boolean, default: false },
+        customFields: { type: Boolean, default: true },
+        workflows: { type: Boolean, default: false },
+        integrations: { type: Boolean, default: false },
+      },
+      limits: {
+        maxUsers: { type: Number, default: 50 },
+        maxForms: { type: Number, default: 100 },
+        storageQuota: { type: Number, default: 10 }, // 10 GB
+        apiCallsPerMonth: { type: Number, default: 10000 },
+      },
     },
-    branding: {
-      showPoweredBy: { type: Boolean, default: true },
-      customFooter: { type: String },
-      customHeader: { type: String }
-    },
-    customFields: [{
-      id: { type: String, required: true },
-      name: { type: String, required: true },
-      type: { type: String, enum: ['text', 'number', 'date', 'boolean', 'select', 'multiselect'], required: true },
-      options: [String],
-      required: { type: Boolean, default: false },
-      defaultValue: Schema.Types.Mixed
-    }]
-  },
 
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
-}, {
-  timestamps: true,
-  collection: 'organizationSettings'
-});
+    customization: {
+      theme: {
+        primaryColor: { type: String, default: '#1976d2' },
+        secondaryColor: { type: String, default: '#dc004e' },
+        logoUrl: { type: String },
+        faviconUrl: { type: String },
+      },
+      branding: {
+        showPoweredBy: { type: Boolean, default: true },
+        customFooter: { type: String },
+        customHeader: { type: String },
+      },
+      customFields: [
+        {
+          id: { type: String, required: true },
+          name: { type: String, required: true },
+          type: {
+            type: String,
+            enum: ['text', 'number', 'date', 'boolean', 'select', 'multiselect'],
+            required: true,
+          },
+          options: [String],
+          required: { type: Boolean, default: false },
+          defaultValue: Schema.Types.Mixed,
+        },
+      ],
+    },
+
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  },
+  {
+    timestamps: true,
+    collection: 'organizationSettings',
+  }
+);
 
 // Indexes
 organizationSettingsSchema.index({ organizationId: 1 });
@@ -352,11 +365,14 @@ organizationSettingsSchema.index({ createdAt: 1 });
 organizationSettingsSchema.index({ updatedAt: 1 });
 
 // Pre-save middleware to update the updatedAt field
-organizationSettingsSchema.pre('save', function(next) {
+organizationSettingsSchema.pre('save', function (next) {
   if (this.isModified() && !this.isNew) {
     this.updatedAt = new Date();
   }
   next();
 });
 
-export const OrganizationSettings = model<IOrganizationSettings>('OrganizationSettings', organizationSettingsSchema);
+export const OrganizationSettings = model<IOrganizationSettings>(
+  'OrganizationSettings',
+  organizationSettingsSchema
+);

@@ -135,12 +135,12 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
       <Card sx={{ mb: 3 }}>
         <CardHeader
           avatar={<FeaturesIcon />}
-          title="Feature Modules"
-          subheader="Enable or disable specific features for your organization"
+          title='Feature Modules'
+          subheader='Enable or disable specific features for your organization'
         />
         <CardContent>
           <Grid container spacing={3}>
-            {modules.map((module) => (
+            {modules.map(module => (
               <Grid item xs={12} md={6} key={module.key}>
                 <Box
                   sx={{
@@ -155,31 +155,31 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                 >
                   <Box sx={{ color: 'primary.main', mt: 0.5 }}>{module.icon}</Box>
                   <Box sx={{ flex: 1 }}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      <Typography variant="subtitle1" fontWeight="medium">
+                    <Box display='flex' alignItems='center' justifyContent='space-between'>
+                      <Typography variant='subtitle1' fontWeight='medium'>
                         {module.name}
                       </Typography>
                       <FormControlLabel
                         control={
                           <Switch
                             checked={settings?.modules?.[module.key] !== false}
-                            onChange={(e) => handleModuleChange(module.key, e.target.checked)}
+                            onChange={e => handleModuleChange(module.key, e.target.checked)}
                             disabled={module.required}
                           />
                         }
-                        label=""
+                        label=''
                         sx={{ m: 0 }}
                       />
                     </Box>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography variant='body2' color='text.secondary' gutterBottom>
                       {module.description}
                     </Typography>
                     {module.required && (
                       <Chip
-                        label="Required"
-                        size="small"
-                        color="primary"
-                        variant="outlined"
+                        label='Required'
+                        size='small'
+                        color='primary'
+                        variant='outlined'
                         icon={<CheckIcon />}
                       />
                     )}
@@ -189,10 +189,11 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
             ))}
           </Grid>
 
-          <Alert severity="info" sx={{ mt: 3 }}>
-            <Typography variant="body2">
-              <strong>Note:</strong> Disabling modules will hide related features from users but won't delete existing data.
-              Re-enabling a module will restore access to all previous data.
+          <Alert severity='info' sx={{ mt: 3 }}>
+            <Typography variant='body2'>
+              <strong>Note:</strong> Disabling modules will hide related features from users but
+              won't delete existing data. Re-enabling a module will restore access to all previous
+              data.
             </Typography>
           </Alert>
         </CardContent>
@@ -201,161 +202,203 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
       {/* Usage Limits */}
       <Card>
         <CardHeader
-          title="Usage Limits"
-          subheader="Configure resource limits for your organization"
+          title='Usage Limits'
+          subheader='Configure resource limits for your organization'
         />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Maximum Users
               </Typography>
               <TextField
-                type="number"
+                type='number'
                 value={settings?.limits?.maxUsers || 50}
-                onChange={(e) => handleLimitChange('maxUsers', parseInt(e.target.value) || 50)}
+                onChange={e => handleLimitChange('maxUsers', parseInt(e.target.value) || 50)}
                 fullWidth
                 inputProps={{ min: 1, max: 10000 }}
               />
               <Box sx={{ mt: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="caption" color="text.secondary">
+                <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                  <Typography variant='caption' color='text.secondary'>
                     Current: {currentUsage.users} users
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant='caption'
                     color={
                       getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50) >= 90
                         ? 'error.main'
                         : 'text.secondary'
                     }
                   >
-                    {Math.round(getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50))}% used
+                    {Math.round(
+                      getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50)
+                    )}
+                    % used
                   </Typography>
                 </Stack>
                 <LinearProgress
-                  variant="determinate"
+                  variant='determinate'
                   value={getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50)}
-                  color={getUsageColor(getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50))}
+                  color={getUsageColor(
+                    getUsagePercentage(currentUsage.users, settings?.limits?.maxUsers || 50)
+                  )}
                   sx={{ mt: 0.5 }}
                 />
               </Box>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Maximum Forms
               </Typography>
               <TextField
-                type="number"
+                type='number'
                 value={settings?.limits?.maxForms || 100}
-                onChange={(e) => handleLimitChange('maxForms', parseInt(e.target.value) || 100)}
+                onChange={e => handleLimitChange('maxForms', parseInt(e.target.value) || 100)}
                 fullWidth
                 inputProps={{ min: 10, max: 50000 }}
               />
               <Box sx={{ mt: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="caption" color="text.secondary">
+                <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                  <Typography variant='caption' color='text.secondary'>
                     Current: {currentUsage.forms} forms
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant='caption'
                     color={
-                      getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100) >= 90
+                      getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100) >=
+                      90
                         ? 'error.main'
                         : 'text.secondary'
                     }
                   >
-                    {Math.round(getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100))}% used
+                    {Math.round(
+                      getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100)
+                    )}
+                    % used
                   </Typography>
                 </Stack>
                 <LinearProgress
-                  variant="determinate"
+                  variant='determinate'
                   value={getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100)}
-                  color={getUsageColor(getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100))}
+                  color={getUsageColor(
+                    getUsagePercentage(currentUsage.forms, settings?.limits?.maxForms || 100)
+                  )}
                   sx={{ mt: 0.5 }}
                 />
               </Box>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Storage Quota (GB)
               </Typography>
               <TextField
-                type="number"
+                type='number'
                 value={settings?.limits?.storageQuota || 10}
-                onChange={(e) => handleLimitChange('storageQuota', parseInt(e.target.value) || 10)}
+                onChange={e => handleLimitChange('storageQuota', parseInt(e.target.value) || 10)}
                 fullWidth
                 inputProps={{ min: 1, max: 1000 }}
               />
               <Box sx={{ mt: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="caption" color="text.secondary">
+                <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                  <Typography variant='caption' color='text.secondary'>
                     Current: {currentUsage.storage} GB used
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant='caption'
                     color={
-                      getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10) >= 90
+                      getUsagePercentage(
+                        currentUsage.storage,
+                        settings?.limits?.storageQuota || 10
+                      ) >= 90
                         ? 'error.main'
                         : 'text.secondary'
                     }
                   >
-                    {Math.round(getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10))}% used
+                    {Math.round(
+                      getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10)
+                    )}
+                    % used
                   </Typography>
                 </Stack>
                 <LinearProgress
-                  variant="determinate"
-                  value={getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10)}
-                  color={getUsageColor(getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10))}
+                  variant='determinate'
+                  value={getUsagePercentage(
+                    currentUsage.storage,
+                    settings?.limits?.storageQuota || 10
+                  )}
+                  color={getUsageColor(
+                    getUsagePercentage(currentUsage.storage, settings?.limits?.storageQuota || 10)
+                  )}
                   sx={{ mt: 0.5 }}
                 />
               </Box>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 API Calls per Month
               </Typography>
               <TextField
-                type="number"
+                type='number'
                 value={settings?.limits?.apiCallsPerMonth || 10000}
-                onChange={(e) => handleLimitChange('apiCallsPerMonth', parseInt(e.target.value) || 10000)}
+                onChange={e =>
+                  handleLimitChange('apiCallsPerMonth', parseInt(e.target.value) || 10000)
+                }
                 fullWidth
                 inputProps={{ min: 1000, max: 10000000 }}
                 disabled={!settings?.modules?.apiAccess}
               />
               <Box sx={{ mt: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="caption" color="text.secondary">
+                <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                  <Typography variant='caption' color='text.secondary'>
                     This month: {currentUsage.apiCalls} calls
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant='caption'
                     color={
-                      getUsagePercentage(currentUsage.apiCalls, settings?.limits?.apiCallsPerMonth || 10000) >= 90
+                      getUsagePercentage(
+                        currentUsage.apiCalls,
+                        settings?.limits?.apiCallsPerMonth || 10000
+                      ) >= 90
                         ? 'error.main'
                         : 'text.secondary'
                     }
                   >
-                    {Math.round(getUsagePercentage(currentUsage.apiCalls, settings?.limits?.apiCallsPerMonth || 10000))}% used
+                    {Math.round(
+                      getUsagePercentage(
+                        currentUsage.apiCalls,
+                        settings?.limits?.apiCallsPerMonth || 10000
+                      )
+                    )}
+                    % used
                   </Typography>
                 </Stack>
                 <LinearProgress
-                  variant="determinate"
-                  value={getUsagePercentage(currentUsage.apiCalls, settings?.limits?.apiCallsPerMonth || 10000)}
-                  color={getUsageColor(getUsagePercentage(currentUsage.apiCalls, settings?.limits?.apiCallsPerMonth || 10000))}
+                  variant='determinate'
+                  value={getUsagePercentage(
+                    currentUsage.apiCalls,
+                    settings?.limits?.apiCallsPerMonth || 10000
+                  )}
+                  color={getUsageColor(
+                    getUsagePercentage(
+                      currentUsage.apiCalls,
+                      settings?.limits?.apiCallsPerMonth || 10000
+                    )
+                  )}
                   sx={{ mt: 0.5 }}
                 />
               </Box>
             </Grid>
           </Grid>
 
-          <Alert severity="warning" sx={{ mt: 3 }} icon={<WarningIcon />}>
-            <Typography variant="body2">
-              <strong>Important:</strong> When limits are reached, new users won't be able to create additional resources.
-              Existing resources will continue to function normally. Consider upgrading your plan if you frequently reach these limits.
+          <Alert severity='warning' sx={{ mt: 3 }} icon={<WarningIcon />}>
+            <Typography variant='body2'>
+              <strong>Important:</strong> When limits are reached, new users won't be able to create
+              additional resources. Existing resources will continue to function normally. Consider
+              upgrading your plan if you frequently reach these limits.
             </Typography>
           </Alert>
         </CardContent>

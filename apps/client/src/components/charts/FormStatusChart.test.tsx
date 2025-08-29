@@ -5,9 +5,7 @@ import theme from '../../theme';
 import { FormStatusChart } from './FormStatusChart';
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider theme={theme}>
-    {children}
-  </ThemeProvider>
+  <ThemeProvider theme={theme}>{children}</ThemeProvider>
 );
 
 describe('FormStatusChart', () => {
@@ -35,7 +33,7 @@ describe('FormStatusChart', () => {
   it('renders with custom title', () => {
     render(
       <TestWrapper>
-        <FormStatusChart data={mockData} title="Custom Chart Title" />
+        <FormStatusChart data={mockData} title='Custom Chart Title' />
       </TestWrapper>
     );
 
@@ -66,7 +64,7 @@ describe('FormStatusChart', () => {
   it('renders with different chart types', () => {
     render(
       <TestWrapper>
-        <FormStatusChart data={mockData} type="bar" />
+        <FormStatusChart data={mockData} type='bar' />
       </TestWrapper>
     );
 

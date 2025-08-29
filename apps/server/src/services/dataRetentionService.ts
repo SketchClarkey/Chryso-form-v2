@@ -49,21 +49,21 @@ export class DataRetentionService {
   // Execute all ready policies
   public async executeReadyPolicies(): Promise<RetentionExecutionResult[]> {
     console.log('🗄️ Starting data retention policy execution...');
-    
+
     try {
       const readyPolicies = await DataRetentionPolicy.findReadyForExecution();
       console.log(`Found ${readyPolicies.length} policies ready for execution`);
-      
+
       const results: RetentionExecutionResult[] = [];
-      
+
       for (const policy of readyPolicies) {
         const result = await this.executePolicy(policy);
         results.push(result);
-        
+
         // Update policy execution stats
         await this.updatePolicyStats(policy, result);
       }
-      
+
       console.log('🗄️ Data retention policy execution completed');
       return results;
     } catch (error) {
@@ -90,9 +90,9 @@ export class DataRetentionService {
             recordsProcessed: 0,
             recordsArchived: 0,
             recordsDeleted: 0,
-            archiveSize: 0
+            archiveSize: 0,
           },
-          executionTime: 0
+          executionTime: 0,
         };
       }
 
@@ -125,7 +125,7 @@ export class DataRetentionService {
       }
 
       const executionTime = Date.now() - startTime;
-      
+
       // Log audit event
       await this.logRetentionEvent(policy, results, executionTime);
 
@@ -134,13 +134,12 @@ export class DataRetentionService {
         policyName: policy.name,
         success: true,
         results,
-        executionTime
+        executionTime,
       };
-
     } catch (error: any) {
       const executionTime = Date.now() - startTime;
       console.error(`Failed to execute policy ${policy.name}:`, error);
-      
+
       return {
         policyId: policy._id.toString(),
         policyName: policy.name,
@@ -151,10 +150,10 @@ export class DataRetentionService {
           recordsArchived: 0,
           recordsDeleted: 0,
           archiveSize: 0,
-          error: error.message
+          error: error.message,
         },
         executionTime,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -164,7 +163,7 @@ export class DataRetentionService {
     const cutoffDate = policy.getCutoffDate();
     const query: any = {
       createdAt: { $lt: cutoffDate },
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     // Apply additional conditions
@@ -184,14 +183,14 @@ export class DataRetentionService {
 
     // Delete the records
     const deleteResult = await Form.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: forms.length,
       recordsArchived: policy.archiveBeforeDelete ? forms.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
@@ -200,7 +199,7 @@ export class DataRetentionService {
     const cutoffDate = policy.getCutoffDate();
     const query: any = {
       timestamp: { $lt: cutoffDate },
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     this.applyConditions(query, policy.conditions);
@@ -218,14 +217,14 @@ export class DataRetentionService {
     }
 
     const deleteResult = await AuditLog.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: auditLogs.length,
       recordsArchived: policy.archiveBeforeDelete ? auditLogs.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
@@ -234,7 +233,7 @@ export class DataRetentionService {
     const cutoffDate = policy.getCutoffDate();
     const query: any = {
       createdAt: { $lt: cutoffDate },
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     this.applyConditions(query, policy.conditions);
@@ -252,14 +251,14 @@ export class DataRetentionService {
     }
 
     const deleteResult = await Report.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: reports.length,
       recordsArchived: policy.archiveBeforeDelete ? reports.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
@@ -269,7 +268,7 @@ export class DataRetentionService {
     const query: any = {
       lastLogin: { $lt: cutoffDate },
       isActive: false,
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     this.applyConditions(query, policy.conditions);
@@ -287,14 +286,14 @@ export class DataRetentionService {
     }
 
     const deleteResult = await User.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: users.length,
       recordsArchived: policy.archiveBeforeDelete ? users.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
@@ -304,7 +303,7 @@ export class DataRetentionService {
     const query: any = {
       createdAt: { $lt: cutoffDate },
       isActive: false, // Only delete inactive templates
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     this.applyConditions(query, policy.conditions);
@@ -322,14 +321,14 @@ export class DataRetentionService {
     }
 
     const deleteResult = await Template.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: templates.length,
       recordsArchived: policy.archiveBeforeDelete ? templates.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
@@ -338,7 +337,7 @@ export class DataRetentionService {
     const cutoffDate = policy.getCutoffDate();
     const query: any = {
       lastAccessed: { $lt: cutoffDate },
-      organizationId: policy.organizationId
+      organizationId: policy.organizationId,
     };
 
     this.applyConditions(query, policy.conditions);
@@ -356,32 +355,39 @@ export class DataRetentionService {
     }
 
     const deleteResult = await Dashboard.deleteMany(query);
-    
+
     return {
       success: true,
       recordsProcessed: dashboards.length,
       recordsArchived: policy.archiveBeforeDelete ? dashboards.length : 0,
       recordsDeleted: deleteResult.deletedCount || 0,
       archiveSize,
-      archiveLocation
+      archiveLocation,
     };
   }
 
   // Process all entities retention
   private async processAllEntitiesRetention(policy: IDataRetentionPolicy): Promise<ArchiveResult> {
     const results: ArchiveResult[] = [];
-    
+
     // Create individual policies for each entity type
-    const entityTypes: Array<IDataRetentionPolicy['entityType']> = ['form', 'auditLog', 'report', 'user', 'template', 'dashboard'];
-    
+    const entityTypes: Array<IDataRetentionPolicy['entityType']> = [
+      'form',
+      'auditLog',
+      'report',
+      'user',
+      'template',
+      'dashboard',
+    ];
+
     for (const entityType of entityTypes) {
       if (entityType === 'all') continue;
-      
+
       const tempPolicy = { ...policy.toObject(), entityType } as IDataRetentionPolicy;
       tempPolicy.getCutoffDate = policy.getCutoffDate.bind(policy);
-      
+
       let result: ArchiveResult;
-      
+
       switch (entityType) {
         case 'form':
           result = await this.processFormRetention(tempPolicy);
@@ -404,17 +410,17 @@ export class DataRetentionService {
         default:
           continue;
       }
-      
+
       results.push(result);
     }
-    
+
     // Combine results
     return {
       success: results.every(r => r.success),
       recordsProcessed: results.reduce((sum, r) => sum + r.recordsProcessed, 0),
       recordsArchived: results.reduce((sum, r) => sum + r.recordsArchived, 0),
       recordsDeleted: results.reduce((sum, r) => sum + r.recordsDeleted, 0),
-      archiveSize: results.reduce((sum, r) => sum + r.archiveSize, 0)
+      archiveSize: results.reduce((sum, r) => sum + r.archiveSize, 0),
     };
   }
 
@@ -447,18 +453,22 @@ export class DataRetentionService {
   }
 
   // Archive data to file system
-  private async archiveData(data: any[], entityType: string, policy: IDataRetentionPolicy): Promise<{ location: string; size: number }> {
+  private async archiveData(
+    data: any[],
+    entityType: string,
+    policy: IDataRetentionPolicy
+  ): Promise<{ location: string; size: number }> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const orgId = policy.organizationId.toString();
     const archiveDir = policy.archiveLocation || path.join(process.cwd(), 'archives', orgId);
-    
+
     // Ensure archive directory exists
     await fs.mkdir(archiveDir, { recursive: true });
-    
+
     const fileName = `${entityType}-${timestamp}`;
     let filePath: string;
     let size = 0;
-    
+
     switch (policy.archiveFormat) {
       case 'json':
         filePath = path.join(archiveDir, `${fileName}.json`);
@@ -466,45 +476,41 @@ export class DataRetentionService {
         await fs.writeFile(filePath, jsonData);
         size = Buffer.byteLength(jsonData);
         break;
-        
+
       case 'csv':
         filePath = path.join(archiveDir, `${fileName}.csv`);
         const csvData = this.convertToCSV(data);
         await fs.writeFile(filePath, csvData);
         size = Buffer.byteLength(csvData);
         break;
-        
+
       case 'compressed':
       default:
         filePath = path.join(archiveDir, `${fileName}.json.gz`);
         const compressedData = JSON.stringify(data);
-        
+
         const writeStream = createWriteStream(filePath);
         const gzipStream = createGzip();
-        
-        await pipeline(
-          require('stream').Readable.from([compressedData]),
-          gzipStream,
-          writeStream
-        );
-        
+
+        await pipeline(require('stream').Readable.from([compressedData]), gzipStream, writeStream);
+
         const stats = await fs.stat(filePath);
         size = stats.size;
         break;
     }
-    
+
     console.log(`Archived ${data.length} ${entityType} records to ${filePath} (${size} bytes)`);
-    
+
     return { location: filePath, size };
   }
 
   // Convert data to CSV format
   private convertToCSV(data: any[]): string {
     if (data.length === 0) return '';
-    
+
     const headers = Object.keys(data[0]);
     const csvRows = [headers.join(',')];
-    
+
     data.forEach(record => {
       const row = headers.map(header => {
         let value = record[header];
@@ -516,35 +522,42 @@ export class DataRetentionService {
       });
       csvRows.push(row.join(','));
     });
-    
+
     return csvRows.join('\n');
   }
 
   // Update policy execution statistics
-  private async updatePolicyStats(policy: IDataRetentionPolicy, result: RetentionExecutionResult): Promise<void> {
+  private async updatePolicyStats(
+    policy: IDataRetentionPolicy,
+    result: RetentionExecutionResult
+  ): Promise<void> {
     const updateData: any = {
-      'stats.lastExecuted': new Date()
+      'stats.lastExecuted': new Date(),
     };
-    
+
     if (result.success) {
       updateData.$inc = {
         'stats.recordsArchived': result.results.recordsArchived,
         'stats.recordsDeleted': result.results.recordsDeleted,
-        'stats.totalSizeArchived': result.results.archiveSize
+        'stats.totalSizeArchived': result.results.archiveSize,
       };
     } else {
       updateData.$inc = {
-        'stats.errors.count': 1
+        'stats.errors.count': 1,
       };
       updateData['stats.errors.lastError'] = result.error;
       updateData['stats.errors.lastErrorAt'] = new Date();
     }
-    
+
     await DataRetentionPolicy.findByIdAndUpdate(policy._id, updateData);
   }
 
   // Log retention event for audit
-  private async logRetentionEvent(policy: IDataRetentionPolicy, result: ArchiveResult, executionTime: number): Promise<void> {
+  private async logRetentionEvent(
+    policy: IDataRetentionPolicy,
+    result: ArchiveResult,
+    executionTime: number
+  ): Promise<void> {
     try {
       const context = {
         organizationId: policy.organizationId.toString(),
@@ -555,9 +568,9 @@ export class DataRetentionService {
         ipAddress: '127.0.0.1',
         userAgent: 'Data Retention Service',
         sessionId: `retention-${Date.now()}`,
-        requestId: `ret-${policy._id}-${Date.now()}`
+        requestId: `ret-${policy._id}-${Date.now()}`,
       };
-      
+
       await this.auditService.logEvent(context, {
         eventType: 'delete',
         action: 'execute_retention_policy',
@@ -575,14 +588,14 @@ export class DataRetentionService {
           archiveSize: result.archiveSize,
           archiveLocation: result.archiveLocation,
           executionTime,
-          success: result.success
+          success: result.success,
         },
         severity: result.success ? 'low' : 'high',
         riskLevel: result.recordsDeleted > 1000 ? 'medium' : 'low',
         dataClassification: 'internal',
         status: result.success ? 'success' : 'failure',
         duration: executionTime,
-        tags: ['retention', 'archive', 'deletion', policy.entityType]
+        tags: ['retention', 'archive', 'deletion', policy.entityType],
       });
     } catch (error) {
       console.error('Failed to log retention audit event:', error);
@@ -592,7 +605,7 @@ export class DataRetentionService {
   // Get retention statistics
   public async getRetentionStatistics(organizationId: string): Promise<any> {
     const policies = await DataRetentionPolicy.find({ organizationId }).lean();
-    
+
     const stats = {
       totalPolicies: policies.length,
       activePolicies: policies.filter(p => p.isActive).length,
@@ -600,16 +613,22 @@ export class DataRetentionService {
       totalRecordsDeleted: policies.reduce((sum, p) => sum + p.stats.recordsDeleted, 0),
       totalSizeArchived: policies.reduce((sum, p) => sum + p.stats.totalSizeArchived, 0),
       totalErrors: policies.reduce((sum, p) => sum + p.stats.errors.count, 0),
-      lastExecution: policies.reduce((latest, p) => {
-        if (!p.stats.lastExecuted) return latest;
-        return !latest || p.stats.lastExecuted > latest ? p.stats.lastExecuted : latest;
-      }, null as Date | null),
-      policiesByEntityType: policies.reduce((acc, p) => {
-        acc[p.entityType] = (acc[p.entityType] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>)
+      lastExecution: policies.reduce(
+        (latest, p) => {
+          if (!p.stats.lastExecuted) return latest;
+          return !latest || p.stats.lastExecuted > latest ? p.stats.lastExecuted : latest;
+        },
+        null as Date | null
+      ),
+      policiesByEntityType: policies.reduce(
+        (acc, p) => {
+          acc[p.entityType] = (acc[p.entityType] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
     };
-    
+
     return stats;
   }
 }

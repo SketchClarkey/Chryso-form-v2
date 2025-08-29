@@ -72,7 +72,7 @@ export const handleUploadError = (error: any, req: Request, res: any, next: any)
         code: 'FILE_TOO_LARGE',
       });
     }
-    
+
     if (error.code === 'LIMIT_FILE_COUNT') {
       return res.status(400).json({
         success: false,
@@ -80,7 +80,7 @@ export const handleUploadError = (error: any, req: Request, res: any, next: any)
         code: 'TOO_MANY_FILES',
       });
     }
-    
+
     if (error.code === 'LIMIT_UNEXPECTED_FILE') {
       return res.status(400).json({
         success: false,
@@ -89,7 +89,7 @@ export const handleUploadError = (error: any, req: Request, res: any, next: any)
       });
     }
   }
-  
+
   if (error.message.includes('not supported')) {
     return res.status(400).json({
       success: false,
@@ -97,7 +97,7 @@ export const handleUploadError = (error: any, req: Request, res: any, next: any)
       code: 'UNSUPPORTED_FILE_TYPE',
     });
   }
-  
+
   return res.status(500).json({
     success: false,
     message: 'File upload failed.',

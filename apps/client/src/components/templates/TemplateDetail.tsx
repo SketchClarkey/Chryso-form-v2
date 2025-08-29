@@ -42,7 +42,7 @@ interface TabPanelProps {
 function TabPanel({ children, value, index, ...other }: TabPanelProps) {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`template-tabpanel-${index}`}
       aria-labelledby={`template-tab-${index}`}
@@ -64,7 +64,11 @@ export function TemplateDetail() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Fetch template details
-  const { data: template, isLoading, error } = useQuery({
+  const {
+    data: template,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['template', id],
     queryFn: async () => {
       const response = await api.get(`/templates/${id}`);
@@ -97,7 +101,7 @@ export function TemplateDetail() {
       });
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
       toast.showSuccess('Template cloned successfully');
       navigate(`/templates/${data.data.template._id}/edit`);
@@ -127,7 +131,7 @@ export function TemplateDetail() {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -135,23 +139,27 @@ export function TemplateDetail() {
 
   if (error || !template) {
     return (
-      <Alert severity="error">
-        Template not found or you don't have permission to view it.
-      </Alert>
+      <Alert severity='error'>Template not found or you don't have permission to view it.</Alert>
     );
   }
 
-  const canEdit = user?.role === 'admin' || template.permissions?.canEdit.includes(user?.role || '');
+  const canEdit =
+    user?.role === 'admin' || template.permissions?.canEdit.includes(user?.role || '');
   const canDelete = user?.role === 'admin';
   const canApprove = user?.role === 'admin' || user?.role === 'manager';
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'draft': return 'warning';
-      case 'archived': return 'default';
-      case 'pending_approval': return 'info';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'draft':
+        return 'warning';
+      case 'archived':
+        return 'default';
+      case 'pending_approval':
+        return 'info';
+      default:
+        return 'default';
     }
   };
 
@@ -168,7 +176,7 @@ export function TemplateDetail() {
       const response = await api.get(`/templates/${id}/export`, {
         responseType: 'blob',
       });
-      
+
       const blob = new Blob([response.data], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -178,7 +186,7 @@ export function TemplateDetail() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       toast.showSuccess('Template exported successfully');
     } catch (error) {
       toast.showError('Failed to export template');
@@ -189,36 +197,33 @@ export function TemplateDetail() {
   return (
     <Box>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
+      <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={3}>
         <Box>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant='h4' gutterBottom>
             {template.name}
           </Typography>
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
+          <Box display='flex' alignItems='center' gap={2} mb={2}>
             <Chip
               label={template.status.replace('_', ' ').toUpperCase()}
               color={getStatusColor(template.status) as any}
-              variant="filled"
+              variant='filled'
             />
-            <Chip
-              label={`Version ${template.version}`}
-              variant="outlined"
-            />
+            <Chip label={`Version ${template.version}`} variant='outlined' />
             <Chip
               label={template.category.charAt(0).toUpperCase() + template.category.slice(1)}
-              variant="outlined"
+              variant='outlined'
             />
           </Box>
           {template.description && (
-            <Typography variant="body1" color="text.secondary" paragraph>
+            <Typography variant='body1' color='text.secondary' paragraph>
               {template.description}
             </Typography>
           )}
         </Box>
 
-        <Box display="flex" gap={1}>
+        <Box display='flex' gap={1}>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<ViewIcon />}
             onClick={() => navigate(`/templates/${id}/preview`)}
           >
@@ -226,7 +231,7 @@ export function TemplateDetail() {
           </Button>
           {canEdit && (
             <Button
-              variant="contained"
+              variant='contained'
               startIcon={<EditIcon />}
               onClick={() => navigate(`/templates/${id}/edit`)}
             >
@@ -244,51 +249,51 @@ export function TemplateDetail() {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant='subtitle2' color='text.secondary'>
                 Created By
               </Typography>
-              <Typography variant="body1">
+              <Typography variant='body1'>
                 {template.createdBy?.firstName} {template.createdBy?.lastName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant='caption' color='text.secondary'>
                 {new Date(template.createdAt).toLocaleDateString()}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant='subtitle2' color='text.secondary'>
                 Last Modified
               </Typography>
-              <Typography variant="body1">
+              <Typography variant='body1'>
                 {template.lastModifiedBy?.firstName} {template.lastModifiedBy?.lastName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant='caption' color='text.secondary'>
                 {new Date(template.updatedAt).toLocaleDateString()}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant='subtitle2' color='text.secondary'>
                 Usage Statistics
               </Typography>
-              <Typography variant="body1">
+              <Typography variant='body1'>
                 {template.usage?.totalForms || 0} forms created
               </Typography>
               {template.usage?.lastUsed && (
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   Last used: {new Date(template.usage.lastUsed).toLocaleDateString()}
                 </Typography>
               )}
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant='subtitle2' color='text.secondary'>
                 Tags
               </Typography>
-              <Box display="flex" flexWrap="wrap" gap={0.5}>
+              <Box display='flex' flexWrap='wrap' gap={0.5}>
                 {template.tags?.length > 0 ? (
                   template.tags.map((tag: string, index: number) => (
-                    <Chip key={index} label={tag} size="small" variant="outlined" />
+                    <Chip key={index} label={tag} size='small' variant='outlined' />
                   ))
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant='body2' color='text.secondary'>
                     No tags
                   </Typography>
                 )}
@@ -301,9 +306,9 @@ export function TemplateDetail() {
       {/* Tabs */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
-          <Tab label="Template Structure" />
-          <Tab label="Approval Workflow" />
-          <Tab label="Version History" />
+          <Tab label='Template Structure' />
+          <Tab label='Approval Workflow' />
+          <Tab label='Version History' />
         </Tabs>
       </Box>
 
@@ -312,37 +317,41 @@ export function TemplateDetail() {
         {/* Template Structure */}
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Template Structure
             </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              {template.sections?.length || 0} sections, {' '}
-              {template.sections?.reduce((total: number, section: any) => total + (section.fields?.length || 0), 0) || 0} fields
+            <Typography variant='body2' color='text.secondary' gutterBottom>
+              {template.sections?.length || 0} sections,{' '}
+              {template.sections?.reduce(
+                (total: number, section: any) => total + (section.fields?.length || 0),
+                0
+              ) || 0}{' '}
+              fields
             </Typography>
-            
+
             {template.sections?.map((section: any, index: number) => (
-              <Card key={section.id} variant="outlined" sx={{ mt: 2 }}>
+              <Card key={section.id} variant='outlined' sx={{ mt: 2 }}>
                 <CardContent>
-                  <Typography variant="subtitle1" gutterBottom>
+                  <Typography variant='subtitle1' gutterBottom>
                     {section.title}
                   </Typography>
                   {section.description && (
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography variant='body2' color='text.secondary' gutterBottom>
                       {section.description}
                     </Typography>
                   )}
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant='caption' color='text.secondary'>
                     {section.fields?.length || 0} fields
                   </Typography>
-                  
+
                   {section.fields?.length > 0 && (
                     <Box mt={2}>
                       {section.fields.map((field: any) => (
                         <Chip
                           key={field.id}
                           label={`${field.label} (${field.type})`}
-                          size="small"
-                          variant="outlined"
+                          size='small'
+                          variant='outlined'
                           sx={{ mr: 1, mb: 1 }}
                         />
                       ))}
@@ -353,20 +362,14 @@ export function TemplateDetail() {
             ))}
 
             {(!template.sections || template.sections.length === 0) && (
-              <Alert severity="info">
-                This template has no sections defined yet.
-              </Alert>
+              <Alert severity='info'>This template has no sections defined yet.</Alert>
             )}
           </CardContent>
         </Card>
       </TabPanel>
 
       <TabPanel value={tabValue} index={1}>
-        <TemplateApprovalWorkflow
-          template={template}
-          canApprove={canApprove}
-          canEdit={canEdit}
-        />
+        <TemplateApprovalWorkflow template={template} canApprove={canApprove} canEdit={canEdit} />
       </TabPanel>
 
       <TabPanel value={tabValue} index={2}>
@@ -374,37 +377,41 @@ export function TemplateDetail() {
       </TabPanel>
 
       {/* Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={() => {
-          cloneTemplateMutation.mutate();
-          handleMenuClose();
-        }}>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+        <MenuItem
+          onClick={() => {
+            cloneTemplateMutation.mutate();
+            handleMenuClose();
+          }}
+        >
           <CloneIcon sx={{ mr: 1 }} /> Clone Template
         </MenuItem>
-        
+
         <MenuItem onClick={handleExportTemplate}>
           <ExportIcon sx={{ mr: 1 }} /> Export Template
         </MenuItem>
-        
+
         <Divider />
-        
+
         {template.status !== 'archived' && canEdit && (
-          <MenuItem onClick={() => {
-            archiveTemplateMutation.mutate();
-            handleMenuClose();
-          }}>
+          <MenuItem
+            onClick={() => {
+              archiveTemplateMutation.mutate();
+              handleMenuClose();
+            }}
+          >
             <ArchiveIcon sx={{ mr: 1 }} /> Archive Template
           </MenuItem>
         )}
-        
+
         {canDelete && (
-          <MenuItem 
+          <MenuItem
             onClick={() => {
-              if (confirm('Are you sure you want to delete this template? This action cannot be undone.')) {
+              if (
+                confirm(
+                  'Are you sure you want to delete this template? This action cannot be undone.'
+                )
+              ) {
                 deleteTemplateMutation.mutate();
               }
               handleMenuClose();

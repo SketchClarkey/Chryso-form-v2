@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Typography,
-  Button,
-  Box,
-  Alert,
-  CircularProgress,
-} from '@mui/material';
+import { Typography, Button, Box, Alert, CircularProgress } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { UserTable, type User } from '../components/users/UserTable';
 import { UserForm } from '../components/users/UserForm';
@@ -26,7 +20,7 @@ export function Users() {
       try {
         setLoading(true);
         setError('');
-        
+
         // Load users and worksites in parallel
         const [usersData, worksitesData] = await Promise.all([
           userService.getUsers(),
@@ -39,7 +33,7 @@ export function Users() {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load data';
         setError(errorMessage);
         console.error('Error loading data:', err);
-        
+
         // Fallback to mock data if API fails
         const mockUsers: User[] = [
           {
@@ -78,9 +72,7 @@ export function Users() {
             lastName: 'Technician',
             fullName: 'Bob Technician',
             role: 'technician',
-            worksites: [
-              { id: '2', name: 'Construction Site A' },
-            ],
+            worksites: [{ id: '2', name: 'Construction Site A' }],
             emailVerified: false,
             isActive: true,
             lastLogin: undefined,
@@ -131,11 +123,7 @@ export function Users() {
   const handleToggleUserStatus = async (userId: string, isActive: boolean) => {
     try {
       const updatedUser = await userService.toggleUserStatus(userId, isActive);
-      setUsers(prevUsers =>
-        prevUsers.map(user =>
-          user.id === userId ? updatedUser : user
-        )
-      );
+      setUsers(prevUsers => prevUsers.map(user => (user.id === userId ? updatedUser : user)));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update user status';
       setError(errorMessage);
@@ -151,11 +139,7 @@ export function Users() {
       if (worksiteIds) {
         const ids = worksiteIds.split(',').map(id => id.trim());
         const updatedUser = await userService.assignWorksites(userId, ids);
-        setUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.id === userId ? updatedUser : user
-          )
-        );
+        setUsers(prevUsers => prevUsers.map(user => (user.id === userId ? updatedUser : user)));
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to assign worksites';
@@ -168,23 +152,21 @@ export function Users() {
     try {
       setFormLoading(true);
       setFormError('');
-      
+
       let savedUser: User;
-      
+
       if (editingUser) {
         // Update existing user
         savedUser = await userService.updateUser(editingUser.id, userData);
         setUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.id === editingUser.id ? savedUser : user
-          )
+          prevUsers.map(user => (user.id === editingUser.id ? savedUser : user))
         );
       } else {
         // Create new user
         savedUser = await userService.createUser(userData);
         setUsers(prevUsers => [...prevUsers, savedUser]);
       }
-      
+
       setFormOpen(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save user';
@@ -203,7 +185,7 @@ export function Users() {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='400px'>
         <CircularProgress />
       </Box>
     );
@@ -211,21 +193,17 @@ export function Users() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" gutterBottom>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mb={3}>
+        <Typography variant='h4' gutterBottom>
           Users
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreateUser}
-        >
+        <Button variant='contained' startIcon={<AddIcon />} onClick={handleCreateUser}>
           Add User
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}

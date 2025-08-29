@@ -91,7 +91,7 @@ export function EnhancedFileUploader({
   const theme = useTheme();
   const { isMobile, hasTouch } = useMobile();
   const toast = useToastNotifications();
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
@@ -106,64 +106,78 @@ export function EnhancedFileUploader({
   const imageOptimizationService = ImageOptimizationService.getInstance();
   const offlineService = OfflineService.getInstance();
 
-  const handleFileSelect = useCallback(async (selectedFiles: FileList | File[]) => {
-    const newFiles: EnhancedFileAttachment[] = [];
-    const filesToProcess = Array.from(selectedFiles);
+  const handleFileSelect = useCallback(
+    async (selectedFiles: FileList | File[]) => {
+      const newFiles: EnhancedFileAttachment[] = [];
+      const filesToProcess = Array.from(selectedFiles);
 
-    if (files.length + filesToProcess.length > maxFiles) {
-      toast.showError(`Maximum ${maxFiles} files allowed`);
-      return;
-    }
-
-    for (const file of filesToProcess) {
-      if (file.size > maxSizeBytes) {
-        toast.showError(`File ${file.name} exceeds maximum size`);
-        continue;
+      if (files.length + filesToProcess.length > maxFiles) {
+        toast.showError(`Maximum ${maxFiles} files allowed`);
+        return;
       }
 
-      const attachment: EnhancedFileAttachment = {
-        id: `file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        file,
-        originalFile: file,
-        name: file.name,
-        size: file.size,
-        originalSize: file.size,
-        type: file.type,
-        uploadProgress: 0,
-        status: isOffline ? 'offline' : 'uploading',
-        isOptimized: false,
-        compressionRatio: 1,
-      };
+      for (const file of filesToProcess) {
+        if (file.size > maxSizeBytes) {
+          toast.showError(`File ${file.name} exceeds maximum size`);
+          continue;
+        }
 
-      // Create data URL for preview
-      if (file.type.startsWith('image/')) {
-        attachment.dataUrl = URL.createObjectURL(file);
+        const attachment: EnhancedFileAttachment = {
+          id: `file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          file,
+          originalFile: file,
+          name: file.name,
+          size: file.size,
+          originalSize: file.size,
+          type: file.type,
+          uploadProgress: 0,
+          status: isOffline ? 'offline' : 'uploading',
+          isOptimized: false,
+          compressionRatio: 1,
+        };
+
+        // Create data URL for preview
+        if (file.type.startsWith('image/')) {
+          attachment.dataUrl = URL.createObjectURL(file);
+        }
+
+        newFiles.push(attachment);
       }
 
-      newFiles.push(attachment);
-    }
+      // Check if images need optimization
+      const imagesToOptimize = newFiles.filter(
+        file =>
+          file.file.type.startsWith('image/') &&
+          autoOptimize &&
+          imageOptimizationService.shouldCompress(file.file, isMobile ? 'mobile' : 'desktop')
+      );
 
-    // Check if images need optimization
-    const imagesToOptimize = newFiles.filter(file => 
-      file.file.type.startsWith('image/') && 
-      autoOptimize &&
-      imageOptimizationService.shouldCompress(file.file, isMobile ? 'mobile' : 'desktop')
-    );
-
-    if (imagesToOptimize.length > 0) {
-      setFilesToOptimize(imagesToOptimize);
-      setOptimizationDialog(true);
-    } else {
-      onFilesChange([...files, ...newFiles]);
-      if (offlineCapable && isOffline) {
-        await storeFilesOffline(newFiles);
+      if (imagesToOptimize.length > 0) {
+        setFilesToOptimize(imagesToOptimize);
+        setOptimizationDialog(true);
+      } else {
+        onFilesChange([...files, ...newFiles]);
+        if (offlineCapable && isOffline) {
+          await storeFilesOffline(newFiles);
+        }
       }
-    }
-  }, [files, maxFiles, maxSizeBytes, autoOptimize, isMobile, isOffline, offlineCapable, onFilesChange, toast]);
+    },
+    [
+      files,
+      maxFiles,
+      maxSizeBytes,
+      autoOptimize,
+      isMobile,
+      isOffline,
+      offlineCapable,
+      onFilesChange,
+      toast,
+    ]
+  );
 
   const handleOptimization = async (shouldOptimize: boolean) => {
     setOptimizationDialog(false);
-    
+
     if (shouldOptimize) {
       setIsOptimizing(true);
       const optimizedFiles: EnhancedFileAttachment[] = [];
@@ -175,8 +189,11 @@ export function EnhancedFileUploader({
             'slow' // Assume slow connection for better optimization
           );
 
-          const result = await imageOptimizationService.optimizeImage(fileAttachment.file, settings);
-          
+          const result = await imageOptimizationService.optimizeImage(
+            fileAttachment.file,
+            settings
+          );
+
           const optimizedAttachment: EnhancedFileAttachment = {
             ...fileAttachment,
             file: new File([result.blob], fileAttachment.name, { type: result.blob.type }),
@@ -187,7 +204,9 @@ export function EnhancedFileUploader({
           };
 
           optimizedFiles.push(optimizedAttachment);
-          toast.showSuccess(`${fileAttachment.name} optimized (${Math.round((1 - result.metadata.compressedSize / result.metadata.originalSize) * 100)}% reduction)`);
+          toast.showSuccess(
+            `${fileAttachment.name} optimized (${Math.round((1 - result.metadata.compressedSize / result.metadata.originalSize) * 100)}% reduction)`
+          );
         } catch (error) {
           console.error('Optimization failed:', error);
           optimizedFiles.push(fileAttachment);
@@ -196,7 +215,7 @@ export function EnhancedFileUploader({
 
       setIsOptimizing(false);
       onFilesChange([...files, ...optimizedFiles]);
-      
+
       if (offlineCapable && isOffline) {
         await storeFilesOffline(optimizedFiles);
       }
@@ -213,16 +232,12 @@ export function EnhancedFileUploader({
   const storeFilesOffline = async (filesToStore: EnhancedFileAttachment[]) => {
     for (const fileAttachment of filesToStore) {
       try {
-        await offlineService.storeAttachmentOffline(
-          fileAttachment.id,
-          fileAttachment.file,
-          {
-            name: fileAttachment.name,
-            type: fileAttachment.type,
-            uploadProgress: fileAttachment.uploadProgress,
-            status: fileAttachment.status,
-          }
-        );
+        await offlineService.storeAttachmentOffline(fileAttachment.id, fileAttachment.file, {
+          name: fileAttachment.name,
+          type: fileAttachment.type,
+          uploadProgress: fileAttachment.uploadProgress,
+          status: fileAttachment.status,
+        });
       } catch (error) {
         console.error('Failed to store file offline:', error);
       }
@@ -249,7 +264,7 @@ export function EnhancedFileUploader({
     }
 
     onFilesChange([...files, ...newFiles]);
-    
+
     if (offlineCapable && isOffline) {
       await storeFilesOffline(newFiles);
     }
@@ -298,8 +313,11 @@ export function EnhancedFileUploader({
         'slow'
       );
 
-      const result = await imageOptimizationService.optimizeImage(fileAttachment.originalFile || fileAttachment.file, settings);
-      
+      const result = await imageOptimizationService.optimizeImage(
+        fileAttachment.originalFile || fileAttachment.file,
+        settings
+      );
+
       const updatedFiles = [...files];
       updatedFiles[fileIndex] = {
         ...fileAttachment,
@@ -311,7 +329,9 @@ export function EnhancedFileUploader({
       };
 
       onFilesChange(updatedFiles);
-      toast.showSuccess(`Image optimized (${Math.round((1 - result.metadata.compressedSize / result.metadata.originalSize) * 100)}% reduction)`);
+      toast.showSuccess(
+        `Image optimized (${Math.round((1 - result.metadata.compressedSize / result.metadata.originalSize) * 100)}% reduction)`
+      );
     } catch (error) {
       toast.showError('Failed to optimize image');
     } finally {
@@ -337,10 +357,14 @@ export function EnhancedFileUploader({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'success';
-      case 'error': return 'error';
-      case 'offline': return 'warning';
-      default: return 'primary';
+      case 'completed':
+        return 'success';
+      case 'error':
+        return 'error';
+      case 'offline':
+        return 'warning';
+      default:
+        return 'primary';
     }
   };
 
@@ -368,7 +392,7 @@ export function EnhancedFileUploader({
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    
+
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles.length > 0) {
       handleFileSelect(droppedFiles);
@@ -394,30 +418,30 @@ export function EnhancedFileUploader({
         onClick={() => fileInputRef.current?.click()}
       >
         <UploadIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-        <Typography variant="h6" gutterBottom>
+        <Typography variant='h6' gutterBottom>
           Drop files here or click to select
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Maximum {maxFiles} files, {formatFileSize(maxSizeBytes)} per file
         </Typography>
-        
+
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 2 }}>
           <Button
-            variant="outlined"
+            variant='outlined'
             startIcon={<UploadIcon />}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               fileInputRef.current?.click();
             }}
           >
             Choose Files
           </Button>
-          
+
           {enableCamera && (isMobile || hasTouch) && (
             <Button
-              variant="outlined"
+              variant='outlined'
               startIcon={<PhotoCamera />}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 setShowCamera(true);
               }}
@@ -429,11 +453,11 @@ export function EnhancedFileUploader({
 
         <input
           ref={fileInputRef}
-          type="file"
+          type='file'
           multiple
           accept={acceptedTypes.join(',')}
           style={{ display: 'none' }}
-          onChange={(e) => {
+          onChange={e => {
             if (e.target.files) {
               handleFileSelect(e.target.files);
             }
@@ -443,7 +467,7 @@ export function EnhancedFileUploader({
 
       {/* Offline Status */}
       {isOffline && offlineCapable && (
-        <Alert severity="info" sx={{ mb: 2 }} icon={<CloudOff />}>
+        <Alert severity='info' sx={{ mb: 2 }} icon={<CloudOff />}>
           You're offline. Files will be uploaded when connection is restored.
         </Alert>
       )}
@@ -452,43 +476,34 @@ export function EnhancedFileUploader({
       {files.length > 0 && (
         <Card>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant='h6' gutterBottom>
               Attached Files ({files.length}/{maxFiles})
             </Typography>
-            
+
             <List>
-              {files.map((file) => (
+              {files.map(file => (
                 <ListItem key={file.id} divider>
-                  <ListItemIcon>
-                    {getFileIcon(file.type)}
-                  </ListItemIcon>
-                  
+                  <ListItemIcon>{getFileIcon(file.type)}</ListItemIcon>
+
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="subtitle2">
-                          {file.name}
-                        </Typography>
+                        <Typography variant='subtitle2'>{file.name}</Typography>
                         {file.isOptimized && (
                           <Chip
-                            label={`${Math.round((1 - 1/file.compressionRatio!) * 100)}% smaller`}
-                            size="small"
-                            color="success"
+                            label={`${Math.round((1 - 1 / file.compressionRatio!) * 100)}% smaller`}
+                            size='small'
+                            color='success'
                           />
                         )}
                         {file.status === 'offline' && (
-                          <Chip
-                            label="Offline"
-                            size="small"
-                            color="warning"
-                            icon={<CloudOff />}
-                          />
+                          <Chip label='Offline' size='small' color='warning' icon={<CloudOff />} />
                         )}
                       </Box>
                     }
                     secondary={
                       <Box>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           {formatFileSize(file.size)}
                           {file.originalSize && file.originalSize !== file.size && (
                             <> (was {formatFileSize(file.originalSize)})</>
@@ -496,7 +511,7 @@ export function EnhancedFileUploader({
                         </Typography>
                         {file.uploadProgress > 0 && file.uploadProgress < 100 && (
                           <LinearProgress
-                            variant="determinate"
+                            variant='determinate'
                             value={file.uploadProgress}
                             sx={{ mt: 1 }}
                           />
@@ -504,35 +519,31 @@ export function EnhancedFileUploader({
                       </Box>
                     }
                   />
-                  
+
                   <ListItemSecondaryAction>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       {file.type.startsWith('image/') && !file.isOptimized && (
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => optimizeFile(file.id)}
                           disabled={isOptimizing}
-                          title="Optimize image"
+                          title='Optimize image'
                         >
                           <Compress />
                         </IconButton>
                       )}
-                      
+
                       {file.type.startsWith('image/') && enableAnnotations && (
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => annotateFile(file.id)}
-                          title="Annotate image"
+                          title='Annotate image'
                         >
                           <Edit />
                         </IconButton>
                       )}
-                      
-                      <IconButton
-                        size="small"
-                        onClick={() => removeFile(file.id)}
-                        color="error"
-                      >
+
+                      <IconButton size='small' onClick={() => removeFile(file.id)} color='error'>
                         <DeleteIcon />
                       </IconButton>
                     </Box>
@@ -547,11 +558,13 @@ export function EnhancedFileUploader({
       {/* File Preview */}
       {showPreview && files.some(f => f.dataUrl) && (
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          {files.filter(f => f.dataUrl).map((file) => (
-            <Grid item xs={6} sm={4} md={3} key={file.id}>
-              <FilePreview file={file as any} />
-            </Grid>
-          ))}
+          {files
+            .filter(f => f.dataUrl)
+            .map(file => (
+              <Grid item xs={6} sm={4} md={3} key={file.id}>
+                <FilePreview file={file as any} />
+              </Grid>
+            ))}
         </Grid>
       )}
 
@@ -582,17 +595,17 @@ export function EnhancedFileUploader({
         <DialogTitle>Optimize Images?</DialogTitle>
         <DialogContent>
           <Typography gutterBottom>
-            {filesToOptimize.length} image(s) can be optimized to reduce file size and improve upload speed.
+            {filesToOptimize.length} image(s) can be optimized to reduce file size and improve
+            upload speed.
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            This will compress images while maintaining good quality. You can always restore the original later.
+          <Typography variant='body2' color='text.secondary'>
+            This will compress images while maintaining good quality. You can always restore the
+            original later.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleOptimization(false)}>
-            Skip Optimization
-          </Button>
-          <Button onClick={() => handleOptimization(true)} variant="contained" autoFocus>
+          <Button onClick={() => handleOptimization(false)}>Skip Optimization</Button>
+          <Button onClick={() => handleOptimization(true)} variant='contained' autoFocus>
             Optimize Images
           </Button>
         </DialogActions>

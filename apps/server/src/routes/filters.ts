@@ -13,15 +13,22 @@ const filterService = FilterService.getInstance();
 
 // Validation middleware
 const filterValidation = [
-  body('name').trim().isLength({ min: 1, max: 100 }).withMessage('Filter name is required and must be less than 100 characters'),
-  body('entityType').isIn(['form', 'template', 'user', 'worksite', 'dashboard', 'all']).withMessage('Invalid entity type'),
+  body('name')
+    .trim()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Filter name is required and must be less than 100 characters'),
+  body('entityType')
+    .isIn(['form', 'template', 'user', 'worksite', 'dashboard', 'all'])
+    .withMessage('Invalid entity type'),
   body('groups').isArray({ min: 1 }).withMessage('At least one filter group is required'),
   body('globalLogicalOperator').isIn(['AND', 'OR']).withMessage('Invalid global logical operator'),
 ];
 
 const applyFilterValidation = [
   body('filter').isObject().withMessage('Filter object is required'),
-  body('entityType').isIn(['form', 'template', 'user', 'worksite', 'dashboard', 'all']).withMessage('Invalid entity type'),
+  body('entityType')
+    .isIn(['form', 'template', 'user', 'worksite', 'dashboard', 'all'])
+    .withMessage('Invalid entity type'),
 ];
 
 // GET /api/filters - Get user's filters
@@ -33,12 +40,12 @@ router.get('/', authenticate, async (req, res) => {
       limit = 50,
       offset = 0,
       sortBy = 'updatedAt',
-      sortOrder = 'desc'
+      sortOrder = 'desc',
     } = req.query;
 
     // Build filter criteria
     const filterCriteria: any = {};
-    
+
     if (entityType && entityType !== 'all') {
       filterCriteria.entityType = entityType;
     }
@@ -61,11 +68,17 @@ router.get('/', authenticate, async (req, res) => {
             id: 'g1',
             name: 'Priority Group',
             criteria: [
-              { id: 'c1', field: 'priority', operator: 'in', value: ['high', 'urgent'], dataType: 'string' }
+              {
+                id: 'c1',
+                field: 'priority',
+                operator: 'in',
+                value: ['high', 'urgent'],
+                dataType: 'string',
+              },
             ],
             logicalOperator: 'AND',
             isActive: true,
-          }
+          },
         ],
         globalLogicalOperator: 'AND',
         isShared: false,
@@ -85,12 +98,24 @@ router.get('/', authenticate, async (req, res) => {
             id: 'g2',
             name: 'Status and Date',
             criteria: [
-              { id: 'c2', field: 'status', operator: 'equals', value: 'completed', dataType: 'string' },
-              { id: 'c3', field: 'completedAt', operator: 'dateThisWeek', value: null, dataType: 'date' }
+              {
+                id: 'c2',
+                field: 'status',
+                operator: 'equals',
+                value: 'completed',
+                dataType: 'string',
+              },
+              {
+                id: 'c3',
+                field: 'completedAt',
+                operator: 'dateThisWeek',
+                value: null,
+                dataType: 'date',
+              },
             ],
             logicalOperator: 'AND',
             isActive: true,
-          }
+          },
         ],
         globalLogicalOperator: 'AND',
         isShared: true,
@@ -104,7 +129,7 @@ router.get('/', authenticate, async (req, res) => {
 
     // Apply filters based on scope
     let filteredResults = mockFilters;
-    
+
     if (scope === 'my') {
       filteredResults = mockFilters.filter(f => f.createdBy === req.user.id);
     } else if (scope === 'shared') {
@@ -124,7 +149,7 @@ router.get('/', authenticate, async (req, res) => {
           limit: Number(limit),
           offset: Number(offset),
           hasMore: false,
-        }
+        },
       },
     });
   } catch (error) {
@@ -148,7 +173,8 @@ router.post('/', authenticate, filterValidation, async (req, res) => {
       });
     }
 
-    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } = req.body;
+    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
+      req.body;
 
     // Validate the filter using the service
     const filter = {
@@ -206,7 +232,8 @@ router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async
     }
 
     const { id } = req.params;
-    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } = req.body;
+    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
+      req.body;
 
     // In a real implementation, check if filter exists and user has permission to edit
     const updatedFilter = {
@@ -395,32 +422,37 @@ router.post('/apply', authenticate, applyFilterValidation, async (req, res) => {
 });
 
 // GET /api/filters/fields/:entityType - Get available fields for entity type
-router.get('/fields/:entityType', authenticate, param('entityType').notEmpty(), async (req, res) => {
-  try {
-    const { entityType } = req.params;
-    
-    const fields = filterService.getAvailableFields(entityType);
-    
-    res.json({
-      success: true,
-      data: { fields },
-    });
-  } catch (error) {
-    console.error('Get fields error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to retrieve fields',
-    });
+router.get(
+  '/fields/:entityType',
+  authenticate,
+  param('entityType').notEmpty(),
+  async (req, res) => {
+    try {
+      const { entityType } = req.params;
+
+      const fields = filterService.getAvailableFields(entityType);
+
+      res.json({
+        success: true,
+        data: { fields },
+      });
+    } catch (error) {
+      console.error('Get fields error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to retrieve fields',
+      });
+    }
   }
-});
+);
 
 // GET /api/filters/operators/:dataType - Get available operators for data type
 router.get('/operators/:dataType', authenticate, param('dataType').notEmpty(), async (req, res) => {
   try {
     const { dataType } = req.params;
-    
+
     const operators = filterService.getOperatorsForType(dataType);
-    
+
     res.json({
       success: true,
       data: { operators },

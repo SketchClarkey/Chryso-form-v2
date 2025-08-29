@@ -13,7 +13,7 @@ const swaggerOptions = {
     .swagger-ui .scheme-container { margin: 20px 0; }
   `,
   customSiteTitle: 'Chryso Forms API Documentation',
-  customfavIcon: '/favicon.ico'
+  customfavIcon: '/favicon.ico',
 };
 
 // Serve swagger documentation
