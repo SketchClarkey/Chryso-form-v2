@@ -12,7 +12,7 @@ import {
   CircularProgress,
   Alert,
   Chip,
-  Grid,
+  Grid2,
   LinearProgress,
 } from '@mui/material';
 import {
@@ -294,18 +294,18 @@ export function Dashboard() {
         </Card>
 
         {/* Charts Section */}
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Grid2 container spacing={3}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <FormStatusChart data={statusChartData} title='Form Status Distribution' type='pie' />
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Grid2>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <FormTrendsChart data={trendData} title='Form Activity (Last 7 Days)' />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {/* Recent Forms */}
-          <Grid item xs={12} lg={8}>
+          <Grid2 size={{ xs: 12, lg: 8 }}>
             <Paper sx={{ p: 2 }}>
               <Typography variant='h6' gutterBottom>
                 Recent Forms
@@ -369,10 +369,10 @@ export function Dashboard() {
                 </List>
               )}
             </Paper>
-          </Grid>
+          </Grid2>
 
           {/* Status Breakdown */}
-          <Grid item xs={12} lg={4}>
+          <Grid2 size={{ xs: 12, lg: 4 }}>
             <Paper sx={{ p: 2 }}>
               <Typography variant='h6' gutterBottom>
                 Status Breakdown
@@ -399,8 +399,8 @@ export function Dashboard() {
                 ))}
               </Box>
             </Paper>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Box>
     </Box>
   );
