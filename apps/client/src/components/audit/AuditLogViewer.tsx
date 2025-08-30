@@ -127,7 +127,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       if (filters.resourceType) params.append('resourceType', filters.resourceType);
       if (filters.search) params.append('search', filters.search);
 
-      const response = await request(`/api/audit/logs?${params}`);
+      const response = await request('GET', `/api/audit/logs?${params}`);
       setLogs(response.data.logs);
       setTotal(response.data.pagination.total);
     } catch (error: any) {
@@ -162,18 +162,14 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
   const handleExport = async () => {
     try {
-      const response = await request('/api/audit/export', {
-        method: 'POST',
-        data: {
-          format: 'csv',
-          filters: {
-            ...filters,
-            startDate: filters.startDate?.toISOString(),
-            endDate: filters.endDate?.toISOString(),
-          },
-          organizationId,
+      const response = await request('POST', '/api/audit/export', {
+        format: 'csv',
+        filters: {
+          ...filters,
+          startDate: filters.startDate?.toISOString(),
+          endDate: filters.endDate?.toISOString(),
         },
-        responseType: 'blob',
+        organizationId,
       });
 
       // Create download link
@@ -252,7 +248,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
         Filters
       </Typography>
       <Grid container spacing={2} alignItems='center'>
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <DateTimePicker
             label='Start Date'
             value={filters.startDate}
@@ -260,7 +256,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <DateTimePicker
             label='End Date'
             value={filters.endDate}
@@ -268,7 +264,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
-        <Grid size={{ xs: 12 }} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <FormControl size='small' fullWidth>
             <InputLabel>Category</InputLabel>
             <Select
@@ -287,7 +283,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid size={{ xs: 12 }} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <FormControl size='small' fullWidth>
             <InputLabel>Severity</InputLabel>
             <Select
@@ -303,7 +299,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid size={{ xs: 12 }} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Box display='flex' gap={1}>
             <Tooltip title='Refresh'>
               <IconButton onClick={loadLogs} size='small'>
