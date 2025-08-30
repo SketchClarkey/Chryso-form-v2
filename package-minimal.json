@@ -1,0 +1,15 @@
+{
+  "name": "chryso-form-v2",
+  "version": "2.0.0",
+  "description": "Modern form digitization application with Vite React frontend and Express backend",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "apps/client",
+    "apps/server"
+  ],
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "name": "chryso-form-v2",
+  "version": "2.0.0",
+  "description": "Modern form digitization application with Vite React frontend and Express backend",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "apps/client",
+    "apps/server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev -w apps/server",
+    "dev:client": "npm run dev -w apps/client",
+    "build": "npm run build:server && npm run build -w apps/client",
+    "build:server": "npm run build -w apps/server",
+    "build:client": "npm run build -w apps/client",
+    "start": "npm run start -w apps/server",
+    "start:client": "npm run preview -w apps/client",
+    "test": "npm run test -w apps/server && npm run test -w apps/client",
+    "test:coverage": "npm run test:coverage -w apps/server && npm run test:coverage -w apps/client",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:all": "npm run test && npm run test:e2e",
+    "lint": "eslint . && npm run lint -w apps/server && npm run lint -w apps/client",
+    "lint:fix": "eslint . --fix && npm run lint:fix -w apps/server && npm run lint:fix -w apps/client",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "npm run type-check -w apps/server && npm run type-check -w apps/client",
+    "clean": "npm run clean -w apps/server && npm run clean -w apps/client",
+    "clean:all": "npm run clean && rm -rf node_modules package-lock.json",
+    "install:all": "npm install",
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "release": "npm run build && npm run test:all",
+    "docker:build": "docker build -t chryso-form-v2 .",
+    "docker:run": "docker run -p 5000:5000 chryso-form-v2",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:prod": "docker-compose up --build",
+    "k8s:deploy": "kubectl apply -f k8s-deployment.yaml",
+    "update-deps": "npx npm-check-updates -u && npm install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/bcryptjs": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "bcryptjs": "^3.0.2",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.34.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "mongoose": "^8.18.0",
+    "npm-check-updates": "^18.0.3",
+    "prettier": "^3.6.2",
+    "wait-on": "^8.0.4"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SketchClarkey/Chryso-form-v2.git"
+  },
+  "keywords": [
+    "form",
+    "digitization",
+    "vite",
+    "react",
+    "typescript",
+    "express",
+    "mongodb"
+  ],
+  "author": "SketchClarkey",
+  "license": "MIT"
+}
