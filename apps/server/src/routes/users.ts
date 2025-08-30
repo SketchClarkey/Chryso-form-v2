@@ -13,7 +13,7 @@ router.use(authenticate);
 router.get(
   '/',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { page, limit, sort, order, q, role } = searchSchema.parse(req.query);
 
@@ -92,7 +92,7 @@ router.get(
 router.get(
   '/:id',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.params.id;
 
@@ -134,7 +134,7 @@ router.get(
 );
 
 // Update user (admin only, or self for limited fields)
-router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.params.id;
     const currentUser = req.user!;
@@ -256,7 +256,7 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<voi
 router.delete(
   '/:id',
   authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.params.id;
       const currentUser = req.user!;
@@ -318,7 +318,7 @@ router.delete(
 router.patch(
   '/:id/worksites',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const userId = req.params.id;
       const currentUser = req.user!;

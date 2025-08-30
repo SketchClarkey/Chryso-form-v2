@@ -14,7 +14,7 @@ interface ScheduledJob {
   schedule: string;
   recipients: string[];
   format: 'pdf' | 'excel' | 'csv';
-  task: cron.ScheduledTask;
+  task: any; // Use any for cron.ScheduledTask to avoid type issues
   lastRun?: Date;
   nextRun?: Date;
   enabled: boolean;
@@ -34,7 +34,7 @@ interface EmailConfig {
 export class SchedulerService {
   private static instance: SchedulerService;
   private jobs: Map<string, ScheduledJob> = new Map();
-  private systemJobs: Map<string, cron.ScheduledTask> = new Map();
+  private systemJobs: Map<string, any> = new Map();
   private emailTransporter: nodemailer.Transporter | null = null;
   private emailConfig: EmailConfig | null = null;
   private dataRetentionService: DataRetentionService;
@@ -69,7 +69,7 @@ export class SchedulerService {
     };
 
     if (this.emailConfig.auth.user && this.emailConfig.auth.pass) {
-      this.emailTransporter = nodemailer.createTransporter(this.emailConfig);
+      this.emailTransporter = nodemailer.createTransport(this.emailConfig);
     } else {
       console.warn('Email configuration missing. Scheduled reports will not be sent.');
     }
@@ -116,16 +116,15 @@ export class SchedulerService {
           await this.executeScheduledReport(report._id.toString());
         },
         {
-          scheduled: true,
           timezone: report.schedule.timezone || 'UTC',
-        }
+        } as any
       );
 
       const job: ScheduledJob = {
         id: `report-${report._id}`,
         reportId: report._id.toString(),
         schedule: report.schedule.cronExpression,
-        recipients: report.schedule.recipients || [],
+        recipients: (report.schedule.recipients || []).map(r => typeof r === 'string' ? r : r.email),
         format: report.schedule.exportFormat || 'pdf',
         task,
         enabled: true,
@@ -365,7 +364,7 @@ export class SchedulerService {
       this.emailConfig = { ...this.emailConfig!, ...config };
 
       if (this.emailConfig.auth.user && this.emailConfig.auth.pass) {
-        this.emailTransporter = nodemailer.createTransporter(this.emailConfig);
+        this.emailTransporter = nodemailer.createTransport(this.emailConfig);
         return true;
       }
     } catch (error) {
@@ -415,9 +414,8 @@ export class SchedulerService {
         }
       },
       {
-        scheduled: true,
         timezone: 'UTC',
-      }
+      } as any
     );
 
     this.systemJobs.set('dataRetention', retentionJob);
@@ -438,7 +436,6 @@ export class SchedulerService {
         }
       },
       {
-        scheduled: true,
         timezone: 'UTC',
       }
     );
@@ -460,7 +457,6 @@ export class SchedulerService {
         }
       },
       {
-        scheduled: true,
         timezone: 'UTC',
       }
     );
@@ -483,7 +479,6 @@ export class SchedulerService {
         }
       },
       {
-        scheduled: true,
         timezone: 'UTC',
       }
     );
@@ -566,7 +561,15 @@ export class SchedulerService {
       for (const collectionInfo of collections) {
         try {
           const collection = db.collection(collectionInfo.name);
-          await collection.reIndex();
+          // Note: reIndex() was deprecated, using createIndex instead with background rebuild
+          const indexes = await collection.listIndexes().toArray();
+          for (const index of indexes) {
+            if (index.name !== '_id_') {
+              // Re-creating indexes to optimize them
+              await collection.dropIndex(index.name);
+              await collection.createIndex(index.key, { background: true });
+            }
+          }
           console.log(`✅ Reindexed collection: ${collectionInfo.name}`);
         } catch (error) {
           console.warn(`Failed to reindex ${collectionInfo.name}:`, error);

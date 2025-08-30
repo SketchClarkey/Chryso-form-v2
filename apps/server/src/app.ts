@@ -40,9 +40,9 @@ export function createApp(): express.Application {
   app.set('trust proxy', 1);
 
   // Security headers
-  app.use(securityHeaders);
-  app.use(preventNoSniff);
-  app.use(preventFraming);
+  app.use(securityHeaders as any);
+  app.use(preventNoSniff as any);
+  app.use(preventFraming as any);
 
   // CORS configuration
   app.use(
@@ -65,7 +65,7 @@ export function createApp(): express.Application {
         return compression.filter(req, res);
       },
       level: 6,
-    })
+    }) as any
   );
 
   // Body parsing middleware
@@ -85,12 +85,12 @@ export function createApp(): express.Application {
   );
 
   // Content type validation and input sanitization
-  app.use(validateContentType);
-  app.use(sanitizeInput);
+  app.use(validateContentType as any);
+  app.use(sanitizeInput as any);
 
   // Apply general rate limiting to all API routes (skip in test environment)
   if (env.NODE_ENV !== 'test') {
-    app.use('/api/', generalRateLimit);
+    app.use('/api/', generalRateLimit as any);
   }
 
   // Health check endpoint

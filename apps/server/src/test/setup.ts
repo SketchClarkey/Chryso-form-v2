@@ -1,5 +1,14 @@
 import { beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
+import './types/global.js'; // Import global type declarations
+
+// Make mongoose available globally for tests
+declare global {
+  var mongoose: typeof import('mongoose');
+  var mongoServer: any;
+}
+
+global.mongoose = mongoose;
 
 // Set up test environment variables before anything else
 process.env.NODE_ENV = 'test';

@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { Request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter to validate file types
-const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter: multer.Options['fileFilter'] = (req, file, cb) => {
   const allowedMimeTypes = [
     // Images
     'image/jpeg',
@@ -63,7 +63,7 @@ export const uploadSingle = upload.single('file');
 export const uploadMultiple = upload.array('files', 10);
 
 // Error handler for multer errors
-export const handleUploadError = (error: any, req: Request, res: any, next: any) => {
+export const handleUploadError = (error: any, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({

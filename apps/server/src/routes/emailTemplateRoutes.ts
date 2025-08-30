@@ -2,12 +2,13 @@ import express from 'express';
 import { EmailTemplate, IEmailTemplate } from '../models/EmailTemplate.js';
 import EmailTemplateService from '../services/emailTemplateService.js';
 import { authenticate, authorize } from '../middleware/auth.js';
+import { AuthenticatedRequest } from '../types/express.js';
 
 const router = express.Router();
 const emailTemplateService = EmailTemplateService.getInstance();
 
 // Get all email templates
-router.get('/', authenticate, async (req, res) => {
+router.get('/', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
     const { category, type, active, search, page = 1, limit = 50 } = req.query;
@@ -36,7 +37,7 @@ router.get('/', authenticate, async (req, res) => {
       EmailTemplate.countDocuments(filter),
     ]);
 
-    res.json({
+    return res.json({
       templates,
       pagination: {
         page: parseInt(page as string),
@@ -47,12 +48,12 @@ router.get('/', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('Failed to get email templates:', error);
-    res.status(500).json({ message: 'Failed to get email templates' });
+    return res.status(500).json({ message: 'Failed to get email templates' });
   }
 });
 
 // Get template by ID
-router.get('/:id', authenticate, async (req, res) => {
+router.get('/:id', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
     const template = await EmailTemplate.findOne({
@@ -64,15 +65,15 @@ router.get('/:id', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Template not found' });
     }
 
-    res.json({ template });
+    return res.json({ template });
   } catch (error) {
     console.error('Failed to get email template:', error);
-    res.status(500).json({ message: 'Failed to get email template' });
+    return res.status(500).json({ message: 'Failed to get email template' });
   }
 });
 
 // Create new template
-router.post('/', authorize('admin'), async (req, res) => {
+router.post('/', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId, userId } = req.user!;
     const templateData = req.body;
@@ -130,18 +131,18 @@ router.post('/', authorize('admin'), async (req, res) => {
     const savedTemplate = await template.save();
     await savedTemplate.populate('createdBy updatedBy', 'firstName lastName email');
 
-    res.status(201).json({
+    return res.status(201).json({
       template: savedTemplate,
       message: 'Template created successfully',
     });
   } catch (error) {
     console.error('Failed to create email template:', error);
-    res.status(500).json({ message: 'Failed to create email template' });
+    return res.status(500).json({ message: 'Failed to create email template' });
   }
 });
 
 // Update template
-router.put('/:id', authorize('admin'), async (req, res) => {
+router.put('/:id', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId, userId } = req.user!;
     const templateData = req.body;
@@ -185,18 +186,18 @@ router.put('/:id', authorize('admin'), async (req, res) => {
     const updatedTemplate = await template.save();
     await updatedTemplate.populate('createdBy updatedBy', 'firstName lastName email');
 
-    res.json({
+    return res.json({
       template: updatedTemplate,
       message: 'Template updated successfully',
     });
   } catch (error) {
     console.error('Failed to update email template:', error);
-    res.status(500).json({ message: 'Failed to update email template' });
+    return res.status(500).json({ message: 'Failed to update email template' });
   }
 });
 
 // Delete template
-router.delete('/:id', authorize('admin'), async (req, res) => {
+router.delete('/:id', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
 
@@ -217,15 +218,15 @@ router.delete('/:id', authorize('admin'), async (req, res) => {
 
     await EmailTemplate.findByIdAndDelete(req.params.id);
 
-    res.json({ message: 'Template deleted successfully' });
+    return res.json({ message: 'Template deleted successfully' });
   } catch (error) {
     console.error('Failed to delete email template:', error);
-    res.status(500).json({ message: 'Failed to delete email template' });
+    return res.status(500).json({ message: 'Failed to delete email template' });
   }
 });
 
 // Clone template
-router.post('/:id/clone', authorize('admin'), async (req, res) => {
+router.post('/:id/clone', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId, userId } = req.user!;
     const { name } = req.body;
@@ -265,18 +266,18 @@ router.post('/:id/clone', authorize('admin'), async (req, res) => {
     const savedTemplate = await clonedTemplate.save();
     await savedTemplate.populate('createdBy updatedBy', 'firstName lastName email');
 
-    res.status(201).json({
+    return res.status(201).json({
       template: savedTemplate,
       message: 'Template cloned successfully',
     });
   } catch (error) {
     console.error('Failed to clone email template:', error);
-    res.status(500).json({ message: 'Failed to clone email template' });
+    return res.status(500).json({ message: 'Failed to clone email template' });
   }
 });
 
 // Preview template
-router.post('/:id/preview', authenticate, async (req, res) => {
+router.post('/:id/preview', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
     const { variables, language = 'en' } = req.body;
@@ -292,26 +293,26 @@ router.post('/:id/preview', authenticate, async (req, res) => {
 
     try {
       const rendered = await emailTemplateService.renderTemplate(
-        template._id.toString(),
+        (template._id as any).toString(),
         variables,
         language
       );
 
-      res.json({ preview: rendered });
+      return res.json({ preview: rendered });
     } catch (renderError: any) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Template rendering failed',
         error: renderError.message,
       });
     }
   } catch (error) {
     console.error('Failed to preview email template:', error);
-    res.status(500).json({ message: 'Failed to preview email template' });
+    return res.status(500).json({ message: 'Failed to preview email template' });
   }
 });
 
 // Send test email
-router.post('/:id/test', authorize('admin'), async (req, res) => {
+router.post('/:id/test', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
     const { testEmail, variables, language = 'en' } = req.body;
@@ -331,7 +332,7 @@ router.post('/:id/test', authorize('admin'), async (req, res) => {
 
     try {
       const rendered = await emailTemplateService.renderTemplate(
-        template._id.toString(),
+        (template._id as any).toString(),
         variables || {},
         language
       );
@@ -339,25 +340,25 @@ router.post('/:id/test', authorize('admin'), async (req, res) => {
       // Here you would integrate with your email service
       // For now, just simulate success
 
-      res.json({
+      return res.json({
         success: true,
         message: `Test email sent successfully to ${testEmail}`,
         preview: rendered,
       });
     } catch (renderError: any) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Template rendering failed',
         error: renderError.message,
       });
     }
   } catch (error) {
     console.error('Failed to send test email:', error);
-    res.status(500).json({ message: 'Failed to send test email' });
+    return res.status(500).json({ message: 'Failed to send test email' });
   }
 });
 
 // Get template categories and types
-router.get('/meta/categories', authenticate, async (req, res) => {
+router.get('/meta/categories', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const categories = [
       { value: 'system', label: 'System Templates', description: 'Built-in system templates' },
@@ -378,15 +379,15 @@ router.get('/meta/categories', authenticate, async (req, res) => {
       { value: 'custom', label: 'Custom Template', category: 'custom' },
     ];
 
-    res.json({ categories, types });
+    return res.json({ categories, types });
   } catch (error) {
     console.error('Failed to get template metadata:', error);
-    res.status(500).json({ message: 'Failed to get template metadata' });
+    return res.status(500).json({ message: 'Failed to get template metadata' });
   }
 });
 
 // Get template usage statistics
-router.get('/:id/stats', authorize('admin'), async (req, res) => {
+router.get('/:id/stats', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId } = req.user!;
 
@@ -416,30 +417,30 @@ router.get('/:id/stats', authorize('admin'), async (req, res) => {
       },
     };
 
-    res.json({ stats });
+    return res.json({ stats });
   } catch (error) {
     console.error('Failed to get template stats:', error);
-    res.status(500).json({ message: 'Failed to get template stats' });
+    return res.status(500).json({ message: 'Failed to get template stats' });
   }
 });
 
 // Initialize system templates
-router.post('/system/initialize', authorize('admin'), async (req, res) => {
+router.post('/system/initialize', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
   try {
     const { organizationId, userId } = req.user!;
 
     const createdTemplates = await emailTemplateService.createSystemTemplates(
-      organizationId,
-      userId
+      organizationId!,
+      userId!
     );
 
-    res.json({
+    return res.json({
       message: `${createdTemplates.length} system templates initialized`,
       templates: createdTemplates.map(t => ({ id: t._id, name: t.name, type: t.type })),
     });
   } catch (error) {
     console.error('Failed to initialize system templates:', error);
-    res.status(500).json({ message: 'Failed to initialize system templates' });
+    return res.status(500).json({ message: 'Failed to initialize system templates' });
   }
 });
 

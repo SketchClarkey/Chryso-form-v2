@@ -36,7 +36,7 @@ const createWorksiteSchema = z.object({
 });
 
 // Get all worksites
-router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const user = req.user!;
 
@@ -86,7 +86,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> 
 router.post(
   '/',
   authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = createWorksiteSchema.parse(req.body);
 
@@ -174,7 +174,7 @@ router.post(
 router.patch(
   '/:id/template',
   authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const { templateId } = req.body;
@@ -248,7 +248,7 @@ router.patch(
 );
 
 // Get worksite by ID with template details
-router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const user = req.user!;

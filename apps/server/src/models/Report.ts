@@ -119,13 +119,16 @@ export interface IReport extends Document {
   schedule?: {
     enabled: boolean;
     frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+    cronExpression?: string; // Custom cron expression
     time?: string; // HH:mm format
     dayOfWeek?: number; // 0-6, Sunday = 0
     dayOfMonth?: number; // 1-31
+    timezone?: string; // Timezone for scheduling
     recipients: Array<{
       email: string;
       name?: string;
     }>;
+    exportFormat?: 'pdf' | 'excel' | 'csv'; // Export format for scheduled reports
     subject?: string;
     message?: string;
     lastRun?: Date;
@@ -362,15 +365,22 @@ const reportSchema = new Schema<IReport>(
         type: String,
         enum: ['daily', 'weekly', 'monthly', 'quarterly'],
       },
+      cronExpression: String, // Custom cron expression
       time: String,
       dayOfWeek: { type: Number, min: 0, max: 6 },
       dayOfMonth: { type: Number, min: 1, max: 31 },
+      timezone: { type: String, default: 'UTC' }, // Timezone for scheduling
       recipients: [
         {
           email: { type: String, required: true },
           name: String,
         },
       ],
+      exportFormat: {
+        type: String,
+        enum: ['pdf', 'excel', 'csv'],
+        default: 'pdf',
+      }, // Export format for scheduled reports
       subject: String,
       message: String,
       lastRun: Date,

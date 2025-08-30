@@ -16,12 +16,12 @@ import {
 const router = Router();
 
 // Apply rate limiting to auth routes
-router.use('/login', authRateLimit);
-router.use('/register', authRateLimit);
-router.use('/forgot-password', strictAuthRateLimit);
+router.use('/login', authRateLimit as any);
+router.use('/register', authRateLimit as any);
+router.use('/forgot-password', strictAuthRateLimit as any);
 
 // Public registration (can be disabled in production)
-router.post('/register', auditAuth, async (req: Request, res: Response): Promise<void> => {
+router.post('/register', auditAuth, async (req: Request, res: Response) => {
   try {
     const validatedData = registerSchema.parse(req.body);
 
@@ -122,7 +122,7 @@ router.post('/register', auditAuth, async (req: Request, res: Response): Promise
 });
 
 // Login
-router.post('/login', auditAuth, async (req: Request, res: Response): Promise<void> => {
+router.post('/login', auditAuth, async (req: Request, res: Response) => {
   try {
     const { email, password } = loginSchema.parse(req.body);
 
@@ -227,7 +227,7 @@ router.post('/login', auditAuth, async (req: Request, res: Response): Promise<vo
 });
 
 // Refresh token
-router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
+router.post('/refresh', async (req: Request, res: Response) => {
   try {
     const { refreshToken } = refreshTokenSchema.parse(req.body);
 
@@ -289,7 +289,7 @@ router.post(
   '/logout',
   authenticate,
   auditAuth,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       // Increment refresh token version to invalidate all refresh tokens
       await User.findByIdAndUpdate(req.user!.id, {
@@ -312,7 +312,7 @@ router.post(
 );
 
 // Get current user profile
-router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const user = await User.findById(req.user!.id)
       .populate('worksites', 'name address customerName')
@@ -359,7 +359,7 @@ router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response)
 router.post(
   '/change-password',
   authenticate,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { currentPassword, newPassword } = changePasswordSchema.parse(req.body);
 
@@ -438,7 +438,7 @@ router.post(
   authenticate,
   authorize('admin'),
   auditUserManagement,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = registerSchema.parse(req.body);
 

@@ -70,7 +70,7 @@ router.get(
       const filter: any = {};
 
       // Role-based filtering
-      if (req.user.role !== 'admin') {
+      if (req.user?.role !== 'admin') {
         filter['permissions.canView'] = { $in: [req.user.role] };
       }
 
@@ -103,7 +103,7 @@ router.get(
         Report.countDocuments(filter),
       ]);
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           reports,
@@ -117,7 +117,7 @@ router.get(
       });
     } catch (error) {
       console.error('Get reports error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to fetch reports',
       });

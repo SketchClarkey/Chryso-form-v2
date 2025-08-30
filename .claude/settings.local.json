@@ -1,6 +1,8 @@
 {
   "permissions": {
-    "additionalDirectories": ["D:\\Chryso-form"]
+    "additionalDirectories": [
+      "D:\\Chryso-form"
+    ]
   },
-  "outputStyle": "default"
+  "outputStyle": "Explanatory"
 }

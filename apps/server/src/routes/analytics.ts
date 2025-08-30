@@ -23,7 +23,7 @@ router.get(
     query('technicians').optional().isString(),
     query('status').optional().isString(),
   ],
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -65,7 +65,7 @@ router.get(
         req.user?.role || 'technician'
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           analytics,
@@ -75,7 +75,7 @@ router.get(
       });
     } catch (error) {
       console.error('Analytics dashboard error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to generate analytics',
       });
@@ -148,7 +148,7 @@ router.get(
   '/quick-stats',
   authenticate,
   [query('period').optional().isIn(['today', 'week', 'month', 'quarter', 'year'])],
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const period = (req.query.period as string) || 'month';
 
@@ -214,7 +214,7 @@ router.get(
     query('endDate').isISO8601().withMessage('End date must be a valid ISO date'),
     query('granularity').optional().isIn(['hour', 'day', 'week', 'month']),
   ],
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -248,7 +248,7 @@ router.get(
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           metric,
@@ -266,7 +266,7 @@ router.get(
       });
     } catch (error) {
       console.error('Trend data error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to fetch trend data',
       });
@@ -282,7 +282,7 @@ router.post(
     body('query').isObject().withMessage('Analytics query is required'),
     body('format').isIn(['csv', 'excel', 'json']).withMessage('Invalid export format'),
   ],
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -330,30 +330,27 @@ router.post(
         case 'json':
           res.setHeader('Content-Type', 'application/json');
           res.setHeader('Content-Disposition', `attachment; filename=analytics-${Date.now()}.json`);
-          res.send(JSON.stringify(exportData, null, 2));
-          break;
+          return res.send(JSON.stringify(exportData, null, 2));
 
         case 'csv':
           // Convert to CSV format
           const csvData = convertToCSV(exportData);
           res.setHeader('Content-Type', 'text/csv');
           res.setHeader('Content-Disposition', `attachment; filename=analytics-${Date.now()}.csv`);
-          res.send(csvData);
-          break;
+          return res.send(csvData);
 
         case 'excel':
           // For now, return JSON - in production, use a library like xlsx
           res.setHeader('Content-Type', 'application/json');
           res.setHeader('Content-Disposition', `attachment; filename=analytics-${Date.now()}.json`);
-          res.send(JSON.stringify(exportData, null, 2));
-          break;
+          return res.send(JSON.stringify(exportData, null, 2));
 
         default:
           throw new Error('Unsupported export format');
       }
     } catch (error) {
       console.error('Export analytics error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to export analytics data',
       });
@@ -366,7 +363,7 @@ router.get(
   '/performance',
   authenticate,
   [query('startDate').optional().isISO8601(), query('endDate').optional().isISO8601()],
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       // Check permissions
       if (!['admin', 'manager'].includes(req.user?.role || 'technician')) {
@@ -410,7 +407,7 @@ router.get(
         },
       };
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           performance: performanceMetrics,
@@ -423,7 +420,7 @@ router.get(
       });
     } catch (error) {
       console.error('Performance metrics error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to fetch performance metrics',
       });

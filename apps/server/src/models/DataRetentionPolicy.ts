@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IDataRetentionPolicy extends Document {
   organizationId: mongoose.Types.ObjectId;
@@ -72,6 +72,11 @@ export interface IDataRetentionPolicy extends Document {
 
   // Methods
   shouldExecute(): boolean;
+  getCutoffDate(): Date;
+}
+
+export interface IDataRetentionPolicyModel extends Model<IDataRetentionPolicy> {
+  findReadyForExecution(): Promise<IDataRetentionPolicy[]>;
 }
 
 const DataRetentionPolicySchema = new Schema<IDataRetentionPolicy>(
@@ -313,7 +318,7 @@ DataRetentionPolicySchema.pre('save', function (next) {
   next();
 });
 
-export const DataRetentionPolicy = mongoose.model<IDataRetentionPolicy>(
+export const DataRetentionPolicy = mongoose.model<IDataRetentionPolicy, IDataRetentionPolicyModel>(
   'DataRetentionPolicy',
   DataRetentionPolicySchema
 );

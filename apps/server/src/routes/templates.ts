@@ -62,7 +62,7 @@ const searchTemplatesSchema = z.object({
 });
 
 // GET /api/templates - Get all templates
-router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const query = searchTemplatesSchema.parse(req.query);
     const {
@@ -143,7 +143,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response): Promise<void> 
 });
 
 // GET /api/templates/:id - Get template by ID
-router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const templateId = req.params.id;
 
@@ -197,7 +197,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<voi
 router.post(
   '/',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = createTemplateSchema.parse(req.body);
 
@@ -251,7 +251,7 @@ router.post(
 );
 
 // PUT /api/templates/:id - Update template
-router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const templateId = req.params.id;
 
@@ -325,7 +325,7 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<voi
 router.delete(
   '/:id',
   authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const templateId = req.params.id;
 
@@ -377,7 +377,7 @@ router.delete(
 );
 
 // POST /api/templates/:id/clone - Clone template
-router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const templateId = req.params.id;
     const { name } = z
@@ -462,7 +462,7 @@ router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response): Prom
 });
 
 // PATCH /api/templates/:id/status - Update template status
-router.patch('/:id/status', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.patch('/:id/status', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const templateId = req.params.id;
     const { status, comment } = z
@@ -531,7 +531,7 @@ router.patch('/:id/status', async (req: AuthenticatedRequest, res: Response): Pr
 });
 
 // GET /api/templates/:id/forms - Get forms created from template
-router.get('/:id/forms', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/:id/forms', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const templateId = req.params.id;
     const { page = 1, limit = 20 } = z
@@ -612,7 +612,7 @@ router.get('/:id/forms', async (req: AuthenticatedRequest, res: Response): Promi
 });
 
 // GET /api/templates/meta/categories - Get template categories with counts
-router.get('/meta/categories', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/meta/categories', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const pipeline = [
       {

@@ -70,7 +70,7 @@ const createPolicySchema = z.object({
 router.get(
   '/',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { page = 1, limit = 20, entityType, isActive } = req.query;
       const organizationId = req.user?.organizationId || (req.query.organizationId as string);
@@ -126,7 +126,7 @@ router.get(
 router.get(
   '/:id',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const organizationId = req.user?.organizationId || (req.query.organizationId as string);
@@ -162,7 +162,7 @@ router.post(
   '/',
   authorize('admin'),
   auditSystemChanges,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = createPolicySchema.parse(req.body);
       const organizationId = req.user?.organizationId || validatedData.organizationId;
@@ -232,7 +232,7 @@ router.put(
   '/:id',
   authorize('admin'),
   auditSystemChanges,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const validatedData = createPolicySchema.partial().parse(req.body);
@@ -268,23 +268,22 @@ router.put(
       policy.modifiedBy = req.user!.id as any;
       await policy.save();
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Retention policy updated successfully',
         data: { policy },
       });
     } catch (error: any) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: 'Invalid input data',
           errors: error.errors,
         });
-        return;
       }
 
       console.error('Failed to update retention policy:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to update retention policy',
       });
@@ -297,7 +296,7 @@ router.delete(
   '/:id',
   authorize('admin'),
   auditSystemChanges,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const organizationId = req.user?.organizationId || (req.query.organizationId as string);
@@ -331,7 +330,7 @@ router.post(
   '/:id/execute',
   authorize('admin'),
   auditSystemChanges,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const organizationId = req.user?.organizationId || req.body.organizationId;
@@ -367,7 +366,7 @@ router.post(
 router.get(
   '/stats/summary',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
@@ -399,7 +398,7 @@ router.get(
 router.post(
   '/:id/test',
   authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const organizationId = req.user?.organizationId || req.body.organizationId;
@@ -448,7 +447,7 @@ router.patch(
   '/:id/toggle',
   authorize('admin'),
   auditSystemChanges,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const organizationId = req.user?.organizationId || req.body.organizationId;
@@ -486,7 +485,7 @@ router.patch(
 router.get(
   '/:id/history',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const { page = 1, limit = 20 } = req.query;

@@ -70,10 +70,10 @@ router.get(
       } = req.query;
 
       const query = {
-        ...(category && { category }),
+        ...(category && { category: category as string }),
         ...(tags && { tags: (tags as string).split(',').map(tag => tag.trim()) }),
-        ...(search && { search }),
-        ...(createdBy && { createdBy }),
+        ...(search && { search: search as string }),
+        ...(createdBy && { createdBy: createdBy as string }),
         ...(isTemplate !== undefined && { isTemplate: isTemplate === 'true' }),
         ...(isPublic !== undefined && { isPublic: isPublic === 'true' }),
       };
@@ -86,13 +86,13 @@ router.get(
         Number(limit)
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: result,
       });
     } catch (error) {
       console.error('Get dashboards error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to fetch dashboards',
       });
@@ -122,7 +122,7 @@ router.get(
         req.user?.id || ''
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { dashboard },
       });
@@ -134,7 +134,7 @@ router.get(
           : error.message === 'Access denied'
             ? 403
             : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to fetch dashboard',
       });
@@ -160,14 +160,14 @@ router.post(
 
       const dashboard = await dashboardService.createDashboard(req.body, req.user?.id || '');
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: { dashboard },
         message: 'Dashboard created successfully',
       });
     } catch (error: any) {
       console.error('Create dashboard error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message || 'Failed to create dashboard',
       });
@@ -203,7 +203,7 @@ router.put(
         changes
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { dashboard },
         message: 'Dashboard updated successfully',
@@ -211,7 +211,7 @@ router.put(
     } catch (error: any) {
       console.error('Update dashboard error:', error);
       const status = error.message === 'Dashboard not found' ? 404 : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to update dashboard',
       });
@@ -241,7 +241,7 @@ router.delete(
         req.user?.id || ''
       );
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Dashboard deleted successfully',
       });
@@ -253,7 +253,7 @@ router.delete(
           : error.message.includes('Not authorized')
             ? 403
             : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to delete dashboard',
       });
@@ -287,7 +287,7 @@ router.post(
         req.user?.id || ''
       );
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: { dashboard },
         message: 'Dashboard duplicated successfully',
@@ -300,7 +300,7 @@ router.post(
           : error.message.includes('Not authorized')
             ? 403
             : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to duplicate dashboard',
       });
@@ -335,7 +335,7 @@ router.get(
         forceRefresh
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           widgets: widgetData,
@@ -350,7 +350,7 @@ router.get(
           : error.message === 'Access denied'
             ? 403
             : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to generate dashboard data',
       });
@@ -386,14 +386,14 @@ router.post(
         `Added widget: ${widget.title}`
       );
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: { dashboard },
         message: 'Widget added successfully',
       });
     } catch (error: any) {
       console.error('Add widget error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message || 'Failed to add widget',
       });
@@ -445,14 +445,14 @@ router.put(
         `Updated widget: ${req.body.title}`
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { dashboard: updatedDashboard },
         message: 'Widget updated successfully',
       });
     } catch (error: any) {
       console.error('Update widget error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message || 'Failed to update widget',
       });
@@ -502,14 +502,14 @@ router.delete(
         `Deleted widget: ${req.params.widgetId}`
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { dashboard: updatedDashboard },
         message: 'Widget deleted successfully',
       });
     } catch (error: any) {
       console.error('Delete widget error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message || 'Failed to delete widget',
       });
@@ -526,13 +526,13 @@ router.get(
     try {
       const templates = await dashboardService.getDashboardTemplates(req.query.category as string);
 
-      res.json({
+      return res.json({
         success: true,
         data: { templates },
       });
     } catch (error: any) {
       console.error('Get dashboard templates error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message || 'Failed to fetch dashboard templates',
       });
@@ -565,7 +565,7 @@ router.post(
         req.user?.id || ''
       );
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: { dashboard },
         message: 'Dashboard created from template successfully',
@@ -573,7 +573,7 @@ router.post(
     } catch (error: any) {
       console.error('Create dashboard from template error:', error);
       const status = error.message.includes('not found') ? 404 : 500;
-      res.status(status).json({
+      return res.status(status).json({
         success: false,
         message: error.message || 'Failed to create dashboard from template',
       });

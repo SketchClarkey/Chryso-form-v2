@@ -21,7 +21,7 @@ router.use(authenticate);
 router.get(
   '/',
   auditDataAccess,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { page, limit, sort, order, q, status, worksite, technician, dateFrom, dateTo } =
         searchSchema.parse(req.query);
@@ -124,7 +124,7 @@ router.get(
 );
 
 // Get form by ID
-router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const formId = req.params.id;
     const currentUser = req.user!;
@@ -193,7 +193,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response): Promise<voi
 router.post(
   '/',
   requireWorksite,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const currentUser = req.user!;
       const validatedData = createFormSchema.parse(req.body);
@@ -268,7 +268,7 @@ router.post(
 );
 
 // Update form
-router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const formId = req.params.id;
     const currentUser = req.user!;
@@ -344,7 +344,7 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response): Promise<voi
 });
 
 // Submit form for completion
-router.post('/:id/submit', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.post('/:id/submit', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const formId = req.params.id;
     const currentUser = req.user!;
@@ -414,7 +414,7 @@ router.post('/:id/submit', async (req: AuthenticatedRequest, res: Response): Pro
 router.post(
   '/:id/review',
   authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const formId = req.params.id;
       const currentUser = req.user!;
@@ -511,7 +511,7 @@ router.post(
 );
 
 // Delete form (admin only, or draft forms by creator)
-router.delete('/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.delete('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const formId = req.params.id;
     const currentUser = req.user!;

@@ -128,6 +128,10 @@ export interface IDashboard extends Document {
     prerequisites?: string[];
     instructions?: string;
   };
+
+  // Methods
+  canAccess(userRole: string, userId: string): boolean;
+  duplicate(newName?: string, userId?: string): Promise<IDashboard>;
 }
 
 const DashboardWidgetSchema = new Schema({

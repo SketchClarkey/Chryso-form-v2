@@ -47,9 +47,9 @@ async function startServer() {
     await connectDB();
 
     // Security headers
-    app.use(securityHeaders);
-    app.use(preventNoSniff);
-    app.use(preventFraming);
+    app.use(securityHeaders as any);
+    app.use(preventNoSniff as any);
+    app.use(preventFraming as any);
 
     // CORS configuration
     app.use(
@@ -72,7 +72,7 @@ async function startServer() {
           return compression.filter(req, res);
         },
         level: 6,
-      })
+      }) as any
     );
 
     // Body parsing middleware
@@ -92,11 +92,11 @@ async function startServer() {
     );
 
     // Content type validation and input sanitization
-    app.use(validateContentType);
-    app.use(sanitizeInput);
+    app.use(validateContentType as any);
+    app.use(sanitizeInput as any);
 
     // Apply general rate limiting to all API routes
-    app.use('/api/', generalRateLimit);
+    app.use('/api/', generalRateLimit as any);
 
     // Health check endpoint
     app.get('/api/health', (req, res) => {

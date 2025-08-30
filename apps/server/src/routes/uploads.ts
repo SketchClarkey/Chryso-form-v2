@@ -18,7 +18,7 @@ router.use(authenticate);
 router.post(
   '/single',
   uploadSingle,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       if (!req.file) {
         res.status(400).json({
@@ -51,7 +51,7 @@ router.post(
 router.post(
   '/multiple',
   uploadMultiple,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const files = req.files as Express.Multer.File[];
 
@@ -83,7 +83,7 @@ router.post(
 );
 
 // Serve uploaded files
-router.get('/:filename', async (req: Request, res: Response): Promise<void> => {
+router.get('/:filename', async (req: Request, res: Response) => {
   try {
     const { filename } = req.params;
 
@@ -131,7 +131,7 @@ router.get('/:filename', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Delete a file
-router.delete('/:filename', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.delete('/:filename', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { filename } = req.params;
 
@@ -178,7 +178,7 @@ router.delete('/:filename', async (req: AuthenticatedRequest, res: Response): Pr
 });
 
 // Get file information
-router.get('/info/:filename', async (req: Request, res: Response): Promise<void> => {
+router.get('/info/:filename', async (req: Request, res: Response) => {
   try {
     const { filename } = req.params;
 

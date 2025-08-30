@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import FilterService from '../services/filterService';
 import { Form } from '../models/Form';
 import { Template } from '../models/Template';
@@ -32,7 +32,7 @@ const applyFilterValidation = [
 ];
 
 // GET /api/filters - Get user's filters
-router.get('/', authenticate, async (req, res) => {
+router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
     const {
       entityType,
@@ -51,7 +51,7 @@ router.get('/', authenticate, async (req, res) => {
     }
 
     if (scope === 'my') {
-      filterCriteria.createdBy = req.user.id;
+      filterCriteria.createdBy = req.user!.id;
     } else if (scope === 'shared') {
       filterCriteria.isShared = true;
     }
@@ -83,7 +83,7 @@ router.get('/', authenticate, async (req, res) => {
         globalLogicalOperator: 'AND',
         isShared: false,
         tags: ['priority', 'urgent'],
-        createdBy: req.user.id,
+        createdBy: req.user!.id,
         createdAt: new Date('2024-01-15'),
         updatedAt: new Date('2024-01-20'),
         usage: { totalUses: 45, lastUsed: new Date() },
@@ -162,7 +162,7 @@ router.get('/', authenticate, async (req, res) => {
 });
 
 // POST /api/filters - Create new filter
-router.post('/', authenticate, filterValidation, async (req, res) => {
+router.post('/', authenticate, filterValidation, async (req: AuthenticatedRequest, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -220,7 +220,7 @@ router.post('/', authenticate, filterValidation, async (req, res) => {
 });
 
 // PUT /api/filters/:id - Update filter
-router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async (req, res) => {
+router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async (req: AuthenticatedRequest, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -290,7 +290,7 @@ router.delete('/:id', authenticate, param('id').notEmpty(), async (req, res) => 
 });
 
 // POST /api/filters/apply - Apply filter to get results
-router.post('/apply', authenticate, applyFilterValidation, async (req, res) => {
+router.post('/apply', authenticate, applyFilterValidation, async (req: AuthenticatedRequest, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

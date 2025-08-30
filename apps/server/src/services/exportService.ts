@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import * as PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit';
 import { createCanvas } from 'canvas';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { promises as fs } from 'fs';

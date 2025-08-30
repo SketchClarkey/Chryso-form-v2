@@ -78,7 +78,7 @@ router.get(
         AuditLog.countDocuments(query),
       ]);
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           logs,
@@ -92,7 +92,7 @@ router.get(
       });
     } catch (error) {
       console.error('Failed to get audit logs:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve audit logs',
       });
@@ -128,13 +128,13 @@ router.get(
 
       const summary = await auditService.getAuditSummary(organizationId, start, end);
 
-      res.json({
+      return res.json({
         success: true,
         data: { summary },
       });
     } catch (error) {
       console.error('Failed to get audit summary:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve audit summary',
       });
@@ -165,13 +165,13 @@ router.get(
 
       const alerts = await auditService.getSecurityAlerts(organizationId, Number(hours));
 
-      res.json({
+      return res.json({
         success: true,
         data: { alerts },
       });
     } catch (error) {
       console.error('Failed to get security alerts:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve security alerts',
       });
@@ -208,13 +208,13 @@ router.get(
 
       const activity = await auditService.getUserActivity(organizationId, userId, start, end);
 
-      res.json({
+      return res.json({
         success: true,
         data: { activity },
       });
     } catch (error) {
       console.error('Failed to get user activity:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve user activity',
       });
@@ -249,13 +249,13 @@ router.get(
         resourceId
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { activity },
       });
     } catch (error) {
       console.error('Failed to get resource activity:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve resource activity',
       });
@@ -294,13 +294,13 @@ router.get(
         end
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: { report },
       });
     } catch (error) {
       console.error('Failed to get compliance report:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve compliance report',
       });
@@ -331,13 +331,13 @@ router.get(
 
       const anomalous = await AuditLog.getAnomalousActivity(organizationId, Number(hours));
 
-      res.json({
+      return res.json({
         success: true,
         data: { anomalous },
       });
     } catch (error) {
       console.error('Failed to get anomalous activity:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve anomalous activity',
       });
@@ -392,7 +392,7 @@ router.post(
       }
     } catch (error) {
       console.error('Failed to export audit logs:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to export audit logs',
       });
