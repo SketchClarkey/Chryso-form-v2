@@ -48,7 +48,7 @@ export function createTestApp(): Express {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  app.use(limiter);
+  app.use(limiter as any);
 
   // Health endpoint
   app.get('/health', (req, res) => {

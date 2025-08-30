@@ -17,8 +17,8 @@ const swaggerOptions = {
 };
 
 // Serve swagger documentation
-router.use('/docs', swaggerUi.serve);
-router.get('/docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
+router.use('/docs', swaggerUi.serve as any);
+router.get('/docs', swaggerUi.setup(swaggerSpec, swaggerOptions) as any);
 
 // Serve raw swagger spec as JSON
 router.get('/swagger.json', (req, res) => {

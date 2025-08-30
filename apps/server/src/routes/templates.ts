@@ -626,7 +626,7 @@ router.get('/meta/categories', async (req: AuthenticatedRequest, res: Response) 
         },
       },
       {
-        $sort: { _id: 1 },
+        $sort: { _id: 1 as 1 },
       },
     ];
 

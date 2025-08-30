@@ -84,7 +84,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
         globalLogicalOperator: 'AND',
         isShared: false,
         tags: ['priority', 'urgent'],
-        createdBy: new Types.ObjectId(req.user!.id),
+        createdBy: req.user!.id,
         createdAt: new Date('2024-01-15'),
         updatedAt: new Date('2024-01-20'),
         usage: { totalUses: 45, lastUsed: new Date() },
@@ -132,7 +132,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
     let filteredResults = mockFilters;
 
     if (scope === 'my') {
-      filteredResults = mockFilters.filter(f => f.createdBy === new Types.ObjectId(req.user!.id));
+      filteredResults = mockFilters.filter(f => f.createdBy.toString() === req.user!.id);
     } else if (scope === 'shared') {
       filteredResults = mockFilters.filter(f => f.isShared);
     }
@@ -141,7 +141,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
       filteredResults = filteredResults.filter(f => f.entityType === entityType);
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         filters: filteredResults,
@@ -155,7 +155,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
     });
   } catch (error) {
     console.error('Get filters error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to retrieve filters',
     });
@@ -186,7 +186,7 @@ router.post('/', authenticate, filterValidation, async (req: AuthenticatedReques
       globalLogicalOperator,
       isShared,
       tags,
-      createdBy: new Types.ObjectId(req.user!.id),
+      createdBy: req.user!.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -207,13 +207,13 @@ router.post('/', authenticate, filterValidation, async (req: AuthenticatedReques
       usage: { totalUses: 0 },
     };
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: { filter: savedFilter },
     });
   } catch (error) {
     console.error('Create filter error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to create filter',
     });
@@ -246,6 +246,8 @@ router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async
       globalLogicalOperator,
       isShared,
       tags,
+      createdBy: req.user!.id,
+      createdAt: new Date(),
       updatedAt: new Date(),
     };
 
@@ -258,13 +260,13 @@ router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: { filter: updatedFilter },
     });
   } catch (error) {
     console.error('Update filter error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to update filter',
     });
@@ -402,7 +404,7 @@ router.post('/apply', authenticate, applyFilterValidation, async (req: Authentic
         isActive: group.isActive,
       }));
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         data: results,
@@ -415,7 +417,7 @@ router.post('/apply', authenticate, applyFilterValidation, async (req: Authentic
     });
   } catch (error) {
     console.error('Apply filter error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to apply filter',
     });

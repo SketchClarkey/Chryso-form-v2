@@ -17,7 +17,7 @@ router.use(authenticate);
 // Upload single file
 router.post(
   '/single',
-  uploadSingle,
+  uploadSingle as any,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       if (!req.file) {
@@ -50,7 +50,7 @@ router.post(
 // Upload multiple files
 router.post(
   '/multiple',
-  uploadMultiple,
+  uploadMultiple as any,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const files = req.files as Express.Multer.File[];

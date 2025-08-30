@@ -1,6 +1,6 @@
 import { beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
-import './types/global.js'; // Import global type declarations
+// Types are automatically loaded from global.d.ts
 
 // Make mongoose available globally for tests
 declare global {

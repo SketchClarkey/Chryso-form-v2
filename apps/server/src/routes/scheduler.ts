@@ -42,7 +42,7 @@ router.post(
     body('recipients').isArray().withMessage('Recipients must be an array'),
     body('exportFormat').isIn(['pdf', 'excel', 'csv']).withMessage('Invalid export format'),
   ],
-  async (req: AuthenticatedRequest, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

@@ -76,7 +76,7 @@ export class DashboardService {
     dashboard.lastModifiedBy = new Types.ObjectId(userId);
 
     await dashboard.save();
-    return dashboard.populate('createdBy', 'firstName lastName email').populate('lastModifiedBy', 'firstName lastName email');
+    return (await dashboard.populate('createdBy', 'firstName lastName email')).populate('lastModifiedBy', 'firstName lastName email');
   }
 
   async getDashboards(

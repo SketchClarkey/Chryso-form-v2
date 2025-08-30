@@ -368,7 +368,7 @@ export class ExportService {
           const chartBuffer = await this.generateChartImage(vizData, visualization);
           const img = new Image();
           img.onload = () => {
-            ctx.drawImage(img, 50, yOffset, 400, 250);
+            ctx.drawImage(img as any, 50, yOffset, 400, 250);
           };
           img.src = `data:image/png;base64,${chartBuffer.toString('base64')}`;
           yOffset += 300;

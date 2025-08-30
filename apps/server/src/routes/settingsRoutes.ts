@@ -1,13 +1,12 @@
 import express from 'express';
 import { OrganizationSettings, IOrganizationSettings } from '../models/OrganizationSettings';
 import { UserPreferences, IUserPreferences } from '../models/UserPreferences';
-import { authenticate } from '../middleware/auth';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Organization Settings Routes (Admin only)
-router.get('/organization', authorize('admin'), async (req, res) => {
+router.get('/organization', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const { organizationId } = req.user!;
 
@@ -35,8 +34,8 @@ router.get('/organization', authorize('admin'), async (req, res) => {
           address: { country: 'US' },
           contact: { email: req.user!.email },
         },
-        createdBy: req.user!.userId,
-        updatedBy: req.user!.userId,
+        createdBy: req.user!.id,
+        updatedBy: req.user!.id,
       });
       await settings.save();
     }
@@ -48,10 +47,10 @@ router.get('/organization', authorize('admin'), async (req, res) => {
   }
 });
 
-router.put('/organization', authorize('admin'), async (req, res) => {
+router.put('/organization', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const { organizationId } = req.user!;
-    const updateData = { ...req.body, updatedBy: req.user!.userId };
+    const updateData = { ...req.body, updatedBy: req.user!.id };
 
     const settings = await OrganizationSettings.findOneAndUpdate({ organizationId }, updateData, {
       new: true,
@@ -66,7 +65,7 @@ router.put('/organization', authorize('admin'), async (req, res) => {
   }
 });
 
-router.get('/organization/sections', authorize('admin'), async (req, res) => {
+router.get('/organization/sections', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const { organizationId } = req.user!;
     const settings = await OrganizationSettings.findOne({ organizationId });
@@ -117,9 +116,9 @@ router.get('/organization/sections', authorize('admin'), async (req, res) => {
 });
 
 // User Preferences Routes
-router.get('/preferences', authenticate, async (req, res) => {
+router.get('/preferences', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
-    const { userId } = req.user!;
+    const { id: userId } = req.user!;
 
     let preferences = await UserPreferences.findOne({ userId });
 
@@ -150,9 +149,9 @@ router.get('/preferences', authenticate, async (req, res) => {
   }
 });
 
-router.put('/preferences', authenticate, async (req, res) => {
+router.put('/preferences', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
-    const { userId } = req.user!;
+    const { id: userId } = req.user!;
     const updateData = req.body;
 
     const preferences = await UserPreferences.findOneAndUpdate({ userId }, updateData, {
@@ -168,9 +167,9 @@ router.put('/preferences', authenticate, async (req, res) => {
   }
 });
 
-router.post('/preferences/activity', authenticate, async (req, res) => {
+router.post('/preferences/activity', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
-    const { userId } = req.user!;
+    const { id: userId } = req.user!;
     const { type, itemId, itemName, action } = req.body;
 
     await UserPreferences.findOneAndUpdate(
@@ -194,9 +193,9 @@ router.post('/preferences/activity', authenticate, async (req, res) => {
   }
 });
 
-router.post('/preferences/pin', authenticate, async (req, res) => {
+router.post('/preferences/pin', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
-    const { userId } = req.user!;
+    const { id: userId } = req.user!;
     const { type, itemId } = req.body;
 
     if (!['forms', 'reports', 'dashboards', 'searches'].includes(type)) {
@@ -216,9 +215,9 @@ router.post('/preferences/pin', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/preferences/pin', authenticate, async (req, res) => {
+router.delete('/preferences/pin', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
-    const { userId } = req.user!;
+    const { id: userId } = req.user!;
     const { type, itemId } = req.query;
 
     if (!['forms', 'reports', 'dashboards', 'searches'].includes(type as string)) {
@@ -238,7 +237,7 @@ router.delete('/preferences/pin', authenticate, async (req, res) => {
 });
 
 // System Information Routes (Admin only)
-router.get('/system/info', authorize('admin'), async (req, res) => {
+router.get('/system/info', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const systemInfo = {
       version: process.env.APP_VERSION || '1.0.0',
@@ -268,7 +267,7 @@ router.get('/system/info', authorize('admin'), async (req, res) => {
 });
 
 // Test Configuration Routes (Admin only)
-router.post('/test/email', authorize('admin'), async (req, res) => {
+router.post('/test/email', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const { organizationId } = req.user!;
     const { testEmail } = req.body;
@@ -293,7 +292,7 @@ router.post('/test/email', authorize('admin'), async (req, res) => {
   }
 });
 
-router.post('/test/storage', authorize('admin'), async (req, res) => {
+router.post('/test/storage', authorize('admin'), async (req: AuthenticatedRequest, res) => {
   try {
     const { organizationId } = req.user!;
 

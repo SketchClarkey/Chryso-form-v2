@@ -1,6 +1,6 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { query, validationResult } from 'express-validator';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import SearchService from '../services/searchService';
 
 const router = Router();
@@ -41,7 +41,7 @@ const suggestionValidation = [
 ];
 
 // GET /api/search - Global search across all entities
-router.get('/', authenticate, searchValidation, async (req, res) => {
+router.get('/', authenticate, searchValidation, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -100,7 +100,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
 
     const results = await searchService.globalSearch(searchOptions, req.user!.role, req.user!.id);
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         query,
@@ -116,7 +116,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
     });
   } catch (error) {
     console.error('Search error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Search failed',
     });
@@ -124,7 +124,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
 });
 
 // GET /api/search/suggestions - Get search suggestions
-router.get('/suggestions', authenticate, suggestionValidation, async (req, res) => {
+router.get('/suggestions', authenticate, suggestionValidation, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -143,7 +143,7 @@ router.get('/suggestions', authenticate, suggestionValidation, async (req, res) 
       req.user!.id
     );
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         query,
@@ -152,7 +152,7 @@ router.get('/suggestions', authenticate, suggestionValidation, async (req, res) 
     });
   } catch (error) {
     console.error('Search suggestions error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to get search suggestions',
     });

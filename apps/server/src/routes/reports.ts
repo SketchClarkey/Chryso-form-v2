@@ -386,7 +386,7 @@ router.post(
         });
       }
 
-      const clonedReport = await report.clone(req.body.name, req.user!.id);
+      const clonedReport = await report.clone(req.body.name, new Types.ObjectId(req.user!.id));
       await clonedReport.populate('createdBy', 'firstName lastName email');
 
       return res.status(201).json({
@@ -862,7 +862,7 @@ router.get(
       // Filter by allowed formats
       const allowedFormats = report.settings?.exportFormats || ['pdf', 'excel', 'csv'];
       const filteredFormats = availableFormats.filter(format =>
-        allowedFormats.includes(format.format)
+        allowedFormats.includes(format.format as "csv" | "image" | "pdf" | "excel")
       );
 
       return res.json({
