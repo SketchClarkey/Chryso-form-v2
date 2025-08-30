@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: '18.20.0'
+  NODE_VERSION: '20.11.0'
 
 jobs:
   setup:
@@ -52,7 +52,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['18.20.0', '20.11.0']
+        node-version: ['20.11.0', '22.17.0']
 
     services:
       mongodb:
