@@ -247,8 +247,8 @@ export function TemplateDetail() {
       {/* Template Info Card */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Created By
               </Typography>
@@ -258,8 +258,8 @@ export function TemplateDetail() {
               <Typography variant='caption' color='text.secondary'>
                 {new Date(template.createdAt).toLocaleDateString()}
               </Typography>
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Last Modified
               </Typography>
@@ -269,8 +269,8 @@ export function TemplateDetail() {
               <Typography variant='caption' color='text.secondary'>
                 {new Date(template.updatedAt).toLocaleDateString()}
               </Typography>
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Usage Statistics
               </Typography>
@@ -282,8 +282,8 @@ export function TemplateDetail() {
                   Last used: {new Date(template.usage.lastUsed).toLocaleDateString()}
                 </Typography>
               )}
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Tags
               </Typography>
@@ -298,8 +298,8 @@ export function TemplateDetail() {
                   </Typography>
                 )}
               </Box>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 

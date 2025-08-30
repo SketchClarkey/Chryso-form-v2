@@ -219,9 +219,9 @@ export function Profile() {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Profile Information */}
-        <Grid size={{ xs: 12 }} md={8}>
+        <Grid2 md={8}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -258,8 +258,8 @@ export function Profile() {
                 )}
               </Box>
 
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} sm={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 sm={6}>
                   <TextField
                     fullWidth
                     label='First Name'
@@ -269,8 +269,8 @@ export function Profile() {
                     error={!!errors.firstName}
                     helperText={errors.firstName}
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} sm={6}>
+                </Grid2>
+                <Grid2 sm={6}>
                   <TextField
                     fullWidth
                     label='Last Name'
@@ -280,8 +280,8 @@ export function Profile() {
                     error={!!errors.lastName}
                     helperText={errors.lastName}
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} sm={6}>
+                </Grid2>
+                <Grid2 sm={6}>
                   <TextField
                     fullWidth
                     label='Email'
@@ -289,8 +289,8 @@ export function Profile() {
                     disabled
                     helperText='Email cannot be changed'
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} sm={6}>
+                </Grid2>
+                <Grid2 sm={6}>
                   <TextField
                     fullWidth
                     label='Role'
@@ -298,8 +298,8 @@ export function Profile() {
                     disabled
                     helperText='Role is assigned by administrators'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
               <Divider sx={{ my: 3 }} />
 
@@ -308,8 +308,8 @@ export function Profile() {
                 Preferences
               </Typography>
 
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} sm={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Theme</InputLabel>
                     <Select
@@ -329,8 +329,8 @@ export function Profile() {
                       <MenuItem value='dark'>Dark</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12 }} sm={6}>
+                </Grid2>
+                <Grid2 sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Language</InputLabel>
                     <Select
@@ -348,8 +348,8 @@ export function Profile() {
                       <MenuItem value='fr'>French</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12 }} sm={6}>
+                </Grid2>
+                <Grid2 sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Timezone</InputLabel>
                     <Select
@@ -369,8 +369,8 @@ export function Profile() {
                       <MenuItem value='America/Los_Angeles'>Pacific Time</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
               {/* Notification Settings */}
               <Typography variant='h6' gutterBottom sx={{ mt: 3 }}>
@@ -465,10 +465,10 @@ export function Profile() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Account Actions */}
-        <Grid size={{ xs: 12 }} md={4}>
+        <Grid2 md={4}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -522,8 +522,8 @@ export function Profile() {
               </Box>
             </Box>
           </Paper>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Password Change Dialog */}
       <Dialog

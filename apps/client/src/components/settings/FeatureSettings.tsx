@@ -139,9 +139,9 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
           subheader='Enable or disable specific features for your organization'
         />
         <CardContent>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             {modules.map(module => (
-              <Grid size={{ xs: 12 }} md={6} key={module.key}>
+              <Grid2 md={6} key={module.key}>
                 <Box
                   sx={{
                     p: 2,
@@ -185,9 +185,9 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                     )}
                   </Box>
                 </Box>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
 
           <Alert severity='info' sx={{ mt: 3 }}>
             <Typography variant='body2'>
@@ -206,8 +206,8 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
           subheader='Configure resource limits for your organization'
         />
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Maximum Users
               </Typography>
@@ -246,9 +246,9 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                   sx={{ mt: 0.5 }}
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Maximum Forms
               </Typography>
@@ -288,9 +288,9 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                   sx={{ mt: 0.5 }}
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Storage Quota (GB)
               </Typography>
@@ -335,9 +335,9 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                   sx={{ mt: 0.5 }}
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 API Calls per Month
               </Typography>
@@ -391,8 +391,8 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
                   sx={{ mt: 0.5 }}
                 />
               </Box>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Alert severity='warning' sx={{ mt: 3 }} icon={<WarningIcon />}>
             <Typography variant='body2'>

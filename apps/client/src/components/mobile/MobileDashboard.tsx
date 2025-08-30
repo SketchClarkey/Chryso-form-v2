@@ -242,7 +242,7 @@ export function MobileDashboard() {
       </Paper>
 
       {/* Quick Stats */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid2 container spacing={2} sx={{ mb: 3 }}>
         <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
@@ -254,7 +254,7 @@ export function MobileDashboard() {
               color='primary'
             />
           )}
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
@@ -266,7 +266,7 @@ export function MobileDashboard() {
               color='warning'
             />
           )}
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
@@ -278,7 +278,7 @@ export function MobileDashboard() {
               color='success'
             />
           )}
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
@@ -291,8 +291,8 @@ export function MobileDashboard() {
               subtitle='New forms'
             />
           )}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Offline Storage Info */}
       {(isOffline || offlineStorageInfo.formCount > 0) && (
@@ -306,7 +306,7 @@ export function MobileDashboard() {
               <CloudOff color='action' />
               Offline Storage
             </Typography>
-            <Grid container spacing={2}>
+            <Grid2 container spacing={2}>
               <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.formCount}
@@ -314,7 +314,7 @@ export function MobileDashboard() {
                 <Typography variant='caption' color='text.secondary'>
                   Forms
                 </Typography>
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.attachmentCount}
@@ -322,7 +322,7 @@ export function MobileDashboard() {
                 <Typography variant='caption' color='text.secondary'>
                   Files
                 </Typography>
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {formatFileSize(offlineStorageInfo.size)}
@@ -330,8 +330,8 @@ export function MobileDashboard() {
                 <Typography variant='caption' color='text.secondary'>
                   Cache Size
                 </Typography>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </CardContent>
         </Card>
       )}

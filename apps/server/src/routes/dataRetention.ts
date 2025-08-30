@@ -68,60 +68,56 @@ const createPolicySchema = z.object({
 });
 
 // Get all retention policies
-router.get(
-  '/',
-  authorize('admin', 'manager'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { page = 1, limit = 20, entityType, isActive } = req.query;
-      const organizationId = req.user?.organizationId || (req.query.organizationId as string);
+router.get('/', authorize('admin', 'manager'), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { page = 1, limit = 20, entityType, isActive } = req.query;
+    const organizationId = req.user?.organizationId || (req.query.organizationId as string);
 
-      if (!organizationId) {
-        res.status(400).json({
-          success: false,
-          message: 'Organization ID required',
-        });
-        return;
-      }
-
-      const query: any = { organizationId };
-      if (entityType) query.entityType = entityType;
-      if (isActive !== undefined) query.isActive = isActive === 'true';
-
-      const skip = (Number(page) - 1) * Number(limit);
-
-      const [policies, total] = await Promise.all([
-        DataRetentionPolicy.find(query)
-          .populate('createdBy', 'firstName lastName email')
-          .populate('modifiedBy', 'firstName lastName email')
-          .sort({ createdAt: -1 })
-          .skip(skip)
-          .limit(Number(limit))
-          .lean(),
-        DataRetentionPolicy.countDocuments(query),
-      ]);
-
-      res.json({
-        success: true,
-        data: {
-          policies,
-          pagination: {
-            page: Number(page),
-            limit: Number(limit),
-            total,
-            pages: Math.ceil(total / Number(limit)),
-          },
-        },
-      });
-    } catch (error) {
-      console.error('Failed to get retention policies:', error);
-      res.status(500).json({
+    if (!organizationId) {
+      res.status(400).json({
         success: false,
-        message: 'Failed to retrieve retention policies',
+        message: 'Organization ID required',
       });
+      return;
     }
+
+    const query: any = { organizationId };
+    if (entityType) query.entityType = entityType;
+    if (isActive !== undefined) query.isActive = isActive === 'true';
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [policies, total] = await Promise.all([
+      DataRetentionPolicy.find(query)
+        .populate('createdBy', 'firstName lastName email')
+        .populate('modifiedBy', 'firstName lastName email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      DataRetentionPolicy.countDocuments(query),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        policies,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit),
+          total,
+          pages: Math.ceil(total / Number(limit)),
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Failed to get retention policies:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve retention policies',
+    });
   }
-);
+});
 
 // Get single retention policy
 router.get(
@@ -396,52 +392,48 @@ router.get(
 );
 
 // Test retention policy (dry run)
-router.post(
-  '/:id/test',
-  authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { id } = req.params;
-      const organizationId = req.user?.organizationId || req.body.organizationId;
+router.post('/:id/test', authorize('admin'), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const organizationId = req.user?.organizationId || req.body.organizationId;
 
-      const policy = await DataRetentionPolicy.findOne({ _id: id, organizationId });
+    const policy = await DataRetentionPolicy.findOne({ _id: id, organizationId });
 
-      if (!policy) {
-        res.status(404).json({
-          success: false,
-          message: 'Retention policy not found',
-        });
-        return;
-      }
-
-      // This would be a dry run to show what would be affected
-      const cutoffDate = policy.getCutoffDate();
-
-      // Count records that would be affected for each entity type
-      const testResults: any = {
-        cutoffDate,
-        policyName: policy.name,
-        entityType: policy.entityType,
-        estimatedRecords: 0,
-      };
-
-      // Add logic to count records that would be affected
-      // This is simplified - in production you'd want to run the same queries as the actual execution
-
-      res.json({
-        success: true,
-        message: 'Retention policy test completed',
-        data: { testResults },
-      });
-    } catch (error) {
-      console.error('Failed to test retention policy:', error);
-      res.status(500).json({
+    if (!policy) {
+      res.status(404).json({
         success: false,
-        message: 'Failed to test retention policy',
+        message: 'Retention policy not found',
       });
+      return;
     }
+
+    // This would be a dry run to show what would be affected
+    const cutoffDate = policy.getCutoffDate();
+
+    // Count records that would be affected for each entity type
+    const testResults: any = {
+      cutoffDate,
+      policyName: policy.name,
+      entityType: policy.entityType,
+      estimatedRecords: 0,
+    };
+
+    // Add logic to count records that would be affected
+    // This is simplified - in production you'd want to run the same queries as the actual execution
+
+    res.json({
+      success: true,
+      message: 'Retention policy test completed',
+      data: { testResults },
+    });
+  } catch (error) {
+    console.error('Failed to test retention policy:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to test retention policy',
+    });
   }
-);
+});
 
 // Toggle policy active status
 router.patch(

@@ -25,10 +25,10 @@ import {
   IntegrationInstructions as IntegrationsIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
-import { GeneralSettings } from '../components/settings/GeneralSettings';
-import { SecuritySettings } from '../components/settings/SecuritySettings';
-import { SystemSettings } from '../components/settings/SystemSettings';
-import { UserPreferences } from '../components/settings/UserPreferences';
+import GeneralSettings from '../components/settings/GeneralSettings';
+import SecuritySettings from '../components/settings/SecuritySettings';
+import SystemSettings from '../components/settings/SystemSettings';
+import UserPreferences from '../components/settings/UserPreferences';
 
 interface SettingsSection {
   path: string;
@@ -99,7 +99,7 @@ export function Settings() {
         Configure application settings and preferences
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Settings Navigation */}
         <Grid size={{ xs: 12, md: 4, lg: 3 }}>
           <Card>
@@ -136,7 +136,7 @@ export function Settings() {
               </List>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Settings Content */}
         <Grid size={{ xs: 12, md: 8, lg: 9 }}>
@@ -149,8 +149,8 @@ export function Settings() {
               <Route path='*' element={<Navigate to='/settings/general' replace />} />
             </Routes>
           </Paper>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 }

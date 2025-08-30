@@ -2,9 +2,17 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './express.js';
 
 // Route handler types that properly handle async functions and return types
-export type RouteHandler<T = any> = (req: Request, res: Response, next: NextFunction) => Promise<void> | void;
+export type RouteHandler<T = any> = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void> | void;
 
-export type AuthenticatedRouteHandler<T = any> = (req: AuthenticatedRequest, res: Response, next: NextFunction) => Promise<void> | void;
+export type AuthenticatedRouteHandler<T = any> = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => Promise<void> | void;
 
 // Async route handler wrapper that handles Promise return types
 export const asyncHandler = <T = any>(
@@ -25,7 +33,12 @@ export const asyncAuthHandler = <T = any>(
 };
 
 // Type-safe response helpers
-export const sendSuccess = <T = any>(res: Response, data?: T, message?: string, statusCode = 200) => {
+export const sendSuccess = <T = any>(
+  res: Response,
+  data?: T,
+  message?: string,
+  statusCode = 200
+) => {
   return res.status(statusCode).json({
     success: true,
     message,
@@ -33,7 +46,13 @@ export const sendSuccess = <T = any>(res: Response, data?: T, message?: string, 
   });
 };
 
-export const sendError = (res: Response, message: string, statusCode = 500, code?: string, details?: any) => {
+export const sendError = (
+  res: Response,
+  message: string,
+  statusCode = 500,
+  code?: string,
+  details?: any
+) => {
   return res.status(statusCode).json({
     success: false,
     message,

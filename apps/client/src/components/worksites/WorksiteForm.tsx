@@ -343,7 +343,7 @@ export function WorksiteForm({
             <Typography variant='h6' gutterBottom>
               Basic Information
             </Typography>
-            <Grid container spacing={2}>
+            <Grid2 container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label='Worksite Name'
@@ -355,7 +355,7 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label='Customer Name'
@@ -367,8 +367,8 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Box>
 
           <Divider />
@@ -408,7 +408,7 @@ export function WorksiteForm({
             <Typography variant='h6' gutterBottom>
               Address
             </Typography>
-            <Grid container spacing={2}>
+            <Grid2 container spacing={2}>
               <Grid size={{ xs: 12 }}>
                 <TextField
                   label='Street Address'
@@ -420,7 +420,7 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='City'
@@ -432,7 +432,7 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='State'
@@ -444,7 +444,7 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
+              </Grid2>
               <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='ZIP Code'
@@ -456,8 +456,8 @@ export function WorksiteForm({
                   fullWidth
                   disabled={submitting}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Box>
 
           <Divider />
@@ -512,7 +512,7 @@ export function WorksiteForm({
                     </Box>
                   </Box>
 
-                  <Grid container spacing={2}>
+                  <Grid2 container spacing={2}>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Name'
@@ -524,7 +524,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Position'
@@ -533,7 +533,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Phone'
@@ -542,7 +542,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Email'
@@ -554,8 +554,8 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </CardContent>
               </Card>
             ))}
@@ -601,7 +601,7 @@ export function WorksiteForm({
                     </IconButton>
                   </Box>
 
-                  <Grid container spacing={2}>
+                  <Grid2 container spacing={2}>
                     <Grid size={{ xs: 12, md: 3 }}>
                       <TextField
                         label='Equipment ID'
@@ -613,7 +613,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 3 }}>
                       <FormControl fullWidth disabled={submitting}>
                         <InputLabel>Type</InputLabel>
@@ -629,7 +629,7 @@ export function WorksiteForm({
                           ))}
                         </Select>
                       </FormControl>
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 3 }}>
                       <TextField
                         label='Model'
@@ -638,7 +638,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 3 }}>
                       <FormControl fullWidth disabled={submitting}>
                         <InputLabel>Condition</InputLabel>
@@ -654,7 +654,7 @@ export function WorksiteForm({
                           ))}
                         </Select>
                       </FormControl>
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Serial Number'
@@ -663,7 +663,7 @@ export function WorksiteForm({
                         fullWidth
                         disabled={submitting}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Notes'
@@ -674,8 +674,8 @@ export function WorksiteForm({
                         rows={2}
                         disabled={submitting}
                       />
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </CardContent>
               </Card>
             ))}

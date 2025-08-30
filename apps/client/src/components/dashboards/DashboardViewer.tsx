@@ -4,7 +4,7 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
+  Grid2,
   Paper,
   IconButton,
   Button,
@@ -140,7 +140,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const response = await request(`/api/dashboards/${dashboardId}`);
+      const response = await get('/api/dashboards/${dashboardId}');
       const dashboardData = response.data.dashboard;
       setDashboard(dashboardData);
       setAutoRefresh(dashboardData.settings.autoRefresh);
@@ -160,7 +160,7 @@ const DashboardViewer: React.FC<DashboardViewerProps> = ({
 
     setRefreshing(true);
     try {
-      const response = await request(`/api/dashboards/${dashboardId}/data?refresh=${forceRefresh}`);
+      const response = await get('/api/dashboards/${dashboardId}/data?refresh=${forceRefresh}');
       setWidgetData(response.data.widgets);
     } catch (err: any) {
       console.error('Failed to load dashboard data:', err);

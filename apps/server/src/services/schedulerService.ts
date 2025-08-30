@@ -124,7 +124,9 @@ export class SchedulerService {
         id: `report-${report._id}`,
         reportId: report._id.toString(),
         schedule: report.schedule.cronExpression,
-        recipients: (report.schedule.recipients || []).map(r => typeof r === 'string' ? r : r.email),
+        recipients: (report.schedule.recipients || []).map(r =>
+          typeof r === 'string' ? r : r.email
+        ),
         format: report.schedule.exportFormat || 'pdf',
         task,
         enabled: true,

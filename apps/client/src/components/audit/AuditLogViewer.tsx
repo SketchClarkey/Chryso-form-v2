@@ -247,7 +247,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       <Typography variant='h6' gutterBottom>
         Filters
       </Typography>
-      <Grid container spacing={2} alignItems='center'>
+      <Grid2 container spacing={2} alignItems='center'>
         <Grid size={{ xs: 12, md: 3 }}>
           <DateTimePicker
             label='Start Date'
@@ -255,7 +255,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             onChange={date => handleFilterChange('startDate', date)}
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 12, md: 3 }}>
           <DateTimePicker
             label='End Date'
@@ -263,7 +263,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             onChange={date => handleFilterChange('endDate', date)}
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 12, md: 2 }}>
           <FormControl size='small' fullWidth>
             <InputLabel>Category</InputLabel>
@@ -282,7 +282,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               <MenuItem value='integration'>Integration</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 12, md: 2 }}>
           <FormControl size='small' fullWidth>
             <InputLabel>Severity</InputLabel>
@@ -298,7 +298,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               <MenuItem value='critical'>Critical</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 12, md: 2 }}>
           <Box display='flex' gap={1}>
             <Tooltip title='Refresh'>
@@ -315,7 +315,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               Clear
             </Button>
           </Box>
-        </Grid>
+        </Grid2>
         <Grid size={{ xs: 12 }}>
           <TextField
             size='small'
@@ -324,8 +324,8 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             value={filters.search}
             onChange={e => handleFilterChange('search', e.target.value)}
           />
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Paper>
   );
 
@@ -501,29 +501,29 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
         <DialogContent>
           {selectedLog && (
             <Box>
-              <Grid container spacing={2}>
+              <Grid2 container spacing={2}>
                 <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Timestamp</Typography>
                   <Typography variant='body2'>
                     {new Date(selectedLog.timestamp).toLocaleString()}
                   </Typography>
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Event Type</Typography>
                   <Typography variant='body2'>{selectedLog.eventType}</Typography>
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Action</Typography>
                   <Typography variant='body2'>{selectedLog.action}</Typography>
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Category</Typography>
                   <Typography variant='body2'>{selectedLog.category}</Typography>
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 12 }}>
                   <Typography variant='subtitle2'>Description</Typography>
                   <Typography variant='body2'>{selectedLog.description}</Typography>
-                </Grid>
+                </Grid2>
                 {selectedLog.details && (
                   <Grid size={{ xs: 12 }}>
                     <Typography variant='subtitle2'>Details</Typography>
@@ -532,9 +532,9 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                         {JSON.stringify(selectedLog.details, null, 2)}
                       </pre>
                     </Paper>
-                  </Grid>
+                  </Grid2>
                 )}
-              </Grid>
+              </Grid2>
             </Box>
           )}
         </DialogContent>

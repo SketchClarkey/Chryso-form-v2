@@ -100,7 +100,7 @@ const DashboardManager: React.FC = () => {
         params.set('search', searchQuery);
       }
 
-      const response = await request(`/api/dashboards?${params.toString()}`);
+      const response = await get('/api/dashboards?${params.toString()}');
       setDashboards(response.data.dashboards);
     } catch (error) {
       console.error('Failed to load dashboards:', error);
@@ -231,8 +231,8 @@ const DashboardManager: React.FC = () => {
       {/* Filters and Search */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2} alignItems='center'>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={2} alignItems='center'>
+            <Grid2 md={6}>
               <Tabs
                 value={selectedCategory}
                 onChange={(_, newValue) => setSelectedCategory(newValue)}
@@ -243,8 +243,8 @@ const DashboardManager: React.FC = () => {
                   <Tab key={category.value} label={category.label} value={category.value} />
                 ))}
               </Tabs>
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <Box display='flex' gap={1}>
                 <TextField
                   placeholder='Search dashboards...'
@@ -261,8 +261,8 @@ const DashboardManager: React.FC = () => {
                   Search
                 </Button>
               </Box>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -285,9 +285,9 @@ const DashboardManager: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {filteredDashboards.map(dashboard => (
-            <Grid size={{ xs: 12 }} sm={6} md={4} key={dashboard.id}>
+            <Grid2 sm={6} md={4} key={dashboard.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
                   <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
@@ -381,9 +381,9 @@ const DashboardManager: React.FC = () => {
                   </Button>
                 </CardActions>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       {/* Action Menu */}

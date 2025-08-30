@@ -294,9 +294,9 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
       </DialogTitle>
 
       <DialogContent>
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {/* Variables Panel */}
-          <Grid size={{ xs: 12 }} md={4}>
+          <Grid2 md={4}>
             <Paper sx={{ p: 2, height: 'fit-content', maxHeight: '70vh', overflow: 'auto' }}>
               <Typography variant='h6' gutterBottom>
                 Template Variables
@@ -322,23 +322,21 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
               <Divider sx={{ my: 2 }} />
 
               {template?.variables?.length > 0 ? (
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   {template.variables.map((variable: any, index: number) => (
-                    <Grid size={{ xs: 12 }} key={index}>
-                      {renderVariableInput(variable)}
-                    </Grid>
+                    <Grid2 key={index}>{renderVariableInput(variable)}</Grid2>
                   ))}
-                </Grid>
+                </Grid2>
               ) : (
                 <Typography variant='body2' color='text.secondary'>
                   No variables defined for this template.
                 </Typography>
               )}
             </Paper>
-          </Grid>
+          </Grid2>
 
           {/* Preview Panel */}
-          <Grid size={{ xs: 12 }} md={8}>
+          <Grid2 md={8}>
             <Paper sx={{ height: '70vh', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
@@ -441,8 +439,8 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
                 </>
               )}
             </Paper>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </DialogContent>
 
       <DialogActions>

@@ -344,7 +344,7 @@ const VisualizationEditor: React.FC<{
 
       <Box sx={{ mt: 2 }}>
         {activeTab === 0 && (
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
@@ -352,7 +352,7 @@ const VisualizationEditor: React.FC<{
                 value={visualization.title || ''}
                 onChange={e => onChange({ title: e.target.value })}
               />
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
@@ -362,12 +362,12 @@ const VisualizationEditor: React.FC<{
                 multiline
                 rows={3}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
 
         {activeTab === 1 && (
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             <Grid size={{ xs: 12 }}>
               <FormControl fullWidth>
                 <InputLabel>Data Source</InputLabel>
@@ -381,7 +381,7 @@ const VisualizationEditor: React.FC<{
                   <MenuItem value='users'>Users</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
             {visualization.type === 'chart' && (
               <Grid size={{ xs: 12 }}>
                 <FormControl fullWidth>
@@ -402,13 +402,13 @@ const VisualizationEditor: React.FC<{
                     <MenuItem value='scatter'>Scatter Chart</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid2>
             )}
-          </Grid>
+          </Grid2>
         )}
 
         {activeTab === 2 && (
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
@@ -421,7 +421,7 @@ const VisualizationEditor: React.FC<{
                   })
                 }
               />
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
@@ -434,8 +434,8 @@ const VisualizationEditor: React.FC<{
                   })
                 }
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
       </Box>
     </Box>
@@ -478,7 +478,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
 
   const loadDataSources = async () => {
     try {
-      const response = await request('/api/reports/meta/datasources');
+      const response = await get('/api/reports/meta/datasources');
       setAvailableDataSources(response.data.dataSources);
     } catch (error) {
       console.error('Failed to load data sources:', error);
@@ -487,7 +487,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
 
   const loadReport = async (id: string) => {
     try {
-      const response = await request(`/api/reports/${id}`);
+      const response = await get('/api/reports/${id}');
       setReport(response.data.report);
     } catch (error) {
       console.error('Failed to load report:', error);
@@ -594,7 +594,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                 <Typography>Report Settings</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
@@ -602,7 +602,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                       value={report.name}
                       onChange={e => setReport({ ...report, name: e.target.value })}
                     />
-                  </Grid>
+                  </Grid2>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Category</InputLabel>
@@ -622,8 +622,8 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                         <MenuItem value='custom'>Custom</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               </AccordionDetails>
             </Accordion>
           </Box>

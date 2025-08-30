@@ -18,110 +18,106 @@ const router = Router();
 router.use(authenticate);
 
 // Get all forms with filtering and pagination
-router.get(
-  '/',
-  auditDataAccess,
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { page, limit, sort, order, q, status, worksite, technician, dateFrom, dateTo } =
-        searchSchema.parse(req.query);
-      const currentUser = req.user!;
+router.get('/', auditDataAccess, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { page, limit, sort, order, q, status, worksite, technician, dateFrom, dateTo } =
+      searchSchema.parse(req.query);
+    const currentUser = req.user!;
 
-      // Build filter based on user role and permissions
-      const filter: any = {};
+    // Build filter based on user role and permissions
+    const filter: any = {};
 
-      // Role-based filtering
-      if (currentUser.role === 'technician') {
-        filter.technician = currentUser.id;
-      } else if (currentUser.role === 'manager') {
-        // Managers can see forms from their worksites
-        filter.worksite = { $in: currentUser.worksiteIds };
-      }
-      // Admins can see all forms (no additional filter)
-
-      // Apply search filters
-      if (q) {
-        filter.$or = [
-          { formId: { $regex: q, $options: 'i' } },
-          { 'customerInfo.customerName': { $regex: q, $options: 'i' } },
-          { 'customerInfo.plantLocation': { $regex: q, $options: 'i' } },
-        ];
-      }
-
-      if (status) {
-        filter.status = status;
-      }
-
-      if (worksite && currentUser.role !== 'technician') {
-        filter.worksite = worksite;
-      }
-
-      if (technician && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
-        filter.technician = technician;
-      }
-
-      if (dateFrom || dateTo) {
-        filter.createdAt = {};
-        if (dateFrom) filter.createdAt.$gte = new Date(dateFrom);
-        if (dateTo) filter.createdAt.$lte = new Date(dateTo);
-      }
-
-      // Build sort
-      const sortField = sort || 'createdAt';
-      const sortOrder = order === 'asc' ? 1 : -1;
-      const sortOptions: any = { [sortField]: sortOrder };
-
-      // Execute query
-      const skip = (Number(page) - 1) * Number(limit);
-
-      const [forms, total] = await Promise.all([
-        Form.find(filter)
-          .populate('worksite', 'name customerName address')
-          .populate('technician', 'firstName lastName email')
-          .populate('approvedBy', 'firstName lastName email')
-          .sort(sortOptions)
-          .skip(skip)
-          .limit(Number(limit))
-          .lean(),
-        Form.countDocuments(filter),
-      ]);
-
-      const totalPages = Math.ceil(total / Number(limit));
-
-      res.json({
-        success: true,
-        data: {
-          forms,
-          pagination: {
-            page: Number(page),
-            limit: Number(limit),
-            total,
-            totalPages,
-            hasNextPage: Number(page) < totalPages,
-            hasPrevPage: Number(page) > 1,
-          },
-        },
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          message: 'Invalid query parameters',
-          errors: error.errors,
-          code: 'VALIDATION_ERROR',
-        });
-        return;
-      }
-
-      console.error('Get forms error:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        code: 'INTERNAL_ERROR',
-      });
+    // Role-based filtering
+    if (currentUser.role === 'technician') {
+      filter.technician = currentUser.id;
+    } else if (currentUser.role === 'manager') {
+      // Managers can see forms from their worksites
+      filter.worksite = { $in: currentUser.worksiteIds };
     }
+    // Admins can see all forms (no additional filter)
+
+    // Apply search filters
+    if (q) {
+      filter.$or = [
+        { formId: { $regex: q, $options: 'i' } },
+        { 'customerInfo.customerName': { $regex: q, $options: 'i' } },
+        { 'customerInfo.plantLocation': { $regex: q, $options: 'i' } },
+      ];
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    if (worksite && currentUser.role !== 'technician') {
+      filter.worksite = worksite;
+    }
+
+    if (technician && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
+      filter.technician = technician;
+    }
+
+    if (dateFrom || dateTo) {
+      filter.createdAt = {};
+      if (dateFrom) filter.createdAt.$gte = new Date(dateFrom);
+      if (dateTo) filter.createdAt.$lte = new Date(dateTo);
+    }
+
+    // Build sort
+    const sortField = sort || 'createdAt';
+    const sortOrder = order === 'asc' ? 1 : -1;
+    const sortOptions: any = { [sortField]: sortOrder };
+
+    // Execute query
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [forms, total] = await Promise.all([
+      Form.find(filter)
+        .populate('worksite', 'name customerName address')
+        .populate('technician', 'firstName lastName email')
+        .populate('approvedBy', 'firstName lastName email')
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Form.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / Number(limit));
+
+    res.json({
+      success: true,
+      data: {
+        forms,
+        pagination: {
+          page: Number(page),
+          limit: Number(limit),
+          total,
+          totalPages,
+          hasNextPage: Number(page) < totalPages,
+          hasPrevPage: Number(page) > 1,
+        },
+      },
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid query parameters',
+        errors: error.errors,
+        code: 'VALIDATION_ERROR',
+      });
+      return;
+    }
+
+    console.error('Get forms error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+    });
   }
-);
+});
 
 // Get form by ID
 router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
@@ -190,82 +186,75 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // Create new form
-router.post(
-  '/',
-  requireWorksite,
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const currentUser = req.user!;
-      const validatedData = createFormSchema.parse(req.body);
+router.post('/', requireWorksite, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const currentUser = req.user!;
+    const validatedData = createFormSchema.parse(req.body);
 
-      // Verify worksite access
-      if (
-        currentUser.role !== 'admin' &&
-        !currentUser.worksiteIds.includes(validatedData.worksite)
-      ) {
-        res.status(403).json({
-          success: false,
-          message: 'Access denied to this worksite',
-          code: 'WORKSITE_ACCESS_DENIED',
-        });
-        return;
-      }
-
-      // Verify worksite exists
-      const worksite = await Worksite.findById(validatedData.worksite);
-      if (!worksite) {
-        res.status(404).json({
-          success: false,
-          message: 'Worksite not found',
-          code: 'WORKSITE_NOT_FOUND',
-        });
-        return;
-      }
-
-      // Create form
-      const form = new Form({
-        ...validatedData,
-        technician: currentUser.id,
-        metadata: {
-          createdBy: currentUser.id,
-          syncStatus: 'synced',
-          offlineCreated: false,
-        },
-      });
-
-      await form.save();
-
-      // Populate for response
-      await form.populate([
-        { path: 'worksite', select: 'name customerName address' },
-        { path: 'technician', select: 'firstName lastName email' },
-      ]);
-
-      res.status(201).json({
-        success: true,
-        message: 'Form created successfully',
-        data: { form },
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          message: 'Invalid form data',
-          errors: error.errors,
-          code: 'VALIDATION_ERROR',
-        });
-        return;
-      }
-
-      console.error('Create form error:', error);
-      res.status(500).json({
+    // Verify worksite access
+    if (currentUser.role !== 'admin' && !currentUser.worksiteIds.includes(validatedData.worksite)) {
+      res.status(403).json({
         success: false,
-        message: 'Internal server error',
-        code: 'INTERNAL_ERROR',
+        message: 'Access denied to this worksite',
+        code: 'WORKSITE_ACCESS_DENIED',
       });
+      return;
     }
+
+    // Verify worksite exists
+    const worksite = await Worksite.findById(validatedData.worksite);
+    if (!worksite) {
+      res.status(404).json({
+        success: false,
+        message: 'Worksite not found',
+        code: 'WORKSITE_NOT_FOUND',
+      });
+      return;
+    }
+
+    // Create form
+    const form = new Form({
+      ...validatedData,
+      technician: currentUser.id,
+      metadata: {
+        createdBy: currentUser.id,
+        syncStatus: 'synced',
+        offlineCreated: false,
+      },
+    });
+
+    await form.save();
+
+    // Populate for response
+    await form.populate([
+      { path: 'worksite', select: 'name customerName address' },
+      { path: 'technician', select: 'firstName lastName email' },
+    ]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Form created successfully',
+      data: { form },
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid form data',
+        errors: error.errors,
+        code: 'VALIDATION_ERROR',
+      });
+      return;
+    }
+
+    console.error('Create form error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+    });
   }
-);
+});
 
 // Update form
 router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {

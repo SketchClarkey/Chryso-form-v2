@@ -25,7 +25,7 @@ export default [
         setInterval: 'readonly',
         clearInterval: 'readonly',
         setImmediate: 'readonly',
-        clearImmediate: 'readonly'
+        clearImmediate: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -104,7 +104,7 @@ export default [
         SharedWorker: 'readonly',
         ServiceWorker: 'readonly',
         PerformanceObserver: 'readonly',
-        __REACT_DEVTOOLS_GLOBAL_HOOK__: 'readonly'
+        __REACT_DEVTOOLS_GLOBAL_HOOK__: 'readonly',
       },
     },
   },

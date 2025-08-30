@@ -4,10 +4,7 @@
   "description": "Modern form digitization application with Vite React frontend and Express backend",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "apps/client",
-    "apps/server"
-  ],
+  "workspaces": ["apps/client", "apps/server"],
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "npm run dev -w apps/server",
@@ -65,15 +62,7 @@
     "type": "git",
     "url": "https://github.com/SketchClarkey/Chryso-form-v2.git"
   },
-  "keywords": [
-    "form",
-    "digitization",
-    "vite",
-    "react",
-    "typescript",
-    "express",
-    "mongodb"
-  ],
+  "keywords": ["form", "digitization", "vite", "react", "typescript", "express", "mongodb"],
   "author": "SketchClarkey",
   "license": "MIT"
 }

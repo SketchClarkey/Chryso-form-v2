@@ -862,7 +862,7 @@ router.get(
       // Filter by allowed formats
       const allowedFormats = report.settings?.exportFormats || ['pdf', 'excel', 'csv'];
       const filteredFormats = availableFormats.filter(format =>
-        allowedFormats.includes(format.format as "csv" | "image" | "pdf" | "excel")
+        allowedFormats.includes(format.format as 'csv' | 'image' | 'pdf' | 'excel')
       );
 
       return res.json({

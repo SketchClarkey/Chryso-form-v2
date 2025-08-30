@@ -92,7 +92,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
     setLoading(true);
     setError(null);
     try {
-      const response = await request(`/api/reports/${reportId}/export-formats`);
+      const response = await get('/api/reports/${reportId}/export-formats');
       setFormats(response.data.formats);
       setCanExport(response.data.canExport);
 
@@ -174,9 +174,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
             <Typography variant='h6' gutterBottom>
               Choose Export Format
             </Typography>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid2 container spacing={2} sx={{ mb: 3 }}>
               {formats.map(format => (
-                <Grid size={{ xs: 12 }} sm={6} md={3} key={format.format}>
+                <Grid2 sm={6} md={3} key={format.format}>
                   <Card
                     sx={{
                       cursor: 'pointer',
@@ -198,9 +198,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
                       </Typography>
                     </CardContent>
                   </Card>
-                </Grid>
+                </Grid2>
               ))}
-            </Grid>
+            </Grid2>
 
             {/* Export Options */}
             {selectedFormatObj && (
@@ -211,9 +211,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
                   Export Options
                 </Typography>
 
-                <Grid container spacing={3}>
+                <Grid2 container spacing={3}>
                   {/* Include Options */}
-                  <Grid size={{ xs: 12 }} md={6}>
+                  <Grid2 md={6}>
                     <FormControl component='fieldset'>
                       <FormLabel component='legend'>Include</FormLabel>
                       <FormGroup>
@@ -251,11 +251,11 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
                         )}
                       </FormGroup>
                     </FormControl>
-                  </Grid>
+                  </Grid2>
 
                   {/* Page Options (for PDF) */}
                   {selectedFormatObj.options.pageSize && (
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <FormControl component='fieldset'>
                         <FormLabel component='legend'>Page Size</FormLabel>
                         <RadioGroup
@@ -277,12 +277,12 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
                           ))}
                         </RadioGroup>
                       </FormControl>
-                    </Grid>
+                    </Grid2>
                   )}
 
                   {/* Orientation Options (for PDF) */}
                   {selectedFormatObj.options.orientation && (
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <FormControl component='fieldset'>
                         <FormLabel component='legend'>Orientation</FormLabel>
                         <RadioGroup
@@ -304,9 +304,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
                           ))}
                         </RadioGroup>
                       </FormControl>
-                    </Grid>
+                    </Grid2>
                   )}
-                </Grid>
+                </Grid2>
 
                 {/* Format-specific Information */}
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>

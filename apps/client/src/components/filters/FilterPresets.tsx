@@ -117,7 +117,7 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
   const loadFilterPresets = async () => {
     setLoading(true);
     try {
-      const response = await request(`/api/filter-presets?entityType=${entityType}`);
+      const response = await get('/api/filter-presets?entityType=${entityType}');
       setPresets(response.data.presets);
     } catch (error) {
       console.error('Failed to load filter presets:', error);
@@ -362,11 +362,11 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
               </Typography>
             </Typography>
 
-            <Grid container spacing={2}>
+            <Grid2 container spacing={2}>
               {categoryPresets
                 .sort((a, b) => a.order - b.order)
                 .map(preset => (
-                  <Grid size={{ xs: 12 }} sm={6} md={4} key={preset.id}>
+                  <Grid2 sm={6} md={4} key={preset.id}>
                     <Card
                       variant='outlined'
                       sx={{
@@ -469,9 +469,9 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
                         </Button>
                       </CardActions>
                     </Card>
-                  </Grid>
+                  </Grid2>
                 ))}
-            </Grid>
+            </Grid2>
           </Box>
         );
       })}

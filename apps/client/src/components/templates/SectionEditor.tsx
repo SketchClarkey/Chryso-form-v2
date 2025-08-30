@@ -129,8 +129,8 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
           />
 
           {/* Layout Options */}
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={2}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Columns</InputLabel>
                 <Select
@@ -144,8 +144,8 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
                   <MenuItem value={4}>4 Columns</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <TextField
                 fullWidth
                 label='Display Order'
@@ -154,8 +154,8 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
                 onChange={e => handleLayoutChange('order', parseInt(e.target.value) || 0)}
                 helperText='Lower numbers appear first'
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           {/* Behavior Options */}
           <Box>

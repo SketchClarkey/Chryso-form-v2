@@ -104,7 +104,7 @@ const QuickFilters: React.FC<QuickFiltersProps> = ({
   const loadQuickFilters = async () => {
     setLoading(true);
     try {
-      const response = await request(`/api/quick-filters?entityType=${entityType}`);
+      const response = await get('/api/quick-filters?entityType=${entityType}');
       setFilters(response.data.filters);
     } catch (error) {
       console.error('Failed to load quick filters:', error);

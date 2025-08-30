@@ -376,8 +376,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
 
         {/* Basic Info Tab */}
         <TabPanel value={currentTab} index={0}>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <TextField
                 label='Template Name'
                 value={formData.name}
@@ -385,9 +385,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 fullWidth
                 required
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -407,9 +407,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -425,9 +425,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControlLabel
                 control={
                   <Switch
@@ -437,7 +437,7 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 }
                 label='Active'
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <TextField
@@ -448,7 +448,7 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 multiline
                 rows={2}
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <TextField
@@ -459,13 +459,13 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 required
                 helperText='Use {{variableName}} for dynamic content'
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </TabPanel>
 
         {/* Content Tab */}
         <TabPanel value={currentTab} index={1}>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
                 <Typography variant='h6'>HTML Content</Typography>
@@ -483,9 +483,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   <Typography>Handlebars Helpers</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Grid container spacing={1}>
+                  <Grid2 container spacing={1}>
                     {handlebarsHelpers.map((helper, index) => (
-                      <Grid size={{ xs: 12 }} sm={6} md={4} key={index}>
+                      <Grid2 sm={6} md={4} key={index}>
                         <Paper
                           sx={{ p: 1, cursor: 'pointer', '&:hover': { bgcolor: 'action.hover' } }}
                           onClick={() => insertHandlebarsHelper(helper.syntax)}
@@ -505,9 +505,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                             {helper.description}
                           </Typography>
                         </Paper>
-                      </Grid>
+                      </Grid2>
                     ))}
-                  </Grid>
+                  </Grid2>
                 </AccordionDetails>
               </Accordion>
 
@@ -526,7 +526,7 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   },
                 }}
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <Typography variant='h6' gutterBottom>
@@ -547,8 +547,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   },
                 }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </TabPanel>
 
         {/* Variables Tab */}
@@ -567,8 +567,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
             <Typography variant='subtitle1' gutterBottom>
               Add New Variable
             </Typography>
-            <Grid container spacing={2} alignItems='center'>
-              <Grid size={{ xs: 12 }} sm={3}>
+            <Grid2 container spacing={2} alignItems='center'>
+              <Grid2 sm={3}>
                 <TextField
                   label='Variable Name'
                   value={newVariable.name}
@@ -576,8 +576,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   size='small'
                   fullWidth
                 />
-              </Grid>
-              <Grid size={{ xs: 12 }} sm={4}>
+              </Grid2>
+              <Grid2 sm={4}>
                 <TextField
                   label='Description'
                   value={newVariable.description}
@@ -585,8 +585,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   size='small'
                   fullWidth
                 />
-              </Grid>
-              <Grid size={{ xs: 12 }} sm={2}>
+              </Grid2>
+              <Grid2 sm={2}>
                 <FormControl size='small' fullWidth>
                   <InputLabel>Type</InputLabel>
                   <Select
@@ -602,8 +602,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                     <MenuItem value='object'>Object</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid size={{ xs: 6 }} sm={2}>
+              </Grid2>
+              <Grid2 sm={2}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -614,8 +614,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   }
                   label='Required'
                 />
-              </Grid>
-              <Grid size={{ xs: 6 }} sm={1}>
+              </Grid2>
+              <Grid2 sm={1}>
                 <Button
                   variant='contained'
                   onClick={handleAddVariable}
@@ -625,8 +625,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 >
                   Add
                 </Button>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Paper>
 
           {/* Variables List */}
@@ -669,8 +669,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
 
         {/* Settings Tab */}
         <TabPanel value={currentTab} index={3}>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <TextField
                 label='From Name'
                 value={formData.settings.fromName}
@@ -678,9 +678,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 fullWidth
                 helperText='Leave empty to use system default'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='From Email'
                 type='email'
@@ -689,9 +689,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 fullWidth
                 helperText='Leave empty to use system default'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='Reply To'
                 type='email'
@@ -699,9 +699,9 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                 onChange={e => handleSettingChange('replyTo', e.target.value)}
                 fullWidth
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Priority</InputLabel>
                 <Select
@@ -714,7 +714,7 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   <MenuItem value='high'>High</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <Stack direction='row' spacing={3}>
@@ -737,8 +737,8 @@ const EmailTemplateEditor: React.FC<EmailTemplateEditorProps> = ({
                   label='Track Link Clicks'
                 />
               </Stack>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </TabPanel>
       </DialogContent>
 

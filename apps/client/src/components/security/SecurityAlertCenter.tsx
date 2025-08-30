@@ -106,7 +106,7 @@ const SecurityAlertCenter: React.FC<SecurityAlertCenterProps> = ({
         ...(severityFilter.length > 0 && { severity: severityFilter.join(',') }),
       });
 
-      const response = await request(`/api/security/alerts?${params}`);
+      const response = await get('/api/security/alerts?${params}');
       let alertsData = response.data.alerts;
 
       // Filter by status if needed

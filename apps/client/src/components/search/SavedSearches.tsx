@@ -128,7 +128,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
   const loadSavedSearches = async () => {
     setLoading(true);
     try {
-      const response = await request(`/api/saved-searches?entityType=${entityType}`);
+      const response = await get('/api/saved-searches?entityType=${entityType}');
       setSearches(response.data.searches);
     } catch (error) {
       console.error('Failed to load saved searches:', error);
@@ -141,9 +141,7 @@ const SavedSearches: React.FC<SavedSearchesProps> = ({
 
   const loadPopularSearches = async () => {
     try {
-      const response = await request(
-        `/api/saved-searches/popular?entityType=${entityType}&limit=5`
-      );
+      const response = await get('/api/saved-searches/popular?entityType=${entityType}&limit=5');
       setPopularSearches(response.data.searches);
     } catch (error) {
       console.error('Failed to load popular searches:', error);

@@ -197,251 +197,285 @@ router.put('/:id', authorize('admin'), async (req: AuthenticatedRequest, res: ex
 });
 
 // Delete template
-router.delete('/:id', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId } = req.user!;
+router.delete(
+  '/:id',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    try {
+      const { organizationId } = req.user!;
 
-    const template = await EmailTemplate.findOne({
-      _id: req.params.id,
-      organizationId,
-    });
-
-    if (!template) {
-      return res.status(404).json({ message: 'Template not found' });
-    }
-
-    if (template.isSystem) {
-      return res.status(400).json({
-        message: 'Cannot delete system template',
+      const template = await EmailTemplate.findOne({
+        _id: req.params.id,
+        organizationId,
       });
+
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+
+      if (template.isSystem) {
+        return res.status(400).json({
+          message: 'Cannot delete system template',
+        });
+      }
+
+      await EmailTemplate.findByIdAndDelete(req.params.id);
+
+      return res.json({ message: 'Template deleted successfully' });
+    } catch (error) {
+      console.error('Failed to delete email template:', error);
+      return res.status(500).json({ message: 'Failed to delete email template' });
     }
-
-    await EmailTemplate.findByIdAndDelete(req.params.id);
-
-    return res.json({ message: 'Template deleted successfully' });
-  } catch (error) {
-    console.error('Failed to delete email template:', error);
-    return res.status(500).json({ message: 'Failed to delete email template' });
   }
-});
+);
 
 // Clone template
-router.post('/:id/clone', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId, userId } = req.user!;
-    const { name } = req.body;
+router.post(
+  '/:id/clone',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    try {
+      const { organizationId, userId } = req.user!;
+      const { name } = req.body;
 
-    const originalTemplate = await EmailTemplate.findOne({
-      _id: req.params.id,
-      organizationId,
-    });
+      const originalTemplate = await EmailTemplate.findOne({
+        _id: req.params.id,
+        organizationId,
+      });
 
-    if (!originalTemplate) {
-      return res.status(404).json({ message: 'Template not found' });
+      if (!originalTemplate) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+
+      const clonedTemplate = new EmailTemplate({
+        organizationId,
+        name: name || `${originalTemplate.name} (Copy)`,
+        description: originalTemplate.description,
+        category: 'custom', // Cloned templates are always custom
+        type: 'custom',
+        subject: originalTemplate.subject,
+        htmlContent: originalTemplate.htmlContent,
+        textContent: originalTemplate.textContent,
+        variables: [...originalTemplate.variables],
+        settings: { ...originalTemplate.settings },
+        localization: {
+          defaultLanguage: originalTemplate.localization.defaultLanguage,
+          translations: [...originalTemplate.localization.translations],
+        },
+        triggers: [...originalTemplate.triggers],
+        isActive: true,
+        isSystem: false,
+        usage: { sentCount: 0 },
+        createdBy: userId,
+        updatedBy: userId,
+      });
+
+      const savedTemplate = await clonedTemplate.save();
+      await savedTemplate.populate('createdBy updatedBy', 'firstName lastName email');
+
+      return res.status(201).json({
+        template: savedTemplate,
+        message: 'Template cloned successfully',
+      });
+    } catch (error) {
+      console.error('Failed to clone email template:', error);
+      return res.status(500).json({ message: 'Failed to clone email template' });
     }
-
-    const clonedTemplate = new EmailTemplate({
-      organizationId,
-      name: name || `${originalTemplate.name} (Copy)`,
-      description: originalTemplate.description,
-      category: 'custom', // Cloned templates are always custom
-      type: 'custom',
-      subject: originalTemplate.subject,
-      htmlContent: originalTemplate.htmlContent,
-      textContent: originalTemplate.textContent,
-      variables: [...originalTemplate.variables],
-      settings: { ...originalTemplate.settings },
-      localization: {
-        defaultLanguage: originalTemplate.localization.defaultLanguage,
-        translations: [...originalTemplate.localization.translations],
-      },
-      triggers: [...originalTemplate.triggers],
-      isActive: true,
-      isSystem: false,
-      usage: { sentCount: 0 },
-      createdBy: userId,
-      updatedBy: userId,
-    });
-
-    const savedTemplate = await clonedTemplate.save();
-    await savedTemplate.populate('createdBy updatedBy', 'firstName lastName email');
-
-    return res.status(201).json({
-      template: savedTemplate,
-      message: 'Template cloned successfully',
-    });
-  } catch (error) {
-    console.error('Failed to clone email template:', error);
-    return res.status(500).json({ message: 'Failed to clone email template' });
   }
-});
+);
 
 // Preview template
-router.post('/:id/preview', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId } = req.user!;
-    const { variables, language = 'en' } = req.body;
-
-    const template = await EmailTemplate.findOne({
-      _id: req.params.id,
-      organizationId,
-    });
-
-    if (!template) {
-      return res.status(404).json({ message: 'Template not found' });
-    }
-
+router.post(
+  '/:id/preview',
+  authenticate,
+  async (req: AuthenticatedRequest, res: express.Response) => {
     try {
-      const rendered = await emailTemplateService.renderTemplate(
-        (template._id as any).toString(),
-        variables,
-        language
-      );
+      const { organizationId } = req.user!;
+      const { variables, language = 'en' } = req.body;
 
-      return res.json({ preview: rendered });
-    } catch (renderError: any) {
-      return res.status(400).json({
-        message: 'Template rendering failed',
-        error: renderError.message,
+      const template = await EmailTemplate.findOne({
+        _id: req.params.id,
+        organizationId,
       });
+
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+
+      try {
+        const rendered = await emailTemplateService.renderTemplate(
+          (template._id as any).toString(),
+          variables,
+          language
+        );
+
+        return res.json({ preview: rendered });
+      } catch (renderError: any) {
+        return res.status(400).json({
+          message: 'Template rendering failed',
+          error: renderError.message,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to preview email template:', error);
+      return res.status(500).json({ message: 'Failed to preview email template' });
     }
-  } catch (error) {
-    console.error('Failed to preview email template:', error);
-    return res.status(500).json({ message: 'Failed to preview email template' });
   }
-});
+);
 
 // Send test email
-router.post('/:id/test', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId } = req.user!;
-    const { testEmail, variables, language = 'en' } = req.body;
-
-    if (!testEmail) {
-      return res.status(400).json({ message: 'Test email address is required' });
-    }
-
-    const template = await EmailTemplate.findOne({
-      _id: req.params.id,
-      organizationId,
-    });
-
-    if (!template) {
-      return res.status(404).json({ message: 'Template not found' });
-    }
-
+router.post(
+  '/:id/test',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: express.Response) => {
     try {
-      const rendered = await emailTemplateService.renderTemplate(
-        (template._id as any).toString(),
-        variables || {},
-        language
-      );
+      const { organizationId } = req.user!;
+      const { testEmail, variables, language = 'en' } = req.body;
 
-      // Here you would integrate with your email service
-      // For now, just simulate success
+      if (!testEmail) {
+        return res.status(400).json({ message: 'Test email address is required' });
+      }
 
-      return res.json({
-        success: true,
-        message: `Test email sent successfully to ${testEmail}`,
-        preview: rendered,
+      const template = await EmailTemplate.findOne({
+        _id: req.params.id,
+        organizationId,
       });
-    } catch (renderError: any) {
-      return res.status(400).json({
-        message: 'Template rendering failed',
-        error: renderError.message,
-      });
+
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+
+      try {
+        const rendered = await emailTemplateService.renderTemplate(
+          (template._id as any).toString(),
+          variables || {},
+          language
+        );
+
+        // Here you would integrate with your email service
+        // For now, just simulate success
+
+        return res.json({
+          success: true,
+          message: `Test email sent successfully to ${testEmail}`,
+          preview: rendered,
+        });
+      } catch (renderError: any) {
+        return res.status(400).json({
+          message: 'Template rendering failed',
+          error: renderError.message,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to send test email:', error);
+      return res.status(500).json({ message: 'Failed to send test email' });
     }
-  } catch (error) {
-    console.error('Failed to send test email:', error);
-    return res.status(500).json({ message: 'Failed to send test email' });
   }
-});
+);
 
 // Get template categories and types
-router.get('/meta/categories', authenticate, async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const categories = [
-      { value: 'system', label: 'System Templates', description: 'Built-in system templates' },
-      { value: 'notification', label: 'Notifications', description: 'User and form notifications' },
-      { value: 'workflow', label: 'Workflow', description: 'Workflow-related emails' },
-      { value: 'custom', label: 'Custom', description: 'Custom templates' },
-    ];
+router.get(
+  '/meta/categories',
+  authenticate,
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    try {
+      const categories = [
+        { value: 'system', label: 'System Templates', description: 'Built-in system templates' },
+        {
+          value: 'notification',
+          label: 'Notifications',
+          description: 'User and form notifications',
+        },
+        { value: 'workflow', label: 'Workflow', description: 'Workflow-related emails' },
+        { value: 'custom', label: 'Custom', description: 'Custom templates' },
+      ];
 
-    const types = [
-      { value: 'welcome', label: 'Welcome Email', category: 'system' },
-      { value: 'form_notification', label: 'Form Notification', category: 'notification' },
-      { value: 'password_reset', label: 'Password Reset', category: 'system' },
-      { value: 'form_reminder', label: 'Form Reminder', category: 'workflow' },
-      { value: 'approval_request', label: 'Approval Request', category: 'workflow' },
-      { value: 'approval_response', label: 'Approval Response', category: 'workflow' },
-      { value: 'system_alert', label: 'System Alert', category: 'system' },
-      { value: 'digest', label: 'Digest Email', category: 'notification' },
-      { value: 'custom', label: 'Custom Template', category: 'custom' },
-    ];
+      const types = [
+        { value: 'welcome', label: 'Welcome Email', category: 'system' },
+        { value: 'form_notification', label: 'Form Notification', category: 'notification' },
+        { value: 'password_reset', label: 'Password Reset', category: 'system' },
+        { value: 'form_reminder', label: 'Form Reminder', category: 'workflow' },
+        { value: 'approval_request', label: 'Approval Request', category: 'workflow' },
+        { value: 'approval_response', label: 'Approval Response', category: 'workflow' },
+        { value: 'system_alert', label: 'System Alert', category: 'system' },
+        { value: 'digest', label: 'Digest Email', category: 'notification' },
+        { value: 'custom', label: 'Custom Template', category: 'custom' },
+      ];
 
-    return res.json({ categories, types });
-  } catch (error) {
-    console.error('Failed to get template metadata:', error);
-    return res.status(500).json({ message: 'Failed to get template metadata' });
+      return res.json({ categories, types });
+    } catch (error) {
+      console.error('Failed to get template metadata:', error);
+      return res.status(500).json({ message: 'Failed to get template metadata' });
+    }
   }
-});
+);
 
 // Get template usage statistics
-router.get('/:id/stats', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId } = req.user!;
+router.get(
+  '/:id/stats',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    try {
+      const { organizationId } = req.user!;
 
-    const template = await EmailTemplate.findOne({
-      _id: req.params.id,
-      organizationId,
-    });
+      const template = await EmailTemplate.findOne({
+        _id: req.params.id,
+        organizationId,
+      });
 
-    if (!template) {
-      return res.status(404).json({ message: 'Template not found' });
+      if (!template) {
+        return res.status(404).json({ message: 'Template not found' });
+      }
+
+      // In a real implementation, you would gather more detailed stats
+      const stats = {
+        usage: template.usage,
+        lastMonth: {
+          sent: Math.floor(template.usage.sentCount * 0.3), // Mock data
+          opened: Math.floor(
+            (template.usage.sentCount * 0.3 * (template.usage.openRate || 0)) / 100
+          ),
+          clicked: Math.floor(
+            (template.usage.sentCount * 0.3 * (template.usage.clickRate || 0)) / 100
+          ),
+        },
+        trends: {
+          sentTrend: 5.2, // Mock percentage change
+          openTrend: -2.1,
+          clickTrend: 1.8,
+        },
+      };
+
+      return res.json({ stats });
+    } catch (error) {
+      console.error('Failed to get template stats:', error);
+      return res.status(500).json({ message: 'Failed to get template stats' });
     }
-
-    // In a real implementation, you would gather more detailed stats
-    const stats = {
-      usage: template.usage,
-      lastMonth: {
-        sent: Math.floor(template.usage.sentCount * 0.3), // Mock data
-        opened: Math.floor((template.usage.sentCount * 0.3 * (template.usage.openRate || 0)) / 100),
-        clicked: Math.floor(
-          (template.usage.sentCount * 0.3 * (template.usage.clickRate || 0)) / 100
-        ),
-      },
-      trends: {
-        sentTrend: 5.2, // Mock percentage change
-        openTrend: -2.1,
-        clickTrend: 1.8,
-      },
-    };
-
-    return res.json({ stats });
-  } catch (error) {
-    console.error('Failed to get template stats:', error);
-    return res.status(500).json({ message: 'Failed to get template stats' });
   }
-});
+);
 
 // Initialize system templates
-router.post('/system/initialize', authorize('admin'), async (req: AuthenticatedRequest, res: express.Response) => {
-  try {
-    const { organizationId, userId } = req.user!;
+router.post(
+  '/system/initialize',
+  authorize('admin'),
+  async (req: AuthenticatedRequest, res: express.Response) => {
+    try {
+      const { organizationId, userId } = req.user!;
 
-    const createdTemplates = await emailTemplateService.createSystemTemplates(
-      organizationId!,
-      userId!
-    );
+      const createdTemplates = await emailTemplateService.createSystemTemplates(
+        organizationId!,
+        userId!
+      );
 
-    return res.json({
-      message: `${createdTemplates.length} system templates initialized`,
-      templates: createdTemplates.map(t => ({ id: t._id, name: t.name, type: t.type })),
-    });
-  } catch (error) {
-    console.error('Failed to initialize system templates:', error);
-    return res.status(500).json({ message: 'Failed to initialize system templates' });
+      return res.json({
+        message: `${createdTemplates.length} system templates initialized`,
+        templates: createdTemplates.map(t => ({ id: t._id, name: t.name, type: t.type })),
+      });
+    } catch (error) {
+      console.error('Failed to initialize system templates:', error);
+      return res.status(500).json({ message: 'Failed to initialize system templates' });
+    }
   }
-});
+);
 
 export default router;
