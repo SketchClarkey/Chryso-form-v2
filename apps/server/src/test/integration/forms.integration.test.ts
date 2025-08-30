@@ -373,7 +373,7 @@ describe('Forms Routes Integration', () => {
 
     it('should validate required fields', async () => {
       const invalidData = { ...validFormData };
-      delete invalidData.customerInfo.customerName;
+      delete (invalidData.customerInfo as any).customerName;
 
       const response = await request(app)
         .post('/forms')

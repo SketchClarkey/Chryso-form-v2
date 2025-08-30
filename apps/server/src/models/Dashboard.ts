@@ -30,6 +30,9 @@ export interface IDashboardWidget extends Document {
     filterType?: 'dropdown' | 'multiselect' | 'daterange' | 'search';
     filterOptions?: any[];
 
+    // Text widget config
+    content?: string;
+
     // Common config
     refreshInterval?: number;
     dateRange?: {
@@ -131,6 +134,8 @@ export interface IDashboard extends Document {
 
   // Methods
   canAccess(userRole: string, userId: string): boolean;
+  canEdit(userRole: string, userId: string): boolean;
+  createVersion(changes: string, userId: string): void;
   duplicate(newName?: string, userId?: string): Promise<IDashboard>;
 }
 
@@ -158,6 +163,7 @@ const DashboardWidgetSchema = new Schema({
     ],
     filterType: { type: String, enum: ['dropdown', 'multiselect', 'daterange', 'search'] },
     filterOptions: [Schema.Types.Mixed],
+    content: { type: String }, // For text widgets
     refreshInterval: { type: Number, min: 5, max: 3600 },
     dateRange: {
       type: { type: String, enum: ['fixed', 'relative'] },

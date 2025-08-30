@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { body, param, query, validationResult } from 'express-validator';
-import { authenticate } from '../middleware/auth.js';
+import { Response, Router } from 'express';
+import { body, param, validationResult } from 'express-validator';
+import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import { Report } from '../models/Report';
 import SchedulerService from '../services/schedulerService';
 
@@ -8,10 +8,10 @@ const router = Router();
 const schedulerService = SchedulerService.getInstance();
 
 // GET /api/scheduler/jobs - Get all scheduled jobs
-router.get('/jobs', authenticate, async (req, res) => {
+router.get('/jobs', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
     // Check permissions
-    if (!['admin', 'manager'].includes(req.user.role)) {
+    if (!['admin', 'manager'].includes(req.user!.role)) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to view scheduled jobs',
@@ -19,13 +19,12 @@ router.get('/jobs', authenticate, async (req, res) => {
     }
 
     const jobs = schedulerService.getScheduledJobs();
-    res.json({
+    return res.json({
       success: true,
       data: { jobs },
     });
   } catch (error) {
-    console.error('Get scheduled jobs error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to fetch scheduled jobs',
     });
@@ -43,7 +42,7 @@ router.post(
     body('recipients').isArray().withMessage('Recipients must be an array'),
     body('exportFormat').isIn(['pdf', 'excel', 'csv']).withMessage('Invalid export format'),
   ],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -63,7 +62,7 @@ router.post(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canEdit.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canEdit.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to schedule this report',
@@ -82,6 +81,7 @@ router.post(
       // Update report schedule
       report.schedule = {
         enabled: true,
+        frequency: 'daily', // Default frequency, will be determined by cron expression
         cronExpression: req.body.cronExpression,
         timezone: req.body.timezone || 'UTC',
         recipients: req.body.recipients,
@@ -101,14 +101,14 @@ router.post(
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: { report },
         message: 'Report scheduled successfully',
       });
     } catch (error) {
       console.error('Schedule report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to schedule report',
       });
@@ -121,7 +121,7 @@ router.delete(
   '/reports/:id/schedule',
   authenticate,
   [param('id').isMongoId().withMessage('Invalid report ID')],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -141,7 +141,7 @@ router.delete(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canEdit.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canEdit.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to unschedule this report',
@@ -157,13 +157,13 @@ router.delete(
       }
       await report.save();
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Report unscheduled successfully',
       });
     } catch (error) {
       console.error('Unschedule report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to unschedule report',
       });
@@ -176,7 +176,7 @@ router.put(
   '/jobs/:id/pause',
   authenticate,
   [param('id').isString().withMessage('Invalid job ID')],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -188,7 +188,7 @@ router.put(
       }
 
       // Check permissions
-      if (!['admin', 'manager'].includes(req.user.role)) {
+      if (!['admin', 'manager'].includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to pause jobs',
@@ -203,13 +203,13 @@ router.put(
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Job paused successfully',
       });
     } catch (error) {
       console.error('Pause job error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to pause job',
       });
@@ -222,7 +222,7 @@ router.put(
   '/jobs/:id/resume',
   authenticate,
   [param('id').isString().withMessage('Invalid job ID')],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -234,7 +234,7 @@ router.put(
       }
 
       // Check permissions
-      if (!['admin', 'manager'].includes(req.user.role)) {
+      if (!['admin', 'manager'].includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to resume jobs',
@@ -249,13 +249,13 @@ router.put(
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Job resumed successfully',
       });
     } catch (error) {
       console.error('Resume job error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to resume job',
       });
@@ -303,7 +303,7 @@ router.get('/cron-presets', authenticate, (req, res) => {
     },
   ];
 
-  res.json({
+  return res.json({
     success: true,
     data: { presets },
   });
@@ -314,7 +314,7 @@ router.post(
   '/email/test',
   authenticate,
   [body('recipient').isEmail().withMessage('Valid recipient email is required')],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -326,7 +326,7 @@ router.post(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin') {
+      if (req.user!.role !== 'admin') {
         return res.status(403).json({
           success: false,
           message: 'Only administrators can test email configuration',
@@ -335,7 +335,7 @@ router.post(
 
       const success = await schedulerService.testEmailConfig();
 
-      res.json({
+      return res.json({
         success,
         message: success
           ? 'Email configuration is working correctly'
@@ -343,7 +343,7 @@ router.post(
       });
     } catch (error) {
       console.error('Test email error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to test email configuration',
       });
@@ -363,7 +363,7 @@ router.put(
     body('pass').optional().isString(),
     body('from').optional().isEmail(),
   ],
-  async (req, res) => {
+  async (req: AuthenticatedRequest, res: Response) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -375,7 +375,7 @@ router.put(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin') {
+      if (req.user!.role !== 'admin') {
         return res.status(403).json({
           success: false,
           message: 'Only administrators can update email configuration',
@@ -395,7 +395,7 @@ router.put(
 
       const success = await schedulerService.updateEmailConfig(emailConfig);
 
-      res.json({
+      return res.json({
         success,
         message: success
           ? 'Email configuration updated successfully'
@@ -403,7 +403,7 @@ router.put(
       });
     } catch (error) {
       console.error('Update email config error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to update email configuration',
       });

@@ -83,6 +83,16 @@ export interface ITemplate extends Document {
 
   // Template Structure
   sections: IFormSection[];
+  elements: any[]; // For backward compatibility with routes
+
+  // Metadata for versioning and tracking
+  metadata: {
+    version: number;
+    createdBy?: Types.ObjectId;
+    lastModifiedBy?: Types.ObjectId;
+    templateType?: string;
+    customProperties?: Record<string, any>;
+  };
 
   // Metadata
   version: number;
@@ -289,6 +299,16 @@ const templateSchema = new Schema<ITemplate>(
     },
 
     sections: [formSectionSchema],
+    elements: [Schema.Types.Mixed], // For backward compatibility
+
+    // Metadata object
+    metadata: {
+      version: { type: Number, default: 1 },
+      createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
+      lastModifiedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+      templateType: { type: String },
+      customProperties: { type: Schema.Types.Mixed, default: {} },
+    },
 
     version: {
       type: Number,

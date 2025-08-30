@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
+import { Types } from 'mongoose';
 import { body, param, query, validationResult } from 'express-validator';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import FilterService from '../services/filterService';
@@ -51,7 +52,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
     }
 
     if (scope === 'my') {
-      filterCriteria.createdBy = req.user!.id;
+      filterCriteria.createdBy = new Types.ObjectId(req.user!.id);
     } else if (scope === 'shared') {
       filterCriteria.isShared = true;
     }
@@ -83,7 +84,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
         globalLogicalOperator: 'AND',
         isShared: false,
         tags: ['priority', 'urgent'],
-        createdBy: req.user!.id,
+        createdBy: new Types.ObjectId(req.user!.id),
         createdAt: new Date('2024-01-15'),
         updatedAt: new Date('2024-01-20'),
         usage: { totalUses: 45, lastUsed: new Date() },
@@ -131,7 +132,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
     let filteredResults = mockFilters;
 
     if (scope === 'my') {
-      filteredResults = mockFilters.filter(f => f.createdBy === req.user.id);
+      filteredResults = mockFilters.filter(f => f.createdBy === new Types.ObjectId(req.user!.id));
     } else if (scope === 'shared') {
       filteredResults = mockFilters.filter(f => f.isShared);
     }
@@ -162,7 +163,7 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
 });
 
 // POST /api/filters - Create new filter
-router.post('/', authenticate, filterValidation, async (req: AuthenticatedRequest, res) => {
+router.post('/', authenticate, filterValidation, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -185,7 +186,7 @@ router.post('/', authenticate, filterValidation, async (req: AuthenticatedReques
       globalLogicalOperator,
       isShared,
       tags,
-      createdBy: req.user.id,
+      createdBy: new Types.ObjectId(req.user!.id),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -220,7 +221,7 @@ router.post('/', authenticate, filterValidation, async (req: AuthenticatedReques
 });
 
 // PUT /api/filters/:id - Update filter
-router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async (req: AuthenticatedRequest, res) => {
+router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -290,7 +291,7 @@ router.delete('/:id', authenticate, param('id').notEmpty(), async (req, res) => 
 });
 
 // POST /api/filters/apply - Apply filter to get results
-router.post('/apply', authenticate, applyFilterValidation, async (req: AuthenticatedRequest, res) => {
+router.post('/apply', authenticate, applyFilterValidation, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -342,7 +343,7 @@ router.post('/apply', authenticate, applyFilterValidation, async (req: Authentic
         break;
 
       case 'user':
-        if (req.user.role === 'admin' || req.user.role === 'manager') {
+        if (req.user!.role === 'admin' || req.user!.role === 'manager') {
           results = await User.find(mongoQuery)
             .select('-password')
             .limit(pagination.limit)
@@ -370,8 +371,8 @@ router.post('/apply', authenticate, applyFilterValidation, async (req: Authentic
         const dashboardQuery = {
           ...mongoQuery,
           $or: [
-            { createdBy: req.user.id },
-            { 'permissions.canView': { $in: [req.user.role] } },
+            { createdBy: new Types.ObjectId(req.user!.id) },
+            { 'permissions.canView': { $in: [req.user!.role] } },
             { 'sharing.isPublic': true },
           ],
         };

@@ -98,7 +98,7 @@ router.get('/', authenticate, searchValidation, async (req, res) => {
       filters,
     };
 
-    const results = await searchService.globalSearch(searchOptions, req.user.role, req.user.id);
+    const results = await searchService.globalSearch(searchOptions, req.user!.role, req.user!.id);
 
     res.json({
       success: true,
@@ -139,8 +139,8 @@ router.get('/suggestions', authenticate, suggestionValidation, async (req, res) 
 
     const suggestions = await searchService.getSearchSuggestions(
       query as string,
-      req.user.role,
-      req.user.id
+      req.user!.role,
+      req.user!.id
     );
 
     res.json({

@@ -160,13 +160,13 @@ router.get(
         },
       };
 
-      res.json({
+      return res.json({
         success: true,
         data: metrics,
       });
     } catch (error) {
       console.error('Failed to get security metrics:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve security metrics',
       });
@@ -253,7 +253,7 @@ router.get(
         tags: log.tags || [],
       }));
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           alerts: securityAlerts,
@@ -267,7 +267,7 @@ router.get(
       });
     } catch (error) {
       console.error('Failed to get security alerts:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve security alerts',
       });
@@ -418,13 +418,13 @@ router.get(
         },
       ]);
 
-      res.json({
+      return res.json({
         success: true,
         data: { events },
       });
     } catch (error) {
       console.error('Failed to get security events:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve security events',
       });
@@ -573,13 +573,13 @@ router.get(
         },
       };
 
-      res.json({
+      return res.json({
         success: true,
         data: complianceData,
       });
     } catch (error) {
       console.error('Failed to get compliance status:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve compliance status',
       });
@@ -637,13 +637,13 @@ router.get(
         status: criticalAlerts > 5 ? 'critical' : criticalAlerts > 0 ? 'warning' : 'healthy',
       };
 
-      res.json({
+      return res.json({
         success: true,
         data: summary,
       });
     } catch (error) {
       console.error('Failed to get security summary:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to retrieve security summary',
       });

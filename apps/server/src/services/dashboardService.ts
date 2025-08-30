@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { Dashboard, IDashboard, IDashboardWidget } from '../models/Dashboard';
 import { Form } from '../models/Form';
 import { Template } from '../models/Template';
@@ -72,10 +73,10 @@ export class DashboardService {
 
     // Apply updates
     Object.assign(dashboard, updates);
-    dashboard.lastModifiedBy = userId;
+    dashboard.lastModifiedBy = new Types.ObjectId(userId);
 
     await dashboard.save();
-    return dashboard.populate(['createdBy', 'lastModifiedBy'], 'firstName lastName email');
+    return dashboard.populate('createdBy', 'firstName lastName email').populate('lastModifiedBy', 'firstName lastName email');
   }
 
   async getDashboards(
@@ -332,11 +333,11 @@ export class DashboardService {
 
     return {
       chartType,
-      labels: results.map(r => r._id || 'Unknown'),
+      labels: results.map((r: any) => r._id || 'Unknown'),
       datasets: [
         {
           label: yAxis[0],
-          data: results.map(r => r.count),
+          data: results.map((r: any) => r.count),
         },
       ],
     };

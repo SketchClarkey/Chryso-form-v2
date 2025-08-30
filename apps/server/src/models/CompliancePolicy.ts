@@ -160,6 +160,10 @@ export interface ICompliancePolicy extends Document {
   updatedAt: Date;
   createdBy: Schema.Types.ObjectId;
   updatedBy: Schema.Types.ObjectId;
+
+  // Methods
+  evaluateCompliance(auditLogs: any[]): { score: number; violations: any[]; summary: string };
+  getApplicableRules(context: any): any[];
 }
 
 const compliancePolicySchema = new Schema<ICompliancePolicy>(

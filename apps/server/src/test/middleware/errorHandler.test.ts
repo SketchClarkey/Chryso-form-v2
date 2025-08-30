@@ -18,7 +18,7 @@ const mockResponse = (): Response =>
     json: vi.fn(),
   }) as any;
 
-const mockNext = vi.fn() as NextFunction;
+const mockNext = vi.fn() as unknown as NextFunction;
 
 describe('Error Handler Middleware', () => {
   let originalNodeEnv: string | undefined;
@@ -30,9 +30,9 @@ describe('Error Handler Middleware', () => {
 
   afterEach(() => {
     if (originalNodeEnv !== undefined) {
-      process.env.NODE_ENV = originalNodeEnv;
+      process.env.NODE_ENV = originalNodeEnv as 'development' | 'production' | 'test';
     } else {
-      delete process.env.NODE_ENV;
+      delete (process.env as any).NODE_ENV;
     }
     vi.restoreAllMocks();
   });

@@ -28,7 +28,7 @@ const mockResponse = (): Response =>
     json: vi.fn(),
   }) as any;
 
-const mockNext = vi.fn() as NextFunction;
+const mockNext = vi.fn() as unknown as NextFunction;
 
 describe('Auth Middleware', () => {
   beforeEach(() => {

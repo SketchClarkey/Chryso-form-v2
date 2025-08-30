@@ -112,7 +112,7 @@ router.post(
         equipment: validatedData.equipment,
         isActive: true,
         metadata: {
-          createdBy: req.user!.id,
+          createdBy: new Types.ObjectId(req.user!.id),
           defaultFormTemplate: defaultTemplate?._id,
           serviceHistory: {
             totalForms: 0,
@@ -216,7 +216,7 @@ router.patch(
 
       // Update worksite
       worksite.metadata.defaultFormTemplate = template?._id || undefined;
-      worksite.metadata.lastModifiedBy = req.user!.id;
+      worksite.metadata.lastModifiedBy = new Types.ObjectId(req.user!.id);
       await worksite.save();
 
       // Populate template data for response

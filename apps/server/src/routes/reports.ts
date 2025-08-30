@@ -1,5 +1,6 @@
 import { Router, Response } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
+import { Types } from 'mongoose';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import { Report, IReport } from '../models/Report.js';
 import { Form } from '../models/Form.js';
@@ -71,7 +72,7 @@ router.get(
 
       // Role-based filtering
       if (req.user?.role !== 'admin') {
-        filter['permissions.canView'] = { $in: [req.user.role] };
+        filter['permissions.canView'] = { $in: [req.user!.role] };
       }
 
       if (category) filter.category = category;
@@ -154,7 +155,7 @@ router.get(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canView.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canView.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to view this report',
@@ -166,13 +167,13 @@ router.get(
       report.usage.lastViewed = new Date();
       await report.save();
 
-      res.json({
+      return res.json({
         success: true,
         data: { report },
       });
     } catch (error) {
       console.error('Get report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to fetch report',
       });
@@ -193,7 +194,7 @@ router.post('/', authenticate, validateReport, async (req: AuthenticatedRequest,
     }
 
     // Check permissions
-    if (!['admin', 'manager'].includes(req.user.role)) {
+    if (!['admin', 'manager'].includes(req.user!.role)) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to create reports',
@@ -202,7 +203,7 @@ router.post('/', authenticate, validateReport, async (req: AuthenticatedRequest,
 
     const reportData = {
       ...req.body,
-      createdBy: req.user.id,
+      createdBy: new Types.ObjectId(req.user!.id),
       permissions: {
         canView: req.body.permissions?.canView || ['admin', 'manager', 'technician'],
         canEdit: req.body.permissions?.canEdit || ['admin', 'manager'],
@@ -218,14 +219,14 @@ router.post('/', authenticate, validateReport, async (req: AuthenticatedRequest,
     await report.save();
     await report.populate('createdBy', 'firstName lastName email');
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: { report },
       message: 'Report created successfully',
     });
   } catch (error) {
     console.error('Create report error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to create report',
     });
@@ -257,7 +258,7 @@ router.put(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canEdit.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canEdit.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to edit this report',
@@ -269,7 +270,7 @@ router.put(
         report.versionHistory.push({
           version: report.version,
           changes: req.body.changes,
-          modifiedBy: req.user.id,
+          modifiedBy: new Types.ObjectId(req.user!.id),
           timestamp: new Date(),
           snapshot: {
             dataSources: report.dataSources,
@@ -281,20 +282,20 @@ router.put(
 
       // Update report
       Object.assign(report, req.body);
-      report.lastModifiedBy = req.user.id;
+      report.lastModifiedBy = new Types.ObjectId(req.user!.id);
 
       await report.save();
       await report.populate('createdBy', 'firstName lastName email');
       await report.populate('lastModifiedBy', 'firstName lastName email');
 
-      res.json({
+      return res.json({
         success: true,
         data: { report },
         message: 'Report updated successfully',
       });
     } catch (error) {
       console.error('Update report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to update report',
       });
@@ -327,7 +328,7 @@ router.delete(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin') {
+      if (req.user!.role !== 'admin') {
         return res.status(403).json({
           success: false,
           message: 'Only administrators can delete reports',
@@ -336,13 +337,13 @@ router.delete(
 
       await Report.findByIdAndDelete(req.params.id);
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Report deleted successfully',
       });
     } catch (error) {
       console.error('Delete report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to delete report',
       });
@@ -378,24 +379,24 @@ router.post(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canView.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canView.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to clone this report',
         });
       }
 
-      const clonedReport = await report.clone(req.body.name, req.user.id);
+      const clonedReport = await report.clone(req.body.name, req.user!.id);
       await clonedReport.populate('createdBy', 'firstName lastName email');
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: { report: clonedReport },
         message: 'Report cloned successfully',
       });
     } catch (error) {
       console.error('Clone report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to clone report',
       });
@@ -431,7 +432,7 @@ router.patch(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canEdit.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canEdit.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to change report status',
@@ -439,17 +440,17 @@ router.patch(
       }
 
       report.status = req.body.status;
-      report.lastModifiedBy = req.user.id;
+      report.lastModifiedBy = new Types.ObjectId(req.user!.id);
       await report.save();
 
-      res.json({
+      return res.json({
         success: true,
         data: { report },
         message: `Report status updated to ${req.body.status}`,
       });
     } catch (error) {
       console.error('Update report status error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to update report status',
       });
@@ -485,16 +486,16 @@ router.post(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canView.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canView.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to generate this report',
         });
       }
 
-      const data = await generateReportData(report, req.user.role, req.body.dateRange);
+      const data = await generateReportData(report, req.user!.role, req.body.dateRange);
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           reportData: data,
@@ -503,7 +504,7 @@ router.post(
       });
     } catch (error) {
       console.error('Generate report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to generate report data',
       });
@@ -558,7 +559,7 @@ async function generateReportData(
       }
     }
 
-    let results = [];
+    let results: any[] = [];
 
     switch (dataSource.type) {
       case 'form':
@@ -653,7 +654,7 @@ router.get('/meta/datasources', authenticate, async (req: AuthenticatedRequest, 
     ];
 
     // Add users data source for admin/manager roles
-    if (['admin', 'manager'].includes(req.user.role)) {
+    if (['admin', 'manager'].includes(req.user!.role)) {
       dataSources.push({
         id: 'users',
         type: 'user',
@@ -670,13 +671,13 @@ router.get('/meta/datasources', authenticate, async (req: AuthenticatedRequest, 
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: { dataSources },
     });
   } catch (error) {
     console.error('Get data sources error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to fetch data sources',
     });
@@ -715,7 +716,7 @@ router.post(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canExport.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canExport.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to export this report',
@@ -731,7 +732,7 @@ router.post(
       }
 
       // Generate report data
-      const data = await generateReportData(report, req.user.role, req.body.dateRange);
+      const data = await generateReportData(report, req.user!.role, req.body.dateRange);
 
       // Export report
       const ExportService = require('../services/exportService').default;
@@ -750,7 +751,7 @@ router.post(
         report,
         data,
         exportOptions,
-        req.user.id
+        req.user!.id
       );
 
       // Update export statistics
@@ -759,18 +760,24 @@ router.post(
       await report.save();
 
       // Send file
-      res.download(filePath, fileName, err => {
+      res.download(filePath, fileName, (err: any) => {
         if (err) {
           console.error('Download error:', err);
-          res.status(500).json({
-            success: false,
-            message: 'Failed to download exported file',
-          });
+          if (!res.headersSent) {
+            res.status(500).json({
+              success: false,
+              message: 'Failed to download exported file',
+            });
+          }
+          return;
         }
+        // Success case - file downloaded successfully
+        return;
       });
+      return; // Explicit return for the async function
     } catch (error) {
       console.error('Export report error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to export report',
       });
@@ -803,7 +810,7 @@ router.get(
       }
 
       // Check permissions
-      if (req.user.role !== 'admin' && !report.permissions.canView.includes(req.user.role)) {
+      if (req.user!.role !== 'admin' && !report.permissions.canView.includes(req.user!.role)) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to view this report',
@@ -858,17 +865,17 @@ router.get(
         allowedFormats.includes(format.format)
       );
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           formats: filteredFormats,
           canExport:
-            report.permissions.canExport.includes(req.user.role) || req.user.role === 'admin',
+            report.permissions.canExport.includes(req.user!.role) || req.user!.role === 'admin',
         },
       });
     } catch (error) {
       console.error('Get export formats error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Failed to get export formats',
       });

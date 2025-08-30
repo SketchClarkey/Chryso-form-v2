@@ -209,10 +209,10 @@ router.post('/preferences/pin', authenticate, async (req, res) => {
       { upsert: true }
     );
 
-    res.json({ message: 'Item pinned successfully' });
+    return res.json({ message: 'Item pinned successfully' });
   } catch (error) {
     console.error('Failed to pin item:', error);
-    res.status(500).json({ message: 'Failed to pin item' });
+    return res.status(500).json({ message: 'Failed to pin item' });
   }
 });
 
@@ -230,10 +230,10 @@ router.delete('/preferences/pin', authenticate, async (req, res) => {
       { $pull: { [`pinnedItems.${type}`]: itemId } }
     );
 
-    res.json({ message: 'Item unpinned successfully' });
+    return res.json({ message: 'Item unpinned successfully' });
   } catch (error) {
     console.error('Failed to unpin item:', error);
-    res.status(500).json({ message: 'Failed to unpin item' });
+    return res.status(500).json({ message: 'Failed to unpin item' });
   }
 });
 
@@ -260,10 +260,10 @@ router.get('/system/info', authorize('admin'), async (req, res) => {
       },
     };
 
-    res.json({ systemInfo });
+    return res.json({ systemInfo });
   } catch (error) {
     console.error('Failed to get system info:', error);
-    res.status(500).json({ message: 'Failed to get system information' });
+    return res.status(500).json({ message: 'Failed to get system information' });
   }
 });
 
@@ -283,13 +283,13 @@ router.post('/test/email', authorize('admin'), async (req, res) => {
     // Here you would implement actual email sending test
     // For now, just simulate success
 
-    res.json({
+    return res.json({
       success: true,
       message: `Test email sent successfully to ${testEmail}`,
     });
   } catch (error) {
     console.error('Failed to test email:', error);
-    res.status(500).json({ message: 'Failed to send test email' });
+    return res.status(500).json({ message: 'Failed to send test email' });
   }
 });
 
@@ -307,13 +307,13 @@ router.post('/test/storage', authorize('admin'), async (req, res) => {
     // Here you would implement actual storage connectivity test
     // For now, just simulate success
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Storage connectivity test successful',
     });
   } catch (error) {
     console.error('Failed to test storage:', error);
-    res.status(500).json({ message: 'Failed to test storage connectivity' });
+    return res.status(500).json({ message: 'Failed to test storage connectivity' });
   }
 });
 

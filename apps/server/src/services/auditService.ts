@@ -1,5 +1,5 @@
 import { AuditLog, IAuditLog } from '../models/AuditLog';
-import { CompliancePolicy } from '../models/CompliancePolicy';
+import { CompliancePolicy, ICompliancePolicy } from '../models/CompliancePolicy';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 

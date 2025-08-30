@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import { Types } from 'mongoose';
 import { z } from 'zod';
 import { DataRetentionPolicy } from '../models/DataRetentionPolicy.js';
 import { DataRetentionService } from '../services/dataRetentionService.js';
@@ -192,7 +193,7 @@ router.post(
       const policy = new DataRetentionPolicy({
         ...validatedData,
         organizationId,
-        createdBy: req.user!.id,
+        createdBy: new Types.ObjectId(req.user!.id),
         stats: {
           recordsArchived: 0,
           recordsDeleted: 0,
@@ -265,7 +266,7 @@ router.put(
       }
 
       Object.assign(policy, validatedData);
-      policy.modifiedBy = req.user!.id as any;
+      policy.modifiedBy = new Types.ObjectId(req.user!.id) as any;
       await policy.save();
 
       return res.json({
@@ -463,7 +464,7 @@ router.patch(
       }
 
       policy.isActive = !policy.isActive;
-      policy.modifiedBy = req.user!.id as any;
+      policy.modifiedBy = new Types.ObjectId(req.user!.id) as any;
       await policy.save();
 
       res.json({

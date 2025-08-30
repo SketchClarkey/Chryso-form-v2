@@ -76,13 +76,13 @@ export const authorize = (...roles: Array<'admin' | 'manager' | 'technician'>) =
       return;
     }
 
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.user!.role)) {
       res.status(403).json({
         success: false,
         message: 'Insufficient permissions',
         code: 'INSUFFICIENT_PERMISSIONS',
         required: roles,
-        current: req.user.role,
+        current: req.user!.role,
       });
       return;
     }
@@ -116,7 +116,7 @@ export const requireWorksite = (
     return;
   }
 
-  if (req.user.role !== 'admin' && !req.user.worksiteIds.includes(worksiteId)) {
+  if (req.user!.role !== 'admin' && !req.user!.worksiteIds.includes(worksiteId)) {
     res.status(403).json({
       success: false,
       message: 'Access denied to this worksite',

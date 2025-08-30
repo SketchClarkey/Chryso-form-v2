@@ -3,6 +3,7 @@ import path from 'path';
 import { createWriteStream } from 'fs';
 import { createGzip } from 'zlib';
 import { pipeline } from 'stream/promises';
+import { Types } from 'mongoose';
 import { DataRetentionPolicy, IDataRetentionPolicy } from '../models/DataRetentionPolicy.js';
 import { Form } from '../models/Form.js';
 import { AuditLog } from '../models/AuditLog.js';
@@ -82,7 +83,7 @@ export class DataRetentionService {
       if (policy.legalHold?.enabled && policy.legalHold.exemptFromDeletion) {
         console.log(`Policy ${policy.name} is under legal hold, skipping execution`);
         return {
-          policyId: policy._id.toString(),
+          policyId: (policy._id as Types.ObjectId).toString(),
           policyName: policy.name,
           success: true,
           results: {
@@ -130,7 +131,7 @@ export class DataRetentionService {
       await this.logRetentionEvent(policy, results, executionTime);
 
       return {
-        policyId: policy._id.toString(),
+        policyId: (policy._id as Types.ObjectId).toString(),
         policyName: policy.name,
         success: true,
         results,
@@ -141,7 +142,7 @@ export class DataRetentionService {
       console.error(`Failed to execute policy ${policy.name}:`, error);
 
       return {
-        policyId: policy._id.toString(),
+        policyId: (policy._id as Types.ObjectId).toString(),
         policyName: policy.name,
         success: false,
         results: {
@@ -549,7 +550,7 @@ export class DataRetentionService {
       updateData['stats.errors.lastErrorAt'] = new Date();
     }
 
-    await DataRetentionPolicy.findByIdAndUpdate(policy._id, updateData);
+    await DataRetentionPolicy.findByIdAndUpdate(policy._id as Types.ObjectId, updateData);
   }
 
   // Log retention event for audit
@@ -568,7 +569,7 @@ export class DataRetentionService {
         ipAddress: '127.0.0.1',
         userAgent: 'Data Retention Service',
         sessionId: `retention-${Date.now()}`,
-        requestId: `ret-${policy._id}-${Date.now()}`,
+        requestId: `ret-${(policy._id as Types.ObjectId).toString()}-${Date.now()}`,
       };
 
       await this.auditService.logEvent(context, {
@@ -577,7 +578,7 @@ export class DataRetentionService {
         category: 'data',
         description: `Executed data retention policy: ${policy.name}`,
         resourceType: 'retention_policy',
-        resourceId: policy._id.toString(),
+        resourceId: (policy._id as Types.ObjectId).toString(),
         resourceName: policy.name,
         details: {
           policyName: policy.name,

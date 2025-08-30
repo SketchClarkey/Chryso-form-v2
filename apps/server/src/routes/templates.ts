@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { Types } from 'mongoose';
 import { z } from 'zod';
 import { authenticate, authorize, AuthenticatedRequest } from '../middleware/auth.js';
 import { Template, ITemplate } from '../models/Template.js';
@@ -204,7 +205,7 @@ router.post(
       const templateData = {
         ...validatedData,
         status: 'draft' as const,
-        createdBy: req.user!.id,
+        createdBy: new Types.ObjectId(req.user!.id),
         metadata: {
           version: 1,
         },
@@ -288,7 +289,7 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
 
     // Update template
     Object.assign(template, validatedData);
-    template.lastModifiedBy = req.user!.id;
+    template.lastModifiedBy = new Types.ObjectId(req.user!.id);
     template.metadata.version = (template.metadata.version || 1) + 1;
 
     await template.save();
@@ -422,7 +423,7 @@ router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response) => {
       description: `${template.description || ''} (Cloned)`,
       elements: JSON.parse(JSON.stringify(template.elements)), // Deep copy
       status: 'draft',
-      createdBy: req.user!.id,
+      createdBy: new Types.ObjectId(req.user!.id),
       metadata: {
         version: 1,
       },
@@ -502,7 +503,7 @@ router.patch('/:id/status', async (req: AuthenticatedRequest, res: Response) => 
     }
 
     template.status = status;
-    template.lastModifiedBy = req.user!.id;
+    template.lastModifiedBy = new Types.ObjectId(req.user!.id);
     await template.save();
 
     res.json({

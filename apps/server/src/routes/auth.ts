@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { Types } from 'mongoose';
 import { z } from 'zod';
 import { User, IUser } from '../models/User.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
@@ -465,7 +466,7 @@ router.post(
         role: validatedData.role || 'technician',
         emailVerified: true, // Admin-created users are pre-verified
         metadata: {
-          createdBy: req.user!.id,
+          createdBy: new Types.ObjectId(req.user!.id),
           ipAddress: req.ip,
           userAgent: req.get('User-Agent'),
         },
