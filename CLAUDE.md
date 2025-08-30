@@ -12,6 +12,9 @@ code in this repository.
 - `npm run build` - Build both applications for production
 - `npm run test` - Run tests for both client and server
 - `npm run lint` - Lint both applications (uses ESLint)
+- `npm run type-check` - Run TypeScript type checking on both apps
+- `npm run format` - Format code with Prettier
+- `npm run clean` - Clean build artifacts
 
 ### Individual App Commands
 
@@ -24,6 +27,11 @@ code in this repository.
 
 - Client tests: `npm run test -w apps/client` (uses Vitest)
 - Server tests: `npm run test -w apps/server` (uses Vitest)
+- E2E tests: `npm run test:e2e` (uses Playwright)
+- E2E with UI: `npm run test:e2e:ui`
+- E2E debug mode: `npm run test:e2e:debug`
+- Run all tests: `npm run test:all` (unit + e2e)
+- Coverage reports: `npm run test:coverage`
 
 ## Project Architecture
 
@@ -106,7 +114,17 @@ Core entities: User, Form, Template, Dashboard, Report, Worksite
 ### Development Notes
 
 - Both apps use TypeScript with strict type checking
-- ESLint configuration for code quality
-- Vitest for testing framework
+- ESLint configuration for code quality with TypeScript rules
+- Vitest for unit/integration testing, Playwright for E2E testing
 - Development mode runs both apps concurrently
 - Client proxies API requests to server during development
+- Prettier for code formatting with pre-commit hooks via Husky
+- Lint-staged runs on pre-commit for quality control
+
+### Docker & Deployment
+
+- `npm run docker:build` - Build Docker image
+- `npm run docker:dev` - Run with docker-compose for development
+- `npm run docker:prod` - Run production build with docker-compose
+- `npm run k8s:deploy` - Deploy to Kubernetes
+- Deployment scripts and configurations available in `/docker` directory
