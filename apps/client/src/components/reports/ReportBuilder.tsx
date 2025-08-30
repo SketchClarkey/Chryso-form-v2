@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   Drawer,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -30,6 +29,7 @@ import {
   AccordionDetails,
   Chip,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
@@ -345,7 +345,7 @@ const VisualizationEditor: React.FC<{
       <Box sx={{ mt: 2 }}>
         {activeTab === 0 && (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label='Title'
@@ -353,7 +353,7 @@ const VisualizationEditor: React.FC<{
                 onChange={e => onChange({ title: e.target.value })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label='Description'
@@ -368,7 +368,7 @@ const VisualizationEditor: React.FC<{
 
         {activeTab === 1 && (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControl fullWidth>
                 <InputLabel>Data Source</InputLabel>
                 <Select
@@ -383,7 +383,7 @@ const VisualizationEditor: React.FC<{
               </FormControl>
             </Grid>
             {visualization.type === 'chart' && (
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <FormControl fullWidth>
                   <InputLabel>Chart Type</InputLabel>
                   <Select
@@ -409,7 +409,7 @@ const VisualizationEditor: React.FC<{
 
         {activeTab === 2 && (
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label='Background Color'
@@ -422,7 +422,7 @@ const VisualizationEditor: React.FC<{
                 }
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label='Border Color'
@@ -595,7 +595,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
                       label='Report Name'
@@ -603,7 +603,7 @@ const ReportBuilder: React.FC<{ reportId?: string }> = ({ reportId }) => {
                       onChange={e => setReport({ ...report, name: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Category</InputLabel>
                       <Select

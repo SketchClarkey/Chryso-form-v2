@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -28,6 +27,7 @@ import {
   Avatar,
   Slider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Person as PersonIcon,
   Palette as AppearanceIcon,
@@ -199,7 +199,7 @@ const UserPreferences: React.FC = () => {
                 Appearance Settings
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Theme</InputLabel>
                     <Select
@@ -214,7 +214,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Color Scheme</InputLabel>
                     <Select
@@ -233,7 +233,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Density</InputLabel>
                     <Select
@@ -250,7 +250,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Language</InputLabel>
                     <Select
@@ -268,7 +268,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -296,7 +296,7 @@ const UserPreferences: React.FC = () => {
                 Email Notifications
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -314,7 +314,7 @@ const UserPreferences: React.FC = () => {
                     label='Form Submissions'
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -332,7 +332,7 @@ const UserPreferences: React.FC = () => {
                     label='Form Assignments'
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -350,7 +350,7 @@ const UserPreferences: React.FC = () => {
                     label='System Alerts'
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -374,7 +374,7 @@ const UserPreferences: React.FC = () => {
                 Browser Notifications
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -394,7 +394,7 @@ const UserPreferences: React.FC = () => {
                 </Grid>
                 {preferences?.notifications?.browser?.enabled && (
                   <>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -412,7 +412,7 @@ const UserPreferences: React.FC = () => {
                         label='Form Submissions'
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -443,7 +443,7 @@ const UserPreferences: React.FC = () => {
                 Work Preferences
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Timezone</InputLabel>
                     <Select
@@ -467,7 +467,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Form View</InputLabel>
                     <Select
@@ -489,7 +489,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -518,7 +518,7 @@ const UserPreferences: React.FC = () => {
                 Data Display Settings
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Date Format</InputLabel>
                     <Select
@@ -540,7 +540,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Time Format</InputLabel>
                     <Select
@@ -561,7 +561,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <Typography gutterBottom>Items per page</Typography>
                   <Slider
                     value={preferences?.dataDisplay?.itemsPerPage || 25}
@@ -576,7 +576,7 @@ const UserPreferences: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Sort Order</InputLabel>
                     <Select
@@ -597,7 +597,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -626,7 +626,7 @@ const UserPreferences: React.FC = () => {
                 Privacy Settings
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Profile Visibility</InputLabel>
                     <Select
@@ -648,7 +648,7 @@ const UserPreferences: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -667,7 +667,7 @@ const UserPreferences: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -686,7 +686,7 @@ const UserPreferences: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -713,7 +713,7 @@ const UserPreferences: React.FC = () => {
 
               <Grid container spacing={2}>
                 {/* Pinned Forms */}
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <Typography variant='subtitle2' gutterBottom>
                     <FormIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Forms
@@ -737,7 +737,7 @@ const UserPreferences: React.FC = () => {
                 </Grid>
 
                 {/* Pinned Reports */}
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <Typography variant='subtitle2' gutterBottom>
                     <ReportIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Reports

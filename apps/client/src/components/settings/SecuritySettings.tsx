@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -24,6 +23,7 @@ import {
   ListItemSecondaryAction,
   IconButton,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Security as SecurityIcon,
   Password as PasswordIcon,
@@ -81,7 +81,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography gutterBottom>Minimum Password Length</Typography>
               <Box sx={{ px: 2 }}>
                 <Slider
@@ -98,7 +98,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography gutterBottom>Password History</Typography>
               <Box sx={{ px: 2 }}>
                 <Slider
@@ -116,7 +116,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant='subtitle2' gutterBottom>
                 Password Requirements
               </Typography>
@@ -184,7 +184,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               </Stack>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Password Expiry (days)'
                 type='number'
@@ -209,7 +209,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Session Timeout (minutes)'
                 type='number'
@@ -220,7 +220,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControlLabel
                 control={
                   <Switch
@@ -232,7 +232,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Max Login Attempts'
                 type='number'
@@ -243,7 +243,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Lockout Duration (minutes)'
                 type='number'
@@ -305,7 +305,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -319,7 +319,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Log Detail Level</InputLabel>
                 <Select
@@ -337,7 +337,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Log Retention (days)'
                 type='number'
@@ -355,7 +355,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Alert severity='info'>
                 <Typography variant='body2'>
                   <strong>Log Levels Explained:</strong>

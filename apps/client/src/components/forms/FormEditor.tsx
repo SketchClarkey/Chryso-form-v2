@@ -18,8 +18,8 @@ import {
   Chip,
   Alert,
   CircularProgress,
-  Grid,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   ExpandMore as ExpandMoreIcon,
   Save as SaveIcon,
@@ -380,7 +380,7 @@ export function FormEditor() {
       <Grid container spacing={3}>
         {/* Status Workflow Panel */}
         {isEditing && formData.status && (
-          <Grid item xs={12} lg={4}>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <FormStatusWorkflow
               currentStatus={formData.status}
               statusHistory={formData.statusHistory || []}
@@ -394,7 +394,7 @@ export function FormEditor() {
         )}
 
         {/* Form Content */}
-        <Grid item xs={12} lg={isEditing && formData.status ? 8 : 12}>
+        <Grid size={{ xs: 12, lg: isEditing && formData.status ? 8 : 12 }}>
           <Card>
             <CardContent>
               <Stepper activeStep={activeStep} sx={{ mb: 4 }}>

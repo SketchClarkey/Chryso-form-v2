@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardActions,
-  Grid,
   Chip,
   IconButton,
   Menu,
@@ -24,6 +23,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Search as SearchIcon,
@@ -315,7 +315,7 @@ function TemplateList() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={2} alignItems='center'>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 fullWidth
                 placeholder='Search templates...'
@@ -330,7 +330,7 @@ function TemplateList() {
                 }}
               />
             </Grid>
-            <Grid item xs={6} md={2}>
+            <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -349,7 +349,7 @@ function TemplateList() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6} md={2}>
+            <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select
@@ -365,7 +365,7 @@ function TemplateList() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6} md={2}>
+            <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Sort By</InputLabel>
                 <Select
@@ -380,7 +380,7 @@ function TemplateList() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6} md={2}>
+            <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Order</InputLabel>
                 <Select
@@ -406,7 +406,7 @@ function TemplateList() {
         <>
           <Grid container spacing={3}>
             {templatesData.templates.map((template: ITemplate) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={template._id}>
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={template._id}>
                 <TemplateCard
                   template={template}
                   onView={handleView}

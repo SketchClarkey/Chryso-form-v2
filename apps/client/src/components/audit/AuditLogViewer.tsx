@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -29,6 +28,7 @@ import {
   Collapse,
   Paper,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Visibility as ViewIcon,
   ExpandMore as ExpandMoreIcon,
@@ -252,7 +252,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
         Filters
       </Typography>
       <Grid container spacing={2} alignItems='center'>
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <DateTimePicker
             label='Start Date'
             value={filters.startDate}
@@ -260,7 +260,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <DateTimePicker
             label='End Date'
             value={filters.endDate}
@@ -268,7 +268,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12 }} md={2}>
           <FormControl size='small' fullWidth>
             <InputLabel>Category</InputLabel>
             <Select
@@ -287,7 +287,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12 }} md={2}>
           <FormControl size='small' fullWidth>
             <InputLabel>Severity</InputLabel>
             <Select
@@ -303,7 +303,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12 }} md={2}>
           <Box display='flex' gap={1}>
             <Tooltip title='Refresh'>
               <IconButton onClick={loadLogs} size='small'>
@@ -320,7 +320,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField
             size='small'
             fullWidth
@@ -506,30 +506,30 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           {selectedLog && (
             <Box>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Timestamp</Typography>
                   <Typography variant='body2'>
                     {new Date(selectedLog.timestamp).toLocaleString()}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Event Type</Typography>
                   <Typography variant='body2'>{selectedLog.eventType}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Action</Typography>
                   <Typography variant='body2'>{selectedLog.action}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Category</Typography>
                   <Typography variant='body2'>{selectedLog.category}</Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Typography variant='subtitle2'>Description</Typography>
                   <Typography variant='body2'>{selectedLog.description}</Typography>
                 </Grid>
                 {selectedLog.details && (
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <Typography variant='subtitle2'>Details</Typography>
                     <Paper sx={{ p: 1, bgcolor: 'background.default' }}>
                       <pre style={{ fontSize: '12px', margin: 0, whiteSpace: 'pre-wrap' }}>

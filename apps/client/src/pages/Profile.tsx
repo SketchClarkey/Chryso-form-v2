@@ -6,7 +6,6 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   Avatar,
   Divider,
   Alert,
@@ -27,6 +26,7 @@ import {
   DialogActions,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Person as PersonIcon,
   Security as SecurityIcon,
@@ -221,7 +221,7 @@ export function Profile() {
 
       <Grid container spacing={3}>
         {/* Profile Information */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12 }} md={8}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -259,7 +259,7 @@ export function Profile() {
               </Box>
 
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <TextField
                     fullWidth
                     label='First Name'
@@ -270,7 +270,7 @@ export function Profile() {
                     helperText={errors.firstName}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <TextField
                     fullWidth
                     label='Last Name'
@@ -281,7 +281,7 @@ export function Profile() {
                     helperText={errors.lastName}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <TextField
                     fullWidth
                     label='Email'
@@ -290,7 +290,7 @@ export function Profile() {
                     helperText='Email cannot be changed'
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <TextField
                     fullWidth
                     label='Role'
@@ -309,7 +309,7 @@ export function Profile() {
               </Typography>
 
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Theme</InputLabel>
                     <Select
@@ -330,7 +330,7 @@ export function Profile() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Language</InputLabel>
                     <Select
@@ -349,7 +349,7 @@ export function Profile() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12 }} sm={6}>
                   <FormControl fullWidth disabled={!isEditing}>
                     <InputLabel>Timezone</InputLabel>
                     <Select
@@ -468,7 +468,7 @@ export function Profile() {
         </Grid>
 
         {/* Account Actions */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12 }} md={4}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>

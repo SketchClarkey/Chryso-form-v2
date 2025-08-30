@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -18,6 +17,7 @@ import {
   Avatar,
   Stack,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Upload as UploadIcon,
   Business as CompanyIcon,
@@ -103,7 +103,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12 }} md={8}>
               <TextField
                 label='Company Name'
                 value={settings?.companyName || ''}
@@ -112,7 +112,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 required
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <Box display='flex' flexDirection='column' alignItems='center' gap={2}>
                 <Avatar
                   src={settings?.companyLogo}
@@ -135,7 +135,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='Street Address'
                 value={settings?.address?.street || ''}
@@ -143,7 +143,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 label='City'
                 value={settings?.address?.city || ''}
@@ -151,7 +151,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='State/Province'
                 value={settings?.address?.state || ''}
@@ -159,7 +159,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='ZIP/Postal Code'
                 value={settings?.address?.zipCode || ''}
@@ -167,7 +167,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='Country'
                 value={settings?.address?.country || ''}
@@ -177,7 +177,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='Phone Number'
                 value={settings?.contact?.phone || ''}
@@ -185,7 +185,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='Email Address'
                 type='email'
@@ -195,7 +195,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 required
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <TextField
                 label='Website'
                 value={settings?.contact?.website || ''}
@@ -216,7 +216,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Timezone</InputLabel>
                 <Select
@@ -232,7 +232,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Default Language</InputLabel>
                 <Select
@@ -249,7 +249,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Date Format</InputLabel>
                 <Select
@@ -265,7 +265,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Time Format</InputLabel>
                 <Select
@@ -278,7 +278,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Currency</InputLabel>
                 <Select
@@ -307,7 +307,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Week Start Day</InputLabel>
                 <Select
@@ -323,7 +323,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12 }} md={3}>
               <TextField
                 label='Work Start Time'
                 type='time'
@@ -338,7 +338,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12 }} md={3}>
               <TextField
                 label='Work End Time'
                 type='time'
@@ -354,7 +354,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant='subtitle2' gutterBottom>
                 Work Days
               </Typography>
@@ -383,7 +383,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, onChange })
               </Stack>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Fiscal Year Start Month</InputLabel>
                 <Select

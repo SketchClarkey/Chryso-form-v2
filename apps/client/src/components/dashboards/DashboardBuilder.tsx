@@ -3,7 +3,6 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   Box,
-  Grid,
   Paper,
   Typography,
   Button,
@@ -35,6 +34,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -358,7 +358,7 @@ const WidgetEditor: React.FC<{
           {activeTab === 0 && (
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label='Widget Title'
@@ -366,7 +366,7 @@ const WidgetEditor: React.FC<{
                     onChange={e => setEditedWidget({ ...editedWidget, title: e.target.value })}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label='Description'
@@ -378,7 +378,7 @@ const WidgetEditor: React.FC<{
                     rows={3}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
                     label='Width'
@@ -393,7 +393,7 @@ const WidgetEditor: React.FC<{
                     inputProps={{ min: 1, max: 12 }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
                     label='Height'
@@ -420,7 +420,7 @@ const WidgetEditor: React.FC<{
               </Typography>
               {editedWidget.type === 'metric' && (
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Metric</InputLabel>
                       <Select
@@ -439,7 +439,7 @@ const WidgetEditor: React.FC<{
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Format</InputLabel>
                       <Select
@@ -463,7 +463,7 @@ const WidgetEditor: React.FC<{
 
               {editedWidget.type === 'chart' && (
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Chart Type</InputLabel>
                       <Select
@@ -483,7 +483,7 @@ const WidgetEditor: React.FC<{
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Data Source</InputLabel>
                       <Select
@@ -507,7 +507,7 @@ const WidgetEditor: React.FC<{
 
               {editedWidget.type === 'text' && (
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
                       label='Content'
@@ -532,7 +532,7 @@ const WidgetEditor: React.FC<{
           {activeTab === 2 && (
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
                     label='Background Color'
@@ -546,7 +546,7 @@ const WidgetEditor: React.FC<{
                     }
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
                     label='Border Color'
@@ -560,7 +560,7 @@ const WidgetEditor: React.FC<{
                     }
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
                     label='Border Radius'
@@ -578,7 +578,7 @@ const WidgetEditor: React.FC<{
                     inputProps={{ min: 0, max: 50 }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -861,7 +861,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
                       label='Dashboard Name'
@@ -869,7 +869,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       onChange={e => setDashboard({ ...dashboard, name: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Category</InputLabel>
                       <Select
@@ -888,7 +888,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <FormControlLabel
                       control={
                         <Switch

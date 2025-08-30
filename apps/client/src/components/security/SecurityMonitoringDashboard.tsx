@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -30,6 +29,7 @@ import {
   MenuItem,
   Badge,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Security as SecurityIcon,
   Warning as WarningIcon,
@@ -336,7 +336,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
       {/* Key Metrics */}
       {metrics && (
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Security Events'
               value={metrics.totalSecurityEvents}
@@ -345,7 +345,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               subtitle='Total events'
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Critical Alerts'
               value={metrics.criticalAlerts}
@@ -355,7 +355,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               subtitle='Require attention'
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Failed Logins'
               value={metrics.failedLogins}
@@ -364,7 +364,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               subtitle='Authentication failures'
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Suspicious Activity'
               value={metrics.suspiciousActivity}
@@ -373,7 +373,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               subtitle='Anomalous patterns'
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Blocked IPs'
               value={metrics.blockedIPs}
@@ -381,7 +381,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               subtitle='Threat sources'
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12 }} sm={6} md={2}>
             <MetricCard
               title='Compliance Score'
               value={`${metrics.complianceScore}%`}
@@ -541,7 +541,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={3}>
               {threatIntel.map(threat => (
-                <Grid item xs={12} md={6} key={threat._id}>
+                <Grid size={{ xs: 12 }} md={6} key={threat._id}>
                   <Card variant='outlined'>
                     <CardContent>
                       <Box display='flex' justifyContent='space-between' alignItems='start' mb={2}>
@@ -581,7 +581,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
               Security Event Trends
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12 }} md={8}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -606,7 +606,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12 }} md={4}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -660,7 +660,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
             </Typography>
             {complianceData && (
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <Card>
                     <CardContent>
                       <Typography variant='h6' gutterBottom>
@@ -690,7 +690,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <Card>
                     <CardContent>
                       <Typography variant='h6' gutterBottom>
@@ -742,7 +742,7 @@ const SecurityMonitoringDashboard: React.FC = () => {
           {selectedAlert && (
             <Box>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Box display='flex' alignItems='center' gap={1} mb={2}>
                     {getSeverityIcon(selectedAlert.severity)}
                     <Typography variant='h6'>{selectedAlert.title}</Typography>
@@ -753,26 +753,26 @@ const SecurityMonitoringDashboard: React.FC = () => {
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Typography variant='body1' gutterBottom>
                     {selectedAlert.description}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Category</Typography>
                   <Typography variant='body2'>{selectedAlert.category}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Source</Typography>
                   <Typography variant='body2'>{selectedAlert.source}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Timestamp</Typography>
                   <Typography variant='body2'>
                     {new Date(selectedAlert.timestamp).toLocaleString()}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Typography variant='subtitle2'>Status</Typography>
                   <Chip
                     label={selectedAlert.status}
@@ -781,18 +781,18 @@ const SecurityMonitoringDashboard: React.FC = () => {
                   />
                 </Grid>
                 {selectedAlert.ipAddress && (
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='subtitle2'>IP Address</Typography>
                     <Typography variant='body2'>{selectedAlert.ipAddress}</Typography>
                   </Grid>
                 )}
                 {selectedAlert.userEmail && (
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='subtitle2'>User</Typography>
                     <Typography variant='body2'>{selectedAlert.userEmail}</Typography>
                   </Grid>
                 )}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Typography variant='subtitle2'>Tags</Typography>
                   <Box display='flex' gap={1} flexWrap='wrap' mt={1}>
                     {selectedAlert.tags.map(tag => (

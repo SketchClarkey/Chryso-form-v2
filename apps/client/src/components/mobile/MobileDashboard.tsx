@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Grid,
   Chip,
   LinearProgress,
   List,
@@ -20,6 +19,7 @@ import {
   useTheme,
   alpha,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Assignment as FormIcon,
   Add as AddIcon,
@@ -243,7 +243,7 @@ export function MobileDashboard() {
 
       {/* Quick Stats */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
           ) : (
@@ -255,7 +255,7 @@ export function MobileDashboard() {
             />
           )}
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
           ) : (
@@ -267,7 +267,7 @@ export function MobileDashboard() {
             />
           )}
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
           ) : (
@@ -279,7 +279,7 @@ export function MobileDashboard() {
             />
           )}
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={{ xs: 6 }}>
           {isLoading ? (
             <Skeleton variant='rectangular' height={100} />
           ) : (
@@ -307,7 +307,7 @@ export function MobileDashboard() {
               Offline Storage
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.formCount}
                 </Typography>
@@ -315,7 +315,7 @@ export function MobileDashboard() {
                   Forms
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {offlineStorageInfo.attachmentCount}
                 </Typography>
@@ -323,7 +323,7 @@ export function MobileDashboard() {
                   Files
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <Typography variant='h6' color='primary.main'>
                   {formatFileSize(offlineStorageInfo.size)}
                 </Typography>

@@ -4,7 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
   Button,
   Tab,
   Tabs,
@@ -14,6 +13,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   FilterList as FilterIcon,
@@ -148,7 +148,7 @@ const AdvancedFiltering: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Entity Type Selector */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Card>
             <CardContent>
               <Typography variant='h6' gutterBottom>
@@ -174,7 +174,7 @@ const AdvancedFiltering: React.FC = () => {
         </Grid>
 
         {/* Main Content */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Card>
             <CardContent>
               <Tabs
@@ -276,7 +276,7 @@ const AdvancedFiltering: React.FC = () => {
         </Grid>
 
         {/* Statistics Card */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography variant='h6' gutterBottom>
@@ -311,7 +311,7 @@ const AdvancedFiltering: React.FC = () => {
         </Grid>
 
         {/* Quick Actions Card */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardContent>
               <Typography variant='h6' gutterBottom>

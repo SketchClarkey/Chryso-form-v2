@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Typography,
-  Grid,
   Paper,
   IconButton,
   Dialog,
@@ -28,6 +27,7 @@ import {
   AccordionDetails,
   Divider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
@@ -625,7 +625,7 @@ export function TemplateBuilder() {
 
       <Grid container spacing={3}>
         {/* Template Settings Panel */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12 }} md={4}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
               <Typography variant='h6' gutterBottom>
@@ -687,7 +687,7 @@ export function TemplateBuilder() {
               </Typography>
               <Grid container spacing={1}>
                 {FIELD_TYPES.map(fieldType => (
-                  <Grid item xs={6} key={fieldType.value}>
+                  <Grid size={{ xs: 6 }} key={fieldType.value}>
                     <Paper
                       sx={{
                         p: 1,
@@ -719,7 +719,7 @@ export function TemplateBuilder() {
         </Grid>
 
         {/* Template Builder */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12 }} md={8}>
           <Box display='flex' justifyContent='between' alignItems='center' mb={2}>
             <Typography variant='h6'>Template Structure</Typography>
             <Button

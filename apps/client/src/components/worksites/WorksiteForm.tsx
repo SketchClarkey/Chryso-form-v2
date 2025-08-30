@@ -20,8 +20,8 @@ import {
   IconButton,
   Card,
   CardContent,
-  Grid,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
@@ -344,7 +344,7 @@ export function WorksiteForm({
               Basic Information
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label='Worksite Name'
                   value={formData.name}
@@ -356,7 +356,7 @@ export function WorksiteForm({
                   disabled={submitting}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label='Customer Name'
                   value={formData.customerName}
@@ -409,7 +409,7 @@ export function WorksiteForm({
               Address
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   label='Street Address'
                   value={formData.address.street}
@@ -421,7 +421,7 @@ export function WorksiteForm({
                   disabled={submitting}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='City'
                   value={formData.address.city}
@@ -433,7 +433,7 @@ export function WorksiteForm({
                   disabled={submitting}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='State'
                   value={formData.address.state}
@@ -445,7 +445,7 @@ export function WorksiteForm({
                   disabled={submitting}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label='ZIP Code'
                   value={formData.address.zipCode}
@@ -513,7 +513,7 @@ export function WorksiteForm({
                   </Box>
 
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Name'
                         value={contact.name}
@@ -525,7 +525,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Position'
                         value={contact.position}
@@ -534,7 +534,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Phone'
                         value={contact.phone}
@@ -543,7 +543,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Email'
                         type='email'
@@ -602,7 +602,7 @@ export function WorksiteForm({
                   </Box>
 
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                       <TextField
                         label='Equipment ID'
                         value={equipment.id}
@@ -614,7 +614,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                       <FormControl fullWidth disabled={submitting}>
                         <InputLabel>Type</InputLabel>
                         <Select
@@ -630,7 +630,7 @@ export function WorksiteForm({
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                       <TextField
                         label='Model'
                         value={equipment.model}
@@ -639,7 +639,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                       <FormControl fullWidth disabled={submitting}>
                         <InputLabel>Condition</InputLabel>
                         <Select
@@ -655,7 +655,7 @@ export function WorksiteForm({
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Serial Number'
                         value={equipment.serialNumber}
@@ -664,7 +664,7 @@ export function WorksiteForm({
                         disabled={submitting}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                       <TextField
                         label='Notes'
                         value={equipment.notes}

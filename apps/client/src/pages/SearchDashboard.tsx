@@ -4,7 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
   Paper,
   List,
   ListItem,
@@ -21,6 +20,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Search as SearchIcon,
   TrendingUp as TrendingUpIcon,
@@ -165,7 +165,7 @@ const SearchDashboard: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Key Metrics */}
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -179,7 +179,7 @@ const SearchDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -193,7 +193,7 @@ const SearchDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -211,7 +211,7 @@ const SearchDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12 }} md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -228,7 +228,7 @@ const SearchDashboard: React.FC = () => {
         </Grid>
 
         {/* Search Activity Chart */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12 }} md={8}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Search Activity by Day
@@ -246,7 +246,7 @@ const SearchDashboard: React.FC = () => {
         </Grid>
 
         {/* Searches by Content Type */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12 }} md={4}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Searches by Content Type
@@ -275,7 +275,7 @@ const SearchDashboard: React.FC = () => {
         </Grid>
 
         {/* Top Search Queries */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12 }} md={6}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Top Search Queries
@@ -308,7 +308,7 @@ const SearchDashboard: React.FC = () => {
         </Grid>
 
         {/* No Results Queries */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12 }} md={6}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Queries with No Results
@@ -331,13 +331,13 @@ const SearchDashboard: React.FC = () => {
         </Grid>
 
         {/* Search Performance Insights */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Search Performance Insights
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12 }} md={4}>
                 <Box p={2} bgcolor='success.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='success.dark'>
                     Most Effective Queries
@@ -348,7 +348,7 @@ const SearchDashboard: React.FC = () => {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12 }} md={4}>
                 <Box p={2} bgcolor='warning.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='warning.dark'>
                     Improvement Opportunity
@@ -359,7 +359,7 @@ const SearchDashboard: React.FC = () => {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12 }} md={4}>
                 <Box p={2} bgcolor='info.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='info.dark'>
                     Usage Pattern

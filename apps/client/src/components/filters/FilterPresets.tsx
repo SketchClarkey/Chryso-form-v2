@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Grid,
   Chip,
   Stack,
   Menu,
@@ -27,6 +26,7 @@ import {
   Badge,
   Divider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   FilterList as FilterIcon,
   Star as StarIcon,
@@ -366,7 +366,7 @@ const FilterPresets: React.FC<FilterPresetsProps> = ({
               {categoryPresets
                 .sort((a, b) => a.order - b.order)
                 .map(preset => (
-                  <Grid item xs={12} sm={6} md={4} key={preset.id}>
+                  <Grid size={{ xs: 12 }} sm={6} md={4} key={preset.id}>
                     <Card
                       variant='outlined'
                       sx={{

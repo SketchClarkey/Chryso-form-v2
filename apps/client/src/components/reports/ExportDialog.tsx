@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -26,6 +25,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   PictureAsPdf as PdfIcon,
   TableChart as ExcelIcon,
@@ -176,7 +176,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
             </Typography>
             <Grid container spacing={2} sx={{ mb: 3 }}>
               {formats.map(format => (
-                <Grid item xs={12} sm={6} md={3} key={format.format}>
+                <Grid size={{ xs: 12 }} sm={6} md={3} key={format.format}>
                   <Card
                     sx={{
                       cursor: 'pointer',
@@ -213,7 +213,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
 
                 <Grid container spacing={3}>
                   {/* Include Options */}
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ xs: 12 }} md={6}>
                     <FormControl component='fieldset'>
                       <FormLabel component='legend'>Include</FormLabel>
                       <FormGroup>
@@ -255,7 +255,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
 
                   {/* Page Options (for PDF) */}
                   {selectedFormatObj.options.pageSize && (
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <FormControl component='fieldset'>
                         <FormLabel component='legend'>Page Size</FormLabel>
                         <RadioGroup
@@ -282,7 +282,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose, reportId, re
 
                   {/* Orientation Options (for PDF) */}
                   {selectedFormatObj.options.orientation && (
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <FormControl component='fieldset'>
                         <FormLabel component='legend'>Orientation</FormLabel>
                         <RadioGroup

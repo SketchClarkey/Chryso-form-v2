@@ -11,9 +11,9 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Grid,
   Paper,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Settings as GeneralIcon,
   Security as SecurityIcon,
@@ -101,7 +101,7 @@ export function Settings() {
 
       <Grid container spacing={3}>
         {/* Settings Navigation */}
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid size={{ xs: 12, md: 4, lg: 3 }}>
           <Card>
             <CardContent>
               <Typography variant='h6' gutterBottom>
@@ -139,7 +139,7 @@ export function Settings() {
         </Grid>
 
         {/* Settings Content */}
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid size={{ xs: 12, md: 8, lg: 9 }}>
           <Paper sx={{ p: 3, minHeight: 600 }}>
             <Routes>
               <Route path='general' element={<GeneralSettings />} />

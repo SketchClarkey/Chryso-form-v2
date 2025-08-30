@@ -4,7 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
   Switch,
   FormControlLabel,
   TextField,
@@ -21,6 +20,7 @@ import {
   Chip,
   Stack,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   ExpandMore as ExpandMoreIcon,
   Save as SaveIcon,
@@ -195,14 +195,14 @@ const DashboardSettings: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Global Settings */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='h6'>Global Settings</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Theme</InputLabel>
                     <Select
@@ -220,7 +220,7 @@ const DashboardSettings: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <TextField
                     fullWidth
                     label='Auto Refresh Interval (seconds)'
@@ -238,7 +238,7 @@ const DashboardSettings: React.FC = () => {
                     inputProps={{ min: 30, max: 3600 }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <TextField
                     fullWidth
                     label='Max Widgets Per Dashboard'
@@ -256,7 +256,7 @@ const DashboardSettings: React.FC = () => {
                     inputProps={{ min: 1, max: 50 }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <TextField
                     fullWidth
                     label='Cache TTL (seconds)'
@@ -271,7 +271,7 @@ const DashboardSettings: React.FC = () => {
                     inputProps={{ min: 30, max: 3600 }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Stack direction='row' spacing={2} flexWrap='wrap'>
                     <FormControlLabel
                       control={
@@ -326,7 +326,7 @@ const DashboardSettings: React.FC = () => {
         </Grid>
 
         {/* Permissions */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='h6'>Permissions</Typography>
@@ -334,7 +334,7 @@ const DashboardSettings: React.FC = () => {
             <AccordionDetails>
               <Grid container spacing={3}>
                 {Object.entries(config.permissions).map(([permission, allowedRoles]) => (
-                  <Grid item xs={12} key={permission}>
+                  <Grid size={{ xs: 12 }} key={permission}>
                     <Box>
                       <Typography
                         variant='subtitle2'
@@ -366,14 +366,14 @@ const DashboardSettings: React.FC = () => {
         </Grid>
 
         {/* Data Retention */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='h6'>Data Retention</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -394,7 +394,7 @@ const DashboardSettings: React.FC = () => {
                 </Grid>
                 {config.dataRetention.enableDataRetention && (
                   <>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <TextField
                         fullWidth
                         label='Retention Period (days)'
@@ -412,7 +412,7 @@ const DashboardSettings: React.FC = () => {
                         inputProps={{ min: 30, max: 2555 }}
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                       <Stack direction='row' spacing={2}>
                         <FormControlLabel
                           control={
@@ -458,14 +458,14 @@ const DashboardSettings: React.FC = () => {
         </Grid>
 
         {/* Notifications */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='h6'>Notifications</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -486,7 +486,7 @@ const DashboardSettings: React.FC = () => {
                 </Grid>
                 {config.notifications.enableEmailNotifications && (
                   <>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12 }} md={6}>
                       <FormControl fullWidth>
                         <InputLabel>Digest Frequency</InputLabel>
                         <Select
@@ -507,7 +507,7 @@ const DashboardSettings: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                       <Stack direction='row' spacing={2}>
                         <FormControlLabel
                           control={

@@ -9,12 +9,12 @@ import {
   FormControlLabel,
   Switch,
   Box,
-  Grid,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 interface IFormSection {
   id: string;
@@ -130,7 +130,7 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
 
           {/* Layout Options */}
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Columns</InputLabel>
                 <Select
@@ -145,7 +145,7 @@ export function SectionEditor({ open, section, onClose, onSave }: SectionEditorP
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <TextField
                 fullWidth
                 label='Display Order'

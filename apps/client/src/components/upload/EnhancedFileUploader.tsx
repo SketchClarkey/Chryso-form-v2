@@ -19,10 +19,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   useTheme,
   alpha,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   CloudUpload as UploadIcon,
   Delete as DeleteIcon,
@@ -561,7 +561,7 @@ export function EnhancedFileUploader({
           {files
             .filter(f => f.dataUrl)
             .map(file => (
-              <Grid item xs={6} sm={4} md={3} key={file.id}>
+              <Grid size={{ xs: 6 }} sm={4} md={3} key={file.id}>
                 <FilePreview file={file as any} />
               </Grid>
             ))}

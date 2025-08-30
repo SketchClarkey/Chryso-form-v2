@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -27,6 +26,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Palette as PaletteIcon,
   Upload as UploadIcon,
@@ -130,7 +130,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Primary Color
               </Typography>
@@ -172,7 +172,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               </Stack>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Secondary Color
               </Typography>
@@ -198,7 +198,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Logo
               </Typography>
@@ -229,7 +229,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Favicon
               </Typography>
@@ -268,7 +268,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -280,7 +280,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label='Custom Header HTML'
                 multiline
@@ -292,7 +292,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label='Custom Footer HTML'
                 multiline
@@ -472,7 +472,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
       <DialogTitle>{initialData ? 'Edit Custom Field' : 'Add Custom Field'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label='Field Name'
               value={fieldData.name}
@@ -482,7 +482,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <FormControl fullWidth>
               <InputLabel>Field Type</InputLabel>
               <Select
@@ -500,7 +500,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
           </Grid>
 
           {(fieldData.type === 'select' || fieldData.type === 'multiselect') && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label='Options (comma-separated)'
                 value={Array.isArray(fieldData.options) ? fieldData.options.join(', ') : ''}
@@ -519,7 +519,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
             </Grid>
           )}
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label='Default Value'
               value={fieldData.defaultValue}
@@ -528,7 +528,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <FormControlLabel
               control={
                 <Switch

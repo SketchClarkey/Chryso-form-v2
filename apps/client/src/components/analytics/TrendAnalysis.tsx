@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -9,7 +8,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Paper,
   Alert,
   CircularProgress,
   Chip,
@@ -20,6 +18,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
@@ -325,7 +324,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
       {selectedAnalysis && (
         <Grid container spacing={3}>
           {/* Main Chart */}
-          <Grid item xs={12} lg={8}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Typography variant='h6' gutterBottom>
@@ -372,7 +371,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           </Grid>
 
           {/* Insights Panel */}
-          <Grid item xs={12} lg={4}>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <Card>
               <CardContent>
                 <Typography variant='h6' gutterBottom>
@@ -425,7 +424,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
                   Summary Statistics
                 </Typography>
                 <Grid container spacing={1}>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='caption' color='text.secondary'>
                       Total
                     </Typography>
@@ -433,7 +432,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
                       {selectedAnalysis.summary.total.toLocaleString()}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='caption' color='text.secondary'>
                       Average
                     </Typography>
@@ -441,7 +440,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
                       {selectedAnalysis.summary.average.toFixed(1)}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='caption' color='text.secondary'>
                       Peak
                     </Typography>
@@ -449,7 +448,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
                       {selectedAnalysis.summary.peak.toLocaleString()}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{ xs: 6 }}>
                     <Typography variant='caption' color='text.secondary'>
                       Lowest
                     </Typography>
@@ -463,7 +462,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({ dateRange, granularity })
           </Grid>
 
           {/* Detailed Data Table */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Card>
               <CardContent>
                 <Typography variant='h6' gutterBottom>

@@ -6,7 +6,6 @@ import {
   CardContent,
   Typography,
   Button,
-  Grid,
   Tabs,
   Tab,
   Chip,
@@ -17,6 +16,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Edit as EditIcon,
   MoreVert as MoreIcon,
@@ -248,7 +248,7 @@ export function TemplateDetail() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Created By
               </Typography>
@@ -259,7 +259,7 @@ export function TemplateDetail() {
                 {new Date(template.createdAt).toLocaleDateString()}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Last Modified
               </Typography>
@@ -270,7 +270,7 @@ export function TemplateDetail() {
                 {new Date(template.updatedAt).toLocaleDateString()}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Usage Statistics
               </Typography>
@@ -283,7 +283,7 @@ export function TemplateDetail() {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' color='text.secondary'>
                 Tags
               </Typography>

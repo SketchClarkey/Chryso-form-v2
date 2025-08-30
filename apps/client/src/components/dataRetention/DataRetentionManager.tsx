@@ -25,7 +25,6 @@ import {
   MenuItem,
   Switch,
   FormControlLabel,
-  Grid,
   Alert,
   Tooltip,
   Paper,
@@ -33,6 +32,7 @@ import {
   Tab,
   LinearProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -512,7 +512,7 @@ const DataRetentionManager: React.FC = () => {
           {/* Statistics Tab */}
           {stats && (
             <Grid container spacing={3}>
-              <Grid item xs={12} md={3}>
+              <Grid size={{ xs: 12 }} md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='primary'>
@@ -525,7 +525,7 @@ const DataRetentionManager: React.FC = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid size={{ xs: 12 }} md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='success.main'>
@@ -538,7 +538,7 @@ const DataRetentionManager: React.FC = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid size={{ xs: 12 }} md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='warning.main'>
@@ -551,7 +551,7 @@ const DataRetentionManager: React.FC = () => {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid size={{ xs: 12 }} md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='error.main'>
@@ -565,7 +565,7 @@ const DataRetentionManager: React.FC = () => {
                 </Card>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -573,7 +573,7 @@ const DataRetentionManager: React.FC = () => {
                     </Typography>
                     <Grid container spacing={2}>
                       {Object.entries(stats.policiesByEntityType).map(([entityType, count]) => (
-                        <Grid item xs={6} md={3} key={entityType}>
+                        <Grid size={{ xs: 6 }} md={3} key={entityType}>
                           <Box display='flex' alignItems='center' gap={1}>
                             <span>{getEntityTypeIcon(entityType)}</span>
                             <Typography variant='body1'>
@@ -604,7 +604,7 @@ const DataRetentionManager: React.FC = () => {
         <DialogContent>
           <form onSubmit={handleSubmit(handleSavePolicy)}>
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12 }} md={6}>
                 <Controller
                   name='name'
                   control={control}
@@ -619,7 +619,7 @@ const DataRetentionManager: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12 }} md={6}>
                 <Controller
                   name='entityType'
                   control={control}
@@ -640,7 +640,7 @@ const DataRetentionManager: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Controller
                   name='description'
                   control={control}
@@ -650,7 +650,7 @@ const DataRetentionManager: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6 }} md={4}>
                 <Controller
                   name='retentionPeriod.value'
                   control={control}
@@ -666,7 +666,7 @@ const DataRetentionManager: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6 }} md={4}>
                 <Controller
                   name='retentionPeriod.unit'
                   control={control}
@@ -682,7 +682,7 @@ const DataRetentionManager: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12 }} md={4}>
                 <Controller
                   name='archiveFormat'
                   control={control}
@@ -699,7 +699,7 @@ const DataRetentionManager: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Controller
                   name='archiveBeforeDelete'
                   control={control}
@@ -712,7 +712,7 @@ const DataRetentionManager: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6 }} md={4}>
                 <Controller
                   name='executionSchedule.frequency'
                   control={control}
@@ -730,7 +730,7 @@ const DataRetentionManager: React.FC = () => {
               </Grid>
 
               {watchedFrequency === 'weekly' && (
-                <Grid item xs={6} md={4}>
+                <Grid size={{ xs: 6 }} md={4}>
                   <Controller
                     name='executionSchedule.dayOfWeek'
                     control={control}
@@ -753,7 +753,7 @@ const DataRetentionManager: React.FC = () => {
               )}
 
               {watchedFrequency === 'monthly' && (
-                <Grid item xs={6} md={4}>
+                <Grid size={{ xs: 6 }} md={4}>
                   <Controller
                     name='executionSchedule.dayOfMonth'
                     control={control}
@@ -770,7 +770,7 @@ const DataRetentionManager: React.FC = () => {
                 </Grid>
               )}
 
-              <Grid item xs={6} md={4}>
+              <Grid size={{ xs: 6 }} md={4}>
                 <Controller
                   name='executionSchedule.hour'
                   control={control}

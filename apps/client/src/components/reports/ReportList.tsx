@@ -6,7 +6,6 @@ import {
   CardActions,
   Button,
   Typography,
-  Grid,
   Chip,
   IconButton,
   Menu,
@@ -24,6 +23,7 @@ import {
   Avatar,
   Tooltip,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   MoreVert as MoreVertIcon,
   Add as AddIcon,
@@ -369,7 +369,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
 
       {/* Filters */}
       <Grid container spacing={2} mb={3}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12 }} md={4}>
           <TextField
             fullWidth
             label='Search reports'
@@ -377,7 +377,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
             onChange={e => setSearchTerm(e.target.value)}
           />
         </Grid>
-        <Grid item xs={6} md={2}>
+        <Grid size={{ xs: 6 }} md={2}>
           <FormControl fullWidth>
             <InputLabel>Category</InputLabel>
             <Select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
@@ -390,7 +390,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={6} md={2}>
+        <Grid size={{ xs: 6 }} md={2}>
           <FormControl fullWidth>
             <InputLabel>Status</InputLabel>
             <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
@@ -401,7 +401,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={6} md={2}>
+        <Grid size={{ xs: 6 }} md={2}>
           <FormControl fullWidth>
             <InputLabel>Sort By</InputLabel>
             <Select value={sortBy} onChange={e => setSortBy(e.target.value)}>
@@ -412,7 +412,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={6} md={2}>
+        <Grid size={{ xs: 6 }} md={2}>
           <FormControl fullWidth>
             <InputLabel>Order</InputLabel>
             <Select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
@@ -427,7 +427,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
       {loading ? (
         <Grid container spacing={3}>
           {Array.from({ length: 8 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grid size={{ xs: 12 }} sm={6} md={4} lg={3} key={index}>
               <Card sx={{ height: 280 }}>
                 <CardContent>
                   <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
@@ -460,7 +460,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
       ) : (
         <Grid container spacing={3}>
           {reports.map(report => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={report._id}>
+            <Grid size={{ xs: 12 }} sm={6} md={4} lg={3} key={report._id}>
               <ReportCard
                 report={report}
                 onView={() => handleView(report)}

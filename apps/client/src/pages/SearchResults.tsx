@@ -5,7 +5,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Grid,
   Chip,
   List,
   ListItem,
@@ -30,10 +29,11 @@ import {
   Stack,
   Avatar,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   ExpandMore as ExpandMoreIcon,
   Description as FormIcon,
-  Template as TemplateIcon,
+  Assignment as TemplateIcon,
   Person as UserIcon,
   LocationOn as WorksiteIcon,
   Dashboard as DashboardIcon,
@@ -268,7 +268,7 @@ const SearchResults: React.FC = () => {
       {query && (
         <Grid container spacing={3}>
           {/* Filters Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12 }} md={3}>
             <Paper sx={{ p: 2, position: 'sticky', top: 16 }}>
               <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
                 <Typography variant='h6'>Filters</Typography>
@@ -392,7 +392,7 @@ const SearchResults: React.FC = () => {
           </Grid>
 
           {/* Results */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12 }} md={9}>
             <Box mb={2} display='flex' justifyContent='space-between' alignItems='center'>
               <Typography variant='h6'>
                 {loading ? 'Searching...' : `${total} results for "${query}"`}

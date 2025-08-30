@@ -16,8 +16,8 @@ import {
   Typography,
   Chip,
   IconButton,
-  Grid,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 interface IFieldOption {
@@ -227,7 +227,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
 
           {/* Basic Properties */}
           <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12 }} md={8}>
               <TextField
                 fullWidth
                 label='Field Label'
@@ -236,7 +236,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                 required
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Width</InputLabel>
                 <Select
@@ -327,7 +327,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
               Validation Rules
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12 }} md={6}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -341,7 +341,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
 
               {(formData.type === 'text' || formData.type === 'textarea') && (
                 <>
-                  <Grid item xs={6} md={3}>
+                  <Grid size={{ xs: 6 }} md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -353,7 +353,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                       }
                     />
                   </Grid>
-                  <Grid item xs={6} md={3}>
+                  <Grid size={{ xs: 6 }} md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -370,7 +370,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
 
               {formData.type === 'number' && (
                 <>
-                  <Grid item xs={6} md={3}>
+                  <Grid size={{ xs: 6 }} md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -382,7 +382,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                       }
                     />
                   </Grid>
-                  <Grid item xs={6} md={3}>
+                  <Grid size={{ xs: 6 }} md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -400,7 +400,7 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
               {(formData.type === 'text' ||
                 formData.type === 'email' ||
                 formData.type === 'phone') && (
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12 }} md={6}>
                   <TextField
                     fullWidth
                     size='small'

@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Typography,
-  Grid,
   Card,
   CardContent,
   CardHeader,
@@ -15,6 +14,7 @@ import {
   Stack,
   Divider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Tune as FeaturesIcon,
   Dashboard as DashboardIcon,
@@ -141,7 +141,7 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
         <CardContent>
           <Grid container spacing={3}>
             {modules.map(module => (
-              <Grid item xs={12} md={6} key={module.key}>
+              <Grid size={{ xs: 12 }} md={6} key={module.key}>
                 <Box
                   sx={{
                     p: 2,
@@ -207,7 +207,7 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
         />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Maximum Users
               </Typography>
@@ -248,7 +248,7 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Maximum Forms
               </Typography>
@@ -290,7 +290,7 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Storage Quota (GB)
               </Typography>
@@ -337,7 +337,7 @@ const FeatureSettings: React.FC<FeatureSettingsProps> = ({ settings, onChange })
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 API Calls per Month
               </Typography>

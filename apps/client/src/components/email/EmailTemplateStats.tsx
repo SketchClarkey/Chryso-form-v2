@@ -7,7 +7,6 @@ import {
   Button,
   Box,
   Typography,
-  Grid,
   Card,
   CardContent,
   LinearProgress,
@@ -20,6 +19,7 @@ import {
   Alert,
   Skeleton,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Email as EmailIcon,
   Visibility as OpenIcon,
@@ -155,7 +155,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
         {loading ? (
           <Grid container spacing={3}>
             {Array.from({ length: 4 }).map((_, index) => (
-              <Grid item xs={12} sm={6} key={index}>
+              <Grid size={{ xs: 12 }} sm={6} key={index}>
                 <Card>
                   <CardContent>
                     <Skeleton variant='text' width='60%' height={40} />
@@ -170,7 +170,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
           <>
             {/* Key Metrics */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12 }} sm={6}>
                 <StatCard
                   title='Total Sent'
                   value={stats.usage.sentCount.toLocaleString()}
@@ -180,7 +180,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12 }} sm={6}>
                 <StatCard
                   title='Open Rate'
                   value={`${(stats.usage.openRate || 0).toFixed(1)}%`}
@@ -191,7 +191,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12 }} sm={6}>
                 <StatCard
                   title='Click Rate'
                   value={`${(stats.usage.clickRate || 0).toFixed(1)}%`}
@@ -202,7 +202,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12 }} sm={6}>
                 <StatCard
                   title='Last 30 Days'
                   value={stats.lastMonth?.sent?.toLocaleString() || '0'}
@@ -216,7 +216,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
 
             {/* Template Details */}
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12 }} md={6}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -293,7 +293,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                 </Card>
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12 }} md={6}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>

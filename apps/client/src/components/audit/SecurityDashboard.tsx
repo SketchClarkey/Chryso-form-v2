@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -18,6 +17,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Security as SecurityIcon,
   Warning as WarningIcon,
@@ -244,7 +244,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
         <>
           {/* Key Metrics */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Security Alerts'
                 value={metrics.securityAlerts}
@@ -253,7 +253,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 color={getMetricColor(metrics.securityAlerts, 5)}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Failed Logins'
                 value={metrics.failedLogins}
@@ -261,7 +261,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 color={getMetricColor(metrics.failedLogins, 10)}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Critical Events'
                 value={metrics.criticalEvents}
@@ -269,7 +269,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 color={getMetricColor(metrics.criticalEvents, 3)}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Compliance Issues'
                 value={metrics.complianceViolations}
@@ -278,7 +278,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 color={getMetricColor(metrics.complianceViolations, 2)}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Total Events'
                 value={metrics.totalEvents}
@@ -286,7 +286,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 trend={metrics.trends.eventsChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12 }} sm={6} md={2}>
               <MetricCard
                 title='Active Users'
                 value={metrics.activeUsers}
@@ -297,7 +297,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
 
           {/* Charts */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12 }} md={8}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
@@ -328,7 +328,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12 }} md={4}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
@@ -368,7 +368,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
 
           {/* Recent Security Alerts */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Card>
                 <CardContent>
                   <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
@@ -426,7 +426,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>

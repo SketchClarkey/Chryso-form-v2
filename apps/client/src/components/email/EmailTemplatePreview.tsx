@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -20,6 +19,7 @@ import {
   Skeleton,
   Divider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Visibility as PreviewIcon,
   Code as CodeIcon,
@@ -296,7 +296,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
       <DialogContent>
         <Grid container spacing={3}>
           {/* Variables Panel */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12 }} md={4}>
             <Paper sx={{ p: 2, height: 'fit-content', maxHeight: '70vh', overflow: 'auto' }}>
               <Typography variant='h6' gutterBottom>
                 Template Variables
@@ -324,7 +324,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
               {template?.variables?.length > 0 ? (
                 <Grid container spacing={2}>
                   {template.variables.map((variable: any, index: number) => (
-                    <Grid item xs={12} key={index}>
+                    <Grid size={{ xs: 12 }} key={index}>
                       {renderVariableInput(variable)}
                     </Grid>
                   ))}
@@ -338,7 +338,7 @@ const EmailTemplatePreview: React.FC<EmailTemplatePreviewProps> = ({ open, onClo
           </Grid>
 
           {/* Preview Panel */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12 }} md={8}>
             <Paper sx={{ height: '70vh', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>

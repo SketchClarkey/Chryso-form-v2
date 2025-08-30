@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Grid,
   Chip,
   Stack,
   Menu,
@@ -24,6 +23,7 @@ import {
   Tooltip,
   Alert,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   FilterList as FilterIcon,
   MoreVert as MoreIcon,
@@ -337,7 +337,7 @@ const FilterManager: React.FC<FilterManagerProps> = ({
       ) : (
         <Grid container spacing={3}>
           {filters.map(filter => (
-            <Grid item xs={12} sm={6} md={4} key={filter.id}>
+            <Grid size={{ xs: 12 }} sm={6} md={4} key={filter.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
                   <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>

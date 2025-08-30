@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
   Card,
   CardContent,
   CardActions,
@@ -25,6 +24,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -232,7 +232,7 @@ const DashboardManager: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={2} alignItems='center'>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Tabs
                 value={selectedCategory}
                 onChange={(_, newValue) => setSelectedCategory(newValue)}
@@ -244,7 +244,7 @@ const DashboardManager: React.FC = () => {
                 ))}
               </Tabs>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Box display='flex' gap={1}>
                 <TextField
                   placeholder='Search dashboards...'
@@ -287,7 +287,7 @@ const DashboardManager: React.FC = () => {
       ) : (
         <Grid container spacing={3}>
           {filteredDashboards.map(dashboard => (
-            <Grid item xs={12} sm={6} md={4} key={dashboard.id}>
+            <Grid size={{ xs: 12 }} sm={6} md={4} key={dashboard.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
                   <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>

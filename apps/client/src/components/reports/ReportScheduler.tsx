@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Grid,
   TextField,
   FormControl,
   InputLabel,
@@ -28,6 +27,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Schedule as ScheduleIcon,
   Email as EmailIcon,
@@ -250,7 +250,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               </Typography>
               <Grid container spacing={1} sx={{ mb: 2 }}>
                 {cronPresets.map(preset => (
-                  <Grid item key={preset.name}>
+                  <Grid key={preset.name}>
                     <Chip
                       label={preset.name}
                       clickable
@@ -390,7 +390,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                     Current Schedule Status
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                       <Typography variant='caption' color='text.secondary'>
                         Last Run
                       </Typography>
@@ -400,7 +400,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                           : 'Never'}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                       <Typography variant='caption' color='text.secondary'>
                         Next Run
                       </Typography>

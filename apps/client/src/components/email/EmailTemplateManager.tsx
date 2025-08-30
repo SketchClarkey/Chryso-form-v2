@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
   Chip,
   IconButton,
   Menu,
@@ -27,6 +26,7 @@ import {
   Badge,
   Tooltip,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Add as AddIcon,
   MoreVert as MoreIcon,
@@ -317,7 +317,7 @@ const EmailTemplateManager: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={2} alignItems='center'>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <Box component='form' onSubmit={handleSearch} display='flex' gap={1}>
                 <TextField
                   placeholder='Search templates...'
@@ -334,7 +334,7 @@ const EmailTemplateManager: React.FC = () => {
                 </Button>
               </Box>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12 }} md={6}>
               <FormControl size='small' fullWidth>
                 <InputLabel>Filter by Category</InputLabel>
                 <Select
@@ -360,7 +360,7 @@ const EmailTemplateManager: React.FC = () => {
       {loading ? (
         <Grid container spacing={3}>
           {Array.from({ length: 6 }).map((_, index) => (
-            <Grid item xs={12} md={6} lg={4} key={index}>
+            <Grid size={{ xs: 12 }} md={6} lg={4} key={index}>
               <Card>
                 <CardContent>
                   <Skeleton variant='text' width='60%' height={32} />
@@ -379,7 +379,7 @@ const EmailTemplateManager: React.FC = () => {
       ) : (
         <Grid container spacing={3}>
           {filteredTemplates.map(template => (
-            <Grid item xs={12} md={6} lg={4} key={template._id}>
+            <Grid size={{ xs: 12 }} md={6} lg={4} key={template._id}>
               <Card
                 sx={{
                   height: '100%',
