@@ -335,9 +335,9 @@ const FilterManager: React.FC<FilterManagerProps> = ({
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {filters.map(filter => (
-            <Grid size={{ xs: 12 }} sm={6} md={4} key={filter.id}>
+            <Grid2 sm={6} md={4} key={filter.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: 1 }}>
                   <Box display='flex' justifyContent='space-between' alignItems='flex-start' mb={1}>
@@ -446,9 +446,9 @@ const FilterManager: React.FC<FilterManagerProps> = ({
                   </Button>
                 </CardActions>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       {/* Context Menu */}

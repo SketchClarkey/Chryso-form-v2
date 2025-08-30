@@ -557,15 +557,15 @@ export function EnhancedFileUploader({
 
       {/* File Preview */}
       {showPreview && files.some(f => f.dataUrl) && (
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid2 container spacing={2} sx={{ mt: 2 }}>
           {files
             .filter(f => f.dataUrl)
             .map(file => (
-              <Grid size={{ xs: 6 }} sm={4} md={3} key={file.id}>
+              <Grid2 sm={4} md={3} key={file.id}>
                 <FilePreview file={file as any} />
-              </Grid>
+              </Grid2>
             ))}
-        </Grid>
+        </Grid2>
       )}
 
       {/* Camera Capture Dialog */}

@@ -15,37 +15,33 @@ const router = Router();
 router.use(authenticate);
 
 // Upload single file
-router.post(
-  '/single',
-  uploadSingle as any,
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      if (!req.file) {
-        res.status(400).json({
-          success: false,
-          message: 'No file uploaded',
-          code: 'NO_FILE',
-        });
-        return;
-      }
-
-      const fileInfo = getFileInfo(req.file);
-
-      res.json({
-        success: true,
-        message: 'File uploaded successfully',
-        data: { file: fileInfo },
-      });
-    } catch (error) {
-      console.error('Single file upload error:', error);
-      res.status(500).json({
+router.post('/single', uploadSingle as any, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({
         success: false,
-        message: 'File upload failed',
-        code: 'UPLOAD_ERROR',
+        message: 'No file uploaded',
+        code: 'NO_FILE',
       });
+      return;
     }
+
+    const fileInfo = getFileInfo(req.file);
+
+    res.json({
+      success: true,
+      message: 'File uploaded successfully',
+      data: { file: fileInfo },
+    });
+  } catch (error) {
+    console.error('Single file upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'File upload failed',
+      code: 'UPLOAD_ERROR',
+    });
   }
-);
+});
 
 // Upload multiple files
 router.post(

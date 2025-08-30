@@ -68,7 +68,7 @@ const AdvancedFiltering: React.FC = () => {
   const loadAvailableFields = async () => {
     setLoading(true);
     try {
-      const response = await request(`/api/filters/fields/${selectedEntityType}`);
+      const response = await get('/api/filters/fields/${selectedEntityType}');
       setAvailableFields(response.data.fields);
     } catch (err: any) {
       setError(err.message || 'Failed to load available fields');
@@ -146,7 +146,7 @@ const AdvancedFiltering: React.FC = () => {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Entity Type Selector */}
         <Grid size={{ xs: 12 }}>
           <Card>
@@ -171,7 +171,7 @@ const AdvancedFiltering: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Main Content */}
         <Grid size={{ xs: 12 }}>
@@ -273,7 +273,7 @@ const AdvancedFiltering: React.FC = () => {
               )}
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Statistics Card */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -308,7 +308,7 @@ const AdvancedFiltering: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Quick Actions Card */}
         <Grid size={{ xs: 12, md: 8 }}>
@@ -336,8 +336,8 @@ const AdvancedFiltering: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Floating Action Button */}
       <Fab

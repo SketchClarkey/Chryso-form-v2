@@ -41,123 +41,133 @@ const suggestionValidation = [
 ];
 
 // GET /api/search - Global search across all entities
-router.get('/', authenticate, searchValidation, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
+router.get(
+  '/',
+  authenticate,
+  searchValidation,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array(),
+        });
+      }
+
+      const {
+        q: query,
+        types,
+        limit = 20,
+        offset = 0,
+        sortBy = 'relevance',
+        sortOrder = 'desc',
+        status,
+        category,
+        dateFrom,
+        dateTo,
+        createdBy,
+        tags,
+      } = req.query;
+
+      // Parse filters
+      const filters: any = {};
+      if (status) {
+        filters.status = (status as string).split(',').map(s => s.trim());
+      }
+      if (category) {
+        filters.category = (category as string).split(',').map(c => c.trim());
+      }
+      if (dateFrom) {
+        filters.dateFrom = new Date(dateFrom as string);
+      }
+      if (dateTo) {
+        filters.dateTo = new Date(dateTo as string);
+      }
+      if (createdBy) {
+        filters.createdBy = createdBy as string;
+      }
+      if (tags) {
+        filters.tags = (tags as string).split(',').map(t => t.trim());
+      }
+
+      const searchOptions = {
+        query: query as string,
+        types: types ? (types as string).split(',').map(t => t.trim()) : undefined,
+        limit: Number(limit),
+        offset: Number(offset),
+        sortBy: sortBy as 'relevance' | 'date' | 'name',
+        sortOrder: sortOrder as 'asc' | 'desc',
+        filters,
+      };
+
+      const results = await searchService.globalSearch(searchOptions, req.user!.role, req.user!.id);
+
+      return res.json({
+        success: true,
+        data: {
+          query,
+          results: results.results,
+          total: results.total,
+          facets: results.facets,
+          pagination: {
+            limit: Number(limit),
+            offset: Number(offset),
+            hasMore: results.total > Number(offset) + Number(limit),
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Search error:', error);
+      return res.status(500).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array(),
+        message: 'Search failed',
       });
     }
-
-    const {
-      q: query,
-      types,
-      limit = 20,
-      offset = 0,
-      sortBy = 'relevance',
-      sortOrder = 'desc',
-      status,
-      category,
-      dateFrom,
-      dateTo,
-      createdBy,
-      tags,
-    } = req.query;
-
-    // Parse filters
-    const filters: any = {};
-    if (status) {
-      filters.status = (status as string).split(',').map(s => s.trim());
-    }
-    if (category) {
-      filters.category = (category as string).split(',').map(c => c.trim());
-    }
-    if (dateFrom) {
-      filters.dateFrom = new Date(dateFrom as string);
-    }
-    if (dateTo) {
-      filters.dateTo = new Date(dateTo as string);
-    }
-    if (createdBy) {
-      filters.createdBy = createdBy as string;
-    }
-    if (tags) {
-      filters.tags = (tags as string).split(',').map(t => t.trim());
-    }
-
-    const searchOptions = {
-      query: query as string,
-      types: types ? (types as string).split(',').map(t => t.trim()) : undefined,
-      limit: Number(limit),
-      offset: Number(offset),
-      sortBy: sortBy as 'relevance' | 'date' | 'name',
-      sortOrder: sortOrder as 'asc' | 'desc',
-      filters,
-    };
-
-    const results = await searchService.globalSearch(searchOptions, req.user!.role, req.user!.id);
-
-    return res.json({
-      success: true,
-      data: {
-        query,
-        results: results.results,
-        total: results.total,
-        facets: results.facets,
-        pagination: {
-          limit: Number(limit),
-          offset: Number(offset),
-          hasMore: results.total > Number(offset) + Number(limit),
-        },
-      },
-    });
-  } catch (error) {
-    console.error('Search error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Search failed',
-    });
   }
-});
+);
 
 // GET /api/search/suggestions - Get search suggestions
-router.get('/suggestions', authenticate, suggestionValidation, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
+router.get(
+  '/suggestions',
+  authenticate,
+  suggestionValidation,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array(),
+        });
+      }
+
+      const { q: query } = req.query;
+
+      const suggestions = await searchService.getSearchSuggestions(
+        query as string,
+        req.user!.role,
+        req.user!.id
+      );
+
+      return res.json({
+        success: true,
+        data: {
+          query,
+          suggestions,
+        },
+      });
+    } catch (error) {
+      console.error('Search suggestions error:', error);
+      return res.status(500).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array(),
+        message: 'Failed to get search suggestions',
       });
     }
-
-    const { q: query } = req.query;
-
-    const suggestions = await searchService.getSearchSuggestions(
-      query as string,
-      req.user!.role,
-      req.user!.id
-    );
-
-    return res.json({
-      success: true,
-      data: {
-        query,
-        suggestions,
-      },
-    });
-  } catch (error) {
-    console.error('Search suggestions error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to get search suggestions',
-    });
   }
-});
+);
 
 // GET /api/search/recent - Get recent searches for the user
 router.get('/recent', authenticate, async (req, res) => {

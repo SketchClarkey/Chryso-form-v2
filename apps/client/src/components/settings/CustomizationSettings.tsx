@@ -129,8 +129,8 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
           subheader='Customize the visual appearance of your application'
         />
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Primary Color
               </Typography>
@@ -170,9 +170,9 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   />
                 ))}
               </Stack>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Secondary Color
               </Typography>
@@ -196,9 +196,9 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   sx={{ flex: 1 }}
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Logo
               </Typography>
@@ -227,9 +227,9 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   </Typography>
                 </Box>
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography variant='subtitle2' gutterBottom>
                 Favicon
               </Typography>
@@ -254,8 +254,8 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                   </Typography>
                 </Box>
               </Box>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -267,7 +267,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
           subheader='Configure branding and footer customization'
         />
         <CardContent>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
@@ -278,7 +278,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 }
                 label="Show 'Powered by' branding"
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <TextField
@@ -290,7 +290,7 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 fullWidth
                 helperText='HTML content to display in the header area'
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <TextField
@@ -302,8 +302,8 @@ const CustomizationSettings: React.FC<CustomizationSettingsProps> = ({ settings,
                 fullWidth
                 helperText='HTML content to display in the footer area'
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -471,7 +471,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
       <DialogTitle>{initialData ? 'Edit Custom Field' : 'Add Custom Field'}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid2 container spacing={2} sx={{ mt: 1 }}>
           <Grid size={{ xs: 12 }}>
             <TextField
               label='Field Name'
@@ -480,7 +480,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
               fullWidth
               required
             />
-          </Grid>
+          </Grid2>
 
           <Grid size={{ xs: 12 }}>
             <FormControl fullWidth>
@@ -497,7 +497,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
                 ))}
               </Select>
             </FormControl>
-          </Grid>
+          </Grid2>
 
           {(fieldData.type === 'select' || fieldData.type === 'multiselect') && (
             <Grid size={{ xs: 12 }}>
@@ -516,7 +516,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
                 fullWidth
                 helperText='Enter options separated by commas'
               />
-            </Grid>
+            </Grid2>
           )}
 
           <Grid size={{ xs: 12 }}>
@@ -526,7 +526,7 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
               onChange={e => setFieldData({ ...fieldData, defaultValue: e.target.value })}
               fullWidth
             />
-          </Grid>
+          </Grid2>
 
           <Grid size={{ xs: 12 }}>
             <FormControlLabel
@@ -538,8 +538,8 @@ const CustomFieldDialog: React.FC<CustomFieldDialogProps> = ({
               }
               label='Required Field'
             />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

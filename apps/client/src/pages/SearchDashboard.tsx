@@ -163,9 +163,9 @@ const SearchDashboard: React.FC = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Key Metrics */}
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid2 md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -177,9 +177,9 @@ const SearchDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid2 md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -191,9 +191,9 @@ const SearchDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid2 md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -209,9 +209,9 @@ const SearchDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
-        <Grid size={{ xs: 12 }} md={3}>
+        <Grid2 md={3}>
           <Card>
             <CardContent>
               <Box display='flex' alignItems='center'>
@@ -225,10 +225,10 @@ const SearchDashboard: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Search Activity Chart */}
-        <Grid size={{ xs: 12 }} md={8}>
+        <Grid2 md={8}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Search Activity by Day
@@ -243,10 +243,10 @@ const SearchDashboard: React.FC = () => {
               </BarChart>
             </ResponsiveContainer>
           </Paper>
-        </Grid>
+        </Grid2>
 
         {/* Searches by Content Type */}
-        <Grid size={{ xs: 12 }} md={4}>
+        <Grid2 md={4}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Searches by Content Type
@@ -272,10 +272,10 @@ const SearchDashboard: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </Paper>
-        </Grid>
+        </Grid2>
 
         {/* Top Search Queries */}
-        <Grid size={{ xs: 12 }} md={6}>
+        <Grid2 md={6}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Top Search Queries
@@ -305,10 +305,10 @@ const SearchDashboard: React.FC = () => {
               </Table>
             </TableContainer>
           </Paper>
-        </Grid>
+        </Grid2>
 
         {/* No Results Queries */}
-        <Grid size={{ xs: 12 }} md={6}>
+        <Grid2 md={6}>
           <Paper sx={{ p: 2 }}>
             <Typography variant='h6' gutterBottom>
               Queries with No Results
@@ -328,7 +328,7 @@ const SearchDashboard: React.FC = () => {
               ))}
             </List>
           </Paper>
-        </Grid>
+        </Grid2>
 
         {/* Search Performance Insights */}
         <Grid size={{ xs: 12 }}>
@@ -336,8 +336,8 @@ const SearchDashboard: React.FC = () => {
             <Typography variant='h6' gutterBottom>
               Search Performance Insights
             </Typography>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12 }} md={4}>
+            <Grid2 container spacing={2}>
+              <Grid2 md={4}>
                 <Box p={2} bgcolor='success.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='success.dark'>
                     Most Effective Queries
@@ -347,8 +347,8 @@ const SearchDashboard: React.FC = () => {
                     results
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid size={{ xs: 12 }} md={4}>
+              </Grid2>
+              <Grid2 md={4}>
                 <Box p={2} bgcolor='warning.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='warning.dark'>
                     Improvement Opportunity
@@ -358,8 +358,8 @@ const SearchDashboard: React.FC = () => {
                     returned no results. Consider improving content coverage.
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid size={{ xs: 12 }} md={4}>
+              </Grid2>
+              <Grid2 md={4}>
                 <Box p={2} bgcolor='info.light' borderRadius={1}>
                   <Typography variant='subtitle2' color='info.dark'>
                     Usage Pattern
@@ -369,11 +369,11 @@ const SearchDashboard: React.FC = () => {
                     workflow patterns
                   </Typography>
                 </Box>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Paper>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

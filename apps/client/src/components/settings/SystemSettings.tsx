@@ -77,8 +77,8 @@ const SystemSettings: React.FC = () => {
 
     try {
       const [settingsResponse, sectionsResponse] = await Promise.all([
-        request('/api/settings/organization'),
-        request('/api/settings/organization/sections'),
+        get('/api/settings/organization'),
+        get('/api/settings/organization/sections'),
       ]);
 
       setSettings(settingsResponse.data.settings);

@@ -323,59 +323,55 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // DELETE /api/templates/:id - Delete template
-router.delete(
-  '/:id',
-  authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const templateId = req.params.id;
+router.delete('/:id', authorize('admin'), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const templateId = req.params.id;
 
-      if (!templateId.match(/^[0-9a-fA-F]{24}$/)) {
-        res.status(400).json({
-          success: false,
-          message: 'Invalid template ID format',
-          code: 'INVALID_ID',
-        });
-        return;
-      }
-
-      const template = await Template.findById(templateId);
-      if (!template) {
-        res.status(404).json({
-          success: false,
-          message: 'Template not found',
-          code: 'TEMPLATE_NOT_FOUND',
-        });
-        return;
-      }
-
-      // Check if template is being used
-      const formsUsingTemplate = await Form.countDocuments({ templateUsed: template._id });
-      if (formsUsingTemplate > 0) {
-        res.status(400).json({
-          success: false,
-          message: `Cannot delete template. It is being used by ${formsUsingTemplate} forms. Archive it instead.`,
-          code: 'TEMPLATE_IN_USE',
-        });
-        return;
-      }
-
-      await Template.findByIdAndDelete(templateId);
-
-      res.json({
-        success: true,
-        message: 'Template deleted successfully',
-      });
-    } catch (error) {
-      console.error('Delete template error:', error);
-      res.status(500).json({
+    if (!templateId.match(/^[0-9a-fA-F]{24}$/)) {
+      res.status(400).json({
         success: false,
-        message: 'Failed to delete template',
-        code: 'INTERNAL_ERROR',
+        message: 'Invalid template ID format',
+        code: 'INVALID_ID',
       });
+      return;
     }
+
+    const template = await Template.findById(templateId);
+    if (!template) {
+      res.status(404).json({
+        success: false,
+        message: 'Template not found',
+        code: 'TEMPLATE_NOT_FOUND',
+      });
+      return;
+    }
+
+    // Check if template is being used
+    const formsUsingTemplate = await Form.countDocuments({ templateUsed: template._id });
+    if (formsUsingTemplate > 0) {
+      res.status(400).json({
+        success: false,
+        message: `Cannot delete template. It is being used by ${formsUsingTemplate} forms. Archive it instead.`,
+        code: 'TEMPLATE_IN_USE',
+      });
+      return;
+    }
+
+    await Template.findByIdAndDelete(templateId);
+
+    res.json({
+      success: true,
+      message: 'Template deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete template error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete template',
+      code: 'INTERNAL_ERROR',
+    });
   }
-);
+});
 
 // POST /api/templates/:id/clone - Clone template
 router.post('/:id/clone', async (req: AuthenticatedRequest, res: Response) => {

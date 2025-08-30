@@ -80,8 +80,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
           subheader='Configure password requirements for all users'
         />
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <Typography gutterBottom>Minimum Password Length</Typography>
               <Box sx={{ px: 2 }}>
                 <Slider
@@ -96,9 +96,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                   valueLabelDisplay='on'
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Typography gutterBottom>Password History</Typography>
               <Box sx={{ px: 2 }}>
                 <Slider
@@ -114,7 +114,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                   valueLabelFormat={value => `${value} passwords`}
                 />
               </Box>
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <Typography variant='subtitle2' gutterBottom>
@@ -182,9 +182,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                   label='Special Characters'
                 />
               </Stack>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='Password Expiry (days)'
                 type='number'
@@ -195,8 +195,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 fullWidth
                 helperText='Set to 0 for no expiry'
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -208,8 +208,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
           subheader='Configure session timeouts and access restrictions'
         />
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <TextField
                 label='Session Timeout (minutes)'
                 type='number'
@@ -218,9 +218,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 fullWidth
                 helperText='Automatic logout after inactivity'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControlLabel
                 control={
                   <Switch
@@ -230,9 +230,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 }
                 label='Require Multi-Factor Authentication (MFA)'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='Max Login Attempts'
                 type='number'
@@ -241,9 +241,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 fullWidth
                 helperText='Account lockout threshold'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='Lockout Duration (minutes)'
                 type='number'
@@ -252,8 +252,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 fullWidth
                 helperText='How long accounts stay locked'
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -304,7 +304,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
           subheader='Configure system activity logging and retention'
         />
         <CardContent>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
@@ -317,9 +317,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 }
                 label='Enable Audit Logging'
               />
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Log Detail Level</InputLabel>
                 <Select
@@ -335,9 +335,9 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                   <MenuItem value='comprehensive'>Comprehensive - All system events</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <TextField
                 label='Log Retention (days)'
                 type='number'
@@ -353,7 +353,7 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                 disabled={!settings?.auditLogging?.enabled}
                 helperText='How long to keep audit logs'
               />
-            </Grid>
+            </Grid2>
 
             <Grid size={{ xs: 12 }}>
               <Alert severity='info'>
@@ -368,8 +368,8 @@ const SecuritySettings: React.FC<SecuritySettingsProps> = ({ settings, onChange 
                   background tasks, errors
                 </Typography>
               </Alert>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
     </Box>

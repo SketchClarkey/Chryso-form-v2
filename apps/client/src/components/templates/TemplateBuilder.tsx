@@ -623,9 +623,9 @@ export function TemplateBuilder() {
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Template Settings Panel */}
-        <Grid size={{ xs: 12 }} md={4}>
+        <Grid2 md={4}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
               <Typography variant='h6' gutterBottom>
@@ -685,9 +685,9 @@ export function TemplateBuilder() {
               <Typography variant='h6' gutterBottom>
                 Field Types
               </Typography>
-              <Grid container spacing={1}>
+              <Grid2 container spacing={1}>
                 {FIELD_TYPES.map(fieldType => (
-                  <Grid size={{ xs: 6 }} key={fieldType.value}>
+                  <Grid2 key={fieldType.value}>
                     <Paper
                       sx={{
                         p: 1,
@@ -711,15 +711,15 @@ export function TemplateBuilder() {
                       <Typography variant='h6'>{fieldType.icon}</Typography>
                       <Typography variant='caption'>{fieldType.label}</Typography>
                     </Paper>
-                  </Grid>
+                  </Grid2>
                 ))}
-              </Grid>
+              </Grid2>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
 
         {/* Template Builder */}
-        <Grid size={{ xs: 12 }} md={8}>
+        <Grid2 md={8}>
           <Box display='flex' justifyContent='between' alignItems='center' mb={2}>
             <Typography variant='h6'>Template Structure</Typography>
             <Button
@@ -807,8 +807,8 @@ export function TemplateBuilder() {
               </Button>
             </Paper>
           )}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Section Editor Dialog */}
       <SectionEditor

@@ -163,115 +163,126 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res) => {
 });
 
 // POST /api/filters - Create new filter
-router.post('/', authenticate, filterValidation, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
+router.post(
+  '/',
+  authenticate,
+  filterValidation,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array(),
+        });
+      }
+
+      const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
+        req.body;
+
+      // Validate the filter using the service
+      const filter = {
+        name,
+        description,
+        entityType,
+        groups,
+        globalLogicalOperator,
+        isShared,
+        tags,
+        createdBy: req.user!.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const validation = filterService.validateFilter(filter);
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Filter validation failed',
+          errors: validation.errors,
+        });
+      }
+
+      // In a real implementation, save to database
+      const savedFilter = {
+        ...filter,
+        id: `filter_${Date.now()}`,
+        usage: { totalUses: 0 },
+      };
+
+      return res.status(201).json({
+        success: true,
+        data: { filter: savedFilter },
+      });
+    } catch (error) {
+      console.error('Create filter error:', error);
+      return res.status(500).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array(),
+        message: 'Failed to create filter',
       });
     }
-
-    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
-      req.body;
-
-    // Validate the filter using the service
-    const filter = {
-      name,
-      description,
-      entityType,
-      groups,
-      globalLogicalOperator,
-      isShared,
-      tags,
-      createdBy: req.user!.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const validation = filterService.validateFilter(filter);
-    if (!validation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Filter validation failed',
-        errors: validation.errors,
-      });
-    }
-
-    // In a real implementation, save to database
-    const savedFilter = {
-      ...filter,
-      id: `filter_${Date.now()}`,
-      usage: { totalUses: 0 },
-    };
-
-    return res.status(201).json({
-      success: true,
-      data: { filter: savedFilter },
-    });
-  } catch (error) {
-    console.error('Create filter error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to create filter',
-    });
   }
-});
+);
 
 // PUT /api/filters/:id - Update filter
-router.put('/:id', authenticate, param('id').notEmpty(), filterValidation, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
+router.put(
+  '/:id',
+  authenticate,
+  param('id').notEmpty(),
+  filterValidation,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array(),
+        });
+      }
+
+      const { id } = req.params;
+      const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
+        req.body;
+
+      // In a real implementation, check if filter exists and user has permission to edit
+      const updatedFilter = {
+        id,
+        name,
+        description,
+        entityType,
+        groups,
+        globalLogicalOperator,
+        isShared,
+        tags,
+        createdBy: req.user!.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const validation = filterService.validateFilter(updatedFilter);
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Filter validation failed',
+          errors: validation.errors,
+        });
+      }
+
+      return res.json({
+        success: true,
+        data: { filter: updatedFilter },
+      });
+    } catch (error) {
+      console.error('Update filter error:', error);
+      return res.status(500).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array(),
+        message: 'Failed to update filter',
       });
     }
-
-    const { id } = req.params;
-    const { name, description, entityType, groups, globalLogicalOperator, isShared, tags } =
-      req.body;
-
-    // In a real implementation, check if filter exists and user has permission to edit
-    const updatedFilter = {
-      id,
-      name,
-      description,
-      entityType,
-      groups,
-      globalLogicalOperator,
-      isShared,
-      tags,
-      createdBy: req.user!.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const validation = filterService.validateFilter(updatedFilter);
-    if (!validation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Filter validation failed',
-        errors: validation.errors,
-      });
-    }
-
-    return res.json({
-      success: true,
-      data: { filter: updatedFilter },
-    });
-  } catch (error) {
-    console.error('Update filter error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to update filter',
-    });
   }
-});
+);
 
 // DELETE /api/filters/:id - Delete filter
 router.delete('/:id', authenticate, param('id').notEmpty(), async (req, res) => {
@@ -293,136 +304,141 @@ router.delete('/:id', authenticate, param('id').notEmpty(), async (req, res) => 
 });
 
 // POST /api/filters/apply - Apply filter to get results
-router.post('/apply', authenticate, applyFilterValidation, async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: errors.array(),
-      });
-    }
+router.post(
+  '/apply',
+  authenticate,
+  applyFilterValidation,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: errors.array(),
+        });
+      }
 
-    const { filter, entityType, pagination = { limit: 50, offset: 0 } } = req.body;
-    const startTime = Date.now();
+      const { filter, entityType, pagination = { limit: 50, offset: 0 } } = req.body;
+      const startTime = Date.now();
 
-    // Validate the filter
-    const validation = filterService.validateFilter(filter);
-    if (!validation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Filter validation failed',
-        errors: validation.errors,
-      });
-    }
+      // Validate the filter
+      const validation = filterService.validateFilter(filter);
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Filter validation failed',
+          errors: validation.errors,
+        });
+      }
 
-    // Build MongoDB query
-    const mongoQuery = filterService.buildMongoQuery(filter);
+      // Build MongoDB query
+      const mongoQuery = filterService.buildMongoQuery(filter);
 
-    let results: any[] = [];
-    let total = 0;
+      let results: any[] = [];
+      let total = 0;
 
-    // Apply the filter based on entity type
-    switch (entityType) {
-      case 'form':
-        results = await Form.find(mongoQuery)
-          .populate('technicianId', 'firstName lastName')
-          .populate('worksiteId', 'name location')
-          .limit(pagination.limit)
-          .skip(pagination.offset)
-          .lean();
-        total = await Form.countDocuments({});
-        break;
-
-      case 'template':
-        results = await Template.find(mongoQuery)
-          .populate('createdBy', 'firstName lastName')
-          .limit(pagination.limit)
-          .skip(pagination.offset)
-          .lean();
-        total = await Template.countDocuments({});
-        break;
-
-      case 'user':
-        if (req.user!.role === 'admin' || req.user!.role === 'manager') {
-          results = await User.find(mongoQuery)
-            .select('-password')
+      // Apply the filter based on entity type
+      switch (entityType) {
+        case 'form':
+          results = await Form.find(mongoQuery)
+            .populate('technicianId', 'firstName lastName')
+            .populate('worksiteId', 'name location')
             .limit(pagination.limit)
             .skip(pagination.offset)
             .lean();
-          total = await User.countDocuments({});
-        } else {
-          return res.status(403).json({
+          total = await Form.countDocuments({});
+          break;
+
+        case 'template':
+          results = await Template.find(mongoQuery)
+            .populate('createdBy', 'firstName lastName')
+            .limit(pagination.limit)
+            .skip(pagination.offset)
+            .lean();
+          total = await Template.countDocuments({});
+          break;
+
+        case 'user':
+          if (req.user!.role === 'admin' || req.user!.role === 'manager') {
+            results = await User.find(mongoQuery)
+              .select('-password')
+              .limit(pagination.limit)
+              .skip(pagination.offset)
+              .lean();
+            total = await User.countDocuments({});
+          } else {
+            return res.status(403).json({
+              success: false,
+              message: 'Insufficient permissions to filter users',
+            });
+          }
+          break;
+
+        case 'worksite':
+          results = await Worksite.find(mongoQuery)
+            .limit(pagination.limit)
+            .skip(pagination.offset)
+            .lean();
+          total = await Worksite.countDocuments({});
+          break;
+
+        case 'dashboard':
+          // Add access control for dashboards
+          const dashboardQuery = {
+            ...mongoQuery,
+            $or: [
+              { createdBy: new Types.ObjectId(req.user!.id) },
+              { 'permissions.canView': { $in: [req.user!.role] } },
+              { 'sharing.isPublic': true },
+            ],
+          };
+          results = await Dashboard.find(dashboardQuery)
+            .populate('createdBy', 'firstName lastName')
+            .limit(pagination.limit)
+            .skip(pagination.offset)
+            .lean();
+          total = await Dashboard.countDocuments({});
+          break;
+
+        default:
+          return res.status(400).json({
             success: false,
-            message: 'Insufficient permissions to filter users',
+            message: 'Unsupported entity type for filtering',
           });
-        }
-        break;
+      }
 
-      case 'worksite':
-        results = await Worksite.find(mongoQuery)
-          .limit(pagination.limit)
-          .skip(pagination.offset)
-          .lean();
-        total = await Worksite.countDocuments({});
-        break;
+      const executionTime = Date.now() - startTime;
 
-      case 'dashboard':
-        // Add access control for dashboards
-        const dashboardQuery = {
-          ...mongoQuery,
-          $or: [
-            { createdBy: new Types.ObjectId(req.user!.id) },
-            { 'permissions.canView': { $in: [req.user!.role] } },
-            { 'sharing.isPublic': true },
-          ],
-        };
-        results = await Dashboard.find(dashboardQuery)
-          .populate('createdBy', 'firstName lastName')
-          .limit(pagination.limit)
-          .skip(pagination.offset)
-          .lean();
-        total = await Dashboard.countDocuments({});
-        break;
+      // Prepare applied filters summary
+      const appliedFilters = filter.groups
+        .filter((group: any) => group.isActive)
+        .map((group: any) => ({
+          groupName: group.name,
+          criteriaCount: group.criteria.length,
+          isActive: group.isActive,
+        }));
 
-      default:
-        return res.status(400).json({
-          success: false,
-          message: 'Unsupported entity type for filtering',
-        });
+      return res.json({
+        success: true,
+        data: {
+          data: results,
+          total,
+          filteredCount: results.length,
+          executionTime,
+          appliedFilters,
+          query: mongoQuery, // For debugging - remove in production
+        },
+      });
+    } catch (error) {
+      console.error('Apply filter error:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to apply filter',
+      });
     }
-
-    const executionTime = Date.now() - startTime;
-
-    // Prepare applied filters summary
-    const appliedFilters = filter.groups
-      .filter((group: any) => group.isActive)
-      .map((group: any) => ({
-        groupName: group.name,
-        criteriaCount: group.criteria.length,
-        isActive: group.isActive,
-      }));
-
-    return res.json({
-      success: true,
-      data: {
-        data: results,
-        total,
-        filteredCount: results.length,
-        executionTime,
-        appliedFilters,
-        query: mongoQuery, // For debugging - remove in production
-      },
-    });
-  } catch (error) {
-    console.error('Apply filter error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to apply filter',
-    });
   }
-});
+);
 
 // GET /api/filters/fields/:entityType - Get available fields for entity type
 router.get(

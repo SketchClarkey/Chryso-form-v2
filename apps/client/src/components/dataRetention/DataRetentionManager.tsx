@@ -212,7 +212,7 @@ const DataRetentionManager: React.FC = () => {
     setError(null);
 
     try {
-      const response = await request(`/api/data-retention?page=${page + 1}&limit=${rowsPerPage}`);
+      const response = await get('/api/data-retention?page=${page + 1}&limit=${rowsPerPage}');
       setPolicies(response.data.policies);
       setTotal(response.data.pagination.total);
     } catch (error: any) {
@@ -224,7 +224,7 @@ const DataRetentionManager: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      const response = await request('/api/data-retention/stats/summary');
+      const response = await get('/api/data-retention/stats/summary');
       setStats(response.data.stats);
     } catch (error) {
       console.error('Failed to load retention stats:', error);
@@ -511,8 +511,8 @@ const DataRetentionManager: React.FC = () => {
         <TabPanel value={selectedTab} index={1}>
           {/* Statistics Tab */}
           {stats && (
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12 }} md={3}>
+            <Grid2 container spacing={3}>
+              <Grid2 md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='primary'>
@@ -524,8 +524,8 @@ const DataRetentionManager: React.FC = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
-              <Grid size={{ xs: 12 }} md={3}>
+              </Grid2>
+              <Grid2 md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='success.main'>
@@ -537,8 +537,8 @@ const DataRetentionManager: React.FC = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
-              <Grid size={{ xs: 12 }} md={3}>
+              </Grid2>
+              <Grid2 md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='warning.main'>
@@ -550,8 +550,8 @@ const DataRetentionManager: React.FC = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
-              <Grid size={{ xs: 12 }} md={3}>
+              </Grid2>
+              <Grid2 md={3}>
                 <Card>
                   <CardContent>
                     <Typography variant='h4' color='error.main'>
@@ -563,7 +563,7 @@ const DataRetentionManager: React.FC = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
 
               <Grid size={{ xs: 12 }}>
                 <Card>
@@ -571,22 +571,22 @@ const DataRetentionManager: React.FC = () => {
                     <Typography variant='h6' gutterBottom>
                       Policies by Entity Type
                     </Typography>
-                    <Grid container spacing={2}>
+                    <Grid2 container spacing={2}>
                       {Object.entries(stats.policiesByEntityType).map(([entityType, count]) => (
-                        <Grid size={{ xs: 6 }} md={3} key={entityType}>
+                        <Grid2 md={3} key={entityType}>
                           <Box display='flex' alignItems='center' gap={1}>
                             <span>{getEntityTypeIcon(entityType)}</span>
                             <Typography variant='body1'>
                               {entityType}: {count}
                             </Typography>
                           </Box>
-                        </Grid>
+                        </Grid2>
                       ))}
-                    </Grid>
+                    </Grid2>
                   </CardContent>
                 </Card>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           )}
         </TabPanel>
       </Paper>
@@ -603,8 +603,8 @@ const DataRetentionManager: React.FC = () => {
         </DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit(handleSavePolicy)}>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 container spacing={2} sx={{ mt: 1 }}>
+              <Grid2 md={6}>
                 <Controller
                   name='name'
                   control={control}
@@ -618,8 +618,8 @@ const DataRetentionManager: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid size={{ xs: 12 }} md={6}>
+              </Grid2>
+              <Grid2 md={6}>
                 <Controller
                   name='entityType'
                   control={control}
@@ -638,7 +638,7 @@ const DataRetentionManager: React.FC = () => {
                     </FormControl>
                   )}
                 />
-              </Grid>
+              </Grid2>
 
               <Grid size={{ xs: 12 }}>
                 <Controller
@@ -648,9 +648,9 @@ const DataRetentionManager: React.FC = () => {
                     <TextField {...field} fullWidth label='Description' multiline rows={2} />
                   )}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 6 }} md={4}>
+              <Grid2 md={4}>
                 <Controller
                   name='retentionPeriod.value'
                   control={control}
@@ -665,8 +665,8 @@ const DataRetentionManager: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid size={{ xs: 6 }} md={4}>
+              </Grid2>
+              <Grid2 md={4}>
                 <Controller
                   name='retentionPeriod.unit'
                   control={control}
@@ -681,8 +681,8 @@ const DataRetentionManager: React.FC = () => {
                     </FormControl>
                   )}
                 />
-              </Grid>
-              <Grid size={{ xs: 12 }} md={4}>
+              </Grid2>
+              <Grid2 md={4}>
                 <Controller
                   name='archiveFormat'
                   control={control}
@@ -697,7 +697,7 @@ const DataRetentionManager: React.FC = () => {
                     </FormControl>
                   )}
                 />
-              </Grid>
+              </Grid2>
 
               <Grid size={{ xs: 12 }}>
                 <Controller
@@ -710,9 +710,9 @@ const DataRetentionManager: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 6 }} md={4}>
+              <Grid2 md={4}>
                 <Controller
                   name='executionSchedule.frequency'
                   control={control}
@@ -727,10 +727,10 @@ const DataRetentionManager: React.FC = () => {
                     </FormControl>
                   )}
                 />
-              </Grid>
+              </Grid2>
 
               {watchedFrequency === 'weekly' && (
-                <Grid size={{ xs: 6 }} md={4}>
+                <Grid2 md={4}>
                   <Controller
                     name='executionSchedule.dayOfWeek'
                     control={control}
@@ -749,11 +749,11 @@ const DataRetentionManager: React.FC = () => {
                       </FormControl>
                     )}
                   />
-                </Grid>
+                </Grid2>
               )}
 
               {watchedFrequency === 'monthly' && (
-                <Grid size={{ xs: 6 }} md={4}>
+                <Grid2 md={4}>
                   <Controller
                     name='executionSchedule.dayOfMonth'
                     control={control}
@@ -767,10 +767,10 @@ const DataRetentionManager: React.FC = () => {
                       />
                     )}
                   />
-                </Grid>
+                </Grid2>
               )}
 
-              <Grid size={{ xs: 6 }} md={4}>
+              <Grid2 md={4}>
                 <Controller
                   name='executionSchedule.hour'
                   control={control}
@@ -784,8 +784,8 @@ const DataRetentionManager: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </form>
         </DialogContent>
         <DialogActions>

@@ -84,92 +84,88 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // Create a new worksite (admin only)
-router.post(
-  '/',
-  authorize('admin'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const validatedData = createWorksiteSchema.parse(req.body);
+router.post('/', authorize('admin'), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const validatedData = createWorksiteSchema.parse(req.body);
 
-      // Validate template if provided
-      let defaultTemplate = null;
-      if (validatedData.defaultTemplate) {
-        defaultTemplate = await Template.findById(validatedData.defaultTemplate);
-        if (!defaultTemplate) {
-          res.status(400).json({
-            success: false,
-            message: 'Invalid template ID provided',
-            code: 'INVALID_TEMPLATE',
-          });
-          return;
-        }
-      }
-
-      const worksite = new Worksite({
-        name: validatedData.name,
-        customerName: validatedData.customerName,
-        address: validatedData.address,
-        contacts: validatedData.contacts,
-        equipment: validatedData.equipment,
-        isActive: true,
-        metadata: {
-          createdBy: new Types.ObjectId(req.user!.id),
-          defaultFormTemplate: defaultTemplate?._id,
-          serviceHistory: {
-            totalForms: 0,
-          },
-        },
-        preferences: {
-          autoFillEquipment: false,
-          defaultChemicals: [],
-          notifications: {
-            serviceReminders: true,
-            equipmentAlerts: true,
-          },
-        },
-      });
-
-      await worksite.save();
-
-      res.status(201).json({
-        success: true,
-        message: 'Worksite created successfully',
-        data: {
-          worksite: {
-            id: worksite._id,
-            name: worksite.name,
-            customerName: worksite.customerName,
-            address: worksite.address,
-            contacts: worksite.contacts,
-            equipment: worksite.equipment || [],
-            isActive: worksite.isActive,
-            defaultTemplate: worksite.metadata?.defaultFormTemplate,
-            createdAt: worksite.createdAt,
-            updatedAt: worksite.updatedAt,
-          },
-        },
-      });
-    } catch (error: any) {
-      console.error('Worksite creation error:', error);
-
-      if (error.name === 'ZodError') {
+    // Validate template if provided
+    let defaultTemplate = null;
+    if (validatedData.defaultTemplate) {
+      defaultTemplate = await Template.findById(validatedData.defaultTemplate);
+      if (!defaultTemplate) {
         res.status(400).json({
           success: false,
-          message: 'Validation error',
-          code: 'VALIDATION_ERROR',
-          errors: error.errors,
+          message: 'Invalid template ID provided',
+          code: 'INVALID_TEMPLATE',
         });
         return;
       }
-
-      res.status(500).json({
-        success: false,
-        message: 'Failed to create worksite',
-        code: 'CREATION_ERROR',
-      });
     }
+
+    const worksite = new Worksite({
+      name: validatedData.name,
+      customerName: validatedData.customerName,
+      address: validatedData.address,
+      contacts: validatedData.contacts,
+      equipment: validatedData.equipment,
+      isActive: true,
+      metadata: {
+        createdBy: new Types.ObjectId(req.user!.id),
+        defaultFormTemplate: defaultTemplate?._id,
+        serviceHistory: {
+          totalForms: 0,
+        },
+      },
+      preferences: {
+        autoFillEquipment: false,
+        defaultChemicals: [],
+        notifications: {
+          serviceReminders: true,
+          equipmentAlerts: true,
+        },
+      },
+    });
+
+    await worksite.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Worksite created successfully',
+      data: {
+        worksite: {
+          id: worksite._id,
+          name: worksite.name,
+          customerName: worksite.customerName,
+          address: worksite.address,
+          contacts: worksite.contacts,
+          equipment: worksite.equipment || [],
+          isActive: worksite.isActive,
+          defaultTemplate: worksite.metadata?.defaultFormTemplate,
+          createdAt: worksite.createdAt,
+          updatedAt: worksite.updatedAt,
+        },
+      },
+    });
+  } catch (error: any) {
+    console.error('Worksite creation error:', error);
+
+    if (error.name === 'ZodError') {
+      res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        code: 'VALIDATION_ERROR',
+        errors: error.errors,
+      });
+      return;
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create worksite',
+      code: 'CREATION_ERROR',
+    });
   }
-);
+});
 
 // Update worksite default template
 router.patch(

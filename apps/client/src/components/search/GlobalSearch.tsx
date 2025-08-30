@@ -114,7 +114,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
         params.set('types', selectedTypes.join(','));
       }
 
-      const response = await request(`/api/search?${params.toString()}`);
+      const response = await get('/api/search?${params.toString()}');
       setResults(response.data.results);
     } catch (error) {
       console.error('Search failed:', error);
@@ -126,9 +126,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   const getSuggestions = async () => {
     try {
-      const response = await request(
-        `/api/search/suggestions?q=${encodeURIComponent(debouncedQuery)}`
-      );
+      const response = await get('/api/search/suggestions?q=${encodeURIComponent(debouncedQuery)}');
       setSuggestions(response.data.suggestions);
     } catch (error) {
       console.error('Failed to get suggestions:', error);
@@ -138,8 +136,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
   const loadRecentAndPopular = async () => {
     try {
       const [recentRes, popularRes] = await Promise.all([
-        request('/api/search/recent'),
-        request('/api/search/popular'),
+        get('/api/search/recent'),
+        get('/api/search/popular'),
       ]);
 
       setRecentSearches(recentRes.data.recentSearches);

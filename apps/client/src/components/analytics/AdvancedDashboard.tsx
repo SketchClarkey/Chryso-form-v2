@@ -391,7 +391,7 @@ const AdvancedDashboard: React.FC = () => {
 
       {/* Date Range and Quick Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Grid container spacing={2} alignItems='center'>
+        <Grid2 container spacing={2} alignItems='center'>
           <Grid size={{ xs: 12, md: 4 }}>
             <Box display='flex' gap={1}>
               <ButtonGroup size='small'>
@@ -400,7 +400,7 @@ const AdvancedDashboard: React.FC = () => {
                 <Button onClick={() => handleQuickDateRange(90)}>90D</Button>
               </ButtonGroup>
             </Box>
-          </Grid>
+          </Grid2>
           <Grid size={{ xs: 12, md: 4 }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Box display='flex' gap={1}>
@@ -422,7 +422,7 @@ const AdvancedDashboard: React.FC = () => {
                 />
               </Box>
             </LocalizationProvider>
-          </Grid>
+          </Grid2>
           <Grid size={{ xs: 12, md: 4 }}>
             <FormControl size='small' fullWidth>
               <InputLabel>Granularity</InputLabel>
@@ -434,13 +434,13 @@ const AdvancedDashboard: React.FC = () => {
                 ))}
               </Select>
             </FormControl>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Paper>
 
       {/* Metrics Cards */}
       {analytics && (
-        <Grid container spacing={3} mb={3}>
+        <Grid2 container spacing={3} mb={3}>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <MetricCard
               title='Total Forms'
@@ -450,7 +450,7 @@ const AdvancedDashboard: React.FC = () => {
               icon={<WorkIcon />}
               color='primary'
             />
-          </Grid>
+          </Grid2>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <MetricCard
               title='Completed Forms'
@@ -464,7 +464,7 @@ const AdvancedDashboard: React.FC = () => {
               icon={<CheckCircleIcon />}
               color='success'
             />
-          </Grid>
+          </Grid2>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <MetricCard
               title='Completion Rate'
@@ -478,7 +478,7 @@ const AdvancedDashboard: React.FC = () => {
               icon={<SpeedIcon />}
               color='info'
             />
-          </Grid>
+          </Grid2>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <MetricCard
               title='Active Users'
@@ -488,8 +488,8 @@ const AdvancedDashboard: React.FC = () => {
               icon={<PeopleIcon />}
               color='secondary'
             />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       )}
 
       {/* Charts Section */}
@@ -502,7 +502,7 @@ const AdvancedDashboard: React.FC = () => {
 
         {/* Trends Tab */}
         {activeTab === 0 && analytics && (
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Card>
                 <CardContent>
@@ -527,7 +527,7 @@ const AdvancedDashboard: React.FC = () => {
                   )}
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 12, md: 6 }}>
               <Card>
                 <CardContent>
@@ -549,13 +549,13 @@ const AdvancedDashboard: React.FC = () => {
                   )}
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
 
         {/* Distribution Tab */}
         {activeTab === 1 && analytics && (
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Card>
                 <CardContent>
@@ -574,7 +574,7 @@ const AdvancedDashboard: React.FC = () => {
                   )}
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 12, md: 6 }}>
               <Card>
                 <CardContent>
@@ -601,20 +601,20 @@ const AdvancedDashboard: React.FC = () => {
                   )}
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
 
         {/* Performance Tab */}
         {activeTab === 2 && analytics && (
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={12}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
                     Performance Overview
                   </Typography>
-                  <Grid container spacing={3}>
+                  <Grid2 container spacing={3}>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <Typography variant='subtitle2' gutterBottom>
                         Completion Rate Trend
@@ -632,7 +632,7 @@ const AdvancedDashboard: React.FC = () => {
                           height={200}
                         />
                       )}
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <Typography variant='subtitle2' gutterBottom>
                         Key Metrics
@@ -657,12 +657,12 @@ const AdvancedDashboard: React.FC = () => {
                           </Typography>
                         </Box>
                       </Box>
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
       </Box>
 

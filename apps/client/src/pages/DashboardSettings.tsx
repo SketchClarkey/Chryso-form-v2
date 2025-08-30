@@ -105,7 +105,7 @@ const DashboardSettings: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await request('/api/settings/dashboard');
+      const response = await get('/api/settings/dashboard');
       if (response.data?.config) {
         setConfig(response.data.config);
       }
@@ -193,7 +193,7 @@ const DashboardSettings: React.FC = () => {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Global Settings */}
         <Grid size={{ xs: 12 }}>
           <Accordion defaultExpanded>
@@ -201,8 +201,8 @@ const DashboardSettings: React.FC = () => {
               <Typography variant='h6'>Global Settings</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Theme</InputLabel>
                     <Select
@@ -219,8 +219,8 @@ const DashboardSettings: React.FC = () => {
                       <MenuItem value='auto'>Auto (System)</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     fullWidth
                     label='Auto Refresh Interval (seconds)'
@@ -237,8 +237,8 @@ const DashboardSettings: React.FC = () => {
                     }
                     inputProps={{ min: 30, max: 3600 }}
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     fullWidth
                     label='Max Widgets Per Dashboard'
@@ -255,8 +255,8 @@ const DashboardSettings: React.FC = () => {
                     }
                     inputProps={{ min: 1, max: 50 }}
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     fullWidth
                     label='Cache TTL (seconds)'
@@ -270,7 +270,7 @@ const DashboardSettings: React.FC = () => {
                     }
                     inputProps={{ min: 30, max: 3600 }}
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 12 }}>
                   <Stack direction='row' spacing={2} flexWrap='wrap'>
                     <FormControlLabel
@@ -319,11 +319,11 @@ const DashboardSettings: React.FC = () => {
                       label='Enable Caching'
                     />
                   </Stack>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </AccordionDetails>
           </Accordion>
-        </Grid>
+        </Grid2>
 
         {/* Permissions */}
         <Grid size={{ xs: 12 }}>
@@ -332,9 +332,9 @@ const DashboardSettings: React.FC = () => {
               <Typography variant='h6'>Permissions</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={3}>
+              <Grid2 container spacing={3}>
                 {Object.entries(config.permissions).map(([permission, allowedRoles]) => (
-                  <Grid size={{ xs: 12 }} key={permission}>
+                  <Grid2 key={permission}>
                     <Box>
                       <Typography
                         variant='subtitle2'
@@ -358,12 +358,12 @@ const DashboardSettings: React.FC = () => {
                         ))}
                       </Stack>
                     </Box>
-                  </Grid>
+                  </Grid2>
                 ))}
-              </Grid>
+              </Grid2>
             </AccordionDetails>
           </Accordion>
-        </Grid>
+        </Grid2>
 
         {/* Data Retention */}
         <Grid size={{ xs: 12 }}>
@@ -372,7 +372,7 @@ const DashboardSettings: React.FC = () => {
               <Typography variant='h6'>Data Retention</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={3}>
+              <Grid2 container spacing={3}>
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
@@ -391,10 +391,10 @@ const DashboardSettings: React.FC = () => {
                     }
                     label='Enable Data Retention Policies'
                   />
-                </Grid>
+                </Grid2>
                 {config.dataRetention.enableDataRetention && (
                   <>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <TextField
                         fullWidth
                         label='Retention Period (days)'
@@ -411,7 +411,7 @@ const DashboardSettings: React.FC = () => {
                         }
                         inputProps={{ min: 30, max: 2555 }}
                       />
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12 }}>
                       <Stack direction='row' spacing={2}>
                         <FormControlLabel
@@ -449,13 +449,13 @@ const DashboardSettings: React.FC = () => {
                           label='Archive Old Dashboards'
                         />
                       </Stack>
-                    </Grid>
+                    </Grid2>
                   </>
                 )}
-              </Grid>
+              </Grid2>
             </AccordionDetails>
           </Accordion>
-        </Grid>
+        </Grid2>
 
         {/* Notifications */}
         <Grid size={{ xs: 12 }}>
@@ -464,7 +464,7 @@ const DashboardSettings: React.FC = () => {
               <Typography variant='h6'>Notifications</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={3}>
+              <Grid2 container spacing={3}>
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
@@ -483,10 +483,10 @@ const DashboardSettings: React.FC = () => {
                     }
                     label='Enable Email Notifications'
                   />
-                </Grid>
+                </Grid2>
                 {config.notifications.enableEmailNotifications && (
                   <>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <FormControl fullWidth>
                         <InputLabel>Digest Frequency</InputLabel>
                         <Select
@@ -506,7 +506,7 @@ const DashboardSettings: React.FC = () => {
                           <MenuItem value='monthly'>Monthly</MenuItem>
                         </Select>
                       </FormControl>
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 12 }}>
                       <Stack direction='row' spacing={2}>
                         <FormControlLabel
@@ -544,14 +544,14 @@ const DashboardSettings: React.FC = () => {
                           label='Notify on Dashboard Update'
                         />
                       </Stack>
-                    </Grid>
+                    </Grid2>
                   </>
                 )}
-              </Grid>
+              </Grid2>
             </AccordionDetails>
           </Accordion>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

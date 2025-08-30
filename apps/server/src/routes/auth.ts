@@ -357,81 +357,77 @@ router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response)
 });
 
 // Change password
-router.post(
-  '/change-password',
-  authenticate,
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { currentPassword, newPassword } = changePasswordSchema.parse(req.body);
+router.post('/change-password', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { currentPassword, newPassword } = changePasswordSchema.parse(req.body);
 
-      // Find user with password
-      const user = (await User.findById(req.user!.id).select('+password')) as IUser;
+    // Find user with password
+    const user = (await User.findById(req.user!.id).select('+password')) as IUser;
 
-      if (!user) {
-        res.status(404).json({
-          success: false,
-          message: 'User not found',
-          code: 'USER_NOT_FOUND',
-        });
-        return;
-      }
-
-      // Verify current password
-      const isCurrentPasswordValid = await user.comparePassword(currentPassword);
-      if (!isCurrentPasswordValid) {
-        res.status(400).json({
-          success: false,
-          message: 'Current password is incorrect',
-          code: 'INVALID_CURRENT_PASSWORD',
-        });
-        return;
-      }
-
-      // Validate new password strength
-      const passwordValidation = validatePasswordStrength(newPassword);
-      if (!passwordValidation.isValid) {
-        res.status(400).json({
-          success: false,
-          message: 'New password does not meet security requirements',
-          errors: passwordValidation.errors,
-          code: 'WEAK_PASSWORD',
-        });
-        return;
-      }
-
-      // Update password
-      user.password = newPassword;
-      user.metadata.lastModifiedBy = user._id;
-      await user.save();
-
-      // Increment refresh token version to invalidate existing tokens
-      user.refreshTokenVersion += 1;
-      await user.save();
-
-      res.json({
-        success: true,
-        message: 'Password changed successfully',
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          message: 'Invalid input data',
-          errors: error.errors,
-          code: 'VALIDATION_ERROR',
-        });
-        return;
-      }
-
-      console.error('Change password error:', error);
-      res.status(500).json({
+    if (!user) {
+      res.status(404).json({
         success: false,
-        message: 'Internal server error',
-        code: 'INTERNAL_ERROR',
+        message: 'User not found',
+        code: 'USER_NOT_FOUND',
       });
+      return;
     }
+
+    // Verify current password
+    const isCurrentPasswordValid = await user.comparePassword(currentPassword);
+    if (!isCurrentPasswordValid) {
+      res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect',
+        code: 'INVALID_CURRENT_PASSWORD',
+      });
+      return;
+    }
+
+    // Validate new password strength
+    const passwordValidation = validatePasswordStrength(newPassword);
+    if (!passwordValidation.isValid) {
+      res.status(400).json({
+        success: false,
+        message: 'New password does not meet security requirements',
+        errors: passwordValidation.errors,
+        code: 'WEAK_PASSWORD',
+      });
+      return;
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.metadata.lastModifiedBy = user._id;
+    await user.save();
+
+    // Increment refresh token version to invalidate existing tokens
+    user.refreshTokenVersion += 1;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully',
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({
+        success: false,
+        message: 'Invalid input data',
+        errors: error.errors,
+        code: 'VALIDATION_ERROR',
+      });
+      return;
+    }
+
+    console.error('Change password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+    });
   }
-);
+});
 
 // Admin-only user registration
 router.post(

@@ -88,7 +88,7 @@ const UserPreferences: React.FC = () => {
   const loadPreferences = async () => {
     setLoading(true);
     try {
-      const response = await request('/api/settings/preferences');
+      const response = await get('/api/settings/preferences');
       setPreferences(response.data.preferences);
     } catch (error) {
       console.error('Failed to load preferences:', error);
@@ -198,8 +198,8 @@ const UserPreferences: React.FC = () => {
               <Typography variant='h6' gutterBottom>
                 Appearance Settings
               </Typography>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Theme</InputLabel>
                     <Select
@@ -212,9 +212,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='system'>System Default</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Color Scheme</InputLabel>
                     <Select
@@ -231,9 +231,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='orange'>Orange</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Density</InputLabel>
                     <Select
@@ -248,9 +248,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='compact'>Compact</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Language</InputLabel>
                     <Select
@@ -266,7 +266,7 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='de'>German</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -280,8 +280,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Keep sidebar collapsed by default'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           </TabPanel>
 
@@ -295,8 +295,8 @@ const UserPreferences: React.FC = () => {
               <Typography variant='subtitle1' gutterBottom sx={{ mt: 3 }}>
                 Email Notifications
               </Typography>
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={2}>
+                <Grid2 md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -313,8 +313,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Form Submissions'
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -331,8 +331,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Form Assignments'
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -349,8 +349,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='System Alerts'
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -367,13 +367,13 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Weekly Digest'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
               <Typography variant='subtitle1' gutterBottom sx={{ mt: 3 }}>
                 Browser Notifications
               </Typography>
-              <Grid container spacing={2}>
+              <Grid2 container spacing={2}>
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
                     control={
@@ -391,10 +391,10 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Enable browser notifications'
                   />
-                </Grid>
+                </Grid2>
                 {preferences?.notifications?.browser?.enabled && (
                   <>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -411,8 +411,8 @@ const UserPreferences: React.FC = () => {
                         }
                         label='Form Submissions'
                       />
-                    </Grid>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    </Grid2>
+                    <Grid2 md={6}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -429,10 +429,10 @@ const UserPreferences: React.FC = () => {
                         }
                         label='Mentions'
                       />
-                    </Grid>
+                    </Grid2>
                   </>
                 )}
-              </Grid>
+              </Grid2>
             </Box>
           </TabPanel>
 
@@ -442,8 +442,8 @@ const UserPreferences: React.FC = () => {
               <Typography variant='h6' gutterBottom>
                 Work Preferences
               </Typography>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Timezone</InputLabel>
                     <Select
@@ -465,9 +465,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='America/Los_Angeles'>Pacific Time</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Form View</InputLabel>
                     <Select
@@ -487,7 +487,7 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='kanban'>Kanban</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -506,8 +506,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Auto-assign new forms to me'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           </TabPanel>
 
@@ -517,8 +517,8 @@ const UserPreferences: React.FC = () => {
               <Typography variant='h6' gutterBottom>
                 Data Display Settings
               </Typography>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Date Format</InputLabel>
                     <Select
@@ -538,9 +538,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='yyyy-MM-dd'>yyyy-MM-dd (ISO)</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Time Format</InputLabel>
                     <Select
@@ -559,9 +559,9 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='24h'>24-hour</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <Typography gutterBottom>Items per page</Typography>
                   <Slider
                     value={preferences?.dataDisplay?.itemsPerPage || 25}
@@ -574,9 +574,9 @@ const UserPreferences: React.FC = () => {
                     marks
                     valueLabelDisplay='on'
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Default Sort Order</InputLabel>
                     <Select
@@ -595,7 +595,7 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='desc'>Descending</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -614,8 +614,8 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Show tutorial tooltips and help messages'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           </TabPanel>
 
@@ -625,8 +625,8 @@ const UserPreferences: React.FC = () => {
               <Typography variant='h6' gutterBottom>
                 Privacy Settings
               </Typography>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 container spacing={3}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>Profile Visibility</InputLabel>
                     <Select
@@ -646,7 +646,7 @@ const UserPreferences: React.FC = () => {
                       <MenuItem value='private'>Private</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -665,7 +665,7 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Show online status to other users'
                   />
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -684,7 +684,7 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Allow direct messages from other users'
                   />
-                </Grid>
+                </Grid2>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControlLabel
@@ -703,17 +703,17 @@ const UserPreferences: React.FC = () => {
                     }
                     label='Share activity status (currently working on)'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
               {/* Pinned Items */}
               <Typography variant='h6' gutterBottom sx={{ mt: 4 }}>
                 Pinned Items
               </Typography>
 
-              <Grid container spacing={2}>
+              <Grid2 container spacing={2}>
                 {/* Pinned Forms */}
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <Typography variant='subtitle2' gutterBottom>
                     <FormIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Forms
@@ -734,10 +734,10 @@ const UserPreferences: React.FC = () => {
                       No pinned forms
                     </Typography>
                   )}
-                </Grid>
+                </Grid2>
 
                 {/* Pinned Reports */}
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <Typography variant='subtitle2' gutterBottom>
                     <ReportIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                     Pinned Reports
@@ -758,8 +758,8 @@ const UserPreferences: React.FC = () => {
                       No pinned reports
                     </Typography>
                   )}
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           </TabPanel>
         </CardContent>

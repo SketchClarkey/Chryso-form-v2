@@ -288,7 +288,7 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
         sortOrder,
       });
 
-      const response = await request(`/api/reports?${params}`);
+      const response = await get('/api/reports?${params}');
       setReports(response.data.reports);
       setTotalPages(response.data.pagination.pages);
     } catch (error) {
@@ -368,16 +368,16 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
       </Box>
 
       {/* Filters */}
-      <Grid container spacing={2} mb={3}>
-        <Grid size={{ xs: 12 }} md={4}>
+      <Grid2 container spacing={2} mb={3}>
+        <Grid2 md={4}>
           <TextField
             fullWidth
             label='Search reports'
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
-        </Grid>
-        <Grid size={{ xs: 6 }} md={2}>
+        </Grid2>
+        <Grid2 md={2}>
           <FormControl fullWidth>
             <InputLabel>Category</InputLabel>
             <Select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
@@ -389,8 +389,8 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
               <MenuItem value='custom'>Custom</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
-        <Grid size={{ xs: 6 }} md={2}>
+        </Grid2>
+        <Grid2 md={2}>
           <FormControl fullWidth>
             <InputLabel>Status</InputLabel>
             <Select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
@@ -400,8 +400,8 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
               <MenuItem value='archived'>Archived</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
-        <Grid size={{ xs: 6 }} md={2}>
+        </Grid2>
+        <Grid2 md={2}>
           <FormControl fullWidth>
             <InputLabel>Sort By</InputLabel>
             <Select value={sortBy} onChange={e => setSortBy(e.target.value)}>
@@ -411,8 +411,8 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
               <MenuItem value='usage.totalViews'>Views</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
-        <Grid size={{ xs: 6 }} md={2}>
+        </Grid2>
+        <Grid2 md={2}>
           <FormControl fullWidth>
             <InputLabel>Order</InputLabel>
             <Select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
@@ -420,14 +420,14 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
               <MenuItem value='asc'>Ascending</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Reports Grid */}
       {loading ? (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {Array.from({ length: 8 }, (_, index) => (
-            <Grid size={{ xs: 12 }} sm={6} md={4} lg={3} key={index}>
+            <Grid2 sm={6} md={4} lg={3} key={index}>
               <Card sx={{ height: 280 }}>
                 <CardContent>
                   <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
@@ -435,9 +435,9 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       ) : reports.length === 0 ? (
         <Box
           display='flex'
@@ -458,9 +458,9 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
           </Button>
         </Box>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {reports.map(report => (
-            <Grid size={{ xs: 12 }} sm={6} md={4} lg={3} key={report._id}>
+            <Grid2 sm={6} md={4} lg={3} key={report._id}>
               <ReportCard
                 report={report}
                 onView={() => handleView(report)}
@@ -469,9 +469,9 @@ const ReportList: React.FC<ReportListProps> = ({ onCreateNew }) => {
                 onDelete={() => handleDelete(report)}
                 onExport={() => handleExport(report)}
               />
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       {/* Pagination */}

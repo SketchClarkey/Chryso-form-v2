@@ -226,8 +226,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
           </FormControl>
 
           {/* Basic Properties */}
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }} md={8}>
+          <Grid2 container spacing={2}>
+            <Grid2 md={8}>
               <TextField
                 fullWidth
                 label='Field Label'
@@ -235,8 +235,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                 onChange={e => handleFieldChange('label', e.target.value)}
                 required
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} md={4}>
+            </Grid2>
+            <Grid2 md={4}>
               <FormControl fullWidth>
                 <InputLabel>Width</InputLabel>
                 <Select
@@ -250,8 +250,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                   <MenuItem value={3}>One Quarter (3/12)</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <TextField
             fullWidth
@@ -326,8 +326,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
             <Typography variant='h6' gutterBottom>
               Validation Rules
             </Typography>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 container spacing={2}>
+              <Grid2 md={6}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -337,11 +337,11 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                   }
                   label='Required Field'
                 />
-              </Grid>
+              </Grid2>
 
               {(formData.type === 'text' || formData.type === 'textarea') && (
                 <>
-                  <Grid size={{ xs: 6 }} md={3}>
+                  <Grid2 md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -352,8 +352,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                         handleValidationChange('minLength', parseInt(e.target.value) || undefined)
                       }
                     />
-                  </Grid>
-                  <Grid size={{ xs: 6 }} md={3}>
+                  </Grid2>
+                  <Grid2 md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -364,13 +364,13 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                         handleValidationChange('maxLength', parseInt(e.target.value) || undefined)
                       }
                     />
-                  </Grid>
+                  </Grid2>
                 </>
               )}
 
               {formData.type === 'number' && (
                 <>
-                  <Grid size={{ xs: 6 }} md={3}>
+                  <Grid2 md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -381,8 +381,8 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                         handleValidationChange('min', parseFloat(e.target.value) || undefined)
                       }
                     />
-                  </Grid>
-                  <Grid size={{ xs: 6 }} md={3}>
+                  </Grid2>
+                  <Grid2 md={3}>
                     <TextField
                       fullWidth
                       size='small'
@@ -393,14 +393,14 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                         handleValidationChange('max', parseFloat(e.target.value) || undefined)
                       }
                     />
-                  </Grid>
+                  </Grid2>
                 </>
               )}
 
               {(formData.type === 'text' ||
                 formData.type === 'email' ||
                 formData.type === 'phone') && (
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <TextField
                     fullWidth
                     size='small'
@@ -409,9 +409,9 @@ export function FieldEditor({ open, field, onClose, onSave, existingFields }: Fi
                     onChange={e => handleValidationChange('pattern', e.target.value || undefined)}
                     helperText='Regular expression for validation'
                   />
-                </Grid>
+                </Grid2>
               )}
-            </Grid>
+            </Grid2>
           </Box>
         </Box>
       </DialogContent>

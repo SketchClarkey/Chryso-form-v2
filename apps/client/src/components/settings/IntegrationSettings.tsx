@@ -140,8 +140,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Email Provider</InputLabel>
                 <Select
@@ -156,9 +156,9 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                   <MenuItem value='ses'>Amazon SES</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Box display='flex' gap={1} alignItems='center'>
                 <Button
                   variant='outlined'
@@ -178,12 +178,12 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                   />
                 )}
               </Box>
-            </Grid>
+            </Grid2>
 
             {/* SMTP Settings */}
             {settings?.email?.provider === 'smtp' && (
               <>
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <TextField
                     label='SMTP Host'
                     value={settings?.email?.settings?.smtp?.host || ''}
@@ -195,8 +195,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={3}>
+                </Grid2>
+                <Grid2 md={3}>
                   <TextField
                     label='Port'
                     type='number'
@@ -209,8 +209,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={3}>
+                </Grid2>
+                <Grid2 md={3}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -225,8 +225,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     label='Use SSL/TLS'
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='Username'
                     value={settings?.email?.settings?.smtp?.auth?.user || ''}
@@ -241,8 +241,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='Password'
                     type='password'
@@ -258,14 +258,14 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
+                </Grid2>
               </>
             )}
 
             {/* SendGrid Settings */}
             {settings?.email?.provider === 'sendgrid' && (
               <>
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <TextField
                     label='API Key'
                     type='password'
@@ -278,8 +278,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='From Email'
                     type='email'
@@ -292,8 +292,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='From Name'
                     value={settings?.email?.settings?.sendgrid?.fromName || ''}
@@ -305,7 +305,7 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
+                </Grid2>
               </>
             )}
 
@@ -380,16 +380,16 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                   label='System Alerts'
                 />
               </Stack>
-            </Grid>
+            </Grid2>
 
             {testResults.email && (
               <Grid size={{ xs: 12 }}>
                 <Alert severity={testResults.email.success ? 'success' : 'error'}>
                   {testResults.email.message}
                 </Alert>
-              </Grid>
+              </Grid2>
             )}
-          </Grid>
+          </Grid2>
         </AccordionDetails>
       </Accordion>
 
@@ -408,8 +408,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 md={6}>
               <FormControl fullWidth>
                 <InputLabel>Storage Provider</InputLabel>
                 <Select
@@ -423,9 +423,9 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                   <MenuItem value='gcp'>Google Cloud Storage</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Button
                 variant='outlined'
                 startIcon={<TestIcon />}
@@ -444,12 +444,12 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                   sx={{ ml: 1 }}
                 />
               )}
-            </Grid>
+            </Grid2>
 
             {/* S3 Settings */}
             {settings?.storage?.provider === 's3' && (
               <>
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <TextField
                     label='Access Key ID'
                     value={settings?.storage?.settings?.s3?.accessKeyId || ''}
@@ -461,8 +461,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='Secret Access Key'
                     type='password'
@@ -475,8 +475,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='Region'
                     value={settings?.storage?.settings?.s3?.region || ''}
@@ -488,8 +488,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
-                <Grid size={{ xs: 12 }} md={6}>
+                </Grid2>
+                <Grid2 md={6}>
                   <TextField
                     label='Bucket Name'
                     value={settings?.storage?.settings?.s3?.bucket || ''}
@@ -501,7 +501,7 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     }
                     fullWidth
                   />
-                </Grid>
+                </Grid2>
               </>
             )}
 
@@ -510,9 +510,9 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                 <Alert severity={testResults.storage.success ? 'success' : 'error'}>
                   {testResults.storage.message}
                 </Alert>
-              </Grid>
+              </Grid2>
             )}
-          </Grid>
+          </Grid2>
         </AccordionDetails>
       </Accordion>
 
@@ -528,7 +528,7 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
@@ -539,11 +539,11 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                 }
                 label='Enable Single Sign-On'
               />
-            </Grid>
+            </Grid2>
 
             {settings?.sso?.enabled && (
               <>
-                <Grid size={{ xs: 12 }} md={6}>
+                <Grid2 md={6}>
                   <FormControl fullWidth>
                     <InputLabel>SSO Provider</InputLabel>
                     <Select
@@ -557,12 +557,12 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                       <MenuItem value='saml'>Generic SAML</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
                 {/* Azure AD Settings */}
                 {settings?.sso?.provider === 'azure' && (
                   <>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    <Grid2 md={6}>
                       <TextField
                         label='Tenant ID'
                         value={settings?.sso?.settings?.azure?.tenantId || ''}
@@ -574,8 +574,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                         }
                         fullWidth
                       />
-                    </Grid>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    </Grid2>
+                    <Grid2 md={6}>
                       <TextField
                         label='Client ID'
                         value={settings?.sso?.settings?.azure?.clientId || ''}
@@ -587,8 +587,8 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                         }
                         fullWidth
                       />
-                    </Grid>
-                    <Grid size={{ xs: 12 }} md={6}>
+                    </Grid2>
+                    <Grid2 md={6}>
                       <TextField
                         label='Client Secret'
                         type='password'
@@ -601,7 +601,7 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                         }
                         fullWidth
                       />
-                    </Grid>
+                    </Grid2>
                   </>
                 )}
 
@@ -610,10 +610,10 @@ const IntegrationSettings: React.FC<IntegrationSettingsProps> = ({ settings, onC
                     After configuring SSO, make sure to test the integration before enabling it for
                     all users.
                   </Alert>
-                </Grid>
+                </Grid2>
               </>
             )}
-          </Grid>
+          </Grid2>
         </AccordionDetails>
       </Accordion>
     </Box>

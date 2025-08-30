@@ -377,7 +377,7 @@ export function FormEditor() {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Status Workflow Panel */}
         {isEditing && formData.status && (
           <Grid size={{ xs: 12, lg: 4 }}>
@@ -390,7 +390,7 @@ export function FormEditor() {
               onStatusChange={handleStatusChange}
               completionPercentage={formData.completionPercentage}
             />
-          </Grid>
+          </Grid2>
         )}
 
         {/* Form Content */}
@@ -697,8 +697,8 @@ export function FormEditor() {
               </Accordion>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 }

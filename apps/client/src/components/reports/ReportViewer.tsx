@@ -16,7 +16,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Grid,
+  Grid2,
   CircularProgress,
   Alert,
   Tooltip,
@@ -372,7 +372,7 @@ const ReportViewer: React.FC<ReportViewerProps> = ({ reportId, onEdit }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await request(`/api/reports/${reportId}`);
+      const response = await get('/api/reports/${reportId}');
       setReport(response.data.report);
       await generateReportData();
     } catch (error: any) {

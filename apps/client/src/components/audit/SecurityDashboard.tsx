@@ -98,9 +98,9 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
 
     try {
       const [metricsRes, alertsRes, anomalousRes] = await Promise.all([
-        request('/api/audit/summary'),
-        request('/api/audit/security-alerts?hours=24'),
-        request('/api/audit/anomalous?hours=24'),
+        get('/api/audit/summary'),
+        get('/api/audit/security-alerts?hours=24'),
+        get('/api/audit/anomalous?hours=24'),
       ]);
 
       // Process metrics
@@ -243,8 +243,8 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
       {metrics && (
         <>
           {/* Key Metrics */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+          <Grid2 container spacing={3} sx={{ mb: 4 }}>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Security Alerts'
                 value={metrics.securityAlerts}
@@ -252,24 +252,24 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 trend={metrics.trends.alertsChange}
                 color={getMetricColor(metrics.securityAlerts, 5)}
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+            </Grid2>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Failed Logins'
                 value={metrics.failedLogins}
                 icon={<LockIcon fontSize='large' />}
                 color={getMetricColor(metrics.failedLogins, 10)}
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+            </Grid2>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Critical Events'
                 value={metrics.criticalEvents}
                 icon={<ErrorIcon fontSize='large' />}
                 color={getMetricColor(metrics.criticalEvents, 3)}
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+            </Grid2>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Compliance Issues'
                 value={metrics.complianceViolations}
@@ -277,27 +277,27 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                 trend={metrics.trends.complianceChange}
                 color={getMetricColor(metrics.complianceViolations, 2)}
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+            </Grid2>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Total Events'
                 value={metrics.totalEvents}
                 icon={<TimelineIcon fontSize='large' />}
                 trend={metrics.trends.eventsChange}
               />
-            </Grid>
-            <Grid size={{ xs: 12 }} sm={6} md={2}>
+            </Grid2>
+            <Grid2 sm={6} md={2}>
               <MetricCard
                 title='Active Users'
                 value={metrics.activeUsers}
                 icon={<UserIcon fontSize='large' />}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           {/* Charts */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid size={{ xs: 12 }} md={8}>
+          <Grid2 container spacing={3} sx={{ mb: 4 }}>
+            <Grid2 md={8}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
@@ -326,9 +326,9 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={4}>
+            <Grid2 md={4}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
@@ -363,12 +363,12 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           {/* Recent Security Alerts */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={3} sx={{ mb: 4 }}>
+            <Grid2 md={6}>
               <Card>
                 <CardContent>
                   <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
@@ -424,9 +424,9 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                   )}
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
 
-            <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 md={6}>
               <Card>
                 <CardContent>
                   <Typography variant='h6' gutterBottom>
@@ -473,8 +473,8 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ organizationId })
                   )}
                 </CardContent>
               </Card>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </>
       )}
 

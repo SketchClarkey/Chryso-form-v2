@@ -124,7 +124,7 @@ const SearchResults: React.FC = () => {
         params.set('category', selectedCategories.join(','));
       }
 
-      const response = await request(`/api/search?${params.toString()}`);
+      const response = await get('/api/search?${params.toString()}');
       setResults(response.data.results);
       setFacets(response.data.facets);
       setTotal(response.data.total);
@@ -266,9 +266,9 @@ const SearchResults: React.FC = () => {
       </Box>
 
       {query && (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {/* Filters Sidebar */}
-          <Grid size={{ xs: 12 }} md={3}>
+          <Grid2 md={3}>
             <Paper sx={{ p: 2, position: 'sticky', top: 16 }}>
               <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
                 <Typography variant='h6'>Filters</Typography>
@@ -389,10 +389,10 @@ const SearchResults: React.FC = () => {
                 </Accordion>
               )}
             </Paper>
-          </Grid>
+          </Grid2>
 
           {/* Results */}
-          <Grid size={{ xs: 12 }} md={9}>
+          <Grid2 md={9}>
             <Box mb={2} display='flex' justifyContent='space-between' alignItems='center'>
               <Typography variant='h6'>
                 {loading ? 'Searching...' : `${total} results for "${query}"`}
@@ -535,8 +535,8 @@ const SearchResults: React.FC = () => {
                 )}
               </>
             )}
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       )}
     </Box>
   );

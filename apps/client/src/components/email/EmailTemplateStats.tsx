@@ -57,7 +57,7 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
     setError(null);
 
     try {
-      const response = await request(`/api/email-templates/${template._id}/stats`);
+      const response = await get('/api/email-templates/${template._id}/stats');
       setStats(response.data.stats);
     } catch (error: any) {
       console.error('Failed to load template stats:', error);
@@ -153,9 +153,9 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
         )}
 
         {loading ? (
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             {Array.from({ length: 4 }).map((_, index) => (
-              <Grid size={{ xs: 12 }} sm={6} key={index}>
+              <Grid2 sm={6} key={index}>
                 <Card>
                   <CardContent>
                     <Skeleton variant='text' width='60%' height={40} />
@@ -163,14 +163,14 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                     <Skeleton variant='rectangular' width='100%' height={8} sx={{ mt: 2 }} />
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
         ) : stats ? (
           <>
             {/* Key Metrics */}
-            <Grid container spacing={3} sx={{ mb: 3 }}>
-              <Grid size={{ xs: 12 }} sm={6}>
+            <Grid2 container spacing={3} sx={{ mb: 3 }}>
+              <Grid2 sm={6}>
                 <StatCard
                   title='Total Sent'
                   value={stats.usage.sentCount.toLocaleString()}
@@ -178,9 +178,9 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                   icon={<EmailIcon fontSize='large' />}
                   trend={stats.trends?.sentTrend}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 12 }} sm={6}>
+              <Grid2 sm={6}>
                 <StatCard
                   title='Open Rate'
                   value={`${(stats.usage.openRate || 0).toFixed(1)}%`}
@@ -189,9 +189,9 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                   progress={stats.usage.openRate || 0}
                   trend={stats.trends?.openTrend}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 12 }} sm={6}>
+              <Grid2 sm={6}>
                 <StatCard
                   title='Click Rate'
                   value={`${(stats.usage.clickRate || 0).toFixed(1)}%`}
@@ -200,23 +200,23 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                   progress={stats.usage.clickRate || 0}
                   trend={stats.trends?.clickTrend}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 12 }} sm={6}>
+              <Grid2 sm={6}>
                 <StatCard
                   title='Last 30 Days'
                   value={stats.lastMonth?.sent?.toLocaleString() || '0'}
                   subtitle='Emails sent'
                   icon={<TimeIcon fontSize='large' />}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
 
             <Divider sx={{ my: 3 }} />
 
             {/* Template Details */}
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12 }} md={6}>
+            <Grid2 container spacing={3}>
+              <Grid2 md={6}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -291,9 +291,9 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                     </List>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
 
-              <Grid size={{ xs: 12 }} md={6}>
+              <Grid2 md={6}>
                 <Card>
                   <CardContent>
                     <Typography variant='h6' gutterBottom>
@@ -364,8 +364,8 @@ const EmailTemplateStats: React.FC<EmailTemplateStatsProps> = ({ open, onClose, 
                     )}
                   </CardContent>
                 </Card>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
 
             {/* Recommendations */}
             {stats.usage.sentCount > 0 && (

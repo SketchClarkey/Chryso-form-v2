@@ -46,7 +46,7 @@ const filesWithGrid = [
   'D:/Chryso-Form/apps/client/src/components/charts/FormStatusChart.tsx',
   'D:/Chryso-Form/apps/client/src/components/camera/MobileCameraCapture.tsx',
   'D:/Chryso-Form/apps/client/src/components/audit/SecurityDashboard.tsx',
-  'D:/Chryso-Form/apps/client/src/components/audit/AuditLogViewer.tsx'
+  'D:/Chryso-Form/apps/client/src/components/audit/AuditLogViewer.tsx',
 ];
 
 function fixGridInFile(filePath) {
@@ -82,7 +82,7 @@ function fixGridInFile(filePath) {
       const mdMatch = attributes.match(/md=\{([^}]+)\}/);
       const lgMatch = attributes.match(/lg=\{([^}]+)\}/);
       const xlMatch = attributes.match(/xl=\{([^}]+)\}/);
-      
+
       // Build size object
       let sizeObj = {};
       if (xsMatch) sizeObj.xs = xsMatch[1];
@@ -90,7 +90,7 @@ function fixGridInFile(filePath) {
       if (mdMatch) sizeObj.md = mdMatch[1];
       if (lgMatch) sizeObj.lg = lgMatch[1];
       if (xlMatch) sizeObj.xl = xlMatch[1];
-      
+
       // Remove size attributes from original attributes
       let cleanAttributes = attributes
         .replace(/xs=\{[^}]+\}/g, '')
@@ -99,7 +99,7 @@ function fixGridInFile(filePath) {
         .replace(/lg=\{[^}]+\}/g, '')
         .replace(/xl=\{[^}]+\}/g, '')
         .trim();
-      
+
       // Create size prop
       let sizeProp = '';
       if (Object.keys(sizeObj).length > 0) {
@@ -112,10 +112,10 @@ function fixGridInFile(filePath) {
           sizeProp = `size={{ ${sizeStr} }}`;
         }
       }
-      
+
       // Combine attributes
       const allAttributes = [sizeProp, cleanAttributes].filter(Boolean).join(' ');
-      
+
       modified = true;
       return `<Grid2${allAttributes ? ' ' + allAttributes : ''}>`;
     });
@@ -135,7 +135,6 @@ function fixGridInFile(filePath) {
       console.log(`⚪ No changes needed: ${path.basename(filePath)}`);
       return false;
     }
-    
   } catch (error) {
     console.error(`❌ Error processing ${filePath}:`, error.message);
     return false;

@@ -107,7 +107,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
 
   const loadCronPresets = async () => {
     try {
-      const response = await request('/api/scheduler/cron-presets');
+      const response = await get('/api/scheduler/cron-presets');
       setCronPresets(response.data.presets);
     } catch (error: any) {
       setError('Failed to load schedule presets');
@@ -248,7 +248,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
               <Typography variant='subtitle2' gutterBottom sx={{ mt: 2 }}>
                 Common Schedules
               </Typography>
-              <Grid container spacing={1} sx={{ mb: 2 }}>
+              <Grid2 container spacing={1} sx={{ mb: 2 }}>
                 {cronPresets.map(preset => (
                   <Grid key={preset.name}>
                     <Chip
@@ -257,9 +257,9 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                       color={selectedPreset === preset.name ? 'primary' : 'default'}
                       onClick={() => handlePresetSelect(preset)}
                     />
-                  </Grid>
+                  </Grid2>
                 ))}
-              </Grid>
+              </Grid2>
 
               {/* Custom Cron Expression */}
               <TextField
@@ -389,7 +389,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                   <Typography variant='subtitle2' gutterBottom>
                     Current Schedule Status
                   </Typography>
-                  <Grid container spacing={2}>
+                  <Grid2 container spacing={2}>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant='caption' color='text.secondary'>
                         Last Run
@@ -399,7 +399,7 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                           ? new Date(currentSchedule.lastRun).toLocaleString()
                           : 'Never'}
                       </Typography>
-                    </Grid>
+                    </Grid2>
                     <Grid size={{ xs: 6 }}>
                       <Typography variant='caption' color='text.secondary'>
                         Next Run
@@ -409,8 +409,8 @@ const ReportScheduler: React.FC<ReportSchedulerProps> = ({
                           ? new Date(currentSchedule.nextRun).toLocaleString()
                           : 'Not scheduled'}
                       </Typography>
-                    </Grid>
-                  </Grid>
+                    </Grid2>
+                  </Grid2>
                 </CardContent>
               </Card>
             )}

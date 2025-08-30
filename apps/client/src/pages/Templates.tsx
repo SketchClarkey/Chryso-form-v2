@@ -314,8 +314,8 @@ function TemplateList() {
       {/* Filters */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2} alignItems='center'>
-            <Grid size={{ xs: 12 }} md={4}>
+          <Grid2 container spacing={2} alignItems='center'>
+            <Grid2 md={4}>
               <TextField
                 fullWidth
                 placeholder='Search templates...'
@@ -329,7 +329,7 @@ function TemplateList() {
                   ),
                 }}
               />
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
@@ -348,7 +348,7 @@ function TemplateList() {
                   <MenuItem value='custom'>Custom</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
@@ -364,7 +364,7 @@ function TemplateList() {
                   <MenuItem value='pending_approval'>Pending Approval</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Sort By</InputLabel>
@@ -379,7 +379,7 @@ function TemplateList() {
                   <MenuItem value='usage.totalForms'>Usage</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
             <Grid size={{ xs: 6, md: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Order</InputLabel>
@@ -392,8 +392,8 @@ function TemplateList() {
                   <MenuItem value='asc'>Ascending</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
@@ -404,7 +404,7 @@ function TemplateList() {
         </Box>
       ) : templatesData?.templates?.length > 0 ? (
         <>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={3}>
             {templatesData.templates.map((template: ITemplate) => (
               <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={template._id}>
                 <TemplateCard
@@ -414,9 +414,9 @@ function TemplateList() {
                   onDelete={handleDelete}
                   onClone={handleClone}
                 />
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
 
           {templatesData.pagination && templatesData.pagination.pages > 1 && (
             <Box display='flex' justifyContent='center' mt={4}>

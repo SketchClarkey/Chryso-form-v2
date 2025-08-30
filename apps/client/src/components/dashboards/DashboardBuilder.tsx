@@ -357,7 +357,7 @@ const WidgetEditor: React.FC<{
           {/* General Tab */}
           {activeTab === 0 && (
             <Box sx={{ mt: 2 }}>
-              <Grid container spacing={2}>
+              <Grid2 container spacing={2}>
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
@@ -365,7 +365,7 @@ const WidgetEditor: React.FC<{
                     value={editedWidget.title}
                     onChange={e => setEditedWidget({ ...editedWidget, title: e.target.value })}
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
@@ -377,7 +377,7 @@ const WidgetEditor: React.FC<{
                     multiline
                     rows={3}
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
@@ -392,7 +392,7 @@ const WidgetEditor: React.FC<{
                     }
                     inputProps={{ min: 1, max: 12 }}
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
@@ -407,8 +407,8 @@ const WidgetEditor: React.FC<{
                     }
                     inputProps={{ min: 1, max: 20 }}
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           )}
 
@@ -419,7 +419,7 @@ const WidgetEditor: React.FC<{
                 Widget Configuration
               </Typography>
               {editedWidget.type === 'metric' && (
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Metric</InputLabel>
@@ -438,7 +438,7 @@ const WidgetEditor: React.FC<{
                         <MenuItem value='avgCompletionTime'>Avg Completion Time</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
+                  </Grid2>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Format</InputLabel>
@@ -457,12 +457,12 @@ const WidgetEditor: React.FC<{
                         <MenuItem value='time'>Time</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               )}
 
               {editedWidget.type === 'chart' && (
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Chart Type</InputLabel>
@@ -482,7 +482,7 @@ const WidgetEditor: React.FC<{
                         <MenuItem value='area'>Area Chart</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
+                  </Grid2>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Data Source</InputLabel>
@@ -501,12 +501,12 @@ const WidgetEditor: React.FC<{
                         <MenuItem value='users'>Users</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               )}
 
               {editedWidget.type === 'text' && (
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
@@ -522,8 +522,8 @@ const WidgetEditor: React.FC<{
                       rows={6}
                       placeholder='Enter your text content here...'
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               )}
             </Box>
           )}
@@ -531,7 +531,7 @@ const WidgetEditor: React.FC<{
           {/* Styling Tab */}
           {activeTab === 2 && (
             <Box sx={{ mt: 2 }}>
-              <Grid container spacing={2}>
+              <Grid2 container spacing={2}>
                 <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
@@ -545,7 +545,7 @@ const WidgetEditor: React.FC<{
                       })
                     }
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
@@ -559,7 +559,7 @@ const WidgetEditor: React.FC<{
                       })
                     }
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <TextField
                     fullWidth
@@ -577,7 +577,7 @@ const WidgetEditor: React.FC<{
                     }
                     inputProps={{ min: 0, max: 50 }}
                   />
-                </Grid>
+                </Grid2>
                 <Grid size={{ xs: 6 }}>
                   <FormControlLabel
                     control={
@@ -593,8 +593,8 @@ const WidgetEditor: React.FC<{
                     }
                     label='Drop Shadow'
                   />
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </Box>
           )}
 
@@ -682,7 +682,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
 
     setLoading(true);
     try {
-      const response = await request(`/api/dashboards/${dashboardId}`);
+      const response = await get('/api/dashboards/${dashboardId}');
       setDashboard(response.data.dashboard);
     } catch (error) {
       console.error('Failed to load dashboard:', error);
@@ -860,7 +860,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                 <Typography>Dashboard Settings</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container spacing={2}>
+                <Grid2 container spacing={2}>
                   <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
@@ -868,7 +868,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       value={dashboard.name}
                       onChange={e => setDashboard({ ...dashboard, name: e.target.value })}
                     />
-                  </Grid>
+                  </Grid2>
                   <Grid size={{ xs: 12 }}>
                     <FormControl fullWidth>
                       <InputLabel>Category</InputLabel>
@@ -887,7 +887,7 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                         <MenuItem value='public'>Public</MenuItem>
                       </Select>
                     </FormControl>
-                  </Grid>
+                  </Grid2>
                   <Grid size={{ xs: 12 }}>
                     <FormControlLabel
                       control={
@@ -903,8 +903,8 @@ const DashboardBuilder: React.FC<{ dashboardId?: string }> = ({ dashboardId }) =
                       }
                       label='Auto Refresh'
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               </AccordionDetails>
             </Accordion>
           </Box>

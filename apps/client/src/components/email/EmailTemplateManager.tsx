@@ -138,7 +138,7 @@ const EmailTemplateManager: React.FC = () => {
         params.append('search', searchTerm);
       }
 
-      const response = await request(`/api/email-templates?${params.toString()}`);
+      const response = await get('/api/email-templates?${params.toString()}');
       setTemplates(response.data.templates);
     } catch (error) {
       console.error('Failed to load email templates:', error);
@@ -149,7 +149,7 @@ const EmailTemplateManager: React.FC = () => {
 
   const loadMetadata = async () => {
     try {
-      const response = await request('/api/email-templates/meta/categories');
+      const response = await get('/api/email-templates/meta/categories');
       setCategories(response.data.categories);
       setTypes(response.data.types);
     } catch (error) {
@@ -316,8 +316,8 @@ const EmailTemplateManager: React.FC = () => {
       {/* Search and Filters */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2} alignItems='center'>
-            <Grid size={{ xs: 12 }} md={6}>
+          <Grid2 container spacing={2} alignItems='center'>
+            <Grid2 md={6}>
               <Box component='form' onSubmit={handleSearch} display='flex' gap={1}>
                 <TextField
                   placeholder='Search templates...'
@@ -333,8 +333,8 @@ const EmailTemplateManager: React.FC = () => {
                   Search
                 </Button>
               </Box>
-            </Grid>
-            <Grid size={{ xs: 12 }} md={6}>
+            </Grid2>
+            <Grid2 md={6}>
               <FormControl size='small' fullWidth>
                 <InputLabel>Filter by Category</InputLabel>
                 <Select
@@ -351,16 +351,16 @@ const EmailTemplateManager: React.FC = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
       {/* Templates Grid */}
       {loading ? (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {Array.from({ length: 6 }).map((_, index) => (
-            <Grid size={{ xs: 12 }} md={6} lg={4} key={index}>
+            <Grid2 md={6} lg={4} key={index}>
               <Card>
                 <CardContent>
                   <Skeleton variant='text' width='60%' height={32} />
@@ -373,13 +373,13 @@ const EmailTemplateManager: React.FC = () => {
                   </Box>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {filteredTemplates.map(template => (
-            <Grid size={{ xs: 12 }} md={6} lg={4} key={template._id}>
+            <Grid2 md={6} lg={4} key={template._id}>
               <Card
                 sx={{
                   height: '100%',
@@ -462,9 +462,9 @@ const EmailTemplateManager: React.FC = () => {
                   </Badge>
                 )}
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       {filteredTemplates.length === 0 && !loading && (
